@@ -1,5 +1,6 @@
 group 'me.tatarka'
 version '1.0-SNAPSHOT'
+apply from: '../publish.gradle'
 
 buildscript {
     ext.kotlin_version = '1.1.0'
@@ -21,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    compile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testCompile 'org.jetbrains.spek:spek-api:1.1.0-beta3'

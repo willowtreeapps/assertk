@@ -1,0 +1,136 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'pom'
+
+def isAndroid = plugins.hasPlugin('com.android.library')
+
+ext {
+    pomFile = file("${project.buildDir}/generated-pom.xml")
+    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
+}
+
+if (isAndroid) {
+    task javadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+    }
+}
+
+task javadocsJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    if (isAndroid) {
+        from android.sourceSets.main.java.srcDirs
+    } else {
+        from sourceSets.main.allSource
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocsJar
+}
+
+signing {
+    required { signatory != null && project.ext.isReleaseVersion }
+    sign configurations.archives
+}
+
+def siteUrl = 'https://github.com/evant/assertk'
+def gitUrl = 'https://github.com/evant/assertk.git'
+
+pom {
+    name project.name
+    if (isAndroid) {
+        packaging 'aar'
+    }
+    description 'assertions for kotlin inspired by assertj'
+    url siteUrl
+
+    scm {
+        url siteUrl
+        connection gitUrl
+        developerConnection gitUrl
+    }
+
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+
+    developers {
+        developer {
+            id 'evant'
+            name 'Evan Tatarka'
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            if (project.ext.isReleaseVersion) {
+                url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            } else {
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            }
+
+            credentials {
+                username = project.findProperty('sonatype.username')
+                password = project.findProperty('sonatype.password')
+            }
+        }
+    }
+
+    publications {
+        lib(MavenPublication) {
+            if (isAndroid) {
+                artifact "$buildDir/outputs/aar/${project.name}-release.aar"
+            } else {
+                from components.java
+            }
+
+            artifact sourcesJar
+            artifact javadocsJar
+
+            if (signing.required) {
+                // Sign the pom.xml.
+                pom.withXml {
+                    writeTo(project.ext.pomFile)
+                    def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
+                    artifact(pomAscFile) {
+                        classifier = null
+                        extension = 'pom.asc'
+                    }
+                    project.ext.pomFile.delete()
+                }
+
+                // Sign the artifacts.
+                project.tasks.signArchives.signatureFiles.each {
+                    artifact(it) {
+                        def matcher = it.file =~ /-?(?<classifier>sources|javadoc)?\.(?<extension>jar|aar)\.asc$/
+                        if (matcher.find()) {
+                            classifier = matcher.group('classifier')
+                            extension = matcher.group('extension') + '.asc'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+model {
+    tasks.publishLibPublicationToMavenLocal {
+        dependsOn(project.tasks.signArchives)
+    }
+
+    tasks.publishLibPublicationToMavenRepository {
+        dependsOn(project.tasks.signArchives)
+    }
+}

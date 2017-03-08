@@ -1,11 +1,14 @@
-package me.tatarka.assertk
+package test.me.tatarka.assertk
 
+import me.tatarka.assertk.assert
 import me.tatarka.assertk.assertions.*
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+
+val ASSERT_SPEC = AssertSpec::class.qualifiedName
 
 class AssertSpec : Spek({
     given("a basic object") {
@@ -24,6 +27,16 @@ class AssertSpec : Spek({
                 Assertions.assertThatThrownBy {
                     assert(subject).isEqualTo(nonEqual)
                 }.hasMessage("expected:<[not ]test> but was:<[]test>")
+            }
+
+            it("should fail with a stacktrace that starts at this test") {
+                val error = Assertions.catchThrowable {
+                    assert(subject).isEqualTo(nonEqual)
+                }
+                val importantStacktrace = error.stackTrace
+                        .dropWhile { it.className.startsWith("or.assertj") }
+
+                Assertions.assertThat(importantStacktrace[0].toString()).contains("me.tatarka.assertk.AssertSpec")
             }
         }
 
@@ -78,7 +91,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).hasClass(DifferentObject::class)
-                }.hasMessage("expected to have class:<me.tatarka.assertk.AssertSpec\$DifferentObject> but was:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to have class:<$ASSERT_SPEC\$DifferentObject> but was:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -90,7 +103,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).hasClass(DifferentObject::class.java)
-                }.hasMessage("expected to have class:<me.tatarka.assertk.AssertSpec\$DifferentObject> but was:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to have class:<$ASSERT_SPEC\$DifferentObject> but was:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -102,7 +115,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).doesNotHaveClass(BasicObject::class)
-                }.hasMessage("expected to not have class:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to not have class:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -114,7 +127,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).doesNotHaveClass(BasicObject::class.java)
-                }.hasMessage("expected to not have class:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to not have class:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -126,7 +139,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).isInstanceOf(DifferentObject::class)
-                }.hasMessage("expected to be instance of:<me.tatarka.assertk.AssertSpec\$DifferentObject> but had class:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to be instance of:<$ASSERT_SPEC\$DifferentObject> but had class:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -138,7 +151,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).isInstanceOf(DifferentObject::class.java)
-                }.hasMessage("expected to be instance of:<me.tatarka.assertk.AssertSpec\$DifferentObject> but had class:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to be instance of:<$ASSERT_SPEC\$DifferentObject> but had class:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -150,7 +163,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).isNotInstanceOf(BasicObject::class)
-                }.hasMessage("expected to not be instance of:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to not be instance of:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -162,7 +175,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as TestObject).isNotInstanceOf(BasicObject::class.java)
-                }.hasMessage("expected to not be instance of:<me.tatarka.assertk.AssertSpec\$BasicObject>")
+                }.hasMessage("expected to not be instance of:<$ASSERT_SPEC\$BasicObject>")
             }
         }
 
@@ -189,6 +202,7 @@ class AssertSpec : Spek({
                 Assertions.assertThatThrownBy {
                     assert(subject).isIn(isOut1, isOut2)
                 }.hasMessage("expected:<[not test1, not test2]> to contain:<test>")
+
             }
         }
 
@@ -303,7 +317,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).hasMessage("not test")
-                }.hasMessage("[message] expected:<\"[not ]test\"> but was:<\"[]test\">")
+                }.hasMessage("expected [message]:<\"[not ]test\"> but was:<\"[]test\">")
             }
         }
 
@@ -323,21 +337,21 @@ class AssertSpec : Spek({
                 val wrongCause = Exception("cause")
                 Assertions.assertThatThrownBy {
                     assert(subject).hasCause(wrongCause)
-                }.hasMessage("[cause] expected:<[java.lang.]Exception: cause> but was:<[me.tatarka.assertk.AssertSpec\$Test]Exception: cause>")
+                }.hasMessage("expected [cause]:<[java.lang.]Exception: cause> but was:<[$ASSERT_SPEC\$Test]Exception: cause>")
             }
 
             it("should fail an unsuccessful test on wrong message") {
                 val wrongCause = TestException("wrong cause")
                 Assertions.assertThatThrownBy {
                     assert(subject).hasCause(wrongCause)
-                }.hasMessage("[cause] expected:<...Spec\$TestException: [wrong ]cause> but was:<...Spec\$TestException: []cause>")
+                }.hasMessage("expected [cause]:<...Spec\$TestException: [wrong ]cause> but was:<...Spec\$TestException: []cause>")
             }
 
             it("should fail an unsuccessful test on wrong cause class and message") {
                 val wrongCause = Exception("wrong cause")
                 Assertions.assertThatThrownBy {
                     assert(subject).hasCause(wrongCause)
-                }.hasMessage("[cause] expected:<[java.lang.Exception: wrong] cause> but was:<[me.tatarka.assertk.AssertSpec\$TestException:] cause>")
+                }.hasMessage("expected [cause]:<[java.lang.Exception: wrong] cause> but was:<[$ASSERT_SPEC\$TestException:] cause>")
             }
         }
 
@@ -350,7 +364,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).hasNoCause()
-                }.hasMessage("expected [cause] to not exist but was:<me.tatarka.assertk.AssertSpec\$TestException: cause>")
+                }.hasMessage("expected [cause] to not exist but was:<$ASSERT_SPEC\$TestException: cause>")
             }
         }
 
@@ -410,7 +424,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as Exception).hasCauseInstanceOf(DifferentException::class)
-                }.hasMessage("expected [cause] to be instance of:<me.tatarka.assertk.AssertSpec\$DifferentException> but had class:<me.tatarka.assertk.AssertSpec\$TestException>")
+                }.hasMessage("expected [cause] to be instance of:<$ASSERT_SPEC\$DifferentException> but had class:<$ASSERT_SPEC\$TestException>")
             }
         }
 
@@ -422,16 +436,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject as Exception).hasCauseInstanceOf(DifferentException::class.java)
-                }.hasMessage("expected [cause] to be instance of:<me.tatarka.assertk.AssertSpec\$DifferentException> but had class:<me.tatarka.assertk.AssertSpec\$TestException>")
-            }
-
-            assert {
-                throw Exception()
-            }.thrown { }
-
-            expect {
-                that(1).isEqualTo(1)
-                that(2).isEqualTo(2)
+                }.hasMessage("expected [cause] to be instance of:<$ASSERT_SPEC\$DifferentException> but had class:<$ASSERT_SPEC\$TestException>")
             }
         }
     }

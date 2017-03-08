@@ -1,4 +1,4 @@
-package me.tatarka.assertk
+package test.me.tatarka.assertk
 
 import me.tatarka.assertk.assertions.isEqualTo
 import org.assertj.core.api.Assertions
@@ -11,7 +11,7 @@ class NamedSpec : Spek({
     }
 
     given("an assert") {
-        val test = assert(BasicObject("yes"))
+        val test = me.tatarka.assertk.assert(BasicObject("yes"))
 
         on("nothing") {
             it("should fail with just the default error message") {
@@ -22,10 +22,10 @@ class NamedSpec : Spek({
         }
 
         on("named(String)") {
-            it("should fail prefixed with the 'describe as' message") {
+            it("should fail prefixed with the 'named' message") {
                 Assertions.assertThatThrownBy {
                     test.named("test").isEqualTo(BasicObject("no"))
-                }.hasMessage("[test] expected:<[no]> but was:<[yes]>")
+                }.hasMessage("expected [test]:<[no]> but was:<[yes]>")
             }
         }
     }

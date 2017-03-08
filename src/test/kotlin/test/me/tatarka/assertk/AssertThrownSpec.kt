@@ -1,5 +1,6 @@
-package me.tatarka.assertk
+package test.me.tatarka.assertk
 
+import me.tatarka.assertk.catch
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.*
