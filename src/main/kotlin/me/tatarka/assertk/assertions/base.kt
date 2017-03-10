@@ -438,9 +438,7 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
 
 @JvmName("arrayAll")
 fun <T> Assert<Array<T>>.all(f: (Assert<T>) -> Unit) {
-    assertAll {
-        for (item in actual) {
-            f(assert(item))
-        }
+    for (item in actual) {
+        f(assert(item))
     }
 }

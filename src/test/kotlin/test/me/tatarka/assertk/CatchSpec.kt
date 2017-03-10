@@ -5,13 +5,13 @@ import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.*
 
-class AssertThrownSpec : Spek({
-    given("a thrown exception") {
+class CatchSpec : Spek({
+    given("an exception") {
 
         val subject = TestException()
 
         on("catch") {
-            it("should catch and return a thrown exception") {
+            it("should catch and return a exception") {
                 Assertions.assertThat(catch { throw subject })
                         .isInstanceOf(TestException::class.java)
                         .hasMessage("test")

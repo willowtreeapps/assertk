@@ -29,6 +29,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     testCompile 'org.jetbrains.spek:spek-api:1.1.0-beta3'
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.0-beta3'
     testCompile 'org.assertj:assertj-core:3.6.2'

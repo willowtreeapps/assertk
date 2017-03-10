@@ -8,9 +8,9 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 
-val ASSERT_SPEC = AssertSpec::class.qualifiedName
-
 class AssertSpec : Spek({
+    val ASSERT_SPEC = AssertSpec::class.qualifiedName
+
     given("a basic object") {
 
         val subject = BasicObject("test")

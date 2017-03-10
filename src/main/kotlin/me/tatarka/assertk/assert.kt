@@ -206,25 +206,25 @@ private class TableFailure(private val table: Table) : Failure {
 }
 
 sealed class AssertBlock<T> constructor(protected val failure: Failure) {
-    abstract infix fun thrown(f: (Assert<Throwable>) -> Unit)
-    abstract infix fun returned(f: (Assert<T>) -> Unit)
+    abstract fun throwsError(f: (Assert<Throwable>) -> Unit)
+    abstract fun returnsValue(f: (Assert<T>) -> Unit)
 
     class Value<T> internal constructor(private val value: T, failure: Failure) : AssertBlock<T>(failure) {
-        override fun thrown(f: (Assert<Throwable>) -> Unit) = fail("expected exception but was:<${display(value)}>")
+        override fun throwsError(f: (Assert<Throwable>) -> Unit) = fail("expected exception but was:<${display(value)}>")
 
-        override fun returned(f: (Assert<T>) -> Unit) {
+        override fun returnsValue(f: (Assert<T>) -> Unit) {
             f(Assert(value, failure))
             failure()
         }
     }
 
     class Error<T> internal constructor(private val error: Throwable, failure: Failure) : AssertBlock<T>(failure) {
-        override fun thrown(f: (Assert<Throwable>) -> Unit) {
+        override fun throwsError(f: (Assert<Throwable>) -> Unit) {
             f(Assert(error, failure))
             failure()
         }
 
-        override fun returned(f: (Assert<T>) -> Unit) = fail("expected value but threw:<${display(error)}>")
+        override fun returnsValue(f: (Assert<T>) -> Unit) = fail("expected value but threw:<${display(error)}>")
     }
 }
 
@@ -294,6 +294,7 @@ class Table1<C1>(columnNames: Array<String>) : Table(columnNames) {
     fun forAll(f: Assertable.(C1) -> Unit) {
         forAll(object : TableFun {
             override fun invoke(assert: Assertable, values: Array<out Any?>) {
+                @Suppress("UNCHECKED_CAST")
                 assert.f(values[0] as C1)
             }
         })
@@ -308,6 +309,7 @@ class Table2<C1, C2>(columnNames: Array<String>) : Table(columnNames) {
     fun forAll(f: Assertable.(C1, C2) -> Unit) {
         forAll(object : TableFun {
             override fun invoke(assert: Assertable, values: Array<out Any?>) {
+                @Suppress("UNCHECKED_CAST")
                 assert.f(values[0] as C1, values[1] as C2)
             }
         })
@@ -322,6 +324,7 @@ class Table3<C1, C2, C3>(columnNames: Array<String>) : Table(columnNames) {
     fun forAll(f: Assertable.(C1, C2, C3) -> Unit) {
         forAll(object : TableFun {
             override fun invoke(assert: Assertable, values: Array<out Any?>) {
+                @Suppress("UNCHECKED_CAST")
                 assert.f(values[0] as C1, values[1] as C2, values[2] as C3)
             }
         })
@@ -336,6 +339,7 @@ class Table4<C1, C2, C3, C4>(columnNames: Array<String>) : Table(columnNames) {
     fun forAll(f: Assertable.(C1, C2, C3, C4) -> Unit) {
         forAll(object : TableFun {
             override fun invoke(assert: Assertable, values: Array<out Any?>) {
+                @Suppress("UNCHECKED_CAST")
                 assert.f(values[0] as C1, values[1] as C2, values[2] as C3, values[3] as C4)
             }
         })
