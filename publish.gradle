@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-apply plugin: 'pom'
+apply plugin: 'me.tatarka.gradle.pom'
 
 def isAndroid = plugins.hasPlugin('com.android.library')
 
