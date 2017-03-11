@@ -72,7 +72,7 @@ assert(string) {
 }
 // -> The following 2 assertions failed:
 //    - expected to start with:<"L"> but was:<"Test">
-//    - expected to have length:<3> but was:<"Test"> (3)
+//    - expected to have length:<3> but was:<"Test"> (4)
 ```
 
 You can wrap multiple assertions in an `assertAll` to ensure all of them get run, not just the first one.
