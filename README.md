@@ -134,6 +134,7 @@ tableOf("a", "b", "result")
 // -> the following 2 assertions failed:
 //    on row:(a=<0>,b=<0>,result=<1>)
 //    - expected:<[1]> but was:<[0]>
+//    on row:(a=<1>,b=<2>,result=<4>)
 //    - expected:<[4]> but was:<[3]>
 ```
 
