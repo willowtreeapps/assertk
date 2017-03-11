@@ -1,5 +1,6 @@
 package test.me.tatarka.assertk
 
+import me.tatarka.assertk.assert
 import me.tatarka.assertk.assertions.isEqualTo
 import me.tatarka.assertk.assertions.isPositive
 import me.tatarka.assertk.tableOf

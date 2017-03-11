@@ -6,7 +6,6 @@ import me.tatarka.assertk.assertions.hasToString
 import me.tatarka.assertk.assertions.isInstanceOf
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 

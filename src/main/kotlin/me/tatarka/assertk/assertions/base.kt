@@ -1,6 +1,10 @@
 package me.tatarka.assertk.assertions
 
 import me.tatarka.assertk.Assert
+import me.tatarka.assertk.assert
+import me.tatarka.assertk.assertions.support.expected
+import me.tatarka.assertk.assertions.support.fail
+import me.tatarka.assertk.assertions.support.show
 import kotlin.reflect.KClass
 
 // Object
@@ -98,7 +102,7 @@ fun <T : Any> Assert<T?>.isNull() {
 
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
     if (actual != null) {
-        assert(actual, f)
+        assert(name, actual, f)
     } else {
         expected("to not be null")
     }
@@ -106,96 +110,96 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
 
 // Throwable
 fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
-    assert(actual.message).named("message").isNotNull {
+    assert("message", actual.message).isNotNull {
         it.isEqualTo(message)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCause(cause: Throwable) {
-    assert(actual.cause).named("cause").isNotNull {
+    assert("cause", actual.cause).isNotNull {
         it.isEqualTo(cause)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasNoCause() {
     if (actual.cause == null) return
-    named("cause").expected("to not exist but was:${show(actual.cause)}")
+    expected("[cause] to not exist but was:${show(actual.cause)}")
 }
 
 fun <T : Throwable> Assert<T>.hasMessageStartingWith(prefix: String) {
-    assert(actual.message).named("message").isNotNull {
+    assert("message", actual.message).isNotNull {
         it.startsWith(prefix)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageContaining(string: String) {
-    assert(actual.message).named("message").isNotNull {
+    assert("message", actual.message).isNotNull {
         it.contains(string)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageMatching(regex: Regex) {
-    assert(actual.message).named("message").isNotNull {
+    assert("message", actual.message).isNotNull {
         it.matches(regex)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
-    assert(actual.message).named("message").isNotNull {
+    assert("message", actual.message).isNotNull {
         it.endsWith(suffix)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.cause).named("cause").isNotNull {
+    assert("cause", actual.cause).isNotNull {
         it.isInstanceOf(kclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
-    assert(actual.cause).named("cause").isNotNull {
+    assert("cause", actual.cause).isNotNull {
         it.isInstanceOf(jclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.cause).named("cause").isNotNull {
+    assert("cause", actual.cause).isNotNull {
         it.hasClass(kclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
-    assert(actual.cause).named("cause").isNotNull {
+    assert("cause", actual.cause).isNotNull {
         it.hasClass(jclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
-    assert(actual.rootCause()).named("root cause").isEqualTo(cause)
+    assert("root cause", actual.rootCause()).isEqualTo(cause)
 
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.rootCause()).named("root cause").isInstanceOf(kclass)
+    assert("root cause", actual.rootCause()).isInstanceOf(kclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
-    assert(actual.rootCause()).named("root cause").isInstanceOf(jclass)
+    assert("root cause", actual.rootCause()).isInstanceOf(jclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.rootCause()).named("root cause").hasClass(kclass)
+    assert("root cause", actual.rootCause()).hasClass(kclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<out T>) {
-    assert(actual.rootCause()).named("root cause").hasClass(jclass)
+    assert("root cause", actual.rootCause()).hasClass(jclass)
 }
 
 private fun Throwable.rootCause(): Throwable =
         this.cause?.rootCause() ?: this
 
 fun <T : Throwable> Assert<T>.hasStackTraceContaining(description: String) {
-    assert(actual.stackTrace.map { it.toString() }).named("stack trace").contains(description)
+    assert("stack trace", actual.stackTrace.map { it.toString() }).contains(description)
 }
 
 // Boolean
@@ -251,7 +255,7 @@ fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
 
 @JvmName("stringHasSize")
 fun <T : CharSequence> Assert<T>.hasLength(length: Int) {
-    assert(actual.length).named("length").isEqualTo(length)
+    assert("length", actual.length).isEqualTo(length)
 }
 
 fun <T : CharSequence> Assert<T>.hasSameLengthAs(other: CharSequence) {
@@ -346,7 +350,7 @@ fun <T : Collection<*>?> Assert<T>.isNullOrEmpty() {
 }
 
 fun <T : Collection<*>> Assert<T>.hasSize(size: Int) {
-    assert(actual.size).named("size").isEqualTo(size)
+    assert("size", actual.size).isEqualTo(size)
 }
 
 fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
@@ -382,9 +386,9 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
     }
 }
 
-fun <E, T: Collection<E>> Assert<T>.all(f: (Assert<E>) -> Unit) {
+fun <E, T : Collection<E>> Assert<T>.all(f: (Assert<E>) -> Unit) {
     for (item in actual) {
-        f(assert(item))
+        f(assert(name, item))
     }
 }
 
@@ -409,7 +413,7 @@ fun <T> Assert<Array<T>?>.isNullOrEmpty() {
 
 @JvmName("arrayHasSize")
 fun <T> Assert<Array<T>>.hasSize(size: Int) {
-    assert(actual.size).named("size").isEqualTo(size)
+    assert("size", actual.size).isEqualTo(size)
 }
 
 @JvmName("arrayContains")
@@ -439,6 +443,6 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
 @JvmName("arrayAll")
 fun <T> Assert<Array<T>>.all(f: (Assert<T>) -> Unit) {
     for (item in actual) {
-        f(assert(item))
+        f(assert(name, item))
     }
 }

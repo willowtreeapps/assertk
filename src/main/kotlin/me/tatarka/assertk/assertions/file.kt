@@ -1,6 +1,8 @@
 import me.tatarka.assertk.Assert
-import me.tatarka.assertk.assertions.contains
 import me.tatarka.assertk.assertions.isEqualTo
+import me.tatarka.assertk.assertions.support.*
+import me.tatarka.assertk.assert
+import me.tatarka.assertk.assertions.contains
 import me.tatarka.assertk.assertions.matches
 import java.io.File
 import java.nio.charset.Charset
@@ -32,34 +34,34 @@ fun Assert<File>.isNotHidden() {
 }
 
 fun Assert<File>.hasName(expected: String) {
-    assert(actual.name).named("name").isEqualTo(expected)
+    assert("formatName", actual.name).isEqualTo(expected)
 }
 
 fun Assert<File>.hasPath(expected: String) {
-    assert(actual.path).named("path").isEqualTo(expected)
+    assert("path", actual.path).isEqualTo(expected)
 }
 
 fun Assert<File>.hasParent(expected: String) {
-    assert(actual.parent).named("parent").isEqualTo(expected)
+    assert("parent", actual.parent).isEqualTo(expected)
 }
 
 fun Assert<File>.hasExtension(expected: String) {
-    assert(actual.extension).named("extension").isEqualTo(expected)
+    assert("extension", actual.extension).isEqualTo(expected)
 }
 
 fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert(text).named("text").isEqualTo(expected)
+    assert("text", text).isEqualTo(expected)
 }
 
 fun Assert<File>.containsText(expected: String, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert(text).named("text").contains(expected)
+    assert("text", text).contains(expected)
 }
 
 fun Assert<File>.matchesText(expected: Regex, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert(text).named("text").matches(expected)
+    assert("text", text).matches(expected)
 }
 
 fun Assert<File>.hasDirectChild(expected: File) {
