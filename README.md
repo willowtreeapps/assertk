@@ -79,8 +79,8 @@ You can wrap multiple assertions in an `assertAll` to ensure all of them get run
 
 ```kotlin
 assertAll {
-    assert(true).isTrue()
-    assert(false).isFalse()
+    assert(false).isTrue()
+    assert(true).isFalse()
 }
 // -> The following 2 assertions failed:
 //    - expected to be true
