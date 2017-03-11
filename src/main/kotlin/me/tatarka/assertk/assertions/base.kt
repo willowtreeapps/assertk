@@ -253,9 +253,10 @@ fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
     expected("to be null or empty but was:${show(actual)}")
 }
 
-@JvmName("stringHasSize")
+@JvmName("stringHasLength")
 fun <T : CharSequence> Assert<T>.hasLength(length: Int) {
-    assert("length", actual.length).isEqualTo(length)
+    if (actual.length == length) return
+    expected("to have length:${show(length)} but was:${show(actual)} (${actual.length}})")
 }
 
 fun <T : CharSequence> Assert<T>.hasSameLengthAs(other: CharSequence) {
