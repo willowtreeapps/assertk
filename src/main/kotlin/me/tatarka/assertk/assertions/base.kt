@@ -72,12 +72,12 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) {
     expected("to not be instance of:${show(jclass)}")
 }
 
-fun <T> Assert<out T>.isIn(vararg values: T) {
+fun <T> Assert<T>.isIn(vararg values: T) {
     if (actual in values) return
     expected(":${show(values)} to contain:${show(actual)}")
 }
 
-fun <T> Assert<out T>.isNotIn(vararg values: T) {
+fun <T> Assert<T>.isNotIn(vararg values: T) {
     if (actual !in values) return
     expected(":${show(values)} to not contain:${show(actual)}")
 }
@@ -225,11 +225,13 @@ fun <T : Number> Assert<T>.isNotZero() {
 }
 
 fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
+    @Suppress("UNCHECKED_CAST")
     if (actual > 0 as T) return
     expected("to be positive but was:${show(actual)}")
 }
 
 fun <T> Assert<T>.isNegative() where T : Number, T : Comparable<T> {
+    @Suppress("UNCHECKED_CAST")
     if (actual < 0 as T) return
     expected("to be negative but was:${show(actual)}")
 }

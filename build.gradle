@@ -1,4 +1,4 @@
-group 'me.tatarka'
+group 'me.tatarka.assertk'
 version '1.0-SNAPSHOT'
 
 buildscript {
