@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-  compile 'me.tatarka.assertk:assertk:1.0-SNAPSHOT'
+  testCompile 'me.tatarka.assertk:assertk:1.0-SNAPSHOT'
 }
 ```
 
