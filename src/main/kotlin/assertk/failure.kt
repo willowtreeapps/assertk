@@ -93,7 +93,7 @@ fun fail(message: String) {
 @Suppress("NOTHING_TO_INLINE", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 private inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
     val filtered = error.stackTrace
-            .dropWhile { it.className.startsWith("me.tatarka.assertk") }
+            .dropWhile { it.className.startsWith("assertk") }
             .toTypedArray()
     (error as java.lang.Throwable).stackTrace = filtered
     throw error

@@ -36,7 +36,7 @@ class AssertSpec : Spek({
                 val importantStacktrace = error.stackTrace
                         .dropWhile { it.className.startsWith("or.assertj") }
 
-                Assertions.assertThat(importantStacktrace[0].toString()).contains("me.tatarka.assertk.AssertSpec")
+                Assertions.assertThat(importantStacktrace[0].toString()).contains("test.assertk.AssertSpec")
             }
         }
 

@@ -2,7 +2,7 @@ group 'com.willowtreeapps.assertk'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.0'
+    ext.kotlin_version = '1.1.1'
     repositories {
         jcenter()
         maven {
@@ -30,8 +30,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testCompile 'org.jetbrains.spek:spek-api:1.1.0-beta3'
-    testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.0-beta3'
+    testCompile 'org.jetbrains.spek:spek-api:1.1.0'
+    testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.0'
     testCompile 'org.assertj:assertj-core:3.6.2'
 }
 
@@ -40,6 +40,7 @@ sourceSets {
 }
 
 junitPlatform {
+    platformVersion '1.0.0-M3'
     filters {
         engines {
             include 'spek'
