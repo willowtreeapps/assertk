@@ -1,4 +1,4 @@
-package me.tatarka.assertk
+package assertk
 
 /**
  * Assertions are run in a failure context which captures failures to report them.

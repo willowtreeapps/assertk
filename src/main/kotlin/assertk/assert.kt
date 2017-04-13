@@ -1,6 +1,6 @@
-package me.tatarka.assertk
+package assertk
 
-import me.tatarka.assertk.assertions.support.show
+import assertk.assertions.support.show
 
 class Assert<out T> internal constructor(val name: String? = null, val actual: T)
 

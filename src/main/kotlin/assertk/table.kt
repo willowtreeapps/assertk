@@ -1,6 +1,6 @@
-package me.tatarka.assertk
+package assertk
 
-import me.tatarka.assertk.assertions.support.show
+import assertk.assertions.support.show
 
 private class TableFailure(private val table: Table) : Failure {
     private val failures: MutableMap<Int, MutableList<AssertionError>> = LinkedHashMap()

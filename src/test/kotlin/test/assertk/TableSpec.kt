@@ -1,9 +1,9 @@
-package test.me.tatarka.assertk
+package test.assertk
 
-import me.tatarka.assertk.assert
-import me.tatarka.assertk.assertions.isEqualTo
-import me.tatarka.assertk.assertions.isPositive
-import me.tatarka.assertk.tableOf
+import assertk.assert
+import assertk.assertions.isEqualTo
+import assertk.assertions.isPositive
+import assertk.tableOf
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given

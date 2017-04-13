@@ -1,9 +1,11 @@
-package test.me.tatarka.assertk
+package test.assertk
 
-import me.tatarka.assertk.catch
+import assertk.catch
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.*
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 
 class CatchSpec : Spek({
     given("an exception") {

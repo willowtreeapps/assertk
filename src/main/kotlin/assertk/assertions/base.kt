@@ -1,10 +1,10 @@
-package me.tatarka.assertk.assertions
+package assertk.assertions
 
-import me.tatarka.assertk.Assert
-import me.tatarka.assertk.assert
-import me.tatarka.assertk.assertions.support.expected
-import me.tatarka.assertk.assertions.support.fail
-import me.tatarka.assertk.assertions.support.show
+import assertk.Assert
+import assertk.assert
+import assertk.assertions.support.expected
+import assertk.assertions.support.fail
+import assertk.assertions.support.show
 import kotlin.reflect.KClass
 
 // Object

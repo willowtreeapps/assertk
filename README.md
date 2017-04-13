@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'me.tatarka.assertk:assertk:1.0-SNAPSHOT'
+  testCompile 'com.willowtreeapps.assertk:assertk:1.0-SNAPSHOT'
 }
 ```
 
@@ -20,8 +20,8 @@ dependencies {
 Simple usage is to wrap the value you are testing in `assert()` and call assertion methods on the result.
 
 ```kotlin
-import me.tatarka.assertk.assert
-import me.tatarka.assertk.assertions.*
+import assertk.assert
+import assertk.assertions.*
 
 class PersonTest {
     val person = Person(name = "Bob", age = 18)

@@ -1,4 +1,4 @@
-package me.tatarka.assertk.assertions.support
+package assertk.assertions.support
 
 private const val MAX_CONTEXT_LENGTH = 20
 
@@ -35,17 +35,17 @@ internal class DiffExtractor(val expected: String, val actual: String) {
     }
 
     fun compactPrefix(): String {
-        if (sharedPrefix.length <= MAX_CONTEXT_LENGTH) {
+        if (sharedPrefix.length <= assertk.MAX_CONTEXT_LENGTH) {
             return sharedPrefix
         }
-        return "..." + sharedPrefix.substring(sharedPrefix.length - MAX_CONTEXT_LENGTH)
+        return "..." + sharedPrefix.substring(sharedPrefix.length - assertk.MAX_CONTEXT_LENGTH)
     }
 
     fun compactSuffix(): String {
-        if (sharedSuffix.length <= MAX_CONTEXT_LENGTH) {
+        if (sharedSuffix.length <= assertk.MAX_CONTEXT_LENGTH) {
             return sharedSuffix
         }
-        return sharedSuffix.substring(0, MAX_CONTEXT_LENGTH) + "..."
+        return sharedSuffix.substring(0, assertk.MAX_CONTEXT_LENGTH) + "..."
     }
 
     fun expectedDiff(): String = extractDiff(expected)

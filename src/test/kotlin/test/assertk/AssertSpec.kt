@@ -1,7 +1,7 @@
-package test.me.tatarka.assertk
+package test.assertk
 
-import me.tatarka.assertk.assert
-import me.tatarka.assertk.assertions.*
+import assertk.assert
+import assertk.assertions.*
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given

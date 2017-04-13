@@ -1,4 +1,4 @@
-group 'me.tatarka.assertk'
+group 'com.willowtreeapps.assertk'
 version '1.0-SNAPSHOT'
 
 buildscript {

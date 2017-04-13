@@ -1,9 +1,9 @@
-import me.tatarka.assertk.Assert
-import me.tatarka.assertk.assertions.isEqualTo
-import me.tatarka.assertk.assertions.support.*
-import me.tatarka.assertk.assert
-import me.tatarka.assertk.assertions.contains
-import me.tatarka.assertk.assertions.matches
+package assertk.assertions
+
+import assertk.Assert
+import assertk.assert
+import assertk.assertions.support.expected
+import assertk.assertions.support.show
 import java.io.File
 import java.nio.charset.Charset
 

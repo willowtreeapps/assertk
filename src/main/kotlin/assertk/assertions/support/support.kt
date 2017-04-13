@@ -1,6 +1,7 @@
-package me.tatarka.assertk.assertions.support
+package assertk.assertions.support
 
-import me.tatarka.assertk.*
+import assertk.Assert
+import assertk.fail
 
 /**
  * Shows a value in a failure message.
