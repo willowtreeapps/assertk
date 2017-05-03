@@ -440,6 +440,23 @@ class AssertSpec : Spek({
             }
         }
     }
+
+    given("a collection") {
+
+        val subject = listOf(1, 2, 3)
+
+        on("containsExactly()") {
+            it("should pass a successful test") {
+                assert(subject).containsExactly(1, 2, 3)
+            }
+
+            it("should fail an unsuccessful test") {
+                Assertions.assertThatThrownBy {
+                    assert(subject).containsExactly(1, 2, 3, 4)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+            }
+        }
+    }
 }) {
     open class TestObject
 
@@ -453,6 +470,6 @@ class AssertSpec : Spek({
 
     class TestException(message: String = "test", cause: Throwable? = null) : Exception(message, cause)
 
-    class DifferentException() : Exception()
+    class DifferentException : Exception()
 }
 

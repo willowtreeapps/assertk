@@ -379,13 +379,18 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
 }
 
 fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
-    val itr = actual.iterator()
-    var i = 0
-    while (itr.hasNext()) {
-        if (itr.next() != elements[i]) {
-            expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+    if (actual.size == elements.size) {
+        val itr = actual.iterator()
+        var i = 0
+
+        while (itr.hasNext()) {
+            if (itr.next() != elements[i]) {
+                expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+            }
+            i += 1
         }
-        i += 1
+    } else {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}")
     }
 }
 
