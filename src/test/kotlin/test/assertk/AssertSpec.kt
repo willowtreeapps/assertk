@@ -1,6 +1,7 @@
 package test.assertk
 
 import assertk.assert
+import assertk.assertAll
 import assertk.assertions.*
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
@@ -440,6 +441,47 @@ class AssertSpec : Spek({
             }
         }
     }
+
+    given("a collection") {
+
+
+        on("containsExactly()") {
+            it("should pass a successful test") {
+                assert(listOf(1, 2, 3)).containsExactly(1, 2, 3)
+                assert(emptyList<Any?>()).containsExactly()
+                assert(listOf(1, 1.09, "awesome!", true)).containsExactly(1, 1.09, "awesome!", true)
+            }
+
+            it("should fail an unsuccessful test") {
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(emptyList<Any?>()).containsExactly(1, 2, 3)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(listOf(1, 2, 3)).containsExactly(5, 6, 7)
+                        assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
+                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+            }
+        }
+    }
 }) {
     open class TestObject
 
@@ -453,6 +495,6 @@ class AssertSpec : Spek({
 
     class TestException(message: String = "test", cause: Throwable? = null) : Exception(message, cause)
 
-    class DifferentException() : Exception()
+    class DifferentException : Exception()
 }
 
