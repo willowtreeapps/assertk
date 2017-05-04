@@ -1,6 +1,7 @@
 package test.assertk
 
 import assertk.assert
+import assertk.assertAll
 import assertk.assertions.*
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
@@ -454,6 +455,14 @@ class AssertSpec : Spek({
                 Assertions.assertThatThrownBy {
                     assert(subject).containsExactly(1, 2, 3, 4)
                 }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(subject).containsExactly(5, 6, 7)
+                    }
+                }.hasMessage("expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>")
             }
         }
     }

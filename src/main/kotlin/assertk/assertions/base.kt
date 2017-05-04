@@ -386,6 +386,7 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
         while (itr.hasNext()) {
             if (itr.next() != elements[i]) {
                 expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+                break
             }
             i += 1
         }
