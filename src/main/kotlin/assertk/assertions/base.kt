@@ -373,6 +373,16 @@ fun <T : Collection<*>> Assert<T>.doesNotContain(element: Any?) {
     expected("to not contain:${show(element)} but was:${show(actual)}")
 }
 
+fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
+    val elementsItr = elements.iterator()
+    while (elementsItr.hasNext()) {
+        if (actual.contains(elementsItr.next())) {
+            expected("to contain none of:${show(elements)} but was:${show(actual)}")
+            break
+        }
+    }
+}
+
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
     if (!actual.containsAll(elements.toList())) {
         expected("to contain all:${show(elements)} but was:${show(actual)}")
