@@ -444,40 +444,38 @@ class AssertSpec : Spek({
 
     given("a collection") {
 
-        on("containsExactly()") {
+        on("containsNone()") {
             it("should pass a successful test") {
-                assert(listOf(1, 2, 3)).containsExactly(1, 2, 3)
-                assert(emptyList<Any?>()).containsExactly()
-                assert(listOf(1, 1.09, "awesome!", true)).containsExactly(1, 1.09, "awesome!", true)
+                assert(listOf(1, 2, 3, 4)).containsNone(5, 6, 7)
+                assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 7)
+                assert(emptyList<Any?>()).containsNone(4)
+                assert(listOf(3, 4)).containsNone()
+                assert(listOf(1, 1.09, "awesome!", true)).containsNone(43, 1.43, "awesome")
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+                    assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 1)
+                }.hasMessage("expected to contain none of:<[4, 5, 6, 1]> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>")
+                    assert(listOf(1, 2, 3, 4)).containsNone(8, 0, 4)
+                }.hasMessage("expected to contain none of:<[8, 0, 4]> but was:<[1, 2, 3, 4]>")
 
                 Assertions.assertThatThrownBy {
-                    assert(emptyList<Any?>()).containsExactly(1, 2, 3)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>")
-
-                Assertions.assertThatThrownBy {
-                    assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
-                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+                    assert(listOf(1, 1.09, "awesome!", true)).containsNone(true, 43, "potato")
+                }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, awesome!, true]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assert(listOf(1, 2, 3)).containsExactly(5, 6, 7)
-                        assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                        assert(listOf(1, 2, 3)).containsNone(5, 6, 7, 1)
+                        assert(listOf("this", "is", "awesome!")).containsNone(true, 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+                        + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
+                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
             }
         }
 
@@ -517,8 +515,45 @@ class AssertSpec : Spek({
                         + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
             }
         }
+
+        on("containsExactly()") {
+            it("should pass a successful test") {
+                assert(listOf(1, 2, 3)).containsExactly(1, 2, 3)
+                assert(emptyList<Any?>()).containsExactly()
+                assert(listOf(1, 1.09, "awesome!", true)).containsExactly(1, 1.09, "awesome!", true)
+            }
+
+            it("should fail an unsuccessful test") {
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(emptyList<Any?>()).containsExactly(1, 2, 3)
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>")
+
+                Assertions.assertThatThrownBy {
+                    assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(listOf(1, 2, 3)).containsExactly(5, 6, 7)
+                        assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
+                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+            }
+        }
     }
-    
+
 }) {
     open class TestObject
 
