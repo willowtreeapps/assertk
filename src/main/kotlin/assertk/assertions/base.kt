@@ -374,8 +374,9 @@ fun <T : Collection<*>> Assert<T>.doesNotContain(element: Any?) {
 }
 
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
-    if (actual.containsAll(elements.toList())) return
-    expected("to contain all:${show(elements)} but was${show(actual)}")
+    if (!actual.containsAll(elements.toList())) {
+        expected("to contain all:${show(elements)} but was:${show(actual)}")
+    }
 }
 
 fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
