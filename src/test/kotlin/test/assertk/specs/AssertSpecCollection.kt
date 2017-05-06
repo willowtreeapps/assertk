@@ -1,5 +1,6 @@
 package test.assertk.specs
 
+import assertk.assert
 import assertk.assertAll
 import assertk.assertions.*
 import org.assertj.core.api.Assertions
@@ -14,30 +15,30 @@ class AssertSpecCollection : Spek({
 
         on("isEmpty()") {
             it("should pass all successful tests") {
-                assertk.assert(emptyList<Any?>()).isEmpty()
+                assert(emptyList<Any?>()).isEmpty()
                 val anEmptyList: List<Any?> = listOf()
-                assertk.assert(anEmptyList).isEmpty()
+                assert(anEmptyList).isEmpty()
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3, 4)).isEmpty()
+                    assert(listOf(1, 2, 3, 4)).isEmpty()
                 }.hasMessage("expected to be empty but was:<[1, 2, 3, 4]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(null)).isEmpty()
+                    assert(listOf(null)).isEmpty()
                 }.hasMessage("expected to be empty but was:<[null]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
+                    assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
                 }.hasMessage("expected to be empty but was:<[1, 1.09, awesome!, true]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3, 4)).isEmpty()
-                        assertk.assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
+                        assert(listOf(1, 2, 3, 4)).isEmpty()
+                        assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be empty but was:<[1, 2, 3, 4]>\n"
@@ -47,28 +48,28 @@ class AssertSpecCollection : Spek({
 
         on("isNotEmpty()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).isNotEmpty()
-                assertk.assert(listOf(null)).isNotEmpty()
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).isNotEmpty()
+                assert(listOf(1, 2, 3, 4)).isNotEmpty()
+                assert(listOf(null)).isNotEmpty()
+                assert(listOf(1, 1.09, "awesome!", true)).isNotEmpty()
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).isNotEmpty()
+                    assert(emptyList<Any?>()).isNotEmpty()
                 }.hasMessage("expected to not be empty")
 
                 Assertions.assertThatThrownBy {
                     val anEmptyList: List<Any?> = listOf()
-                    assertk.assert(anEmptyList).isNotEmpty()
+                    assert(anEmptyList).isNotEmpty()
                 }.hasMessage("expected to not be empty")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(emptyList<Any?>()).isNotEmpty()
+                        assert(emptyList<Any?>()).isNotEmpty()
                         val anEmptyList: List<Any?> = listOf()
-                        assertk.assert(anEmptyList).isNotEmpty()
+                        assert(anEmptyList).isNotEmpty()
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to not be empty\n"
@@ -80,25 +81,25 @@ class AssertSpecCollection : Spek({
             it("should pass all successful tests") {
                 // Need to force a null here
                 val nullList: List<Any?>? = null
-                assertk.assert(nullList).isNullOrEmpty()
-                assertk.assert(emptyList<Any?>()).isNullOrEmpty()
+                assert(nullList).isNullOrEmpty()
+                assert(emptyList<Any?>()).isNullOrEmpty()
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).isNullOrEmpty()
+                    assert(listOf(1, 2, 3)).isNullOrEmpty()
                 }.hasMessage("expected to be null or empty but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(null)).isNullOrEmpty()
+                    assert(listOf(null)).isNullOrEmpty()
                 }.hasMessage("expected to be null or empty but was:<[null]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).isNullOrEmpty()
-                        assertk.assert(listOf(43, true, "awesome!")).isNullOrEmpty()
+                        assert(listOf(1, 2, 3)).isNullOrEmpty()
+                        assert(listOf(43, true, "awesome!")).isNullOrEmpty()
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be null or empty but was:<[1, 2, 3]>\n"
@@ -108,31 +109,31 @@ class AssertSpecCollection : Spek({
 
         on("hasSize()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).hasSize(4)
-                assertk.assert(emptyList<Any?>()).hasSize(0)
-                assertk.assert(listOf(null)).hasSize(1)
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).hasSize(4)
+                assert(listOf(1, 2, 3, 4)).hasSize(4)
+                assert(emptyList<Any?>()).hasSize(0)
+                assert(listOf(null)).hasSize(1)
+                assert(listOf(1, 1.09, "awesome!", true)).hasSize(4)
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).hasSize(4)
+                    assert(listOf(1, 2, 3)).hasSize(4)
                 }.hasMessage("expected [size]:<[4]> but was:<[3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).hasSize(1)
+                    assert(emptyList<Any?>()).hasSize(1)
                 }.hasMessage("expected [size]:<[1]> but was:<[0]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(null)).hasSize(0)
+                    assert(listOf(null)).hasSize(0)
                 }.hasMessage("expected [size]:<[0]> but was:<[1]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).hasSize(4)
-                        assertk.assert(listOf(43, true, "awesome!")).hasSize(1)
+                        assert(listOf(1, 2, 3)).hasSize(4)
+                        assert(listOf(43, true, "awesome!")).hasSize(1)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected [size]:<[4]> but was:<[3]>\n"
@@ -142,31 +143,31 @@ class AssertSpecCollection : Spek({
 
         on("hasSameSizeAs()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).hasSameSizeAs(listOf(43, 2, 3, 3))
-                assertk.assert(emptyList<Any?>()).hasSameSizeAs(emptyList<Any?>())
-                assertk.assert(listOf(null)).hasSameSizeAs(listOf(null))
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).hasSameSizeAs(listOf(1.09, "whoa!", false, true))
+                assert(listOf(1, 2, 3, 4)).hasSameSizeAs(listOf(43, 2, 3, 3))
+                assert(emptyList<Any?>()).hasSameSizeAs(emptyList<Any?>())
+                assert(listOf(null)).hasSameSizeAs(listOf(null))
+                assert(listOf(1, 1.09, "awesome!", true)).hasSameSizeAs(listOf(1.09, "whoa!", false, true))
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(43))
+                    assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(43))
                 }.hasMessage("expected to have same size as:<[43]> (1) but was size:(3)")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).hasSameSizeAs(listOf(43))
+                    assert(emptyList<Any?>()).hasSameSizeAs(listOf(43))
                 }.hasMessage("expected to have same size as:<[43]> (1) but was size:(0)")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(null)).hasSameSizeAs(listOf(43, "whoa!"))
+                    assert(listOf(null)).hasSameSizeAs(listOf(43, "whoa!"))
                 }.hasMessage("expected to have same size as:<[43, whoa!]> (2) but was size:(1)")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(1, 2, 3, 4))
-                        assertk.assert(listOf(43, true, "awesome!")).hasSameSizeAs(listOf(true, true))
+                        assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(1, 2, 3, 4))
+                        assert(listOf(43, true, "awesome!")).hasSameSizeAs(listOf(true, true))
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to have same size as:<[1, 2, 3, 4]> (4) but was size:(3)\n"
@@ -176,30 +177,30 @@ class AssertSpecCollection : Spek({
 
         on("contains()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).contains(3)
-                assertk.assert(listOf(null)).contains(null)
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).contains(1.09)
+                assert(listOf(1, 2, 3, 4)).contains(3)
+                assert(listOf(null)).contains(null)
+                assert(listOf(1, 1.09, "awesome!", true)).contains(1.09)
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).contains(43)
+                    assert(listOf(1, 2, 3)).contains(43)
                 }.hasMessage("expected to contain:<43> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).contains(null)
+                    assert(emptyList<Any?>()).contains(null)
                 }.hasMessage("expected to contain:<null> but was:<[]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 1.09, "awesome!", true)).contains(43)
+                    assert(listOf(1, 1.09, "awesome!", true)).contains(43)
                 }.hasMessage("expected to contain:<43> but was:<[1, 1.09, awesome!, true]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).contains(43)
-                        assertk.assert(listOf(43, true, "awesome!")).contains(false)
+                        assert(listOf(1, 2, 3)).contains(43)
+                        assert(listOf(43, true, "awesome!")).contains(false)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain:<43> but was:<[1, 2, 3]>\n"
@@ -209,26 +210,26 @@ class AssertSpecCollection : Spek({
 
         on("doesNotContain()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).doesNotContain(43)
-                assertk.assert(emptyList<Any?>()).doesNotContain(4)
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).doesNotContain(43)
+                assert(listOf(1, 2, 3, 4)).doesNotContain(43)
+                assert(emptyList<Any?>()).doesNotContain(4)
+                assert(listOf(1, 1.09, "awesome!", true)).doesNotContain(43)
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).doesNotContain(2)
+                    assert(listOf(1, 2, 3)).doesNotContain(2)
                 }.hasMessage("expected to not contain:<2> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 1.09, "awesome!", true)).doesNotContain(1.09)
+                    assert(listOf(1, 1.09, "awesome!", true)).doesNotContain(1.09)
                 }.hasMessage("expected to not contain:<1.09> but was:<[1, 1.09, awesome!, true]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).doesNotContain(3)
-                        assertk.assert(listOf(43, true, "awesome!")).doesNotContain(true)
+                        assert(listOf(1, 2, 3)).doesNotContain(3)
+                        assert(listOf(43, true, "awesome!")).doesNotContain(true)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to not contain:<3> but was:<[1, 2, 3]>\n"
@@ -238,32 +239,32 @@ class AssertSpecCollection : Spek({
 
         on("containsNone()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3, 4)).containsNone(5, 6, 7)
-                assertk.assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 7)
-                assertk.assert(emptyList<Any?>()).containsNone(4)
-                assertk.assert(listOf(3, 4)).containsNone()
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).containsNone(43, 1.43, "awesome")
+                assert(listOf(1, 2, 3, 4)).containsNone(5, 6, 7)
+                assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 7)
+                assert(emptyList<Any?>()).containsNone(4)
+                assert(listOf(3, 4)).containsNone()
+                assert(listOf(1, 1.09, "awesome!", true)).containsNone(43, 1.43, "awesome")
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 1)
+                    assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 1)
                 }.hasMessage("expected to contain none of:<[4, 5, 6, 1]> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3, 4)).containsNone(8, 0, 4)
+                    assert(listOf(1, 2, 3, 4)).containsNone(8, 0, 4)
                 }.hasMessage("expected to contain none of:<[8, 0, 4]> but was:<[1, 2, 3, 4]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 1.09, "awesome!", true)).containsNone(true, 43, "potato")
+                    assert(listOf(1, 1.09, "awesome!", true)).containsNone(true, 43, "potato")
                 }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, awesome!, true]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).containsNone(5, 6, 7, 1)
-                        assertk.assert(listOf("this", "is", "awesome!")).containsNone(true, 4, "awesome!")
+                        assert(listOf(1, 2, 3)).containsNone(5, 6, 7, 1)
+                        assert(listOf("this", "is", "awesome!")).containsNone(true, 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
@@ -273,34 +274,34 @@ class AssertSpecCollection : Spek({
 
         on("containsAll()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3)).containsAll(3, 2, 1)
-                assertk.assert(emptyList<Any?>()).containsAll()
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).containsAll(1, 1.09, "awesome!", true)
+                assert(listOf(1, 2, 3)).containsAll(3, 2, 1)
+                assert(emptyList<Any?>()).containsAll()
+                assert(listOf(1, 1.09, "awesome!", true)).containsAll(1, 1.09, "awesome!", true)
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).containsAll(4, 3, 1, 2)
+                    assert(listOf(1, 2, 3)).containsAll(4, 3, 1, 2)
                 }.hasMessage("expected to contain all:<[4, 3, 1, 2]> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 4, 5)).containsAll(2, 1, 3)
+                    assert(listOf(1, 2, 4, 5)).containsAll(2, 1, 3)
                 }.hasMessage("expected to contain all:<[2, 1, 3]> but was:<[1, 2, 4, 5]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).containsAll(1, 2, 3)
+                    assert(emptyList<Any?>()).containsAll(1, 2, 3)
                 }.hasMessage("expected to contain all:<[1, 2, 3]> but was:<[]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf("this", "is", "awesome!")).containsAll("this", 4, "awesome!")
+                    assert(listOf("this", "is", "awesome!")).containsAll("this", 4, "awesome!")
                 }.hasMessage("expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).containsAll(5, 6, 7)
-                        assertk.assert(listOf("this", "is", "awesome!")).containsAll("this", 4, "awesome!")
+                        assert(listOf(1, 2, 3)).containsAll(5, 6, 7)
+                        assert(listOf("this", "is", "awesome!")).containsAll("this", 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
@@ -310,34 +311,34 @@ class AssertSpecCollection : Spek({
 
         on("containsExactly()") {
             it("should pass all successful tests") {
-                assertk.assert(listOf(1, 2, 3)).containsExactly(1, 2, 3)
-                assertk.assert(emptyList<Any?>()).containsExactly()
-                assertk.assert(listOf(1, 1.09, "awesome!", true)).containsExactly(1, 1.09, "awesome!", true)
+                assert(listOf(1, 2, 3)).containsExactly(1, 2, 3)
+                assert(emptyList<Any?>()).containsExactly()
+                assert(listOf(1, 1.09, "awesome!", true)).containsExactly(1, 1.09, "awesome!", true)
             }
 
             it("should fail all unsuccessful tests") {
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
+                    assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
                 }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
+                    assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
                 }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(emptyList<Any?>()).containsExactly(1, 2, 3)
+                    assert(emptyList<Any?>()).containsExactly(1, 2, 3)
                 }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>")
 
                 Assertions.assertThatThrownBy {
-                    assertk.assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                    assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
                 }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
             }
 
             it("should fail an unsuccessful test with only one error message per assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assertk.assert(listOf(1, 2, 3)).containsExactly(5, 6, 7)
-                        assertk.assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
+                        assert(listOf(1, 2, 3)).containsExactly(5, 6, 7)
+                        assert(listOf("this", "is", "awesome!")).containsExactly("this", 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
