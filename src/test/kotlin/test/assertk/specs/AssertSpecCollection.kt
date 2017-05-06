@@ -12,6 +12,36 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("isNullOrEmpty()") {
+            it("should pass all successful tests") {
+                // Need to force a null here
+                val nullList: List<Any?>? = null
+                assertk.assert(nullList).isNullOrEmpty()
+                assertk.assert(emptyList<Any?>()).isNullOrEmpty()
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 2, 3)).isNullOrEmpty()
+                }.hasMessage("expected to be null or empty but was:<[1, 2, 3]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(null)).isNullOrEmpty()
+                }.hasMessage("expected to be null or empty but was:<[null]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(listOf(1, 2, 3)).isNullOrEmpty()
+                        assertk.assert(listOf(43, true, "awesome!")).isNullOrEmpty()
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to be null or empty but was:<[1, 2, 3]>\n"
+                        + "- expected to be null or empty but was:<[43, true, awesome!]>")
+            }
+        }
+
         on("hasSize()") {
             it("should pass all successful tests") {
                 assertk.assert(listOf(1, 2, 3, 4)).hasSize(4)
