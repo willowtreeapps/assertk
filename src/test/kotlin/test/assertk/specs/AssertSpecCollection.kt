@@ -12,6 +12,37 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("isNotEmpty()") {
+            it("should pass all successful tests") {
+                assertk.assert(listOf(1, 2, 3, 4)).isNotEmpty()
+                assertk.assert(listOf(null)).isNotEmpty()
+                assertk.assert(listOf(1, 1.09, "awesome!", true)).isNotEmpty()
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(emptyList<Any?>()).isNotEmpty()
+                }.hasMessage("expected to not be empty")
+
+                Assertions.assertThatThrownBy {
+                    val anEmptyList: List<Any?> = listOf()
+                    assertk.assert(anEmptyList).isNotEmpty()
+                }.hasMessage("expected to not be empty")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(emptyList<Any?>()).isNotEmpty()
+                        val anEmptyList: List<Any?> = listOf()
+                        assertk.assert(anEmptyList).isNotEmpty()
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to not be empty\n"
+                        + "- expected to not be empty")
+            }
+        }
+
         on("isNullOrEmpty()") {
             it("should pass all successful tests") {
                 // Need to force a null here
