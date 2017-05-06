@@ -12,6 +12,39 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("contains()") {
+            it("should pass all successful tests") {
+                assertk.assert(listOf(1, 2, 3, 4)).contains(3)
+                assertk.assert(listOf(null)).contains(null)
+                assertk.assert(listOf(1, 1.09, "awesome!", true)).contains(1.09)
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 2, 3)).contains(43)
+                }.hasMessage("expected to contain:<43> but was:<[1, 2, 3]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(emptyList<Any?>()).contains(null)
+                }.hasMessage("expected to contain:<null> but was:<[]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 1.09, "awesome!", true)).contains(43)
+                }.hasMessage("expected to contain:<43> but was:<[1, 1.09, awesome!, true]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(listOf(1, 2, 3)).contains(43)
+                        assertk.assert(listOf(43, true, "awesome!")).contains(false)
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to contain:<43> but was:<[1, 2, 3]>\n"
+                        + "- expected to contain:<false> but was:<[43, true, awesome!]>")
+            }
+        }
+
         on("doesNotContain()") {
             it("should pass all successful tests") {
                 assertk.assert(listOf(1, 2, 3, 4)).doesNotContain(43)
