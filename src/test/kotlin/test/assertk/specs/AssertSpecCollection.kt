@@ -12,6 +12,40 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("hasSameSizeAs()") {
+            it("should pass all successful tests") {
+                assertk.assert(listOf(1, 2, 3, 4)).hasSameSizeAs(listOf(43, 2, 3, 3))
+                assertk.assert(emptyList<Any?>()).hasSameSizeAs(emptyList<Any?>())
+                assertk.assert(listOf(null)).hasSameSizeAs(listOf(null))
+                assertk.assert(listOf(1, 1.09, "awesome!", true)).hasSameSizeAs(listOf(1.09, "whoa!", false, true))
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(43))
+                }.hasMessage("expected to have same size as:<[43]> (1) but was size:(3)")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(emptyList<Any?>()).hasSameSizeAs(listOf(43))
+                }.hasMessage("expected to have same size as:<[43]> (1) but was size:(0)")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(null)).hasSameSizeAs(listOf(43, "whoa!"))
+                }.hasMessage("expected to have same size as:<[43, whoa!]> (2) but was size:(1)")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(listOf(1, 2, 3)).hasSameSizeAs(listOf(1, 2, 3, 4))
+                        assertk.assert(listOf(43, true, "awesome!")).hasSameSizeAs(listOf(true, true))
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to have same size as:<[1, 2, 3, 4]> (4) but was size:(3)\n"
+                        + "- expected to have same size as:<[true, true]> (2) but was size:(3)")
+            }
+        }
+
         on("contains()") {
             it("should pass all successful tests") {
                 assertk.assert(listOf(1, 2, 3, 4)).contains(3)
