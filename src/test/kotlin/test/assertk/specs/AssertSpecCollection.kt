@@ -12,6 +12,40 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("hasSize()") {
+            it("should pass all successful tests") {
+                assertk.assert(listOf(1, 2, 3, 4)).hasSize(4)
+                assertk.assert(emptyList<Any?>()).hasSize(0)
+                assertk.assert(listOf(null)).hasSize(1)
+                assertk.assert(listOf(1, 1.09, "awesome!", true)).hasSize(4)
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 2, 3)).hasSize(4)
+                }.hasMessage("expected [size]:<[4]> but was:<[3]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(emptyList<Any?>()).hasSize(1)
+                }.hasMessage("expected [size]:<[1]> but was:<[0]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(null)).hasSize(0)
+                }.hasMessage("expected [size]:<[0]> but was:<[1]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(listOf(1, 2, 3)).hasSize(4)
+                        assertk.assert(listOf(43, true, "awesome!")).hasSize(1)
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected [size]:<[4]> but was:<[3]>\n"
+                        + "- expected [size]:<[1]> but was:<[3]>")
+            }
+        }
+
         on("hasSameSizeAs()") {
             it("should pass all successful tests") {
                 assertk.assert(listOf(1, 2, 3, 4)).hasSameSizeAs(listOf(43, 2, 3, 3))
