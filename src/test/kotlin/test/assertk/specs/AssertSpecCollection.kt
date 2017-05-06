@@ -12,6 +12,39 @@ class AssertSpecCollection : Spek({
 
     given("a collection") {
 
+        on("isEmpty()") {
+            it("should pass all successful tests") {
+                assertk.assert(emptyList<Any?>()).isEmpty()
+                val anEmptyList: List<Any?> = listOf()
+                assertk.assert(anEmptyList).isEmpty()
+            }
+
+            it("should fail all unsuccessful tests") {
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 2, 3, 4)).isEmpty()
+                }.hasMessage("expected to be empty but was:<[1, 2, 3, 4]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(null)).isEmpty()
+                }.hasMessage("expected to be empty but was:<[null]>")
+
+                Assertions.assertThatThrownBy {
+                    assertk.assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
+                }.hasMessage("expected to be empty but was:<[1, 1.09, awesome!, true]>")
+            }
+
+            it("should fail an unsuccessful test with only one error message per assertion") {
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assertk.assert(listOf(1, 2, 3, 4)).isEmpty()
+                        assertk.assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
+                    }
+                }.hasMessage("The following 2 assertions failed:\n"
+                        + "- expected to be empty but was:<[1, 2, 3, 4]>\n"
+                        + "- expected to be empty but was:<[1, 1.09, awesome!, true]>")
+            }
+        }
+
         on("isNotEmpty()") {
             it("should pass all successful tests") {
                 assertk.assert(listOf(1, 2, 3, 4)).isNotEmpty()
