@@ -16,8 +16,6 @@ class AssertSpecCollection : Spek({
         on("isEmpty()") {
             it("should pass all successful tests") {
                 assert(emptyList<Any?>()).isEmpty()
-                val anEmptyList: List<Any?> = listOf()
-                assert(anEmptyList).isEmpty()
             }
 
             it("should fail all unsuccessful tests") {
