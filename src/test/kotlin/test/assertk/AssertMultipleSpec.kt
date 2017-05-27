@@ -9,7 +9,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 
-class AssertMultiple : Spek({
+class AssertMultipleSpec : Spek({
 
     on("an assert block with a value") {
         val subject = BasicObject("test", 1)

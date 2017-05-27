@@ -1,4 +1,4 @@
-package test.assertk.specs
+package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertions.*
