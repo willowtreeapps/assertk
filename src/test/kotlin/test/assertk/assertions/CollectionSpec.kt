@@ -1,4 +1,4 @@
-package test.assertk.specs
+package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertAll
@@ -9,7 +9,7 @@ import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 
-class AssertSpecCollection : Spek({
+class CollectionSpec : Spek({
 
     given("a collection") {
 
