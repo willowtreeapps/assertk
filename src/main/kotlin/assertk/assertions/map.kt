@@ -20,7 +20,7 @@ fun <K, V> Assert<Map<K, V>>.contains(key : K, value : V) {
     expected("to contain:${show(mapOf(key to value))} but was:${show(actual)}")
 }
 
-@JvmName("mapContainsPair")
+@JvmName("mapContains")
 fun <K, V> Assert<Map<K, V>>.contains(element: Pair<K, V>) {
     contains(element.first, element.second)
 }
