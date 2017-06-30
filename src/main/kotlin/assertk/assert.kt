@@ -25,9 +25,7 @@ sealed class AssertBlock<out T> {
     }
 }
 
-fun <T> assert(actual: T): Assert<T> = Assert(null, actual)
-
-fun <T> assert(actual: T, name: String?): Assert<T> = Assert(name, actual)
+fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(name, actual)
 
 fun <T> assert(actual: T, f: (Assert<T>) -> Unit) {
     FailureContext.run(SoftFailure()) {
