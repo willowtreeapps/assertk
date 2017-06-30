@@ -21,7 +21,7 @@ fun <T : Collection<*>?> Assert<T>.isNullOrEmpty() {
 }
 
 fun <T : Collection<*>> Assert<T>.hasSize(size: Int) {
-    assert("size", actual.size).isEqualTo(size)
+    assert(actual.size, "size").isEqualTo(size)
 }
 
 fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
@@ -76,6 +76,6 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
 
 fun <E, T : Collection<E>> Assert<T>.all(f: (Assert<E>) -> Unit) {
     for (item in actual) {
-        f(assert(name, item))
+        f(assert(item, name))
     }
 }

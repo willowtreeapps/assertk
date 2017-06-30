@@ -101,7 +101,7 @@ fun <T : Any> Assert<T?>.isNull() {
 
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
     if (actual != null) {
-        assert(name, actual, f)
+        assert(actual, name, f)
     } else {
         expected("to not be null")
     }

@@ -7,13 +7,13 @@ import assertk.assertions.support.show
 import kotlin.reflect.KClass
 
 fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
-    assert("message", actual.message).isNotNull {
+    assert(actual.message, "message").isNotNull {
         it.isEqualTo(message)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCause(cause: Throwable) {
-    assert("cause", actual.cause).isNotNull {
+    assert(actual.cause, "cause").isNotNull {
         it.isEqualTo(cause)
     }
 }
@@ -24,78 +24,78 @@ fun <T : Throwable> Assert<T>.hasNoCause() {
 }
 
 fun <T : Throwable> Assert<T>.hasMessageStartingWith(prefix: String) {
-    assert("message", actual.message).isNotNull {
+    assert(actual.message, "message").isNotNull {
         it.startsWith(prefix)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageContaining(string: String) {
-    assert("message", actual.message).isNotNull {
+    assert(actual.message, "message").isNotNull {
         it.contains(string)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageMatching(regex: Regex) {
-    assert("message", actual.message).isNotNull {
+    assert(actual.message, "message").isNotNull {
         it.matches(regex)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
-    assert("message", actual.message).isNotNull {
+    assert(actual.message, "message").isNotNull {
         it.endsWith(suffix)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
-    assert("cause", actual.cause).isNotNull {
+    assert(actual.cause, "cause").isNotNull {
         it.isInstanceOf(kclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
-    assert("cause", actual.cause).isNotNull {
+    assert(actual.cause, "cause").isNotNull {
         it.isInstanceOf(jclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
-    assert("cause", actual.cause).isNotNull {
+    assert(actual.cause, "cause").isNotNull {
         it.hasClass(kclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
-    assert("cause", actual.cause).isNotNull {
+    assert(actual.cause, "cause").isNotNull {
         it.hasClass(jclass)
     }
 }
 
 fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
-    assert("root cause", actual.rootCause()).isEqualTo(cause)
+    assert(actual.rootCause(), "root cause").isEqualTo(cause)
 
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
-    assert("root cause", actual.rootCause()).isInstanceOf(kclass)
+    assert(actual.rootCause(), "root cause").isInstanceOf(kclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
-    assert("root cause", actual.rootCause()).isInstanceOf(jclass)
+    assert(actual.rootCause(), "root cause").isInstanceOf(jclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
-    assert("root cause", actual.rootCause()).hasClass(kclass)
+    assert(actual.rootCause(), "root cause").hasClass(kclass)
 }
 
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<out T>) {
-    assert("root cause", actual.rootCause()).hasClass(jclass)
+    assert(actual.rootCause(), "root cause").hasClass(jclass)
 }
 
 private fun Throwable.rootCause(): Throwable =
         this.cause?.rootCause() ?: this
 
 fun <T : Throwable> Assert<T>.hasStackTraceContaining(description: String) {
-    assert("stack trace", actual.stackTrace.map { it.toString() }).contains(description)
+    assert(actual.stackTrace.map { it.toString() }, "stack trace").contains(description)
 }
 
