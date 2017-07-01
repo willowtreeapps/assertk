@@ -34,34 +34,34 @@ fun Assert<File>.isNotHidden() {
 }
 
 fun Assert<File>.hasName(expected: String) {
-    assert("formatName", actual.name).isEqualTo(expected)
+    assert(actual.name, "formatName").isEqualTo(expected)
 }
 
 fun Assert<File>.hasPath(expected: String) {
-    assert("path", actual.path).isEqualTo(expected)
+    assert(actual.path, "path").isEqualTo(expected)
 }
 
 fun Assert<File>.hasParent(expected: String) {
-    assert("parent", actual.parent).isEqualTo(expected)
+    assert(actual.parent, "parent").isEqualTo(expected)
 }
 
 fun Assert<File>.hasExtension(expected: String) {
-    assert("extension", actual.extension).isEqualTo(expected)
+    assert(actual.extension, "extension").isEqualTo(expected)
 }
 
 fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert("text", text).isEqualTo(expected)
+    assert(text, "text").isEqualTo(expected)
 }
 
 fun Assert<File>.containsText(expected: String, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert("text", text).contains(expected)
+    assert(text, "text").contains(expected)
 }
 
 fun Assert<File>.matchesText(expected: Regex, charset: Charset = Charsets.UTF_8) {
     val text = actual.readText(charset)
-    assert("text", text).matches(expected)
+    assert(text, "text").matches(expected)
 }
 
 fun Assert<File>.hasDirectChild(expected: File) {

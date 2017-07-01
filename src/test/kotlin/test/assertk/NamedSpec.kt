@@ -27,7 +27,7 @@ class NamedSpec : Spek({
         on("named(String)") {
             it("should fail prefixed with the 'named' message") {
                 Assertions.assertThatThrownBy {
-                    assert("test", subject).isEqualTo(BasicObject("no"))
+                    assert(subject, "test").isEqualTo(BasicObject("no"))
                 }.hasMessage("expected [test]:<[no]> but was:<[yes]>")
             }
         }

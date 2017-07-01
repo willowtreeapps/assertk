@@ -25,7 +25,7 @@ fun <T> Assert<Array<T>?>.isNullOrEmpty() {
 
 @JvmName("arrayHasSize")
 fun <T> Assert<Array<T>>.hasSize(size: Int) {
-    assert("size", actual.size).isEqualTo(size)
+    assert(actual.size, "size").isEqualTo(size)
 }
 
 @JvmName("arrayContains")
@@ -55,6 +55,6 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
 @JvmName("arrayAll")
 fun <T> Assert<Array<T>>.all(f: (Assert<T>) -> Unit) {
     for (item in actual) {
-        f(assert(name, item))
+        f(assert(item, name))
     }
 }
