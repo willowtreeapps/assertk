@@ -1,5 +1,5 @@
 group 'com.willowtreeapps.assertk'
-version '1.0-SNAPSHOT'
+version '0.9'
 
 buildscript {
     ext.kotlin_version = '1.1.2'
