@@ -1,17 +1,18 @@
 # assertk
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk)
+
 assertions for kotlin inspired by assertj
 
 ## Download
 
 ```groovy
 repositories {
-  maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots"
-  }
+  mavenCentral()
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk:1.0-SNAPSHOT'
+  testCompile 'com.willowtreeapps.assertk:assertk:0.9'
 }
 ```
 

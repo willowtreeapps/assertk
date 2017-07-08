@@ -99,17 +99,6 @@ publishing {
             artifact javadocsJar
 
             if (signing.required) {
-                // Sign the pom.xml.
-                pom.withXml {
-                    writeTo(project.ext.pomFile)
-                    def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
-                    artifact(pomAscFile) {
-                        classifier = null
-                        extension = 'pom.asc'
-                    }
-                    project.ext.pomFile.delete()
-                }
-
                 // Sign the artifacts.
                 project.tasks.signArchives.signatureFiles.each {
                     artifact(it) {
@@ -120,6 +109,23 @@ publishing {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+if (signing.required) {
+    project.afterEvaluate {
+        // Sign the pom.xml.
+        publishing.publications.lib(MavenPublication) {
+            pom.withXml {
+                writeTo(project.ext.pomFile)
+                def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+                project.ext.pomFile.delete()
             }
         }
     }
