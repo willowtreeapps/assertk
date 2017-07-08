@@ -19,23 +19,23 @@ class AssertBlockSpec : Spek({
         }
 
         it("should pass a successful returns value assertion") {
-            subject.returnsValue {
-                it.isEqualTo(2)
+            subject.returnedValue {
+                isEqualTo(2)
             }
         }
 
         it("should fail an unsuccessful return value assertion") {
             Assertions.assertThatThrownBy {
-                subject.returnsValue {
-                    it.isNegative()
+                subject.returnedValue {
+                    isNegative()
                 }
             }.hasMessage("expected to be negative but was:<2>")
         }
 
         it("should fail a throws error assertion") {
             Assertions.assertThatThrownBy {
-                subject.throwsError {
-                    it.hasMessage("error")
+                subject.thrownError {
+                    hasMessage("error")
                 }
             }.hasMessage("expected exception but was:<2>")
         }
@@ -47,23 +47,23 @@ class AssertBlockSpec : Spek({
         }
 
         it("should pass a successful throws error assertion") {
-            subject.throwsError {
-                it.hasMessage("test")
+            subject.thrownError {
+                hasMessage("test")
             }
         }
 
         it("should fail a unsuccessful throws error assertion") {
             Assertions.assertThatThrownBy {
-                subject.throwsError {
-                    it.hasMessage("wrong")
+                subject.thrownError {
+                    hasMessage("wrong")
                 }
             }.hasMessage("expected [message]:<\"[wrong]\"> but was:<\"[test]\">")
         }
 
         it("should fail a returns value assertion") {
             Assertions.assertThatThrownBy {
-                subject.returnsValue {
-                    it.isPositive()
+                subject.returnedValue {
+                    isPositive()
                 }
             }.hasMessage("expected value but threw:<java.lang.Exception: test>")
         }

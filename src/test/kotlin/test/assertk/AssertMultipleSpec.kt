@@ -16,16 +16,16 @@ class AssertMultipleSpec : Spek({
 
         it("should pass multiple successful assertions") {
             assert(subject) {
-                it.isInstanceOf(BasicObject::class)
-                it.hasToString("BasicObject(arg1=test, arg2=1)")
+                isInstanceOf(BasicObject::class)
+                hasToString("BasicObject(arg1=test, arg2=1)")
             }
         }
 
         it("should fail the first assertion") {
             Assertions.assertThatThrownBy {
                 assert<Any>(subject) {
-                    it.isInstanceOf(String::class)
-                    it.hasToString("BasicObject(arg1=test, arg2=1)")
+                    isInstanceOf(String::class)
+                    hasToString("BasicObject(arg1=test, arg2=1)")
                 }
             }.hasMessage("expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultiple\$BasicObject>")
         }
@@ -33,8 +33,8 @@ class AssertMultipleSpec : Spek({
         it("should fail the second assertion") {
             Assertions.assertThatThrownBy {
                 assert(subject) {
-                    it.isInstanceOf(BasicObject::class)
-                    it.hasToString("wrong")
+                    isInstanceOf(BasicObject::class)
+                    hasToString("wrong")
                 }
             }.hasMessage("expected toString() to be:<\"wrong\"> but was:<\"BasicObject(arg1=test, arg2=1)\">")
         }
@@ -42,8 +42,8 @@ class AssertMultipleSpec : Spek({
         it("should fail both assertions") {
             Assertions.assertThatThrownBy {
                 assert<Any>(subject) {
-                    it.isInstanceOf(String::class)
-                    it.hasToString("wrong")
+                    isInstanceOf(String::class)
+                    hasToString("wrong")
                 }
             }.hasMessage("""The following 2 assertions failed:
 - expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultiple${"$"}BasicObject>

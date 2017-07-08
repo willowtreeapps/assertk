@@ -67,8 +67,8 @@ run even if the first one fails.
 ```kotlin
 val string = "Test"
 assert(string) {
-    it.startsWith("L")
-    it.hasLength(3)
+    startsWith("L")
+    hasLength(3)
 }
 // -> The following 2 assertions failed:
 //    - expected to start with:<"L"> but was:<"Test">
@@ -96,7 +96,7 @@ The first is to wrap in a `catch` block to store the result, then assert on that
 ```kotlin
 val exception = catch { throw Exception("error") }
 assert(exception).isNotNull {
-    it.hasMessage("wrong")
+    hasMessage("wrong")
 }
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
 ```
@@ -106,16 +106,16 @@ Your other option is to use an `assert` with a single lambda arg to capture the 
 ```kotlin
 assert {
     throw Exception("error")
-}.throwsError {
-    it.hasMessage("wrong")
+}.thrownError {
+    hasMessage("wrong")
 }
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
 ```
 
 This method also allows you to assert on return values.
 ```kotlin
-assert { 1 + 1 }.returnsValue {
-    it.isNegative()
+assert { 1 + 1 }.returnedValue {
+    isNegative()
 }
 // -> expected to be negative but was:<2>
 ```
