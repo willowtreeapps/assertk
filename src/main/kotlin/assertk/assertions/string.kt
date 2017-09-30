@@ -8,7 +8,7 @@ import assertk.assertions.support.show
 fun Assert<String>.hasLineCount(lineCount: Int) {
     val actualLineCount = actual.lines().size
     if (actualLineCount == lineCount) return
-    expected("To have line count:${show(lineCount)} but was:${show(actualLineCount)}")
+    expected("to have line count:${show(lineCount)} but was:${show(actualLineCount)}")
 }
 
 fun Assert<String>.isEqualTo(other: String, ignoreCase: Boolean = false) {
