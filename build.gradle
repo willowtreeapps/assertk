@@ -3,6 +3,8 @@ version '0.9'
 
 buildscript {
     ext.kotlin_version = '1.1.2'
+    ext.junit_platform_version = '1.0.0'
+
     repositories {
         jcenter()
         maven {
@@ -11,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3'
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath "me.tatarka.gradle:pom:1.0"
     }
@@ -30,8 +32,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testCompile 'org.jetbrains.spek:spek-api:1.1.0'
-    testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.0'
+    testCompile 'org.jetbrains.spek:spek-api:1.1.5'
+    testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
     testCompile 'org.assertj:assertj-core:3.6.2'
 }
 
@@ -40,7 +42,7 @@ sourceSets {
 }
 
 junitPlatform {
-    platformVersion '1.0.0-M3'
+    platformVersion "$junit_platform_version"
     filters {
         engines {
             include 'spek'

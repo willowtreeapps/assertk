@@ -27,7 +27,7 @@ class AssertMultipleSpec : Spek({
                     isInstanceOf(String::class)
                     hasToString("BasicObject(arg1=test, arg2=1)")
                 }
-            }.hasMessage("expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultiple\$BasicObject>")
+            }.hasMessage("expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultipleSpec\$BasicObject>")
         }
 
         it("should fail the second assertion") {
@@ -46,7 +46,7 @@ class AssertMultipleSpec : Spek({
                     hasToString("wrong")
                 }
             }.hasMessage("""The following 2 assertions failed:
-- expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultiple${"$"}BasicObject>
+- expected to be instance of:<java.lang.String> but had class:<test.assertk.AssertMultipleSpec${"$"}BasicObject>
 - expected toString() to be:<"wrong"> but was:<"BasicObject(arg1=test, arg2=1)">""")
         }
     }
