@@ -37,7 +37,7 @@ class CollectionSpec : Spek({
                     "test should fail") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1.09, "awesome!", true)).isEmpty()
-                }.hasMessage("expected to be empty but was:<[1, 1.09, awesome!, true]>")
+                }.hasMessage("expected to be empty but was:<[1, 1.09, \"awesome!\", true]>")
             }
 
             it("Given two non-empty lists, " +
@@ -49,7 +49,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be empty but was:<[1, 2, 3, 4]>\n"
-                        + "- expected to be empty but was:<[1, 1.09, awesome!, true]>")
+                        + "- expected to be empty but was:<[1, 1.09, \"awesome!\", true]>")
             }
 
             it("Given one empty list and two non-empty lists, " +
@@ -62,7 +62,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be empty but was:<[1, 2, 3, 4]>\n"
-                        + "- expected to be empty but was:<[1, 1.09, awesome!, true]>")
+                        + "- expected to be empty but was:<[1, 1.09, \"awesome!\", true]>")
             }
         }
 
@@ -161,7 +161,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be null or empty but was:<[1, 2, 3]>\n"
-                        + "- expected to be null or empty but was:<[43, true, awesome!]>")
+                        + "- expected to be null or empty but was:<[43, true, \"awesome!\"]>")
             }
 
             it("Given one empty list and two non-empty non-null lists, " +
@@ -174,7 +174,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to be null or empty but was:<[1, 2, 3]>\n"
-                        + "- expected to be null or empty but was:<[43, true, awesome!]>")
+                        + "- expected to be null or empty but was:<[43, true, \"awesome!\"]>")
             }
         }
 
@@ -285,7 +285,7 @@ class CollectionSpec : Spek({
                     "test should fail") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(null)).hasSameSizeAs(listOf(43, "whoa!"))
-                }.hasMessage("expected to have same size as:<[43, whoa!]> (2) but was size:(1)")
+                }.hasMessage("expected to have same size as:<[43, \"whoa!\"]> (2) but was size:(1)")
             }
 
             it("Given two failing assertions, " +
@@ -311,11 +311,6 @@ class CollectionSpec : Spek({
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to have same size as:<[1, 2, 3, 4]> (4) but was size:(3)\n"
                         + "- expected to have same size as:<[true, true]> (2) but was size:(3)")
-            }
-
-            it("Given two empty maps, " +
-                    "test should pass") {
-                assert(emptyMap<Any?, Any?>()).hasSameSizeAs(emptyMap<Any?, Any?>())
             }
         }
 
@@ -353,7 +348,7 @@ class CollectionSpec : Spek({
                     "test should fail when expecting anything that is not contained in the list") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1.09, "awesome!", true)).contains(43)
-                }.hasMessage("expected to contain:<43> but was:<[1, 1.09, awesome!, true]>")
+                }.hasMessage("expected to contain:<43> but was:<[1, 1.09, \"awesome!\", true]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -365,7 +360,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain:<43> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain:<false> but was:<[43, true, awesome!]>")
+                        + "- expected to contain:<false> but was:<[43, true, \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -378,29 +373,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain:<43> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain:<false> but was:<[43, true, awesome!]>")
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should pass when expecting a pair that is actually contained in the map") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3)).contains("one" to 1)
-            }
-
-            it("Given a map that contains multiple types, " +
-                    "test should pass when expecting a pair that is actually contained in the map") {
-                assert(mapOf<Any?, Any?>("one" to 1, 1.09 to "Something", "awesome!" to true)).contains("awesome!" to true)
-            }
-
-            it("Given a map which contains a null, " +
-                    "test should pass when expecting the map to contain a null") {
-                assert(mapOf<Any?, Any?>(null to null)).contains(null to null)
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should fail when expecting a pair that is not contained in the map") {
-                Assertions.assertThatThrownBy {
-                    assert(mapOf("one" to 1, "two" to 2, "three" to 3)).contains("zero" to 0)
-                }.hasMessage("expected to contain:<{zero=0}> but was:<{one=1, two=2, three=3}>")
+                        + "- expected to contain:<false> but was:<[43, true, \"awesome!\"]>")
             }
         }
 
@@ -431,7 +404,7 @@ class CollectionSpec : Spek({
                     "test should fail when expecting an element which is contained in the list") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1.09, "awesome!", true)).doesNotContain(1.09)
-                }.hasMessage("expected to not contain:<1.09> but was:<[1, 1.09, awesome!, true]>")
+                }.hasMessage("expected to not contain:<1.09> but was:<[1, 1.09, \"awesome!\", true]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -443,7 +416,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to not contain:<3> but was:<[1, 2, 3]>\n"
-                        + "- expected to not contain:<true> but was:<[43, true, awesome!]>")
+                        + "- expected to not contain:<true> but was:<[43, true, \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -456,24 +429,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to not contain:<3> but was:<[1, 2, 3]>\n"
-                        + "- expected to not contain:<true> but was:<[43, true, awesome!]>")
-            }
-
-            it("Given an empty map, " +
-                    "test should pass when expecting anything to be contained within the map") {
-                assert(emptyMap<Any?, Any?>()).doesNotContain("Something" to 99)
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should pass when expecting a pair that is not contained in the map") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3)).doesNotContain("zero" to 0)
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should fail when expecting a pair that is contained in the map") {
-                Assertions.assertThatThrownBy {
-                    assert(mapOf("one" to 1, "two" to 2, "three" to 3)).doesNotContain("one" to 1)
-                }.hasMessage("expected to not contain:<{one=1}> but was:<{one=1, two=2, three=3}>")
+                        + "- expected to not contain:<true> but was:<[43, true, \"awesome!\"]>")
             }
         }
 
@@ -521,7 +477,7 @@ class CollectionSpec : Spek({
                     "test should fail if the list contains any of the elements that are expected") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1.09, "awesome!", true)).containsNone(true, 43, "potato")
-                }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, awesome!, true]>")
+                }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, \"awesome!\", true]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -533,7 +489,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -547,24 +503,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
-            }
-
-            it("Given an empty map, " +
-                    "test should pass when expecting multiple elements to be contained within the map") {
-                assert(emptyMap<Any?, Any?>()).containsNone("not" to 3, "in" to 2, "list" to 4)
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should pass when pairs that aren't not contained in the map") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3)).containsNone("zero" to 0, "negative one" to -1)
-            }
-
-            it("Given a map that contains multiple pairs of Strings to Ints, " +
-                    "test should fail when expecting a pairs that are contained in the map") {
-                Assertions.assertThatThrownBy {
-                    assert(mapOf("one" to 1, "two" to 2, "three" to 3)).containsNone("one" to 1, "three" to 3)
-                }.hasMessage("expected to not contain:<{one=1, three=3}> but was:<{one=1, two=2, three=3}>")
+                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
             }
         }
 
@@ -609,7 +548,7 @@ class CollectionSpec : Spek({
                     "test should fail when not containing all elements expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, "is", "awesome!")).containsAll("this", 4, "awesome!")
-                }.hasMessage("expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, is, awesome!]>")
+                }.hasMessage("expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -621,7 +560,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, is, awesome!]>")
+                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -635,7 +574,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[this, is, awesome!]>")
+                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
             }
         }
 
@@ -680,7 +619,7 @@ class CollectionSpec : Spek({
                     "test should fail when not containing all elements expected exactly in order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, "is", "awesome!")).containsExactly("this", 4, "awesome!")
-                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, is, awesome!]>")
+                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -692,7 +631,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, is, awesome!]>")
+                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -706,44 +645,7 @@ class CollectionSpec : Spek({
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, is, awesome!]>")
-            }
-
-            it("Given an empty map, " +
-                    "test should pas when expecting nothing") {
-                assert(emptyMap<Any?, Any?>()).containsExactly()
-            }
-
-            it("Given a map of multiple elements, " +
-                    "test should pass when containing all elements in the map") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3)).containsExactly("one" to 1, "two" to 2, "three" to 3)
-            }
-
-            it("Given a map of multiple elements, " +
-                    "test should pass when containing all elements in the map") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3)).containsExactly("one" to 1, "two" to 2, "three" to 3)
-            }
-
-            it("Given an empty map, " +
-                    "test should fail when expecting anything") {
-                Assertions.assertThatThrownBy {
-                    assert(emptyMap<Any?, Any?>()).containsExactly("one" to 1, "one" to 2)
-                }.hasMessage("expected to contain exactly:<{one=2}> but was:<{}>")
-            }
-
-            it("Given a map of multiple elements, " +
-                    "test should fail when maps are of different sizes") {
-                Assertions.assertThatThrownBy {
-                    assert(mapOf("one" to 1, "two" to 2, "three" to 3, "four" to 4))
-                            .containsExactly("one" to 1, "two" to 2, "three" to 3)
-                }.hasMessage("expected to contain exactly:<{one=1, two=2, three=3}> " +
-                        "but was:<{one=1, two=2, three=3, four=4}>")
-            }
-
-            it("Given a map of multiple elements, " +
-                    "test should not fail when elements are in different order") {
-                assert(mapOf("one" to 1, "two" to 2, "three" to 3))
-                        .containsExactly("two" to 2, "three" to 3, "one" to 1)
+                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
         }
     }
