@@ -69,7 +69,7 @@ fun <T : Collection<*>> Assert<T>.doesNotContain(element: Any?) {
 }
 
 /**
- * Asserts the collections does not contain any of the expected elements.
+ * Asserts the collection does not contain any of the expected elements.
  * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
