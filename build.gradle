@@ -34,6 +34,7 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     testCompile 'org.jetbrains.spek:spek-api:1.1.5'
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
+    testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
     testCompile 'org.assertj:assertj-core:3.6.2'
 }
 
