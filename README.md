@@ -41,6 +41,8 @@ class PersonTest {
 }
 ```
 
+You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk/assertk.assertions/index.html).
+
 ### Nullability
 Since null is a first-class concept in kotlin's type system, you need to be explicit in your assertions.
 
