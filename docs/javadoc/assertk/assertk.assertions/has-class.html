@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>hasClass - assertk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">assertk</a>&nbsp;/&nbsp;<a href="index.html">assertk.assertions</a>&nbsp;/&nbsp;<a href=".">hasClass</a><br/>
+<br/>
+<h1>hasClass</h1>
+<a name="assertk.assertions$hasClass(assertk.Assert((assertk.assertions.hasClass.T)), kotlin.reflect.KClass((assertk.assertions.hasClass.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span> <a href="../assertk/-assert/index.html"><span class="identifier">Assert</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">hasClass</span><span class="symbol">(</span><span class="identifier" id="assertk.assertions$hasClass(assertk.Assert((assertk.assertions.hasClass.T)), kotlin.reflect.KClass((assertk.assertions.hasClass.T)))/kclass">kclass</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html"><span class="identifier">KClass</span></a><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Asserts the value has the expected kotlin class. This is an exact match, so <code>assert("test").hasClass(String::class)</code>
+is succesful but <code>assert("test").hasClass(Any::class)</code> fails.</p>
+<p><strong>See Also</strong><br/>
+<p><a href="does-not-have-class.html">doesNotHaveClass</a></p>
+<p><a href="is-instance-of.html">isInstanceOf</a></p>
+</p>
+<a name="assertk.assertions$hasClass(assertk.Assert((assertk.assertions.hasClass.T)), java.lang.Class((assertk.assertions.hasClass.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span> <a href="../assertk/-assert/index.html"><span class="identifier">Assert</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">hasClass</span><span class="symbol">(</span><span class="identifier" id="assertk.assertions$hasClass(assertk.Assert((assertk.assertions.hasClass.T)), java.lang.Class((assertk.assertions.hasClass.T)))/jclass">jclass</span><span class="symbol">:</span>&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Class.html"><span class="identifier">Class</span></a><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Asserts the value has the expected java class. This is an exact match, so
+<code>assert("test").hasClass(String::class.java)</code> is successful but <code>assert("test").hasClass(Any::class.java)</code> fails.</p>
+<p><strong>See Also</strong><br/>
+<p><a href="does-not-have-class.html">doesNotHaveClass</a></p>
+<p><a href="is-instance-of.html">isInstanceOf</a></p>
+</p>
+</BODY>
+</HTML>
