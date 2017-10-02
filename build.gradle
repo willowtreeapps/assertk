@@ -55,5 +55,5 @@ junitPlatform {
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
+    outputDirectory = "docs/javadoc"
 }
