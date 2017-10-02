@@ -11,5 +11,10 @@
 <a name="assertk.assertions$isNotNull(assertk.Assert((assertk.assertions.isNotNull.T)), kotlin.Function1((assertk.Assert((assertk.assertions.isNotNull.T)), kotlin.Unit)))"></a>
 <code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span> <a href="../assertk/-assert/index.html"><span class="identifier">Assert</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">?</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">isNotNull</span><span class="symbol">(</span><span class="identifier" id="assertk.assertions$isNotNull(assertk.Assert((assertk.assertions.isNotNull.T)), kotlin.Function1((assertk.Assert((assertk.assertions.isNotNull.T)), kotlin.Unit)))/f">f</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../assertk/-assert/index.html"><span class="identifier">Assert</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a>&nbsp;<span class="symbol">=</span>&nbsp;{}<span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
 <p>Asserts the value is not null. You can pass in an optional lambda to run additonal assertions on the non-null value.</p>
+<pre><code>val name: String? = ...
+assert(name).isNotNull() {
+  hasLength(4)
+}
+</code></pre>
 </BODY>
 </HTML>
