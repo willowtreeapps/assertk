@@ -188,6 +188,13 @@ fun <T : Any> Assert<T?>.isNull() {
 
 /**
  * Asserts the value is not null. You can pass in an optional lambda to run additonal assertions on the non-null value.
+ *
+ * ```
+ * val name: String? = ...
+ * assert(name).isNotNull() {
+ *   hasLength(4)
+ * }
+ * ```
  */
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
     if (actual != null) {
