@@ -17,7 +17,7 @@ Want to contribute, but not sure how? Here are some ideas to get you started.
    PR if you have something better. Feel free to first create an issue if you
    want feedback or a discussion on better wording.  Unless there is a good
    reason, failure messages should be in the form `"expeted:${show(foo)} but
-   was ${show(bar)}"`.
+   was:${show(bar)}"`.
 4. **Suggest a new feature.** Have a new cool feature idea or want to work on
    one that's already suggested? First create/comment on an issue to get
    feedback and figure out a good design. We will then assign you on the issue.
