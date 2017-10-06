@@ -75,7 +75,7 @@ class InputStreamSpec: Spek ({
 
 
 internal fun emptyStream(): InputStream {
-    return ByteArrayInputStream(ByteArray(0)) as InputStream
+    return ByteArrayInputStream(ByteArray(0))
 }
 
 internal fun nonEmptyStream(): InputStream {
