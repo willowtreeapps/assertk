@@ -6,99 +6,111 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
-import java.nio.file.Paths
+import java.nio.file.Files
+import java.nio.file.Path
 
-class PathSpec: Spek({
+class PathSpec : Spek({
+    var regularFile: Path? = null
+    var directory: Path? = null
+
+    beforeGroup {
+        regularFile = createTempFile()
+        directory = createTempDir()
+    }
+
+    afterGroup {
+        regularFile?.let { Files.deleteIfExists(it) }
+        directory?.let { Files.deleteIfExists(it) }
+    }
 
     given("a regular file") {
-        val regularFile = Paths.get("LICENSE")
 
         it("is a regular file") {
-            assert( regularFile ).isRegularFile()
+            assert(regularFile!!).isRegularFile()
         }
 
         it("is not a folder") {
             assertThatThrownBy {
-                assert( regularFile ).isDirectory()
-            }.hasMessage("expected <LICENSE> to be a directory, but it is not")
+                assert(regularFile!!).isDirectory()
+            }.hasMessage("expected <$regularFile> to be a directory, but it is not")
         }
-
-//        it("is not an executable") {
-//            assertThatThrownBy {
-//                assert( regularFile ).isExecutable()
-//            }.hasMessage("Foo")
-//        }
 
         it("is not hidden") {
             assertThatThrownBy {
-                assert( regularFile ).isHidden()
-            }.hasMessage("expected <LICENSE> to be hidden, but it is not")
+                assert(regularFile!!).isHidden()
+            }.hasMessage("expected <$regularFile> to be hidden, but it is not")
         }
 
         it("is readable") {
-            assert( regularFile ).isReadable()
+            assert(regularFile!!).isReadable()
         }
 
         it("is not a symbolic link") {
             assertThatThrownBy {
-                assert( regularFile ).isSymbolicLink()
-            }.hasMessage("expected <LICENSE> to be a symbolic link, but it is not")
+                assert(regularFile!!).isSymbolicLink()
+            }.hasMessage("expected <$regularFile> to be a symbolic link, but it is not")
         }
 
         it("is writeable") {
-            assert( regularFile ).isWritable()
+            assert(regularFile!!).isWritable()
         }
 
         it("is same file as itself") {
-            assert( regularFile ).isSameFileAs( Paths.get("LICENSE") )
+            assert(regularFile!!).isSameFileAs(regularFile!!)
         }
 
         it("is same file as itself even when the path is different") {
-            assert( regularFile ).isSameFileAs( Paths.get("LICENSE").toAbsolutePath() )
-            assert( regularFile ).isSameFileAs( Paths.get("src/../LICENSE") )
+            assert(regularFile!!).isSameFileAs(regularFile!!.toAbsolutePath())
         }
     }
 
     given("a directory") {
-        val directory = Paths.get("src")
 
         it("is not a regular file") {
             assertThatThrownBy {
-                assert( directory ).isRegularFile()
-            }.hasMessage("expected <src> to be a regular file, but it is not")
+                assert(directory!!).isRegularFile()
+            }.hasMessage("expected <$directory> to be a regular file, but it is not")
         }
 
         it("is a folder") {
-            assert( directory ).isDirectory()
+            assert(directory!!).isDirectory()
         }
 
         it("is not hidden") {
             assertThatThrownBy {
-                assert( directory ).isHidden()
-            }.hasMessage("expected <src> to be hidden, but it is not")
+                assert(directory!!).isHidden()
+            }.hasMessage("expected <$directory> to be hidden, but it is not")
         }
 
         it("is readable") {
-            assert( directory ).isReadable()
+            assert(directory!!).isReadable()
         }
 
         it("is not a symbolic link") {
             assertThatThrownBy {
-                assert( directory ).isSymbolicLink()
-            }.hasMessage("expected <src> to be a symbolic link, but it is not")
+                assert(directory!!).isSymbolicLink()
+            }.hasMessage("expected <$directory> to be a symbolic link, but it is not")
         }
 
         it("is writeable") {
-            assert( directory ).isWritable()
+            assert(directory!!).isWritable()
         }
 
         it("is same file as itself") {
-            assert( directory ).isSameFileAs( Paths.get("src") )
+            assert(directory!!).isSameFileAs(directory!!)
         }
 
         it("is same file as itself even when the path is different") {
-            assert( directory ).isSameFileAs( Paths.get("src").toAbsolutePath() )
-            assert( directory ).isSameFileAs( Paths.get("src/../src") )
+            assert(directory!!).isSameFileAs(directory!!.toAbsolutePath())
+            assert(directory!!).isSameFileAs(directory!!.toAbsolutePath())
         }
     }
 })
+
+
+private fun createTempDir() = Files.createTempDirectory("tempDir")
+private fun createTempFile() = Files.createTempFile("tempFile", "").also {
+    Files.newOutputStream(it).use {
+        it.write(ByteArray(10))
+    }
+}
