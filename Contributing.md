@@ -11,7 +11,7 @@ Want to contribute, but not sure how? Here are some ideas to get you started.
    with [AssertJ](http://joel-costigliola.github.io/assertj/).
 2. **Add a new assertion.** If you have an idea for a new assertion that's
    general enough, you can add it. Assertions are grouped under their type in
-   `src/main/kotlin/assertk/assertions/`. Make sure you write unit test and docs 
+   `src/main/kotlin/assertk/assertions/`. Make sure you write unit test and docs
    for them.
 3. **Improve a failure message.** Some failure messages can be better. Create a
    PR if you have something better. Feel free to first create an issue if you
