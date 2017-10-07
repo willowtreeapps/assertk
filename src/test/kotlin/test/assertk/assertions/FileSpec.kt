@@ -88,13 +88,13 @@ class FileSpec : Spek({
             it("given file's name, should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(file).hasName("file")
-                }.hasMessage("expected [formatName]:<\"file[]\"> but was:<\"file[.txt]\">")
+                }.hasMessage("expected [name]:<\"file[]\"> but was:<\"file[.txt]\">")
             }
 
             it("given directory's name, should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(directory).hasName("assertKt")
-                }.hasMessage("expected [formatName]:<\"[assertKt]\"> but was:<\"[${directory.name}]\">")
+                }.hasMessage("expected [name]:<\"[assertKt]\"> but was:<\"[${directory.name}]\">")
             }
         }
 
