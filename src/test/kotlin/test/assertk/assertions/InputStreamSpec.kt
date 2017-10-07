@@ -21,7 +21,7 @@ class InputStreamSpec : Spek({
         it("has the same content as another empty stream (using hasNotSameContentAs)") {
             assertThatThrownBy {
                 assert(emptyStream()).hasNotSameContentAs(emptyStream())
-            }.hasMessage("expected stream not to be equal, but they were equal")
+            }.hasMessage("expected streams not to be equal, but they were equal")
         }
 
         it("has not the same content as any other non empty stream") {
@@ -44,7 +44,7 @@ class InputStreamSpec : Spek({
         it("has the same content as another stream using a copy of the byte array (using hasNotSameContentAs)") {
             assertThatThrownBy {
                 assert(streamA()).hasNotSameContentAs(streamA())
-            }.hasMessage("expected stream not to be equal, but they were equal")
+            }.hasMessage("expected streams not to be equal, but they were equal")
         }
 
         it("has not the same content as another stream using another byte array") {
@@ -64,7 +64,7 @@ class InputStreamSpec : Spek({
         it("is not the same as the second stream") {
             assertThatThrownBy {
                 assert(prefixOfStreamA()).hasSameContentAs(streamA())
-            }.hasMessage("expected to have the same size, but actual stream size (5) differs from other stream size (10)")
+            }.hasMessage("expected to have the same size, but actual size (5) differs from other size (10)")
         }
 
         it("is not the same as the second stream (using hasNotSameContentAs)") {
@@ -79,13 +79,28 @@ class InputStreamSpec : Spek({
 
             assertThatThrownBy {
                 assert(streamA()).hasSameContentAs(prefixOfStreamA())
-            }.hasMessage("expected to have the same size, but actual stream size (10) differs from other stream size (5)")
+            }.hasMessage("expected to have the same size, but actual size (10) differs from other size (5)")
         }
 
         it("is not the same as its prefix stream (using hasNotSameContentAs)") {
             assert(streamA()).hasNotSameContentAs(prefixOfStreamA())
         }
 
+    }
+
+    given("another non empty stream which differs from the other somewhere in the middle") {
+
+        it("streamB has not the same content as streamC") {
+
+            assertThatThrownBy {
+                assert(streamB()).hasSameContentAs(streamC())
+            }.hasMessage("expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x78, size=10. Other stream: value=0x77, size=10")
+
+        }
+
+        it("streamB has not the same content as streamC (using hasNotSameContentAs)") {
+            assert(streamB()).hasNotSameContentAs(streamC())
+        }
     }
 })
 
@@ -110,6 +125,15 @@ internal fun streamB(): InputStream {
     return ByteArrayInputStream(
             arrayOf(
                     100.toByte(), 110.toByte(), 120.toByte(), 130.toByte(), 140.toByte(), 150.toByte(), 160.toByte(), 170.toByte(), 180.toByte(), 190.toByte()
+            ).toByteArray()
+    )
+}
+
+/** Every call creates a new stream, with the same content. The stream only differs in one place from [streamB] */
+internal fun streamC(): InputStream {
+    return ByteArrayInputStream(
+            arrayOf(
+                    100.toByte(), 110.toByte(), 119.toByte(), 130.toByte(), 140.toByte(), 150.toByte(), 160.toByte(), 170.toByte(), 180.toByte(), 190.toByte()
             ).toByteArray()
     )
 }
