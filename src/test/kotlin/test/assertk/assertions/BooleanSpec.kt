@@ -1,3 +1,5 @@
+package test.assertk.assertions
+
 import assertk.assert
 import assertk.assertions.isEmpty
 import assertk.assertions.isFalse
