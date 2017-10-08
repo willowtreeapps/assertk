@@ -34,9 +34,10 @@ To contribute, fork our project on GitHub, then submit a pull request to our
 2. If you added new assertions, please be sure to add them to the main project.
 3. If you update anything that would add breaking changes to older versions of
    assertk be sure to declare that in your Pull Request description.
-4. Be sure to document your code. This includes adding in javadoc style
+4. Be sure to document your code. This includes adding in kotlin doc style
    comments for those methods that are publicly accessible and also adding
-   those methods to their respective `README.md` document.
+   those methods to their respective `README.md` document. Any consumer-facing
+   changes should be added to the [Unreleased] section of the `CHANGELOG.md`.
 
 ---
 
