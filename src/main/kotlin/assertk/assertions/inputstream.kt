@@ -83,72 +83,69 @@ private fun compare(len: Int, actual: ByteArray, other: ByteArray): Int? {
  */
 private fun doTheStreamHaveTheSameContent(actual: InputStream, other: InputStream): String? {
 
-    val actualStream = InputStreamWithIdempotentCloseCall(actual)
-    val otherStream = InputStreamWithIdempotentCloseCall(other)
+    actual.use { actualStream ->
+        other.use { otherStream ->
 
-    var size = 0L
+            var size = 0L
 
-    val actualBuffer = ByteArray(BUFFER_SIZE)
-    val otherBuffer = ByteArray(BUFFER_SIZE)
+            val actualBuffer = ByteArray(BUFFER_SIZE)
+            val otherBuffer = ByteArray(BUFFER_SIZE)
 
-    while (true) {
-        val actualRead = fillBuffer(actualStream, actualBuffer)
-        val otherRead = fillBuffer(otherStream, otherBuffer)
+            while (true) {
+                val actualRead = fillBuffer(actualStream, actualBuffer)
+                val otherRead = fillBuffer(otherStream, otherBuffer)
 
-        if (actualRead == otherRead) {
+                if (actualRead == otherRead) {
 
-            if (actualRead == 0) {
-                // the streams have the same size and are finished and have the same content
-                return null
-            } else {
-                val pos = compare(actualRead, actualBuffer, otherBuffer)
-                if (pos == null) {
-                    // the current buffers are equals and we can try the next block
-                    size += actualRead
+                    if (actualRead == 0) {
+                        // the streams have the same size and are finished and have the same content
+                        return null
+                    } else {
+                        val pos = compare(actualRead, actualBuffer, otherBuffer)
+                        if (pos == null) {
+                            // the current buffers are equals and we can try the next block
+                            size += actualRead
+
+                        } else {
+                            // the first difference is in position pos
+
+                            val actualSize = size + actualRead + consume(actualStream)
+                            val otherSize = size + otherRead + consume(otherStream)
+
+                            return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+                        }
+                    }
 
                 } else {
-                    // the first difference is in position pos
 
-                    val actualSize = size + actualRead + consume(actualStream)
-                    val otherSize = size + otherRead + consume(otherStream)
+                    if (actualRead == 0) {
+                        val actualSize = actualRead + size
+                        val otherSize = consume(otherStream) + otherRead + size
 
-                    return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+                        return "to have the same size, but actual stream size (${actualSize}) differs from other stream size ($otherSize)"
+                    } else if (otherRead == 0) {
+                        val actualSize = consume(actualStream) + actualRead + size
+                        val otherSize = otherRead + size
+
+                        return "to have the same size, but actual stream size ($actualSize) differs from other stream size (${otherSize})"
+                    } else {
+                        val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
+                        val actualSize = consume(actualStream) + actualRead + size
+                        val otherSize = consume(otherStream) + otherRead + size
+
+                        return if (pos == null) {
+                            "to have the same size, but actual size (${actualSize}) differs from other size (${otherSize})"
+                        } else {
+                            "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+                        }
+                    }
                 }
             }
 
-        } else {
-
-            if (actualRead == 0) {
-                val actualSize = actualRead + size
-                val otherSize = consume(otherStream) + otherRead + size
-                return "to have the same size, but actual stream size (${actualSize}) differs from other stream size ($otherSize)"
-            } else if (otherRead == 0) {
-                val actualSize = consume(actualStream) + actualRead + size
-                val otherSize = otherRead + size
-                return "to have the same size, but actual stream size ($actualSize) differs from other stream size (${otherSize})"
-            } else {
-                val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
-                val actualSize = consume(actualStream) + actualRead + size
-                val otherSize = consume(otherStream) + otherRead + size
-                if (pos == null) {
-                    return "to have the same size, but actual size (${actualSize}) differs from other size (${otherSize})"
-                } else {
-                    return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
-                }
-            }
-        }
-    }
-}
-
-/** As you can't ask if an InputStream was already closed this wrapper will record it. */
-private class InputStreamWithIdempotentCloseCall(private val original: InputStream) : InputStream() {
-    private var closedCalled = false
-
-    override fun read() = original.read()
-    override fun close() {
-        if (!closedCalled) {
-            closedCalled = true
-            super.close()
+            // the following throw should be unnecessary, as the only way to leave the while loop is either
+            // - somewhere in the while loop an exception is thrown
+            // - somwhere in the while loop the method is left by a return statement
+             throw IllegalStateException("unreachable code")
         }
     }
 }
