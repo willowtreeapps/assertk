@@ -118,7 +118,6 @@ private fun consume(stream: InputStream): Int {
     while (true) {
         val len = stream.read(buffer)
         if (len < 0) {
-            stream.close()
             return consumed
         }
         consumed += len
@@ -131,7 +130,6 @@ private fun fillBuffer(stream: InputStream, buffer: ByteArray): Int {
     while (true) {
         val len = stream.read(buffer, pos, BUFFER_SIZE - pos)
         if (len == -1) {
-            stream.close()
             return if (pos < 0) 0 else pos
         }
 
