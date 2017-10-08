@@ -1,0 +1,23 @@
+build:
+  failThreshold: 1
+
+complexity:
+  StringLiteralDuplication:
+    active: false
+  TooManyFunctions:
+    active: false
+
+performance:
+  SpreadOperator:
+    active: false
+
+style:
+  VariableMinLength:
+    active: false
+  ReturnCount:
+    active: false
+  UseDataClass:
+    active: false
+  ClassNaming:
+    active: true
+    classPattern: ^[A-Z$][a-zA-Z0-9$]*$

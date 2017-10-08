@@ -32,7 +32,10 @@ jobs:
           - v2-dependencies-
 
       # run tests!
-      - run: gradle test
+      - run: ./gradlew test
+
+      # run checks
+      - run: ./gradlew detektCheck
 
       - save_cache:
           paths:
@@ -49,3 +52,4 @@ jobs:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
+        

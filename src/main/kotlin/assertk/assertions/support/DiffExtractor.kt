@@ -13,7 +13,7 @@ internal class DiffExtractor(val expected: String, val actual: String) {
 
     private fun sharedPrefix(): String {
         val end = minOf(expected.length, actual.length)
-        for (i in 0..end - 1) {
+        for (i in 0 until end) {
             if (expected[i] != actual[i]) {
                 return expected.substring(0, i)
             }
@@ -34,23 +34,23 @@ internal class DiffExtractor(val expected: String, val actual: String) {
         return expected.substring(expected.length - suffixLength)
     }
 
-    fun compactPrefix(): String {
+    internal fun compactPrefix(): String {
         if (sharedPrefix.length <= MAX_CONTEXT_LENGTH) {
             return sharedPrefix
         }
         return "..." + sharedPrefix.substring(sharedPrefix.length - MAX_CONTEXT_LENGTH)
     }
 
-    fun compactSuffix(): String {
+    internal fun compactSuffix(): String {
         if (sharedSuffix.length <= MAX_CONTEXT_LENGTH) {
             return sharedSuffix
         }
         return sharedSuffix.substring(0, MAX_CONTEXT_LENGTH) + "..."
     }
 
-    fun expectedDiff(): String = extractDiff(expected)
+    internal fun expectedDiff(): String = extractDiff(expected)
 
-    fun actualDiff(): String = extractDiff(actual)
+    internal fun actualDiff(): String = extractDiff(actual)
 
     private fun extractDiff(source: String): String =
             "[${source.substring(sharedPrefix.length, source.length - sharedSuffix.length)}]"

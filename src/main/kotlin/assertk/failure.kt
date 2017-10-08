@@ -90,11 +90,12 @@ fun fail(message: String) {
     FailureContext.failure.fail(AssertionError(message))
 }
 
-@Suppress("NOTHING_TO_INLINE", "PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+@Suppress("NOTHING_TO_INLINE")
 private inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
     val filtered = error.stackTrace
             .dropWhile { it.className.startsWith("assertk") }
             .toTypedArray()
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "UnsafeCast")
     (error as java.lang.Throwable).stackTrace = filtered
     throw error
 }
