@@ -109,8 +109,4 @@ class PathSpec : Spek({
 
 
 private fun createTempDir() = Files.createTempDirectory("tempDir")
-private fun createTempFile() = Files.createTempFile("tempFile", "").also {
-    Files.newOutputStream(it).use {
-        it.write(ByteArray(10))
-    }
-}
+private fun createTempFile() = Files.createTempFile("tempFile", "").apply { toFile().writeBytes(ByteArray(10)) }
