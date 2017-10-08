@@ -168,5 +168,20 @@ assert(person).hasAge(10)
 // -> expected age:<10> but was age:<18>
 ```
 
-### Contributing to assertk
+### Important Note:
+You can't assume that `expected` or `fail` will stop execution in a custom assertion. This is because it might be used
+in an `assertAll` block which ensures all assertions are run. Make sure you return early if you want execution to always
+stop.
+
+```kotlin
+fun Assert<...>.myAssertion() {
+  while (true) {
+    ...
+    expected("to be something but wasn't")
+    break // Need to break out of the loop!
+  }
+}
+```
+
+## Contributing to assertk
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/master/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/master/code-of-conduct.md).
