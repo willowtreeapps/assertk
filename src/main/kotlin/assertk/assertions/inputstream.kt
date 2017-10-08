@@ -10,62 +10,11 @@ import java.io.InputStream
  */
 fun Assert<InputStream>.hasSameContentAs(other: InputStream) {
 
-    var size = 0L
-
-    val actualBuffer = ByteArray(BUFFER_SIZE)
-    val otherBuffer = ByteArray(BUFFER_SIZE)
-
-    while (true) {
-        val actualRead = fillBuffer(actual, actualBuffer)
-        val otherRead = fillBuffer(other, otherBuffer)
-
-        if (actualRead == otherRead) {
-
-            if(actualRead==0) {
-                // the streams have the same size and are finished and have the same content
-                return
-            }
-            else {
-                val pos = compare(actualRead, actualBuffer, otherBuffer)
-                if(pos==null) {
-                    // the current buffers are equals and we can try the next block
-                    size += actualRead
-
-                } else {
-                    // the first difference is in position pos
-
-                    val actualSize = size + actualRead + consume(actual)
-                    val otherSize = size + otherRead + consume(other)
-
-                    expected("to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize")
-                }
-            }
-
-        } else {
-
-            if(actualRead==0) {
-                val actualSize = actualRead + size
-                val otherSize = consume(other) + otherRead + size
-                expected("to have the same size, but actual stream size (${actualSize}) differs from other stream size ($otherSize)")
-            }
-            else if (otherRead==0) {
-                val actualSize = consume(actual) + actualRead + size
-                val otherSize = otherRead + size
-                expected("to have the same size, but actual stream size ($actualSize) differs from other stream size (${otherSize})")
-            }
-            else {
-                val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
-                val actualSize = consume(actual) + actualRead + size
-                val otherSize = consume(other) + otherRead + size
-                if(pos==null) {
-                    expected("to have the same size, but actual size (${actualSize}) differs from other size (${otherSize})")
-                }
-                else {
-                    expected("to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize")
-                }
-            }
-        }
+    val msg = doTheStreamHaveTheSameContent(actual, other)
+    if(msg!=null) {
+        expected(msg)
     }
+
 }
 
 /** Asserts that the actual stream has a different content as the other stream.
@@ -73,13 +22,12 @@ fun Assert<InputStream>.hasSameContentAs(other: InputStream) {
  * @param other whichs content is compared to the actual one
  */
 fun Assert<InputStream>.hasNotSameContentAs(other: InputStream) {
-    try {
-        hasSameContentAs(other)
+
+    val msg = doTheStreamHaveTheSameContent(actual, other)
+    if(msg==null) {
+        expected("streams not to be equal, but they were equal")
     }
-    catch(e: AssertionError) {
-        return
-    }
-    expected("streams not to be equal, but they were equal")
+
 }
 
 private fun Byte.toHexString() = String.format("%02X", this)
@@ -115,4 +63,70 @@ private fun compare(len: Int, actual: ByteArray, other: ByteArray): Int? {
     }
 
     return null
+}
+
+/** Verifies that the streams have the same content.
+ * @param actual one of the streams to be compared
+ * @param other the other stream to be compared
+ *
+ * @return a message if the streams don't have the same content, or null if they have the same content
+ */
+private fun doTheStreamHaveTheSameContent(actual: InputStream, other: InputStream): String? {
+
+    var size = 0L
+
+    val actualBuffer = ByteArray(BUFFER_SIZE)
+    val otherBuffer = ByteArray(BUFFER_SIZE)
+
+    while (true) {
+        val actualRead = fillBuffer(actual, actualBuffer)
+        val otherRead = fillBuffer(other, otherBuffer)
+
+        if (actualRead == otherRead) {
+
+            if(actualRead==0) {
+                // the streams have the same size and are finished and have the same content
+                return null
+            }
+            else {
+                val pos = compare(actualRead, actualBuffer, otherBuffer)
+                if(pos==null) {
+                    // the current buffers are equals and we can try the next block
+                    size += actualRead
+
+                } else {
+                    // the first difference is in position pos
+
+                    val actualSize = size + actualRead + consume(actual)
+                    val otherSize = size + otherRead + consume(other)
+
+                    return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+                }
+            }
+
+        } else {
+
+            if(actualRead==0) {
+                val actualSize = actualRead + size
+                val otherSize = consume(other) + otherRead + size
+                return "to have the same size, but actual stream size (${actualSize}) differs from other stream size ($otherSize)"
+            }
+            else if (otherRead==0) {
+                val actualSize = consume(actual) + actualRead + size
+                val otherSize = otherRead + size
+                return "to have the same size, but actual stream size ($actualSize) differs from other stream size (${otherSize})"
+            }
+            else {
+                val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
+                val actualSize = consume(actual) + actualRead + size
+                val otherSize = consume(other) + otherRead + size
+                if(pos==null) {
+                    return "to have the same size, but actual size (${actualSize}) differs from other size (${otherSize})"
+                }
+                else {
+                    return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+                }
+            }
+        }
+    }
 }

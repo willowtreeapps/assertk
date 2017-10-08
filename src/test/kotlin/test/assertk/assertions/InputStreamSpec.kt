@@ -94,7 +94,7 @@ class InputStreamSpec : Spek({
 
             assertThatThrownBy {
                 assert(streamB()).hasSameContentAs(streamC())
-            }.hasMessage("expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x78, size=10. Other stream: value=0x77, size=10")
+            }.hasMessage("expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x66, size=10. Other stream: value=0x77, size=10")
 
         }
 
@@ -112,28 +112,20 @@ internal fun emptyStream(): InputStream {
 
 /** Every call creates a new stream, with the same content. */
 internal fun streamA(): InputStream {
-    return ByteArrayInputStream(arrayOf(0.toByte(), 10.toByte(), 20.toByte(), 30.toByte(), 40.toByte(), 50.toByte(), 60.toByte(), 70.toByte(), 80.toByte(), 90.toByte()).toByteArray())
+    return ByteArrayInputStream(byteArrayOf(0, 10, 20, 30, 40, 50, 60, 70, 80, 90))
 }
 
 /** Every call creates a new stream, with the same content. */
 internal fun prefixOfStreamA(): InputStream {
-    return ByteArrayInputStream(arrayOf(0.toByte(), 10.toByte(), 20.toByte(), 30.toByte(), 40.toByte()).toByteArray())
+    return ByteArrayInputStream(byteArrayOf(0, 10, 20, 30, 40))
 }
 
 /** Every call creates a new stream, with the same content. */
 internal fun streamB(): InputStream {
-    return ByteArrayInputStream(
-            arrayOf(
-                    100.toByte(), 110.toByte(), 120.toByte(), 130.toByte(), 140.toByte(), 150.toByte(), 160.toByte(), 170.toByte(), 180.toByte(), 190.toByte()
-            ).toByteArray()
-    )
+    return ByteArrayInputStream(byteArrayOf(100, 101, 102, 103, 104, 105, 106, 107, 108, 109))
 }
 
 /** Every call creates a new stream, with the same content. The stream only differs in one place from [streamB] */
 internal fun streamC(): InputStream {
-    return ByteArrayInputStream(
-            arrayOf(
-                    100.toByte(), 110.toByte(), 119.toByte(), 130.toByte(), 140.toByte(), 150.toByte(), 160.toByte(), 170.toByte(), 180.toByte(), 190.toByte()
-            ).toByteArray()
-    )
+    return ByteArrayInputStream(byteArrayOf(100, 101, 119, 103, 104, 105, 106, 107, 108, 109))
 }
