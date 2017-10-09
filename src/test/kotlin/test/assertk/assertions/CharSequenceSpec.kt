@@ -34,10 +34,10 @@ class CharSequenceSpec : Spek({
             }
         }
 
-        on("isEmpty()") {
+        on("isNullOrEmpty()") {
             it("Given an empty sequence or null, test should pass") {
                 assert("").isNullOrEmpty()
-                var test : CharSequence? = null
+                val test : CharSequence? = null
                 assert(test).isNullOrEmpty()
             }
 
