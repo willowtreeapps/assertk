@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Add docs to all assertions.
+- Add Path assertions.
+- Add InputStream assertions.
 
 ### Fixed
 - Fix typos on a few assertions.
