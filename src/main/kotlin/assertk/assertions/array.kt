@@ -98,8 +98,8 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
  * Asserts on all items in the array. The given lambda will be run for each item.
  *
  * ```
- * assert(arrayOf("one", "two")) {
- *   hasLength(3)
+ * assert(arrayOf("one", "two")).all {
+ *   it.hasLength(3)
  * }
  * ```
  */

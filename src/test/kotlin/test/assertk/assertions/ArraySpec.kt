@@ -506,5 +506,35 @@ class ArraySpec : Spek({
                         + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
             }
         }
+
+        on("all()") {
+            it("Given an empty array, test should pass when expecting nothing") {
+                assert(emptyArray<Any>()).all { }
+            }
+
+            it("Given a non empty array, test should pass when expecting nothing") {
+                assert(arrayOf("one", "two")).all { }
+            }
+
+            it("Given an array of Strings, valid assertion should pass for each item") {
+                assert(arrayOf("one", "two")).all {
+                    it.hasLength(3)
+                }
+            }
+
+            it("Given an array, invalid assertion should fail") {
+                Assertions.assertThatThrownBy {
+                    assert(arrayOf(1, 2, 3, 4)).all {
+                        it.isLessThan(3)
+                    }
+                }.hasMessage("expected to be less than:<3> but was:<3>")
+            }
+
+            it("Given an array of multiple types, valid assertion should pass for each item") {
+                assert(arrayOf("one", 2)).all {
+                    it.doesNotHaveClass(Boolean::class)
+                }
+            }
+        }
     }
 })
