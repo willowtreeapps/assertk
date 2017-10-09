@@ -99,7 +99,7 @@ The first is to wrap in a `catch` block to store the result, then assert on that
 ```kotlin
 val exception = catch { throw Exception("error") }
 assert(exception).isNotNull {
-    hasMessage("wrong")
+    it.hasMessage("wrong")
 }
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
 ```
