@@ -27,7 +27,7 @@ fun <T : Number> Assert<T>.isNotZero() {
  * @see [isNegative]
  */
 fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "UnsafeCast")
     if (actual > 0 as T) return
     expected("to be positive but was:${show(actual)}")
 }
@@ -37,7 +37,7 @@ fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
  * @see [isPositive]
  */
 fun <T> Assert<T>.isNegative() where T : Number, T : Comparable<T> {
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "UnsafeCast")
     if (actual < 0 as T) return
     expected("to be negative but was:${show(actual)}")
 }

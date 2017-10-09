@@ -15,7 +15,10 @@ private fun display(value: Any?): String {
         is Class<*> -> value.name
         is Array<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Collection<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
-        is Map<*, *> -> value.entries.joinToString(prefix = "{", postfix = "}", transform =  { (k, v) -> "${display(k)}=${display(v)}"})
+        is Map<*, *> -> value.entries.joinToString(
+                prefix = "{",
+                postfix = "}",
+                transform = { (k, v) -> "${display(k)}=${display(v)}" })
         is Regex -> "/$value/"
         else -> value.toString()
     }

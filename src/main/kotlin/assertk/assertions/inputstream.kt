@@ -2,30 +2,29 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
+import java.io.Closeable
 import java.io.InputStream
 
-/** Asserts that the actual stream has the same content as the other stream.
+/** Asserts that the actual stream has the same content as the expected stream.
  * Both [InputStream]s will be closed by the assertion.
  *
- * @param other which content is compared to the actual one
+ * @param expected which content is compared to the actual one
  */
-fun Assert<InputStream>.hasSameContentAs(other: InputStream) {
-
-    val msg = doTheStreamHaveTheSameContent(actual, other)
+fun Assert<InputStream>.hasSameContentAs(expected: InputStream) {
+    val msg = doTheStreamHaveTheSameContent(actual, expected)
     if (msg != null) {
         expected(msg)
     }
 
 }
 
-/** Asserts that the actual stream has a different content as the other stream.
+/** Asserts that the actual stream has a different content as the expected stream.
  * Both [InputStream]s will be closed by the assertion.
  *
- * @param other which content is compared to the actual one
+ * @param expected which content is compared to the actual one
  */
-fun Assert<InputStream>.hasNotSameContentAs(other: InputStream) {
-
-    val msg = doTheStreamHaveTheSameContent(actual, other)
+fun Assert<InputStream>.hasNotSameContentAs(expected: InputStream) {
+    val msg = doTheStreamHaveTheSameContent(actual, expected)
     if (msg == null) {
         expected("streams not to be equal, but they were equal")
     }
@@ -63,87 +62,79 @@ private fun fillBuffer(stream: InputStream, buffer: ByteArray): Int {
     }
 }
 
-private fun compare(len: Int, actual: ByteArray, other: ByteArray): Int? {
-    for (i in 0 until len) {
-        if (actual[i] != other[i]) {
-            return i
-        }
-    }
-
-    return null
+private fun compare(len: Int, actual: ByteArray, expected: ByteArray): Int? {
+    return (0 until len).firstOrNull { actual[it] != expected[it] }
 }
 
-/** Verifies that the streams have the same content.
- * @param actual one of the streams to be compared
- * @param other the other stream to be compared
- *
- * @return a message if the streams don't have the same content, or null if they have the same content
- */
-private fun doTheStreamHaveTheSameContent(actual: InputStream, other: InputStream): String? {
+@Suppress("NestedBlockDepth")
+private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputStream): String? = use(actual, expected) {
+    var size = 0L
 
-    actual.use { actualStream ->
-        other.use { otherStream ->
+    val actualBuffer = ByteArray(BUFFER_SIZE)
+    val otherBuffer = ByteArray(BUFFER_SIZE)
 
-            var size = 0L
+    while (true) {
+        val actualRead = fillBuffer(actual, actualBuffer)
+        val otherRead = fillBuffer(expected, otherBuffer)
 
-            val actualBuffer = ByteArray(BUFFER_SIZE)
-            val otherBuffer = ByteArray(BUFFER_SIZE)
-
-            while (true) {
-                val actualRead = fillBuffer(actualStream, actualBuffer)
-                val otherRead = fillBuffer(otherStream, otherBuffer)
-
-                if (actualRead == otherRead) {
-
-                    if (actualRead == 0) {
-                        // the streams have the same size and are finished and have the same content
-                        return null
-                    } else {
-                        val pos = compare(actualRead, actualBuffer, otherBuffer)
-                        if (pos == null) {
-                            // the current buffers are equals and we can try the next block
-                            size += actualRead
-
-                        } else {
-                            // the first difference is in position pos
-
-                            val actualSize = size + actualRead + consume(actualStream)
-                            val otherSize = size + otherRead + consume(otherStream)
-
-                            return "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
-                        }
-                    }
-
-                } else {
-
-                    if (actualRead == 0) {
-                        val actualSize = actualRead + size
-                        val otherSize = consume(otherStream) + otherRead + size
-
-                        return "to have the same size, but actual stream size (${actualSize}) differs from other stream size ($otherSize)"
-                    } else if (otherRead == 0) {
-                        val actualSize = consume(actualStream) + actualRead + size
-                        val otherSize = otherRead + size
-
-                        return "to have the same size, but actual stream size ($actualSize) differs from other stream size (${otherSize})"
-                    } else {
-                        val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
-                        val actualSize = consume(actualStream) + actualRead + size
-                        val otherSize = consume(otherStream) + otherRead + size
-
-                        return if (pos == null) {
-                            "to have the same size, but actual size (${actualSize}) differs from other size (${otherSize})"
-                        } else {
-                            "to have the same content, but actual stream differs at pos $size. Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize. Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
-                        }
-                    }
-                }
+        if (actualRead == otherRead) {
+            if (actualRead == 0) {
+                // the streams have the same size and are finished and have the same content
+                return null
             }
 
-            // the following throw should be unnecessary, as the only way to leave the while loop is either
-            // - somewhere in the while loop an exception is thrown
-            // - somwhere in the while loop the method is left by a return statement
-            throw IllegalStateException("unreachable code")
+            val pos = compare(actualRead, actualBuffer, otherBuffer)
+            if (pos == null) {
+                // the current buffers are equals and we can try the next block
+                size += actualRead
+            } else {
+                // the first difference is in position pos
+                val actualSize = size + actualRead + consume(actual)
+                val otherSize = size + otherRead + consume(expected)
+
+                return "to have the same content, but actual stream differs at pos $size." +
+                        " Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize." +
+                        " Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+            }
+        } else {
+            if (actualRead == 0) {
+                val actualSize = actualRead + size
+                val otherSize = consume(expected) + otherRead + size
+
+                return "to have the same size," +
+                        " but actual stream size ($actualSize) differs from other stream size ($otherSize)"
+            }
+
+            if (otherRead == 0) {
+                val actualSize = consume(actual) + actualRead + size
+                val otherSize = otherRead + size
+
+                return "to have the same size," +
+                        " but actual stream size ($actualSize) differs from other stream size ($otherSize)"
+            }
+
+            val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
+            val actualSize = consume(actual) + actualRead + size
+            val otherSize = consume(expected) + otherRead + size
+
+            return if (pos == null) {
+                "to have the same size," +
+                        " but actual size ($actualSize) differs from other size ($otherSize)"
+            } else {
+                "to have the same content, but actual stream differs at pos $size." +
+                        " Actual stream: value=0x${actualBuffer[pos].toHexString()}, size=$actualSize." +
+                        " Other stream: value=0x${otherBuffer[pos].toHexString()}, size=$otherSize"
+            }
         }
     }
+
+    // the following throw should be unnecessary, as the only way to leave the while loop is either
+    // - somewhere in the while loop an exception is thrown
+    // - somewhere in the while loop the method is left by a return statement
+    throw IllegalStateException("unreachable code")
 }
+
+private inline fun <R> use(a: Closeable, b: Closeable, f: () -> R): R {
+    return a.use { b.use { f() } }
+}
+
