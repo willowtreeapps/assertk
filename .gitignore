@@ -4,3 +4,5 @@ build/
 local.properties
 *.iml
 out/
+Thumbs.db
+.DS_Store
