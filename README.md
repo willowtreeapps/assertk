@@ -1,6 +1,7 @@
 # assertk
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk)
+[![Build status](https://travis-ci.org/willowtreeapps/assertk.svg?branch=master)](https://travis-ci.org/willowtreeapps/assertk)
 
 assertions for kotlin inspired by assertj
 
