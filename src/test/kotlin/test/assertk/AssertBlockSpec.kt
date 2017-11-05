@@ -1,10 +1,7 @@
 package test.assertk
 
 import assertk.assert
-import assertk.assertions.hasMessage
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNegative
-import assertk.assertions.isPositive
+import assertk.assertions.*
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
@@ -35,7 +32,7 @@ class AssertBlockSpec : Spek({
         it("should fail a throws error assertion") {
             Assertions.assertThatThrownBy {
                 subject.thrownError {
-                    hasMessage("error")
+                    message().isEqualTo("error")
                 }
             }.hasMessage("expected exception but was:<2>")
         }
@@ -48,16 +45,16 @@ class AssertBlockSpec : Spek({
 
         it("should pass a successful throws error assertion") {
             subject.thrownError {
-                hasMessage("test")
+                message().isEqualTo("test")
             }
         }
 
         it("should fail a unsuccessful throws error assertion") {
             Assertions.assertThatThrownBy {
                 subject.thrownError {
-                    hasMessage("wrong")
+                    message().isEqualTo("wrong")
                 }
-            }.hasMessage("expected [message]:<\"[wrong]\"> but was:<\"[test]\">")
+            }.hasMessage("expected [message]:<\"[wrong]\"> but was:<\"[test]\"> (java.lang.Exception: test)")
         }
 
         it("should fail a returns value assertion") {

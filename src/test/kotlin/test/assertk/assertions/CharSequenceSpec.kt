@@ -50,26 +50,14 @@ class CharSequenceSpec : Spek({
 
         on("hasLength()") {
             it("Given a sequence, test should pass") {
-                assert("test").hasLength(4)
-                assert("").hasLength(0)
+                assert("test").length().isEqualTo(4)
+                assert("").length().isEqualTo(0)
             }
 
             it("Given a sequence with different length, test should fail") {
                 Assertions.assertThatThrownBy {
-                    assert("test").hasLength(0)
-                }.hasMessage("expected to have length:<0> but was:<\"test\"> (4)")
-            }
-        }
-
-        on("hasSameLengthAs()") {
-            it("Given sequences with same length, test should pass") {
-                assert("banana").hasSameLengthAs("apples")
-            }
-
-            it("Given sequences with different length, test should fail") {
-                Assertions.assertThatThrownBy {
-                    assert("banana").hasSameLengthAs("pear")
-                }.hasMessage("expected to have same length as:<\"pear\"> (4) but was:<\"banana\"> (6)")
+                    assert("test").length().isEqualTo(0)
+                }.hasMessage("expected [length]:<[0]> but was:<[4]> (\"test\")")
             }
         }
     }

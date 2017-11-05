@@ -203,21 +203,21 @@ class ArraySpec : Spek({
                     "test should fail when expecting 4 elements") {
                 Assertions.assertThatThrownBy {
                     assert(arrayOf(1, 2, 3)).hasSize(4)
-                }.hasMessage("expected [size]:<[4]> but was:<[3]>")
+                }.hasMessage("expected [size]:<[4]> but was:<[3]> ([1, 2, 3])")
             }
 
             it("Given an empty array, " +
                     "test should fail when expecting more than 0 elements") {
                 Assertions.assertThatThrownBy {
                     assert(emptyArray<Any?>()).hasSize(1)
-                }.hasMessage("expected [size]:<[1]> but was:<[0]>")
+                }.hasMessage("expected [size]:<[1]> but was:<[0]> ([])")
             }
 
             it("Given a array of 1 null, " +
                     "test should fail when expecting 0 elements") {
                 Assertions.assertThatThrownBy {
                     assert(arrayOf<Any?>(null)).hasSize(0)
-                }.hasMessage("expected [size]:<[0]> but was:<[1]>")
+                }.hasMessage("expected [size]:<[0]> but was:<[1]> ([null])")
             }
 
             it("Given two arrays expecting incorrect size for each, " +
@@ -228,8 +228,8 @@ class ArraySpec : Spek({
                         assert(arrayOf(43, true, "awesome!")).hasSize(1)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected [size]:<[4]> but was:<[3]>\n"
-                        + "- expected [size]:<[1]> but was:<[3]>")
+                        + "- expected [size]:<[4]> but was:<[3]> ([1, 2, 3])\n"
+                        + "- expected [size]:<[1]> but was:<[3]> ([43, true, \"awesome!\"])")
             }
 
             it("Given one array expecting the correct size and two arrays expecting incorrect size for each, " +
@@ -241,8 +241,8 @@ class ArraySpec : Spek({
                         assert(arrayOf(43, true, "awesome!")).hasSize(1)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected [size]:<[4]> but was:<[3]>\n"
-                        + "- expected [size]:<[1]> but was:<[3]>")
+                        + "- expected [size]:<[4]> but was:<[3]> ([1, 2, 3])\n"
+                        + "- expected [size]:<[1]> but was:<[3]> ([43, true, \"awesome!\"])")
             }
         }
 
@@ -507,32 +507,32 @@ class ArraySpec : Spek({
             }
         }
 
-        on("all()") {
+        on("each()") {
             it("Given an empty array, test should pass when expecting nothing") {
-                assert(emptyArray<Any>()).all { }
+                assert(emptyArray<Any>()).each { }
             }
 
             it("Given a non empty array, test should pass when expecting nothing") {
-                assert(arrayOf("one", "two")).all { }
+                assert(arrayOf("one", "two")).each { }
             }
 
             it("Given an array of Strings, valid assertion should pass for each item") {
-                assert(arrayOf("one", "two")).all {
-                    it.hasLength(3)
+                assert(arrayOf("one", "two")).each {
+                    it.length().isEqualTo(3)
                 }
             }
 
             it("Given an array, invalid assertion should fail") {
                 Assertions.assertThatThrownBy {
-                    assert(arrayOf(1, 2, 3, 4)).all {
+                    assert(arrayOf(1, 2, 3, 4)).each {
                         it.isLessThan(3)
                     }
-                }.hasMessage("expected to be less than:<3> but was:<3>")
+                }.hasMessage("expected to be less than:<3> but was:<3> ([1, 2, 3, 4])")
             }
 
             it("Given an array of multiple types, valid assertion should pass for each item") {
-                assert(arrayOf("one", 2)).all {
-                    it.doesNotHaveClass(Boolean::class)
+                assert(arrayOf("one", 2)).each {
+                    it.kClass().isNotEqualTo(Boolean::class)
                 }
             }
         }

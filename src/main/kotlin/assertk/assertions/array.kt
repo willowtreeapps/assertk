@@ -95,16 +95,16 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
 }
 
 /**
- * Asserts on all items in the array. The given lambda will be run for each item.
+ * Asserts on each item in the array. The given lambda will be run for each item.
  *
  * ```
- * assert(arrayOf("one", "two")).all {
+ * assert(arrayOf("one", "two")).each {
  *   it.hasLength(3)
  * }
  * ```
  */
 @JvmName("arrayAll")
-fun <T> Assert<Array<T>>.all(f: (Assert<T>) -> Unit) {
+fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) {
     for (item in actual) {
         f(assert(item, name))
     }

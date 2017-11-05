@@ -51,7 +51,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).isNotEqualTo(equal)
-                }.hasMessage("expected:<test> not to be equal to:<test>")
+                }.hasMessage("expected to not be equal to:<test>")
             }
         }
 
@@ -85,49 +85,53 @@ class AssertSpec : Spek({
 
         on("hasClass(KClass)") {
             it("should pass a successful test") {
-                assert(subject as TestObject).hasClass(BasicObject::class)
+                assert(subject as TestObject).kClass().isEqualTo(BasicObject::class)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as TestObject).hasClass(DifferentObject::class)
-                }.hasMessage("expected to have class:<$ASSERT_SPEC\$DifferentObject> but was:<$ASSERT_SPEC\$BasicObject>")
+                    assert(subject as TestObject).kClass().isEqualTo(DifferentObject::class)
+                }.hasMessageStartingWith("expected [class]:")
+                        .hasMessageContaining("[Different]Object> but was:")
+                        .hasMessageContaining("[Basic]Object>")
             }
         }
 
         on("hasClass(Class)") {
             it("should pass a successful test") {
-                assert(subject as TestObject).hasClass(BasicObject::class.java)
+                assert(subject as TestObject).jClass().isEqualTo(BasicObject::class.java)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as TestObject).hasClass(DifferentObject::class.java)
-                }.hasMessage("expected to have class:<$ASSERT_SPEC\$DifferentObject> but was:<$ASSERT_SPEC\$BasicObject>")
+                    assert(subject as TestObject).jClass().isEqualTo(DifferentObject::class.java)
+                }.hasMessageStartingWith("expected [class]:")
+                        .hasMessageContaining("[Different]Object> but was:")
+                        .hasMessageContaining("[Basic]Object>")
             }
         }
 
         on("doesNotHaveClass(KClass)") {
             it("should pass a successful test") {
-                assert(subject as TestObject).doesNotHaveClass(DifferentObject::class)
+                assert(subject as TestObject).kClass().isNotEqualTo(DifferentObject::class)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as TestObject).doesNotHaveClass(BasicObject::class)
-                }.hasMessage("expected to not have class:<$ASSERT_SPEC\$BasicObject>")
+                    assert(subject as TestObject).kClass().isNotEqualTo(BasicObject::class)
+                }.hasMessage("expected [class] to not be equal to:<class $ASSERT_SPEC\$BasicObject> (test)")
             }
         }
 
         on("doesNotHaveClass(Class)") {
             it("should pass a successful test") {
-                assert(subject as TestObject).doesNotHaveClass(DifferentObject::class.java)
+                assert(subject as TestObject).jClass().isNotEqualTo(DifferentObject::class.java)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as TestObject).doesNotHaveClass(BasicObject::class.java)
-                }.hasMessage("expected to not have class:<$ASSERT_SPEC\$BasicObject>")
+                    assert(subject as TestObject).jClass().isNotEqualTo(BasicObject::class.java)
+                }.hasMessage("expected [class] to not be equal to:<$ASSERT_SPEC\$BasicObject> (test)")
             }
         }
 
@@ -234,25 +238,25 @@ class AssertSpec : Spek({
 
         on("hasToString()") {
             it("should pass a successful test") {
-                assert(subject).hasToString("test")
+                assert(subject).toStringFun().isEqualTo("test")
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasToString("not test")
-                }.hasMessage("expected toString() to be:<\"not test\"> but was:<\"test\">")
+                    assert(subject).toStringFun().isEqualTo("not test")
+                }.hasMessage("expected [toString]:<\"[not ]test\"> but was:<\"[]test\"> (test)")
             }
         }
 
         on("hasHashCode()") {
             it("should pass a successful test") {
-                assert(subject).hasHashCode(42)
+                assert(subject).hashCodeFun().isEqualTo(42)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasHashCode(9)
-                }.hasMessage("expected hashCode() to be:<9> but was:<42>")
+                    assert(subject).hashCodeFun().isEqualTo(9)
+                }.hasMessage("expected [hashCode]:<[9]> but was:<[42]> (test)")
             }
         }
     }
@@ -269,7 +273,7 @@ class AssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).isNull()
-                }.hasMessage("expected null but was:<test>")
+                }.hasMessage("expected to be null but was:<test>")
             }
         }
 

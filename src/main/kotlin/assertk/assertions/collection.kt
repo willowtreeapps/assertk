@@ -117,7 +117,7 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
 }
 
 /**
- * Asserts on all items in the collection. The given lambda will be run for each item.
+ * Asserts on each item in the collection. The given lambda will be run for each item.
  *
  * ```
  * assert(listOf("one", "two")) {
@@ -125,7 +125,7 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
  * }
  * ```
  */
-fun <E, T : Collection<E>> Assert<T>.all(f: (Assert<E>) -> Unit) {
+fun <E, T : Collection<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
     for (item in actual) {
         f(assert(item, name))
     }

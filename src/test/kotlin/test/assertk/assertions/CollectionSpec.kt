@@ -203,21 +203,21 @@ class CollectionSpec : Spek({
                     "test should fail when expecting 4 elements") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3)).hasSize(4)
-                }.hasMessage("expected [size]:<[4]> but was:<[3]>")
+                }.hasMessage("expected [size]:<[4]> but was:<[3]> ([1, 2, 3])")
             }
 
             it("Given an empty list, " +
                     "test should fail when expecting more than 0 elements") {
                 Assertions.assertThatThrownBy {
                     assert(emptyList<Any?>()).hasSize(1)
-                }.hasMessage("expected [size]:<[1]> but was:<[0]>")
+                }.hasMessage("expected [size]:<[1]> but was:<[0]> ([])")
             }
 
             it("Given a list of 1 null, " +
                     "test should fail when expecting 0 elements") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(null)).hasSize(0)
-                }.hasMessage("expected [size]:<[0]> but was:<[1]>")
+                }.hasMessage("expected [size]:<[0]> but was:<[1]> ([null])")
             }
 
             it("Given two lists expecting incorrect size for each, " +
@@ -228,8 +228,8 @@ class CollectionSpec : Spek({
                         assert(listOf(43, true, "awesome!")).hasSize(1)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected [size]:<[4]> but was:<[3]>\n"
-                        + "- expected [size]:<[1]> but was:<[3]>")
+                        + "- expected [size]:<[4]> but was:<[3]> ([1, 2, 3])\n"
+                        + "- expected [size]:<[1]> but was:<[3]> ([43, true, \"awesome!\"])")
             }
 
             it("Given one list expecting the correct size and two lists expecting incorrect size for each, " +
@@ -241,8 +241,8 @@ class CollectionSpec : Spek({
                         assert(listOf(43, true, "awesome!")).hasSize(1)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected [size]:<[4]> but was:<[3]>\n"
-                        + "- expected [size]:<[1]> but was:<[3]>")
+                        + "- expected [size]:<[4]> but was:<[3]> ([1, 2, 3])\n"
+                        + "- expected [size]:<[1]> but was:<[3]> ([43, true, \"awesome!\"])")
             }
         }
 
