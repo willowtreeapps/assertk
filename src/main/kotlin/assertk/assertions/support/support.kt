@@ -2,11 +2,15 @@ package assertk.assertions.support
 
 import assertk.Assert
 import assertk.fail
+import assertk.rootActual
 
 /**
- * Shows a value in a failure message.
+ * Shows the primary value in a failure message.
+ * @param value The value to display.
+ * @param wrap What characters to wrap around the value. This should be a pair of characters where the first is at the
+ * beginning and the second is at the end. For example, "()" will show (value). The default is "<>".
  */
-fun show(value: Any?): String = "<${display(value)}>"
+fun show(value: Any?, wrap: String = "<>"): String = "${wrap[0]}${display(value)}${wrap[1]}"
 
 private fun display(value: Any?): String {
     return when (value) {
@@ -47,7 +51,8 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  */
 fun <T> Assert<T>.expected(message: String) {
     val maybeSpace = if (message.startsWith(":")) "" else " "
-    fail("expected${formatName(name)}$maybeSpace$message")
+    val maybeInstance = if (parent != null) " ${show(rootActual(), "()")}" else ""
+    fail("expected${formatName(name)}$maybeSpace$message$maybeInstance")
 }
 
 private fun formatName(name: String?): String {

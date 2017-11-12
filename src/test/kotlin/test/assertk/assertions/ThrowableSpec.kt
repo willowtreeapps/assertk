@@ -13,255 +13,255 @@ class ThrowableSpec : Spek({
 
     given("a Throwable") {
 
-        val rootCause = TestException("root cause")
+        val rootCause = TestException("rootCause")
         val cause = TestException("cause", rootCause)
         val subject = TestException("test", cause)
 
         on("hasMessage()") {
             it("should pass a successful test") {
-                assert(subject).hasMessage("test")
+                assert(subject).message().isEqualTo("test")
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasMessage("not test")
-                }.hasMessage("expected [message]:<\"[not ]test\"> but was:<\"[]test\">")
+                    assert(subject).message().isEqualTo("not test")
+                }.hasMessage("expected [message]:<\"[not ]test\"> but was:<\"[]test\"> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasCause()") {
             it("should pass a successful test") {
-                assert(subject).hasCause(cause)
+                assert(subject).cause().isEqualTo(cause)
             }
 
             it("should fail an unsuccessful test on no cause") {
                 val causeless = TestException("test")
                 Assertions.assertThatThrownBy {
-                    assert(causeless).hasCause(cause)
-                }.hasMessage("expected [cause] to not be null")
+                    assert(causeless).cause().isEqualTo(cause)
+                }.hasMessage("expected [cause]:<$THROWABLE_SPEC\$TestException: cause> but was:<null> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong cause class") {
                 val wrongCause = Exception("cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCause(wrongCause)
-                }.hasMessage("expected [cause]:<[java.lang.]Exception: cause> but was:<[$THROWABLE_SPEC\$Test]Exception: cause>")
+                    assert(subject).cause().isEqualTo(wrongCause)
+                }.hasMessage("expected [cause]:<[java.lang.]Exception: cause> but was:<[$THROWABLE_SPEC\$Test]Exception: cause> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong message") {
                 val wrongCause = TestException("wrong cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCause(wrongCause)
-                }.hasMessage("expected [cause]:<...Spec\$TestException: [wrong ]cause> but was:<...Spec\$TestException: []cause>")
+                    assert(subject).cause().isEqualTo(wrongCause)
+                }.hasMessage("expected [cause]:<...Spec\$TestException: [wrong ]cause> but was:<...Spec\$TestException: []cause> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong cause class and message") {
                 val wrongCause = Exception("wrong cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCause(wrongCause)
-                }.hasMessage("expected [cause]:<[java.lang.Exception: wrong] cause> but was:<[$THROWABLE_SPEC\$TestException:] cause>")
+                    assert(subject).cause().isEqualTo(wrongCause)
+                }.hasMessage("expected [cause]:<[java.lang.Exception: wrong] cause> but was:<[$THROWABLE_SPEC\$TestException:] cause> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasNoCause()") {
             it("should pass a successful test") {
                 val causeless = TestException("test")
-                assert(causeless).hasNoCause()
+                assert(causeless).cause().isNull()
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasNoCause()
-                }.hasMessage("expected [cause] to not exist but was:<$THROWABLE_SPEC\$TestException: cause>")
+                    assert(subject).cause().isNull()
+                }.hasMessage("expected [cause] to be null but was:<$THROWABLE_SPEC\$TestException: cause> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasMessageStartingWith") {
             it("should pass a successful test") {
-                assert(subject).hasMessageStartingWith("t")
+                assert(subject).message().isNotNull { it.startsWith("t") }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasMessageStartingWith("f")
-                }.hasMessage("expected [message] to start with:<\"f\"> but was:<\"test\">")
+                    assert(subject).message().isNotNull { it.startsWith("f") }
+                }.hasMessage("expected [message] to start with:<\"f\"> but was:<\"test\"> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasMessageContaining") {
             it("should pass a successful test") {
-                assert(subject).hasMessageContaining("es")
+                assert(subject).message().isNotNull { it.contains("es") }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasMessageContaining("f")
-                }.hasMessage("expected [message] to contain:<\"f\"> but was:<\"test\">")
+                    assert(subject).message().isNotNull { it.contains("f") }
+                }.hasMessage("expected [message] to contain:<\"f\"> but was:<\"test\"> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasMessageMatching") {
             it("should pass a successful test") {
-                assert(subject).hasMessageMatching("t.*t".toRegex())
+                assert(subject).message().isNotNull { it.matches("t.*t".toRegex()) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasMessageMatching("f.*f".toRegex())
-                }.hasMessage("expected [message] to match:</f.*f/> but was:<\"test\">")
+                    assert(subject).message().isNotNull { it.matches("f.*f".toRegex()) }
+                }.hasMessage("expected [message] to match:</f.*f/> but was:<\"test\"> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasMessageEndingWidth") {
             it("should pass a successful test") {
-                assert(subject).hasMessageEndingWith("t")
+                assert(subject).message().isNotNull { it.endsWith("t") }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasMessageEndingWith("f")
-                }.hasMessage("expected [message] to end with:<\"f\"> but was:<\"test\">")
+                    assert(subject).message().isNotNull { it.endsWith("f") }
+                }.hasMessage("expected [message] to end with:<\"f\"> but was:<\"test\"> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasCauseInstanceOf(KClass)") {
             it("should pass a successful test") {
-                assert(subject).hasCauseInstanceOf(TestException::class)
+                assert(subject).cause().isNotNull { it.isInstanceOf(TestException::class) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCauseInstanceOf(DifferentException::class)
-                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).cause().isNotNull { it.isInstanceOf(DifferentException::class) }
+                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasCauseInstanceOf(Class)") {
             it("should pass a successful test") {
-                assert(subject).hasCauseInstanceOf(TestException::class.java)
+                assert(subject).cause().isNotNull { it.isInstanceOf(TestException::class.java) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCauseInstanceOf(DifferentException::class.java)
-                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).cause().isNotNull { it.isInstanceOf(DifferentException::class.java) }
+                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasCauseWithClass(KClass)") {
             it("should pass a successful test") {
-                assert(subject).hasCauseWithClass(TestException::class)
+                assert(subject).cause().isNotNull { it.kClass().isEqualTo(TestException::class) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCauseWithClass(Exception::class)
-                }.hasMessage("expected [cause] to have class:<java.lang.Exception> but was:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).cause().isNotNull { it.kClass().isEqualTo(Exception::class) }
+                }.hasMessage("expected [cause.class]:<class [java.lang.]Exception> but was:<class [$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasCauseWithClass(Class)") {
             it("should pass a successful test") {
-                assert(subject).hasCauseWithClass(TestException::class.java)
+                assert(subject).cause().isNotNull { it.jClass().isEqualTo(TestException::class.java) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasCauseWithClass(Exception::class.java)
-                }.hasMessage("expected [cause] to have class:<java.lang.Exception> but was:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).cause().isNotNull { it.jClass().isEqualTo(Exception::class.java) }
+                }.hasMessage("expected [cause.class]:<[java.lang.]Exception> but was:<[$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCause()") {
             it("should pass a successful test") {
-                assert(subject).hasRootCause(rootCause)
+                assert(subject).rootCause().isEqualTo(rootCause)
             }
 
             it("should fail an unsuccessful test on no cause") {
                 val causeless = TestException("test")
                 Assertions.assertThatThrownBy {
-                    assert(causeless).hasRootCause(rootCause)
-                }.hasMessage("expected [root cause]:<...Spec\$TestException: [root cause]> but was:<...Spec\$TestException: [test]>")
+                    assert(causeless).rootCause().isEqualTo(rootCause)
+                }.hasMessage("expected [rootCause]:<...Spec\$TestException: [rootCause]> but was:<...Spec\$TestException: [test]> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong cause class") {
                 val wrongCause = Exception("cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasRootCause(wrongCause)
-                }.hasMessage("expected [root cause]:<[java.lang.Exception:] cause> but was:<[$THROWABLE_SPEC\$TestException: root] cause>")
+                    assert(subject).rootCause().isEqualTo(wrongCause)
+                }.hasMessage("expected [rootCause]:<[java.lang.Exception: c]ause> but was:<[$THROWABLE_SPEC\$TestException: rootC]ause> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong message") {
                 val wrongCause = TestException("wrong cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasRootCause(wrongCause)
-                }.hasMessage("expected [root cause]:<...Spec\$TestException: [wrong] cause> but was:<...Spec\$TestException: [root] cause>")
+                    assert(subject).rootCause().isEqualTo(wrongCause)
+                }.hasMessage("expected [rootCause]:<...Spec\$TestException: [wrong c]ause> but was:<...Spec\$TestException: [rootC]ause> ($THROWABLE_SPEC\$TestException: test)")
             }
 
             it("should fail an unsuccessful test on wrong cause class and message") {
                 val wrongCause = Exception("wrong cause")
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasRootCause(wrongCause)
-                }.hasMessage("expected [root cause]:<[java.lang.Exception: wrong] cause> but was:<[$THROWABLE_SPEC\$TestException: root] cause>")
+                    assert(subject).rootCause().isEqualTo(wrongCause)
+                }.hasMessage("expected [rootCause]:<[java.lang.Exception: wrong c]ause> but was:<[$THROWABLE_SPEC\$TestException: rootC]ause> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCauseInstanceOf(KClass)") {
             it("should pass a successful test") {
-                assert(subject).hasRootCauseInstanceOf(TestException::class)
+                assert(subject).rootCause().isInstanceOf(TestException::class)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasRootCauseInstanceOf(DifferentException::class)
-                }.hasMessage("expected [root cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).rootCause().isInstanceOf(DifferentException::class)
+                }.hasMessage("expected [rootCause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCauseInstanceOf(Class)") {
             it("should pass a successful test") {
-                assert(subject).hasRootCauseInstanceOf(TestException::class.java)
+                assert(subject).rootCause().isInstanceOf(TestException::class.java)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as Exception).hasCauseInstanceOf(DifferentException::class.java)
-                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).cause().isNotNull { it.isInstanceOf(DifferentException::class.java) }
+                }.hasMessage("expected [cause] to be instance of:<$THROWABLE_SPEC\$DifferentException> but had class:<$THROWABLE_SPEC\$TestException> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCauseWithClass(KClass)") {
             it("should pass a successful test") {
-                assert(subject).hasRootCauseWithClass(TestException::class)
+                assert(subject).rootCause().isNotNull { it.kClass().isEqualTo(TestException::class) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject as Exception).hasRootCauseWithClass(Exception::class)
-                }.hasMessage("expected [root cause] to have class:<java.lang.Exception> but was:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).rootCause().isNotNull { it.kClass().isEqualTo(Exception::class) }
+                }.hasMessage("expected [rootCause.class]:<class [java.lang.]Exception> but was:<class [$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCauseWithClass(Class)") {
             it("should pass a successful test") {
-                assert(subject).hasRootCauseWithClass(TestException::class.java)
+                assert(subject).rootCause().isNotNull { it.jClass().isEqualTo(TestException::class.java) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasRootCauseWithClass(Exception::class.java)
-                }.hasMessage("expected [root cause] to have class:<java.lang.Exception> but was:<$THROWABLE_SPEC\$TestException>")
+                    assert(subject).rootCause().isNotNull { it.jClass().isEqualTo(Exception::class.java) }
+                }.hasMessage("expected [rootCause.class]:<[java.lang.]Exception> but was:<[$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasStackTraceContaining") {
             it("should pass a successful test") {
-                assert(subject).hasStackTraceContaining("$THROWABLE_SPEC\$1\$1.invoke(ThrowableSpec.kt:18)")
+                assert(subject).stackTrace().contains("$THROWABLE_SPEC\$1\$1.invoke(ThrowableSpec.kt:18)")
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).hasStackTraceContaining("wrong")
+                    assert(subject).stackTrace().contains("wrong")
                 }.hasMessageStartingWith("expected [stack trace] to contain:<\"wrong\"> but was:")
             }
         }

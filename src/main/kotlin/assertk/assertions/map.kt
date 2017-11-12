@@ -19,7 +19,7 @@ fun <T : Map<*, *>> Assert<T>.hasSameSizeAs(other: Map<*, *>) {
  * @see [doesNotContain]
  */
 @JvmName("mapContains")
-fun <K, V> Assert<Map<K, V>>.contains(key : K, value : V) {
+fun <K, V> Assert<Map<K, V>>.contains(key: K, value: V) {
     if (actual[key] == value) {
         return
     }
@@ -86,3 +86,13 @@ fun <K, V> Assert<Map<K, V>>.containsExactly(vararg elements: Pair<K, V>) {
     if (actual.size == elements.size && elements.all { (k, v) -> actual[k] == v }) return
     expected("to contain exactly:${show(mapOf(*elements))} but was:${show(actual)}")
 }
+
+/**
+ * Returns an assert that asserts on the value at the given key in the map.
+ *
+ * ```
+ * assert(mapOf("key" to "value")).key("key").isEqualTo("value")
+ * ```
+ */
+fun <K, V> Assert<Map<K, V>>.key(key: K)
+        = assert(actual.getValue(key), "${name ?: ""}${show(key, "[]")}")

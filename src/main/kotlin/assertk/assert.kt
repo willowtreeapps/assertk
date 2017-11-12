@@ -6,7 +6,22 @@ import assertk.assertions.support.show
  * An assertion. Holds an actual value to assertion on and an optional name.
  * @see [assert]
  */
-class Assert<out T> internal constructor(val name: String? = null, val actual: T)
+class Assert<out T> internal constructor(val actual: T, val name: String? = null, val parent: Assert<*>? = null) {
+    /**
+     * Asserts on the given value with an optional name.
+     *
+     * ```
+     * assert(true, name = "true").isTrue()
+     * ```
+     */
+    fun <T> assert(actual: T, name: String? = this.name, parent: Assert<*>? = this)
+            : Assert<T> = Assert(actual, name, parent)
+}
+
+/**
+ * The root actual value for an assertion. It will follow up parent assertions until it finds the top one.
+ */
+fun <T> Assert<T>.rootActual(): Any? = if (parent != null) parent.rootActual() else actual
 
 /**
  * An assertion on a block of code. Can assert that it either throws and error or returns a value.
@@ -26,13 +41,13 @@ sealed class AssertBlock<out T> {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) = fail("expected exception but was:${show(value)}")
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
-            f(Assert(actual = value))
+            f(assert(value))
         }
     }
 
     internal class Error<out T> internal constructor(private val error: Throwable) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
-            f(Assert(actual = error))
+            f(assert(error))
         }
 
         override fun returnedValue(f: Assert<T>.() -> Unit) = fail("expected value but threw:${show(error)}")
@@ -46,21 +61,39 @@ sealed class AssertBlock<out T> {
  * assert(true, name = "true").isTrue()
  * ```
  */
-fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(name, actual)
+fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name)
 
 /**
  * Asserts on the given value with an optional name. All assertions in the given lambda are run.
  *
  * ```
  * assert("test", name = "test") {
- *   hasLength(4)
+ *   startsWith(4)
  *   endsWith("t")
  * }
  * ```
  */
+@Deprecated(message = "Use assert(actual, name).all(f) instead.",
+        replaceWith = ReplaceWith("assert(actual, name).all(f)"))
 fun <T> assert(actual: T, name: String? = null, f: Assert<T>.() -> Unit) {
     FailureContext.run(SoftFailure()) {
-        f(Assert(name, actual))
+        f(assert(actual, name))
+    }
+}
+
+/**
+ * All assertions in the given lambda are run.
+ *
+ * ```
+ * assert("test", name = "test").all {
+ *   startsWith("t")
+ *   endsWith("t")
+ * }
+ * ```
+ */
+fun <T> Assert<T>.all(f: Assert<T>.() -> Unit) {
+    FailureContext.run(SoftFailure()) {
+        f()
     }
 }
 
