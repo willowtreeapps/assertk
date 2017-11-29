@@ -2,7 +2,7 @@ group 'com.willowtreeapps.assertk'
 version '0.10-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.50'
+    ext.kotlin_version = '1.2.0'
     ext.junit_platform_version = '1.0.0'
     ext.dokka_version = '0.9.14'
     ext.detekt_version = '1.0.0.RC4-3'
