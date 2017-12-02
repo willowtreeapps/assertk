@@ -51,24 +51,6 @@ fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
 }
 
 /**
- * Asserts the collection contains the expected element, using `in`.
- * @see [doesNotContain]
- */
-fun <T : Collection<*>> Assert<T>.contains(element: Any?) {
-    if (element in actual) return
-    expected("to contain:${show(element)} but was:${show(actual)}")
-}
-
-/**
- * Asserts the collection does not contain the expected element, using `!in`.
- * @see [contains]
- */
-fun <T : Collection<*>> Assert<T>.doesNotContain(element: Any?) {
-    if (element !in actual) return
-    expected("to not contain:${show(element)} but was:${show(actual)}")
-}
-
-/**
  * Asserts the collection does not contain any of the expected elements.
  * @see [containsAll]
  */
@@ -113,20 +95,5 @@ fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
         }
     } else {
         expected("to contain exactly:${show(elements)} but was:${show(actual)}")
-    }
-}
-
-/**
- * Asserts on each item in the collection. The given lambda will be run for each item.
- *
- * ```
- * assert(listOf("one", "two")) {
- *   hasLength(3)
- * }
- * ```
- */
-fun <E, T : Collection<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
-    for (item in actual) {
-        f(assert(item, name))
     }
 }
