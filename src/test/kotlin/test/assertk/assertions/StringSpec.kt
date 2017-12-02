@@ -30,27 +30,35 @@ class StringSpec : Spek({
                     assert("Test").isEqualTo("tesT", false)
                 }.hasMessage("expected:<\"[tesT]\"> but was:<\"[Test]\">")
             }
+
+            it("Given a java nullable string, picks the objects isEqualTo over the string one") {
+                assert(JavaNullableString.string()).isEqualTo(JavaNullableString.string())
+            }
         }
 
         on("isNotEqualTo()") {
             it("Given same strings, test should fail") {
                 Assertions.assertThatThrownBy {
                     assert("test").isNotEqualTo("test")
-                }.hasMessage("expected:<\"test\"> not to be equal to:<\"test\">")
+                }.hasMessage("expected to not be equal to:<\"test\">")
             }
 
             it("Given different strings, test should pass") {
-                    assert("").isNotEqualTo("test")
+                assert("").isNotEqualTo("test")
             }
 
             it("Given same strings with different casing and ignoring case, test should fail") {
                 Assertions.assertThatThrownBy {
                     assert("Test").isNotEqualTo("tesT", true)
-                }.hasMessage("expected:<\"tesT\"> not to be equal to:<\"Test\">")
+                }.hasMessage("expected:<\"tesT\"> not to be equal to (ignoring case):<\"Test\">")
             }
 
             it("Given different strings with different casing and not ignoring case, test should pass") {
-                    assert("Test").isNotEqualTo("tesT", false)
+                assert("Test").isNotEqualTo("tesT", false)
+            }
+
+            it("Given a java nullable string, picks the objects isNotEqualTo over the string one") {
+                assert(JavaNullableString.string()).isNotEqualTo("wrong")
             }
         }
 
@@ -138,7 +146,7 @@ class StringSpec : Spek({
 
         on("matches()") {
             it("Given a string that matches, test should pass") {
-               assert("1234").matches(Regex("\\d\\d\\d\\d"))
+                assert("1234").matches(Regex("\\d\\d\\d\\d"))
             }
 
             it("Given a string that doesn't matche, test should fail") {

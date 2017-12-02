@@ -162,6 +162,7 @@ src/main/kotlin/assertk/assertions/any.kt
 ### Fixed
 - Fix typos on a few assertions.
 - Fix bug in array `containsExactly`.
+- Fix issue with isEqualTo and nullable java strings
 
 ## [0.9] - 2017-09-25
 - Initial Release
