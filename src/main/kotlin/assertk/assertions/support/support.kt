@@ -2,7 +2,6 @@ package assertk.assertions.support
 
 import assertk.Assert
 import assertk.fail
-import assertk.rootActual
 
 /**
  * Shows the primary value in a failure message.
@@ -51,7 +50,7 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  */
 fun <T> Assert<T>.expected(message: String) {
     val maybeSpace = if (message.startsWith(":")) "" else " "
-    val maybeInstance = if (parent != null) " ${show(rootActual(), "()")}" else ""
+    val maybeInstance = if (context != null) " ${show(context, "()")}" else ""
     fail("expected${formatName(name)}$maybeSpace$message$maybeInstance")
 }
 

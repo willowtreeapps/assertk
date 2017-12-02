@@ -6,7 +6,7 @@ import assertk.assertions.support.show
  * An assertion. Holds an actual value to assertion on and an optional name.
  * @see [assert]
  */
-class Assert<out T> internal constructor(val actual: T, val name: String? = null, val parent: Assert<*>? = null) {
+class Assert<out T> internal constructor(val actual: T, val name: String?, internal val context: Any?) {
     /**
      * Asserts on the given value with an optional name.
      *
@@ -14,14 +14,9 @@ class Assert<out T> internal constructor(val actual: T, val name: String? = null
      * assert(true, name = "true").isTrue()
      * ```
      */
-    fun <T> assert(actual: T, name: String? = this.name, parent: Assert<*>? = this)
-            : Assert<T> = Assert(actual, name, parent)
+    fun <R> assert(actual: R, name: String? = this.name)
+            : Assert<R> = Assert(actual, name, if (context != null || this.actual === actual) context else this.actual)
 }
-
-/**
- * The root actual value for an assertion. It will follow up parent assertions until it finds the top one.
- */
-fun <T> Assert<T>.rootActual(): Any? = if (parent != null) parent.rootActual() else actual
 
 /**
  * An assertion on a block of code. Can assert that it either throws and error or returns a value.
@@ -61,7 +56,7 @@ sealed class AssertBlock<out T> {
  * assert(true, name = "true").isTrue()
  * ```
  */
-fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name)
+fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name, null)
 
 /**
  * Asserts on the given value with an optional name. All assertions in the given lambda are run.

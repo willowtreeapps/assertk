@@ -181,7 +181,7 @@ class ThrowableSpec : Spek({
                 val causeless = TestException("test")
                 Assertions.assertThatThrownBy {
                     assert(causeless).rootCause().isEqualTo(rootCause)
-                }.hasMessage("expected [rootCause]:<...Spec\$TestException: [rootCause]> but was:<...Spec\$TestException: [test]> ($THROWABLE_SPEC\$TestException: test)")
+                }.hasMessage("expected [rootCause]:<...Spec\$TestException: [rootCause]> but was:<...Spec\$TestException: [test]>")
             }
 
             it("should fail an unsuccessful test on wrong cause class") {
