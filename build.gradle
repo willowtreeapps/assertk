@@ -3,7 +3,7 @@ version '0.10-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.50'
-    ext.junit_platform_version = '1.0.0'
+    ext.junit_platform_version = '1.0.2'
     ext.dokka_version = '0.9.14'
     ext.detekt_version = '1.0.0.RC4-3'
 
@@ -38,11 +38,13 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile 'org.jetbrains.spek:spek-api:1.1.5'
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
     testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.2"
     testCompile 'org.assertj:assertj-core:3.6.2'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0'
 }
 
 sourceSets {
@@ -54,6 +56,7 @@ junitPlatform {
     filters {
         engines {
             include 'spek'
+            include 'junit-jupiter'
         }
     }
 }

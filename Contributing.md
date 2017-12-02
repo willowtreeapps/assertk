@@ -38,6 +38,8 @@ To contribute, fork our project on GitHub, then submit a pull request to our
    comments for those methods that are publicly accessible and also adding
    those methods to their respective `README.md` document. Any consumer-facing
    changes should be added to the [Unreleased] section of the `CHANGELOG.md`.
+5. Make sure your coding style follows the
+   [Android Kotlin Style Guide](https://android.github.io/kotlin-guides/style.html)
 
 ---
 
