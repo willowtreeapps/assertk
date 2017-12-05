@@ -239,8 +239,7 @@ fun <T : Any> Assert<T?>.isNull() {
  */
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
     if (actual != null) {
-        // Skip self in parent chain because reporting actual T vs T? isn't very useful.
-        assert(actual, name = name, parent = parent).all(f)
+        assert(actual, name = name).all(f)
     } else {
         expected("to not be null")
     }
