@@ -103,7 +103,7 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
  * }
  * ```
  */
-@JvmName("arrayAll")
+@JvmName("arrayEach")
 fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) {
     actual.forEachIndexed { index, item -> f(assert(item, "${name ?: ""}${show(index, "[]")}")) }
 }
