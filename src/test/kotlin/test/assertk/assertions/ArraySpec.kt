@@ -527,7 +527,7 @@ class ArraySpec : Spek({
                     assert(arrayOf(1, 2, 3, 4)).each {
                         it.isLessThan(3)
                     }
-                }.hasMessage("expected to be less than:<3> but was:<3> ([1, 2, 3, 4])")
+                }.hasMessage("expected [[2]] to be less than:<3> but was:<3> ([1, 2, 3, 4])")
             }
 
             it("Given an array of multiple types, valid assertion should pass for each item") {
