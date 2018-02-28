@@ -31,7 +31,7 @@ fun <T> Assert<Array<T>>.isNotEmpty() {
  * @see [isEmpty]
  */
 @JvmName("arrayIsNullOrEmpty")
-fun <T> Assert<Array<T>?>.isNullOrEmpty() {
+fun <T> Assert<Array<T?>?>.isNullOrEmpty() {
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }

@@ -135,46 +135,46 @@ class ArraySpec : Spek({
 
             it("Given an empty arrays, " +
                     "test should pass") {
-                assert(emptyArray<Any?>()).isNullOrEmpty()
+                assert(emptyArray<Any?>()).isEmpty()
             }
 
             it("Given a non-empty array of Ints, " +
                     "test should fail") {
                 Assertions.assertThatThrownBy {
-                    assert(arrayOf(1, 2, 3)).isNullOrEmpty()
-                }.hasMessage("expected to be null or empty but was:<[1, 2, 3]>")
+                    assert(arrayOf(1, 2, 3)).isEmpty()
+                }.hasMessage("expected to be empty but was:<[1, 2, 3]>")
             }
 
             it("Given a non-empty array with a null, " +
                     "test should fail") {
                 Assertions.assertThatThrownBy {
-                    assert(arrayOf<Any?>(null)).isNullOrEmpty()
-                }.hasMessage("expected to be null or empty but was:<[null]>")
+                    assert(arrayOf<Any?>(null)).isEmpty()
+                }.hasMessage("expected to be empty but was:<[null]>")
             }
 
             it("Given two non-empty non-null arrays, " +
                     "test should fail with only one error message per failed assertion") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assert(arrayOf(1, 2, 3)).isNullOrEmpty()
-                        assert(arrayOf(43, true, "awesome!")).isNullOrEmpty()
+                        assert(arrayOf(1, 2, 3)).isEmpty()
+                        assert(arrayOf(43, true, "awesome!")).isEmpty()
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to be null or empty but was:<[1, 2, 3]>\n"
-                        + "- expected to be null or empty but was:<[43, true, \"awesome!\"]>")
+                        + "- expected to be empty but was:<[1, 2, 3]>\n"
+                        + "- expected to be empty but was:<[43, true, \"awesome!\"]>")
             }
 
             it("Given one empty array and two non-empty non-null arrays, " +
                     "test should fail only for the non-empty non-null arrays") {
                 Assertions.assertThatThrownBy {
                     assertAll {
-                        assert(arrayOf(1, 2, 3)).isNullOrEmpty()
-                        assert(arrayOf(43, true, "awesome!")).isNullOrEmpty()
-                        assert(emptyArray<Any?>()).isNullOrEmpty()
+                        assert(arrayOf(1, 2, 3)).isEmpty()
+                        assert(arrayOf(43, true, "awesome!")).isEmpty()
+                        assert(emptyArray<Any?>()).isEmpty()
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to be null or empty but was:<[1, 2, 3]>\n"
-                        + "- expected to be null or empty but was:<[43, true, \"awesome!\"]>")
+                        + "- expected to be empty but was:<[1, 2, 3]>\n"
+                        + "- expected to be empty but was:<[43, true, \"awesome!\"]>")
             }
         }
 

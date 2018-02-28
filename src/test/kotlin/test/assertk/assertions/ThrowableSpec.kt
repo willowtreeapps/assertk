@@ -232,24 +232,24 @@ class ThrowableSpec : Spek({
 
         on("hasRootCauseWithClass(KClass)") {
             it("should pass a successful test") {
-                assert(subject).rootCause().isNotNull { it.kClass().isEqualTo(TestException::class) }
+                assert(subject).rootCause().kClass().isEqualTo(TestException::class)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).rootCause().isNotNull { it.kClass().isEqualTo(Exception::class) }
+                    assert(subject).rootCause().kClass().isEqualTo(Exception::class)
                 }.hasMessage("expected [rootCause.class]:<class [java.lang.]Exception> but was:<class [$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }
 
         on("hasRootCauseWithClass(Class)") {
             it("should pass a successful test") {
-                assert(subject).rootCause().isNotNull { it.jClass().isEqualTo(TestException::class.java) }
+                assert(subject).rootCause().jClass().isEqualTo(TestException::class.java)
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject).rootCause().isNotNull { it.jClass().isEqualTo(Exception::class.java) }
+                    assert(subject).rootCause().jClass().isEqualTo(Exception::class.java)
                 }.hasMessage("expected [rootCause.class]:<[java.lang.]Exception> but was:<[$THROWABLE_SPEC\$Test]Exception> ($THROWABLE_SPEC\$TestException: test)")
             }
         }

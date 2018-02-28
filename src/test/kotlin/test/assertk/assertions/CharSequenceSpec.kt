@@ -36,15 +36,15 @@ class CharSequenceSpec : Spek({
 
         on("isNullOrEmpty()") {
             it("Given an empty sequence or null, test should pass") {
-                assert("").isNullOrEmpty()
+                assert("").isEmpty()
                 val test : CharSequence? = null
                 assert(test).isNullOrEmpty()
             }
 
             it("Given a non empty sequence, test should fail") {
                 Assertions.assertThatThrownBy {
-                    assert("test").isNullOrEmpty()
-                }.hasMessage("expected to be null or empty but was:<\"test\">")
+                    assert("test").isEmpty()
+                }.hasMessage("expected to be empty but was:<\"test\">")
             }
         }
 

@@ -107,7 +107,7 @@ fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
  */
 @Deprecated(message = "Use cause().isNotNull { it.isInstanceOf(kclass) } instead.",
         replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(kclass) }"))
-fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
+fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<T>) {
     assert(actual.cause, "cause").isNotNull {
         it.isInstanceOf(kclass)
     }
@@ -120,7 +120,7 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use cause().isNotNull { it.isInstanceOf(jclass) } instead.",
         replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(jclass) }"))
-fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
+fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<T>) {
     assert(actual.cause, "cause").isNotNull {
         it.isInstanceOf(jclass)
     }
@@ -133,7 +133,7 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
  */
 @Deprecated(message = "Use cause().isNotNull { it.kClass().isEqualTo(kclass) } instead.",
         replaceWith = ReplaceWith("cause().isNotNull { it.kClass().isEqualTo(kclass) }"))
-fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
+fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<T>) {
     assert(actual.cause, "cause").isNotNull {
         it.kClass().isEqualTo(kclass)
     }
@@ -146,7 +146,7 @@ fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use cause().isNotNull { it.jClass().isEqualTo(jclass) } instead.",
         replaceWith = ReplaceWith("cause().isNotNull { it.jClass().isEqualTo(jclass) }"))
-fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
+fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<T>) {
     assert(actual.cause, "cause").isNotNull {
         it.jClass().isEqualTo(jclass)
     }
@@ -169,10 +169,8 @@ fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
  */
 @Deprecated(message = "Use rootCause().isInstanceOf(kclass) instead.",
         replaceWith = ReplaceWith("rootCause().isInstanceOf(kclass)"))
-fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.isInstanceOf(kclass)
-    }
+fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<T>) {
+    assert(actual.rootCause(), "root cause").isInstanceOf(kclass)
 }
 
 /**
@@ -182,10 +180,8 @@ fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use rootCause().isInstanceOf(jclass) instead.",
         replaceWith = ReplaceWith("rootCause().isInstanceOf(jclass)"))
-fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.isInstanceOf(jclass)
-    }
+fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<T>) {
+    assert(actual.rootCause(), "root cause").isInstanceOf(jclass)
 }
 
 /**
@@ -195,8 +191,9 @@ fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
  */
 @Deprecated(message = "Use rootCause().isNotNull { it.kClass().isEqualTo(kclass) } instead.",
         replaceWith = ReplaceWith("rootCause().isNotNull { it.kClass().isEqualTo(kclass) }"))
-fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
+fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<T>) {
+    val assertion: Assert<Throwable?> = assert(actual.rootCause(), "root cause")
+    assertion.isNotNull {
         it.kClass().isEqualTo(kclass)
     }
 }
@@ -208,8 +205,9 @@ fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use rootCause().isNotNull { it.jClass().isEqualTo(jclass) } instead.",
         replaceWith = ReplaceWith("rootCause().isNotNull { it.jClass().isEqualTo(jclass) }"))
-fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
+fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<T>) {
+    val assertion: Assert<Throwable?> = assert(actual.rootCause(), "root cause")
+    assertion.isNotNull {
         it.jClass().isEqualTo(jclass)
     }
 }
@@ -223,6 +221,6 @@ private fun Throwable.rootCause(): Throwable =
 @Deprecated(message = "Use stackTrace().contains(description) instead.",
         replaceWith = ReplaceWith("stackTrace().contains(description)"))
 fun <T : Throwable> Assert<T>.hasStackTraceContaining(description: String) {
-    assert(actual.stackTrace.map { it.toString() }, "stack trace").contains(description)
+    stackTrace().contains(description)
 }
 

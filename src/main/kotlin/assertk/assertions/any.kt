@@ -84,8 +84,8 @@ fun <T> Assert<T>.isNotSameAs(expected: Any?) {
  */
 @Deprecated(message = "Use kClass().isEqualTo(kclass) instead.",
         replaceWith = ReplaceWith("kClass().isEqualTo(kclass)"))
-fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
-    val jclass: Class<out T> = kclass.java
+fun <T : Any> Assert<T>.hasClass(kclass: KClass<T>) {
+    val jclass: Class<T> = kclass.java
     if (jclass == actual.javaClass) return
     expected("to have class:${show(jclass)} but was:${show(actual.javaClass)}")
 }
@@ -98,7 +98,7 @@ fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use jClass().isEqualTo(jclass) instead.",
         replaceWith = ReplaceWith("jClass().isEqualTo(jclass)"))
-fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.hasClass(jclass: Class<T>) {
     if (jclass == actual.javaClass) return
     expected("to have class:${show(jclass)} but was:${show(actual.javaClass)}")
 }
@@ -112,8 +112,8 @@ fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
  */
 @Deprecated(message = "Use kClass().isNotEqualTo(kclass) instead.",
         replaceWith = ReplaceWith("kClass().isNotEqualTo(kclass)"))
-fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) {
-    val jclass: Class<out T> = kclass.java
+fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<T>) {
+    val jclass: Class<T> = kclass.java
     if (jclass != actual.javaClass) return
     expected("to not have class:${show(jclass)}")
 }
@@ -127,7 +127,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) {
  */
 @Deprecated(message = "Use jClass().isNotEqualTo(jclass) instead.",
         replaceWith = ReplaceWith("jClass().isNotEqualTo(jclass)"))
-fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<T>) {
     if (jclass != actual.javaClass) return
     expected("to not have class:${show(jclass)}")
 }
@@ -138,8 +138,8 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any> Assert<T>.isInstanceOf(kclass: KClass<out T>) {
-    val jclass: Class<out T> = kclass.java
+fun <T : Any> Assert<T>.isInstanceOf(kclass: KClass<*>) {
+    val jclass: Class<*> = kclass.java
     if (jclass.isInstance(actual)) return
     expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
 }
@@ -150,7 +150,7 @@ fun <T : Any> Assert<T>.isInstanceOf(kclass: KClass<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any> Assert<T>.isInstanceOf(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.isInstanceOf(jclass: Class<*>) {
     if (jclass.isInstance(actual)) return
     expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
 }
@@ -161,8 +161,8 @@ fun <T : Any> Assert<T>.isInstanceOf(jclass: Class<out T>) {
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
-    val jclass: Class<out T> = kclass.java
+fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<*>) {
+    val jclass: Class<*> = kclass.java
     if (!jclass.isInstance(actual)) return
     expected("to not be instance of:${show(jclass)}")
 }
@@ -173,7 +173,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<*>) {
     if (!jclass.isInstance(actual)) return
     expected("to not be instance of:${show(jclass)}")
 }
@@ -237,7 +237,7 @@ fun <T : Any> Assert<T?>.isNull() {
  * }
  * ```
  */
-fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
+fun <T> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
     if (actual != null) {
         assert(actual, name = name).all(f)
     } else {
@@ -254,8 +254,9 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
  * assert(person).prop("name", { it.name }).isEqualTo("Sue")
  * ```
  */
-fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P)
-        = assert(extract(actual), "${if (this.name != null) this.name + "." else ""}$name")
+fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> {
+    return assert(extract(actual!!), "${if (this.name != null) this.name + "." else ""}$name")
+}
 
 /**
  * Returns an assert that asserts on the given property.

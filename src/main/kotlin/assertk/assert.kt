@@ -6,7 +6,7 @@ import assertk.assertions.support.show
  * An assertion. Holds an actual value to assertion on and an optional name.
  * @see [assert]
  */
-class Assert<out T> internal constructor(val actual: T, val name: String?, internal val context: Any?) {
+class Assert<T> internal constructor(val actual: T, val name: String?, internal val context: Any?) {
     /**
      * Asserts on the given value with an optional name.
      *
@@ -21,7 +21,7 @@ class Assert<out T> internal constructor(val actual: T, val name: String?, inter
 /**
  * An assertion on a block of code. Can assert that it either throws and error or returns a value.
  */
-sealed class AssertBlock<out T> {
+sealed class AssertBlock<T> {
     /**
      * Runs the given lambda if the block throws an error, otherwise fails.
      */
@@ -32,7 +32,7 @@ sealed class AssertBlock<out T> {
      */
     abstract fun returnedValue(f: Assert<T>.() -> Unit)
 
-    internal class Value<out T> internal constructor(private val value: T) : AssertBlock<T>() {
+    internal class Value<T> internal constructor(private val value: T) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) = fail("expected exception but was:${show(value)}")
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
@@ -40,7 +40,7 @@ sealed class AssertBlock<out T> {
         }
     }
 
-    internal class Error<out T> internal constructor(private val error: Throwable) : AssertBlock<T>() {
+    internal class Error<T> internal constructor(private val error: Throwable) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
             f(assert(error))
         }

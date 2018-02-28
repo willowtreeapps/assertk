@@ -35,7 +35,7 @@ fun <T : CharSequence> Assert<T>.isNotEmpty() {
  * @see [isEmpty]
  */
 @JvmName("isCharSequenceNullOrEmpty")
-fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
+fun <T : CharSequence?> Assert<T?>.isNullOrEmpty() {
     if (actual.isNullOrEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }

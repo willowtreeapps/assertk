@@ -32,6 +32,7 @@ class StringSpec : Spek({
             }
 
             it("Given a java nullable string, picks the objects isEqualTo over the string one") {
+                //TODO not sure to understand this one ?
                 assert(JavaNullableString.string()).isEqualTo(JavaNullableString.string())
             }
         }
