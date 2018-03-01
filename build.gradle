@@ -43,6 +43,7 @@ dependencies {
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
     testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
     testCompile 'org.assertj:assertj-core:3.6.2'
+    testCompile 'com.google.code.findbugs:jsr305:3.0.0'
 }
 
 sourceSets {
