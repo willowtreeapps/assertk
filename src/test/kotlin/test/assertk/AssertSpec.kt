@@ -1,5 +1,6 @@
 package test.assertk
 
+import assertk.Assert
 import assertk.assert
 import assertk.assertions.*
 import org.assertj.core.api.Assertions
@@ -7,6 +8,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
+import java.util.*
 
 class AssertSpec : Spek({
     val ASSERT_SPEC = AssertSpec::class.qualifiedName
@@ -291,7 +293,7 @@ class AssertSpec : Spek({
             }
 
             it("should pass a successful test with an additional assertion") {
-                assert(subject).isNotNull { it.isEqualTo(subject) }
+                assert(subject).isNotNull { it.isRelaxedEqualTo(subject) }
             }
 
             it("should fail an unsuccessful test because of an additional assertion") {
@@ -302,8 +304,14 @@ class AssertSpec : Spek({
 
             it("should fail an unsuccessful test because of null but not run additional assertion") {
                 Assertions.assertThatThrownBy {
-                    assert(null as String?).isNotNull { it.isEqualTo(unequal) }
+                    assert(null as String?).isNotNull { it.isRelaxedEqualTo(unequal) }
                 }.hasMessage("expected to not be null")
+            }
+
+            it("shiud handle equality on objects of different types") {
+                val p2=Point2(2,3)
+                val p3=Point3(2,3,0)
+                assert(p3).isRelaxedEqualTo(p2)
             }
         }
     }
@@ -318,5 +326,26 @@ class AssertSpec : Spek({
     }
 
     class DifferentObject : TestObject()
+
+    class Point2(val x: Int, val y: Int)
+
+    class Point3(val x: Int, val y: Int, val z: Int) {
+        override fun equals(other: Any?): Boolean {
+            return when (other) {
+                is Point3 -> (x == other.x && y == other.y && z == other.z)
+                is Point2 -> (x == other.x && y == other.y && z == 0 /*or whatever your origin is*/)
+                else -> false
+            }
+        }
+
+        override fun hashCode(): Int {
+            var result = x
+            result = 31 * result + y
+            result = 31 * result + z
+            return result
+        }
+
+
+    }
 }
 

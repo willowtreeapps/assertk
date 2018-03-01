@@ -2,7 +2,7 @@ group 'com.willowtreeapps.assertk'
 version '0.10-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.50'
+    ext.kotlin_version = '1.2.21'
     ext.junit_platform_version = '1.0.0'
     ext.dokka_version = '0.9.14'
     ext.detekt_version = '1.0.0.RC4-3'
@@ -43,6 +43,7 @@ dependencies {
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
     testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
     testCompile 'org.assertj:assertj-core:3.6.2'
+    testCompile 'com.google.code.findbugs:jsr305:3.0.0'
 }
 
 sourceSets {
@@ -74,5 +75,11 @@ detekt {
     profile("test") {
         input = "$projectDir/src/test/kotlin"
         config = "$projectDir/detekt-test.yml"
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        allWarningsAsErrors = true
     }
 }

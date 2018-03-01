@@ -32,7 +32,24 @@ class StringSpec : Spek({
             }
 
             it("Given a java nullable string, picks the objects isEqualTo over the string one") {
-                assert(JavaNullableString.string()).isEqualTo(JavaNullableString.string())
+                val actual: String? = JavaNullableString.string()
+                val other: String? = JavaNullableString.string()
+                assert(actual).isEqualTo(other)
+            }
+
+            it("Given a java nullable string with annotation @Nullable, picks the objects isEqualTo over the string one") {
+                assert(JavaNullableString.stringWithNullableAnnotation())
+                        .isEqualTo(JavaNullableString.stringWithNullableAnnotation())
+            }
+
+            it("Given a java nullable string, picks the string isEqualTo after calling Nullable()") {
+                assert(JavaNullableString.string()).Nullable().isEqualTo(JavaNullableString.string())
+            }
+
+            it("Given a java non nullable string, picks the string isEqualTo after calling Nonnull()") {
+                assert(JavaNullableString.nonNullableString())
+                        .Nonnull()
+                        .isEqualTo(JavaNullableString.nonNullableString())
             }
         }
 

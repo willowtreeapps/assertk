@@ -62,7 +62,7 @@ private fun fillBuffer(stream: InputStream, buffer: ByteArray): Int {
     }
 }
 
-private fun compare(len: Int, actual: ByteArray, expected: ByteArray): Int? {
+private fun firstDifferencePosition(len: Int, actual: ByteArray, expected: ByteArray): Int? {
     return (0 until len).firstOrNull { actual[it] != expected[it] }
 }
 
@@ -83,7 +83,7 @@ private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputSt
                 return null
             }
 
-            val pos = compare(actualRead, actualBuffer, otherBuffer)
+            val pos = firstDifferencePosition(actualRead, actualBuffer, otherBuffer)
             if (pos == null) {
                 // the current buffers are equals and we can try the next block
                 size += actualRead
@@ -113,7 +113,7 @@ private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputSt
                         " but actual stream size ($actualSize) differs from other stream size ($otherSize)"
             }
 
-            val pos = compare(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
+            val pos = firstDifferencePosition(Math.min(actualRead, otherRead), actualBuffer, otherBuffer)
             val actualSize = consume(actual) + actualRead + size
             val otherSize = consume(expected) + otherRead + size
 
@@ -131,6 +131,7 @@ private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputSt
     // the following throw should be unnecessary, as the only way to leave the while loop is either
     // - somewhere in the while loop an exception is thrown
     // - somewhere in the while loop the method is left by a return statement
+    @Suppress("UNREACHABLE_CODE")
     throw IllegalStateException("unreachable code")
 }
 

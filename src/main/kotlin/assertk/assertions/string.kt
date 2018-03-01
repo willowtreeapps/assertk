@@ -19,7 +19,7 @@ fun Assert<String>.hasLineCount(lineCount: Int) {
  * @param ignoreCase true to compare ignoring case, the default if false.
  * @see [isNotEqualTo]
  */
-fun Assert<String?>.isEqualTo(other: String?, ignoreCase: Boolean = false) {
+fun Assert<String>.isEqualTo(other: String, ignoreCase: Boolean = false) {
     if (actual.equals(other, ignoreCase)) return
     fail(other, actual)
 }
@@ -29,7 +29,7 @@ fun Assert<String?>.isEqualTo(other: String?, ignoreCase: Boolean = false) {
  * @param ignoreCase true to compare ignoring case, the default if false.
  * @see [isEqualTo]
  */
-fun Assert<String?>.isNotEqualTo(other: String?, ignoreCase: Boolean = false) {
+fun Assert<String>.isNotEqualTo(other: String, ignoreCase: Boolean = false) {
     if (!actual.equals(other, ignoreCase)) return
     if (ignoreCase) {
         expected(":${show(other)} not to be equal to (ignoring case):${show(actual)}")
