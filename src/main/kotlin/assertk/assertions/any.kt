@@ -268,3 +268,16 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> {
  * ```
  */
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }
+
+/**
+ * Returns an assert that can handle plateform type ```T!```
+ */
+inline fun <reified T> Assert<T>.Nullable(): Assert<T?> {
+    @Suppress("UNCHECKED_CAST")
+    return this as Assert<T?>
+}
+
+inline fun <reified T : kotlin.Any> Assert<T?>.Nonnull(): Assert<T> {
+    return assert(actual!!, name)
+}
+
