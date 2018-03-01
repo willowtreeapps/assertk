@@ -32,7 +32,7 @@ fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace
         replaceWith = ReplaceWith("message().isEqualTo(message)"))
 fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
     assert(actual.message, "message").isNotNull {
-        it.isEqualTo(message)
+        it.isRelaxedEqualTo(message)
     }
 }
 

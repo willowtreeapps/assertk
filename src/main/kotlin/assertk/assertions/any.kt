@@ -34,7 +34,12 @@ fun <T : Any> Assert<T>.hashCodeFun() = prop("hashCode", Any::hashCode)
  * @see [isNotEqualTo]
  * @see [isSameAs]
  */
-fun <T> Assert<T>.isEqualTo(expected: Any?) {
+fun <T> Assert<T>.isEqualTo(expected: T) {
+    if (actual == expected) return
+    fail(expected, actual)
+}
+
+fun <T> Assert<T>.isRelaxedEqualTo(expected: Any?) {
     if (actual == expected) return
     fail(expected, actual)
 }
