@@ -3,7 +3,6 @@ version '0.10-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.50'
-    ext.junit_platform_version = '1.0.0'
     ext.dokka_version = '0.9.14'
     ext.detekt_version = '1.0.0.RC4-3'
 
@@ -15,7 +14,6 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
@@ -24,7 +22,6 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply from: 'publish.gradle'
@@ -38,10 +35,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile 'org.jetbrains.spek:spek-api:1.1.5'
     testRuntime 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
-    testRuntime "org.junit.platform:junit-platform-launcher:$junit_platform_version"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
     testCompile 'org.assertj:assertj-core:3.6.2'
 }
 
@@ -49,12 +47,9 @@ sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }
 
-junitPlatform {
-    platformVersion "$junit_platform_version"
-    filters {
-        engines {
-            include 'spek'
-        }
+test {
+    useJUnitPlatform {
+        includeEngines 'junit-jupiter', 'spek'
     }
 }
 
