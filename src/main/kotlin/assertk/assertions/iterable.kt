@@ -1,6 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.assertAll
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -32,7 +33,9 @@ fun <T : Iterable<*>> Assert<T>.doesNotContain(element: Any?) {
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
-    actual.forEachIndexed { index, item ->
-        f(assert(item, "${name ?: ""}${show(index, "[]")}"))
+    assertAll {
+        actual.forEachIndexed { index, item ->
+            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
+        }
     }
 }

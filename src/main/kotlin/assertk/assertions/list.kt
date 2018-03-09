@@ -2,7 +2,6 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
-import assertk.assertions.support.fail
 import assertk.assertions.support.show
 
 /**
@@ -13,10 +12,28 @@ import assertk.assertions.support.show
  * ```
  */
 fun <T> Assert<List<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
-    if (index in 0 until actual.size) {
-        f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
+    if (index in 0 until actual.size)
+        {
+        f( assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
     } else {
         expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
     }
 }
 
+/**
+ * Asserts the list contains exactly the expected elements. They must be in the same order and
+ * there must not be any extra elements.
+ * @see [containsAll]
+ */
+fun <T : List<*>> Assert<T>.containsExactly(vararg elements: Any?) {
+    if (actual.size == elements.size) {
+        for (i in 0 until actual.size) {
+            if (actual[i] != elements[i]) {
+                expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+                break
+            }
+        }
+    } else {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+    }
+}
