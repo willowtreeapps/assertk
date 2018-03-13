@@ -6,3 +6,6 @@ local.properties
 out/
 Thumbs.db
 .DS_Store
+.envrc
+default.nix
+node_modules
