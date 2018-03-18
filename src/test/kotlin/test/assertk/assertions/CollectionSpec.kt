@@ -344,21 +344,24 @@ class CollectionSpec : Spek({
                     "test should fail if the list contains any of the elements that are expected") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3)).containsNone(4, 5, 6, 1)
-                }.hasMessage("expected to contain none of:<[4, 5, 6, 1]> but was:<[1, 2, 3]>")
+                }.hasMessage("expected to contain none of:<[4, 5, 6, 1]> but was:<[1, 2, 3]>" +
+                                " some elements were not expected:<[1]>")
             }
 
             it("Given a list with less elements passed in than the number of elements expected, " +
                     "test should fail if the list contains any of the elements that are expected") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3, 4)).containsNone(8, 0, 4)
-                }.hasMessage("expected to contain none of:<[8, 0, 4]> but was:<[1, 2, 3, 4]>")
+                }.hasMessage("expected to contain none of:<[8, 0, 4]> but was:<[1, 2, 3, 4]>" +
+                                " some elements were not expected:<[4]>")
             }
 
             it("Given a list of multiple types containing more elements passed in than the number of elements expected, " +
                     "test should fail if the list contains any of the elements that are expected") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1.09, "awesome!", true)).containsNone(true, 43, "potato")
-                }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, \"awesome!\", true]>")
+                }.hasMessage("expected to contain none of:<[true, 43, \"potato\"]> but was:<[1, 1.09, \"awesome!\", true]>" +
+                                " some elements were not expected:<[true]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -369,8 +372,10 @@ class CollectionSpec : Spek({
                         assert(listOf("this", "is", "awesome!")).containsNone(true, 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
+                        + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>"
+                        + " some elements were not expected:<[1]>\n"
+                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>"
+                        + " some elements were not expected:<[\"awesome!\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -383,8 +388,10 @@ class CollectionSpec : Spek({
                         assert(listOf(1, 2, 3, 4)).containsNone(5, 6, 7) // Should pass
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
+                        + "- expected to contain none of:<[5, 6, 7, 1]> but was:<[1, 2, 3]>"
+                        + " some elements were not expected:<[1]>\n"
+                        + "- expected to contain none of:<[true, 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>"
+                        + " some elements were not expected:<[\"awesome!\"]>")
             }
         }
 

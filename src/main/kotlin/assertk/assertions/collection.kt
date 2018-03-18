@@ -54,13 +54,13 @@ fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
  * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
-    val elementsItr = elements.iterator()
-    while (elementsItr.hasNext()) {
-        if (actual.contains(elementsItr.next())) {
-            expected("to contain none of:${show(elements)} but was:${show(actual)}")
-            break
-        }
+    if (elements.none { it in actual }) {
+        return
     }
+
+    val notExpected = elements.filter { it in actual }
+    expected("to contain none of:${show(elements)} but was:${show(actual)}" +
+            " some elements were not expected:${show(notExpected)}")
 }
 
 /**
