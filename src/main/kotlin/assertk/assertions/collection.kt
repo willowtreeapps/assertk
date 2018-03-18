@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -82,18 +81,30 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
  * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
-    if (actual.size == elements.size) {
-        val itr = actual.iterator()
-        var i = 0
+    val notExpected = actual.toMutableList()
+    val notFound = mutableListOf<Any?>()
 
-        while (itr.hasNext()) {
-            if (itr.next() != elements[i]) {
-                expected("to contain exactly:${show(elements)} but was:${show(actual)}")
-                break
-            }
-            i += 1
+    for (element in elements) {
+        if (element in notExpected) {
+            notExpected.removeAt(notExpected.indexOfFirst { it == element })
+        } else {
+            notFound += element
         }
+    }
+
+    if (notExpected.isEmpty() && notFound.isEmpty()) {
+        return
+    }
+
+    if (notExpected.isEmpty()) {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not found:${show(notFound)}")
+    } else if (notFound.isEmpty()) {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not expected:${show(notExpected)}")
     } else {
-        expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not found:${show(notFound)}" +
+                " some elements were not expected:${show(notExpected)}")
     }
 }

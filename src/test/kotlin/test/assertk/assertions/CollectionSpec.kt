@@ -479,28 +479,33 @@ class CollectionSpec : Spek({
                     "test should fail when not containing all elements expected exactly in order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3)).containsExactly(1, 2, 3, 4)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>")
+                }.hasMessage("expected to contain exactly:<[1, 2, 3, 4]> but was:<[1, 2, 3]>" +
+                                " some elements were not found:<[4]>")
             }
 
             it("Given a list of multiple elements with more elements given than expected, " +
                     "test should fail when not containing all elements expected exactly in order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3, 4)).containsExactly(1, 2, 3)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>")
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[1, 2, 3, 4]>" +
+                                " some elements were not expected:<[4]>")
             }
 
             it("Given an empty list, " +
                     "test should fail when expecting anything") {
                 Assertions.assertThatThrownBy {
                     assert(emptyList<Any?>()).containsExactly(1, 2, 3)
-                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>")
+                }.hasMessage("expected to contain exactly:<[1, 2, 3]> but was:<[]>" +
+                                " some elements were not found:<[1, 2, 3]>")
             }
 
             it("Given a list of multiple types, " +
                     "test should fail when not containing all elements expected exactly in order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, "is", "awesome!")).containsExactly("this", 4, "awesome!")
-                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
+                }.hasMessage("expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>" +
+                                " some elements were not found:<[\"this\", 4]>" +
+                                " some elements were not expected:<[1, \"is\"]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -511,8 +516,12 @@ class CollectionSpec : Spek({
                         assert(listOf(1, "is", "awesome!")).containsExactly("this", 4, "awesome!") // should fail
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
+                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>"
+                        + " some elements were not found:<[5, 6, 7]>"
+                        + " some elements were not expected:<[1, 2, 3]>\n"
+                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>"
+                        + " some elements were not found:<[\"this\", 4]>"
+                        + " some elements were not expected:<[1, \"is\"]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -525,8 +534,20 @@ class CollectionSpec : Spek({
                         assert(listOf(1, "is", "awesome!")).containsExactly("this", 4, "awesome!") // should fail
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
+                                + "- expected to contain exactly:<[5, 6, 7]> but was:<[1, 2, 3]>"
+                                + " some elements were not found:<[5, 6, 7]>"
+                                + " some elements were not expected:<[1, 2, 3]>\n"
+                                + "- expected to contain exactly:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>"
+                                + " some elements were not found:<[\"this\", 4]>"
+                                + " some elements were not expected:<[1, \"is\"]>")
+            }
+
+            it("Given the same element multiple times, difference reporting should still work") {
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 1, 3)).containsExactly(1, 3, 3)
+                }.hasMessage("expected to contain exactly:<[1, 3, 3]> but was:<[1, 1, 3]>"
+                        + " some elements were not found:<[3]>"
+                        + " some elements were not expected:<[1]>")
             }
         }
     }
