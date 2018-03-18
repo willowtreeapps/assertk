@@ -546,9 +546,19 @@ class CollectionSpec : Spek({
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 1, 3)).containsExactly(1, 3, 3)
                 }.hasMessage("expected to contain exactly:<[1, 3, 3]> but was:<[1, 1, 3]>"
-                        + " some elements were not found:<[3]>"
-                        + " some elements were not expected:<[1]>")
+                                + " some elements were not found:<[3]>"
+                                + " some elements were not expected:<[1]>")
             }
+
+
+            it("Given the same elements in a different order, difference reporting should still work") {
+                Assertions.assertThatThrownBy {
+                    assert(listOf(1, 2, 1, 3)).containsExactly(1, 1, 2, 3)
+                }.hasMessage("expected to contain exactly:<[1, 1, 2, 3]> but was:<[1, 2, 1, 3]>"
+                                + " first difference at index 1"
+                                + " expected:<1> but was:<2>")
+            }
+
         }
     }
 })
