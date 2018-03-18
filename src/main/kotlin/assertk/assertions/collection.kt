@@ -70,9 +70,13 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
  * @see [containsExactly]
  */
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
-    if (!actual.containsAll(elements.toList())) {
-        expected("to contain all:${show(elements)} but was:${show(actual)}")
+    if (actual.containsAll(elements.toList())) {
+        return
     }
+
+    val notFound = elements.filterNot { it in actual }
+    expected("to contain all:${show(elements)} but was:${show(actual)}" +
+            " some elements were not found:${show(notFound)}")
 }
 
 /**

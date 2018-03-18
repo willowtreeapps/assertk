@@ -408,28 +408,32 @@ class CollectionSpec : Spek({
                     "test should fail when not containing all elements expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 3)).containsAll(4, 3, 1, 2)
-                }.hasMessage("expected to contain all:<[4, 3, 1, 2]> but was:<[1, 2, 3]>")
+                }.hasMessage("expected to contain all:<[4, 3, 1, 2]> but was:<[1, 2, 3]>" +
+                                " some elements were not found:<[4]>")
             }
 
             it("Given a list of multiple elements with less elements given than expected, " +
                     "test should fail when not containing all elements expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, 2, 4, 5)).containsAll(2, 1, 3)
-                }.hasMessage("expected to contain all:<[2, 1, 3]> but was:<[1, 2, 4, 5]>")
+                }.hasMessage("expected to contain all:<[2, 1, 3]> but was:<[1, 2, 4, 5]>" +
+                                " some elements were not found:<[3]>")
             }
 
             it("Given an empty list, " +
                     "test should fail when expecting anything") {
                 Assertions.assertThatThrownBy {
                     assert(emptyList<Any?>()).containsAll(1, 2, 3)
-                }.hasMessage("expected to contain all:<[1, 2, 3]> but was:<[]>")
+                }.hasMessage("expected to contain all:<[1, 2, 3]> but was:<[]>" +
+                                " some elements were not found:<[1, 2, 3]>")
             }
 
             it("Given a list of multiple types, " +
                     "test should fail when not containing all elements expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assert(listOf(1, "is", "awesome!")).containsAll("this", 4, "awesome!")
-                }.hasMessage("expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
+                }.hasMessage("expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>" +
+                                " some elements were not found:<[\"this\", 4]>")
             }
 
             it("Given multiple assertions which should fail, " +
@@ -440,8 +444,10 @@ class CollectionSpec : Spek({
                         assert(listOf(1, "is", "awesome!")).containsAll("this", 4, "awesome!")
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>")
+                        + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>"
+                        + " some elements were not found:<[5, 6, 7]>\n"
+                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[1, \"is\", \"awesome!\"]>"
+                        + " some elements were not found:<[\"this\", 4]>")
             }
 
             it("Given multiple assertions which should fail and some that should pass, " +
@@ -454,8 +460,10 @@ class CollectionSpec : Spek({
                         assert(listOf(1, 1.09, "awesome!", true)).containsAll(1, 1.09, "awesome!", true) // should pass
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>\n"
-                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>")
+                        + "- expected to contain all:<[5, 6, 7]> but was:<[1, 2, 3]>"
+                        + " some elements were not found:<[5, 6, 7]>\n"
+                        + "- expected to contain all:<[\"this\", 4, \"awesome!\"]> but was:<[\"this\", \"is\", \"awesome!\"]>"
+                        + " some elements were not found:<[4]>")
             }
         }
 
