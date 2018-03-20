@@ -7,6 +7,9 @@ import assertk.assertions.support.fail
 import assertk.assertions.support.show
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.full.staticProperties
 
 /**
  * Returns an assert on the kotlin class of the value.
@@ -267,3 +270,19 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P)
  * ```
  */
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }
+
+/**
+ * Returns an assert that compares only the given properties on the calling class
+ * @param other Other value to compare to
+ * @param properties properties of the type with which to compare
+ *
+ * ```
+ * assert(person).isEqualToComparingOnlyGivenProperties(other, Person::name, Person::age)
+ * ```
+ */
+fun <T> Assert<T>.isEqualToComparingOnlyGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
+    properties.forEach {
+        assert(it.get(actual), "${if (this.name != null) this.name + "." else ""}${it.name}")
+                .isEqualTo(it.get(other))
+    }
+}

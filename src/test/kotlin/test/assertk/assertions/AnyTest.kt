@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 package test.assertk.assertions
 
 import assertk.assert
@@ -257,6 +259,28 @@ class AnyTest {
                 assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
             }
         }
+
+        @Nested inner class `isEqualToComparingOnlyGivenProperties(object, props)` {
+
+            private val testObject = BasicObject("test", 99, 3.14)
+
+            @Test fun `regular equals fail` () {
+                assertFails {
+                    assert(subject).isEqualTo(testObject)
+                }
+            }
+
+            @Test fun `extract prop passes`() {
+                assert(subject).isEqualToComparingOnlyGivenProperties(testObject, BasicObject::str, BasicObject::double)
+            }
+
+            @Test fun `extract prop includes name in failure message`() {
+                val error = assertFails {
+                    assert(subject).isEqualToComparingOnlyGivenProperties(testObject, BasicObject::int)
+                }
+                assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
+            }
+        }
     }
 
     @Nested inner class `nullable object` {
@@ -312,9 +336,9 @@ class AnyTest {
 
 open class TestObject
 
-class BasicObject(val str: String) : TestObject() {
+class BasicObject(val str: String, val int: Int = 42, val double: Double = 3.14) : TestObject() {
     override fun toString(): String = str
-    override fun equals(other: Any?): Boolean = (other is BasicObject) && (str == other.str)
+    override fun equals(other: Any?): Boolean = (other is BasicObject) && (str == other.str && int == other.int && double == other.double)
     override fun hashCode(): Int = 42
 }
 
