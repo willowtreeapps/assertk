@@ -3,9 +3,16 @@ package assertk
 import assertk.assertions.support.show
 
 /**
+ * Marks the assertion DSL.
+ */
+@DslMarker
+annotation class AssertkDsl
+
+/**
  * An assertion. Holds an actual value to assertion on and an optional name.
  * @see [assert]
  */
+@AssertkDsl
 class Assert<out T> internal constructor(val actual: T, val name: String?, internal val context: Any?) {
     /**
      * Asserts on the given value with an optional name.
