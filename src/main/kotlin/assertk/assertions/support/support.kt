@@ -15,6 +15,10 @@ private fun display(value: Any?): String {
     return when (value) {
         null -> "null"
         is String -> "\"$value\""
+        is Char -> "'$value'"
+        is Byte -> "0x%02X".format(value)
+        is Long -> "${value}L"
+        is Float -> "${value}f"
         is Class<*> -> value.name
         is Array<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Collection<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
@@ -22,6 +26,14 @@ private fun display(value: Any?): String {
                 prefix = "{",
                 postfix = "}",
                 transform = { (k, v) -> "${display(k)}=${display(v)}" })
+        is BooleanArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is ByteArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is CharArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is DoubleArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is FloatArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is IntArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is LongArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is ShortArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Regex -> "/$value/"
         else -> value.toString()
     }

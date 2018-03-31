@@ -135,21 +135,21 @@ class MapSpec : Spek({
                     "test should fail when not containing all entries expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assertk.assert(mapOf(1 to 'i', 2 to 'j', 3 to 'k')).containsAll(4 to 'a', 1 to 'i')
-                }.hasMessage("expected to contain:<{4=a, 1=i}> but was:<{1=i, 2=j, 3=k}>")
+                }.hasMessage("expected to contain:<{4='a', 1='i'}> but was:<{1='i', 2='j', 3='k'}>")
             }
 
             it("Given a map of multiple entries with less entries given than expected, " +
                     "test should fail when not containing all entries expected regardless of order") {
                 Assertions.assertThatThrownBy {
                     assertk.assert(mapOf(1 to 'i', 3 to 'k')).containsAll(3 to 'k', 1 to 'i', 2 to 'j')
-                }.hasMessage("expected to contain:<{3=k, 1=i, 2=j}> but was:<{1=i, 3=k}>")
+                }.hasMessage("expected to contain:<{3='k', 1='i', 2='j'}> but was:<{1='i', 3='k'}>")
             }
 
             it("Given an empty map, " +
                     "test should fail when expecting anything") {
                 Assertions.assertThatThrownBy {
                     assertk.assert(emptyMap<Any?, Any?>()).containsAll(1 to 'x')
-                }.hasMessage("expected to contain:<{1=x}> but was:<{}>")
+                }.hasMessage("expected to contain:<{1='x'}> but was:<{}>")
             }
 
             it("Given two failing assertions, " +
@@ -160,7 +160,7 @@ class MapSpec : Spek({
                         assertk.assert(emptyMap<Any?, Any?>()).containsAll(1 to 0)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain:<{1=y}> but was:<{1=x}>\n"
+                        + "- expected to contain:<{1='y'}> but was:<{1='x'}>\n"
                         + "- expected to contain:<{1=0}> but was:<{}>")
             }
 
@@ -173,7 +173,7 @@ class MapSpec : Spek({
                         assertk.assert(emptyMap<Any?, Any?>()).containsAll(1 to 0)
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to contain:<{1=y}> but was:<{1=x}>\n"
+                        + "- expected to contain:<{1='y'}> but was:<{1='x'}>\n"
                         + "- expected to contain:<{1=0}> but was:<{}>")
             }
         }
@@ -198,14 +198,14 @@ class MapSpec : Spek({
                     "test should fail") {
                 Assertions.assertThatThrownBy {
                     assertk.assert(mapOf(1 to 'x', 2 to 'y')).hasSameSizeAs(mapOf(1 to 'x'))
-                }.hasMessage("expected to have same size as:<{1=x}> (1) but was size:(2)")
+                }.hasMessage("expected to have same size as:<{1='x'}> (1) but was size:(2)")
             }
 
             it("Given an empty map and a map with 1 entry, " +
                     "test should fail") {
                 Assertions.assertThatThrownBy {
                     assertk.assert(emptyMap<Any?, Any?>()).hasSameSizeAs(mapOf(1 to 'x'))
-                }.hasMessage("expected to have same size as:<{1=x}> (1) but was size:(0)")
+                }.hasMessage("expected to have same size as:<{1='x'}> (1) but was size:(0)")
             }
 
             it("Given two failing assertions, " +
@@ -216,8 +216,8 @@ class MapSpec : Spek({
                         assertk.assert(emptyMap<Any?, Any?>()).hasSameSizeAs(mapOf(1 to 'x'))
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to have same size as:<{1=x}> (1) but was size:(2)\n"
-                        + "- expected to have same size as:<{1=x}> (1) but was size:(0)")
+                        + "- expected to have same size as:<{1='x'}> (1) but was size:(2)\n"
+                        + "- expected to have same size as:<{1='x'}> (1) but was size:(0)")
             }
 
             it("Given one passing and two failing assertions, " +
@@ -229,8 +229,8 @@ class MapSpec : Spek({
                         assertk.assert(emptyMap<Any?, Any?>()).hasSameSizeAs(mapOf(1 to 'x'))
                     }
                 }.hasMessage("The following 2 assertions failed:\n"
-                        + "- expected to have same size as:<{1=x}> (1) but was size:(2)\n"
-                        + "- expected to have same size as:<{1=x}> (1) but was size:(0)")
+                        + "- expected to have same size as:<{1='x'}> (1) but was size:(2)\n"
+                        + "- expected to have same size as:<{1='x'}> (1) but was size:(0)")
             }
         }
     }
