@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -55,13 +54,13 @@ fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
  * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
-    val elementsItr = elements.iterator()
-    while (elementsItr.hasNext()) {
-        if (actual.contains(elementsItr.next())) {
-            expected("to contain none of:${show(elements)} but was:${show(actual)}")
-            break
-        }
+    if (elements.none { it in actual }) {
+        return
     }
+
+    val notExpected = elements.filter { it in actual }
+    expected("to contain none of:${show(elements)} but was:${show(actual)}" +
+            " some elements were not expected:${show(notExpected)}")
 }
 
 /**
@@ -71,9 +70,13 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
  * @see [containsExactly]
  */
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
-    if (!actual.containsAll(elements.toList())) {
-        expected("to contain all:${show(elements)} but was:${show(actual)}")
+    if (actual.containsAll(elements.toList())) {
+        return
     }
+
+    val notFound = elements.filterNot { it in actual }
+    expected("to contain all:${show(elements)} but was:${show(actual)}" +
+            " some elements were not found:${show(notFound)}")
 }
 
 /**
@@ -82,18 +85,36 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
  * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsExactly(vararg elements: Any?) {
-    if (actual.size == elements.size) {
-        val itr = actual.iterator()
-        var i = 0
+    val actualAsList = actual.toList()
+    if (actualAsList == elements.toList()) {
+        return
+    }
 
-        while (itr.hasNext()) {
-            if (itr.next() != elements[i]) {
-                expected("to contain exactly:${show(elements)} but was:${show(actual)}")
-                break
-            }
-            i += 1
+    val firstDifferingIndex = (elements zip actualAsList).indexOfFirst { it.first != it.second }
+    val notExpected = actualAsList.toMutableList()
+    val notFound = mutableListOf<Any?>()
+
+    for (element in elements) {
+        if (element in notExpected) {
+            notExpected.removeAt(notExpected.indexOfFirst { it == element })
+        } else {
+            notFound += element
         }
+    }
+
+    if (!notExpected.isEmpty() && !notFound.isEmpty()) {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not found:${show(notFound)}" +
+                " some elements were not expected:${show(notExpected)}")
+    } else if (!notFound.isEmpty()) {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not found:${show(notFound)}")
+    } else if (!notExpected.isEmpty()) {
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " some elements were not expected:${show(notExpected)}")
     } else {
-        expected("to contain exactly:${show(elements)} but was:${show(actual)}")
+        expected("to contain exactly:${show(elements)} but was:${show(actual)}" +
+                " first difference at index $firstDifferingIndex" +
+                " expected:${show(elements[firstDifferingIndex])} but was:${show(actualAsList[firstDifferingIndex])}")
     }
 }
