@@ -19,8 +19,8 @@ class ListTest {
             }
             assertEquals(
                 """expected to contain exactly:
-                |[0] expected:<[2]> but was:<[1]>
-                |[1] expected:<[1]> but was:<[2]>
+                | at index:0 expected:<2>
+                | at index:1 unexpected:<2>
             """.trimMargin(), error.message
             )
         }
@@ -31,8 +31,9 @@ class ListTest {
             }
             assertEquals(
                 """expected to contain exactly:
-                |[0] expected:<[3]> but was:<[1]>
-                |[1] extra actual element:<2>
+                | at index:0 expected:<3>
+                | at index:0 unexpected:<1>
+                | at index:1 unexpected:<2>
             """.trimMargin(), error.message
             )
         }
@@ -43,7 +44,7 @@ class ListTest {
             }
             assertEquals(
                 """expected to contain exactly:
-                |[2] missing expected element:<3>
+                | at index:2 expected:<3>
             """.trimMargin(), error.message
             )
         }
@@ -54,8 +55,7 @@ class ListTest {
             }
             assertEquals(
                 """expected to contain exactly:
-                |missing expected element(s):
-                |[1] <2>
+                | at index:1 expected:<2>
             """.trimMargin(), error.message
             )
         }
@@ -66,8 +66,7 @@ class ListTest {
             }
             assertEquals(
                 """expected to contain exactly:
-                |extra actual element(s):
-                |[1] <2>
+                | at index:1 unexpected:<2>
             """.trimMargin(), error.message
             )
         }

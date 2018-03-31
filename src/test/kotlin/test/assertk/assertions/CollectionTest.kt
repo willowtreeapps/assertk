@@ -86,7 +86,7 @@ class CollectionTest {
             val error = assertFails {
                 assert(listOf(1, 2)).containsNone(2, 3)
             }
-            assertEquals("expected to contain none of:<[2, 3]> but was:<[1, 2]>", error.message)
+            assertEquals("expected to contain none of:<[2, 3]> some elements were not expected:<[2]>", error.message)
         }
     }
 
@@ -99,7 +99,7 @@ class CollectionTest {
             val error = assertFails {
                 assert(listOf(1)).containsAll(1, 2)
             }
-            assertEquals("expected to contain all:<[1, 2]> but was:<[1]>", error.message)
+            assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
         }
     }
 }

@@ -59,8 +59,7 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
     }
 
     val notExpected = elements.filter { it in actual }
-    expected("to contain none of:${show(elements)} but was:${show(actual)}" +
-            " some elements were not expected:${show(notExpected)}")
+    expected("to contain none of:${show(elements)} some elements were not expected:${show(notExpected)}")
 }
 
 /**
@@ -75,6 +74,5 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
     }
 
     val notFound = elements.filterNot { it in actual }
-    expected("to contain all:${show(elements)} but was:${show(actual)}" +
-            " some elements were not found:${show(notFound)}")
+    expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
 }
