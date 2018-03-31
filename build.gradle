@@ -4,7 +4,7 @@ version '0.10-SNAPSHOT'
 buildscript {
     ext.kotlin_version = '1.1.50'
     ext.dokka_version = '0.9.14'
-    ext.detekt_version = '1.0.0.RC4-3'
+    ext.detekt_version = '1.0.0.RC5'
 
     repositories {
         jcenter()
