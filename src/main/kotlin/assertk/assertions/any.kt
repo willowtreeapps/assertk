@@ -277,10 +277,10 @@ fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callab
  * @param properties properties of the type with which to compare
  *
  * ```
- * assert(person).isEqualToComparingOnlyGivenProperties(other, Person::name, Person::age)
+ * assert(person).isEqualToWithGivenProperties(other, Person::name, Person::age)
  * ```
  */
-fun <T> Assert<T>.isEqualToComparingOnlyGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
+fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
     properties.forEach {
         assert(it.get(actual), "${if (this.name != null) this.name + "." else ""}${it.name}")
                 .isEqualTo(it.get(other))

@@ -260,7 +260,7 @@ class AnyTest {
             }
         }
 
-        @Nested inner class `isEqualToComparingOnlyGivenProperties(object, props)` {
+        @Nested inner class `isEqualToWithGivenProperties(object, props)` {
 
             private val testObject = BasicObject("test", 99, 3.14)
 
@@ -271,12 +271,12 @@ class AnyTest {
             }
 
             @Test fun `extract prop passes`() {
-                assert(subject).isEqualToComparingOnlyGivenProperties(testObject, BasicObject::str, BasicObject::double)
+                assert(subject).isEqualToWithGivenProperties(testObject, BasicObject::str, BasicObject::double)
             }
 
             @Test fun `extract prop includes name in failure message`() {
                 val error = assertFails {
-                    assert(subject).isEqualToComparingOnlyGivenProperties(testObject, BasicObject::int)
+                    assert(subject).isEqualToWithGivenProperties(testObject, BasicObject::int)
                 }
                 assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
             }
