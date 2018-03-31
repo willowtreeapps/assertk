@@ -236,7 +236,7 @@ fun <T : Any> Assert<T?>.isNull() {
  * ```
  * val name: String? = ...
  * assert(name).isNotNull() {
- *   hasLength(4)
+ *   it.hasLength(4)
  * }
  * ```
  */

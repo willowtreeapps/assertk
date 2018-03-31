@@ -24,7 +24,8 @@ class LensAssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).prop("arg1") { it.arg1 }.isEqualTo("wrong")
-                }.hasMessage("expected [arg1]:<\"[wrong]\"> but was:<\"[test]\"> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
+                }
+                    .hasMessage("expected [arg1]:<\"[wrong]\"> but was:<\"[test]\"> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
             }
 
             it("should pass a successful nested prop test") {
@@ -34,7 +35,8 @@ class LensAssertSpec : Spek({
             it("should fail an unsuccessful nested prop test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).prop("arg2") { it.arg2 }.prop("arg1") { it.arg1 }.isEqualTo(0)
-                }.hasMessage("expected [arg2.arg1]:<[0]> but was:<[1]> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
+                }
+                    .hasMessage("expected [arg2.arg1]:<[0]> but was:<[1]> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
             }
         }
 
@@ -46,7 +48,8 @@ class LensAssertSpec : Spek({
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).prop(BasicDataObject::arg1).isEqualTo("wrong")
-                }.hasMessage("expected [arg1]:<\"[wrong]\"> but was:<\"[test]\"> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
+                }
+                    .hasMessage("expected [arg1]:<\"[wrong]\"> but was:<\"[test]\"> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
             }
 
             it("should pass a successful nested prop test") {
@@ -56,7 +59,8 @@ class LensAssertSpec : Spek({
             it("should fail an unsuccessful nested prop test") {
                 Assertions.assertThatThrownBy {
                     assert(subject).prop(BasicDataObject::arg2).prop(Nested::arg1).isEqualTo(0)
-                }.hasMessage("expected [arg2.arg1]:<[0]> but was:<[1]> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
+                }
+                    .hasMessage("expected [arg2.arg1]:<[0]> but was:<[1]> (BasicDataObject(arg1=test, arg2=Nested(arg1=1)))")
             }
         }
     }
@@ -66,22 +70,28 @@ class LensAssertSpec : Spek({
 
         on("index()") {
             it("should pass a successful test") {
-                assert(subject, name = "subject").index(0).isEqualTo(listOf("one"))
+                assert(subject, name = "subject").index(0) { it.isEqualTo(listOf("one")) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject, name = "subject").index(0).isEqualTo(listOf("wrong"))
+                    assert(subject, name = "subject").index(0) { it.isEqualTo(listOf("wrong")) }
                 }.hasMessage("expected [subject[0]]:<[\"[wrong]\"]> but was:<[\"[one]\"]> ([[\"one\"], [\"two\"]])")
             }
 
+            it("should fail out of range") {
+                Assertions.assertThatThrownBy {
+                    assert(subject, name = "subject").index(-1) { it.isEqualTo(listOf("one")) }
+                }.hasMessage("expected [subject] index to be in range:[0-2) but was:<-1>")
+            }
+
             it("should pass a successful nested list test") {
-                assert(subject).index(1).index(0).isEqualTo("two")
+                assert(subject).index(1) { it.index(0) { it.isEqualTo("two") } }
             }
 
             it("should fail an unsuccessful nested prop test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject, name = "subject").index(1).index(0).isEqualTo("wrong")
+                    assert(subject, name = "subject").index(1) { it.index(0) { it.isEqualTo("wrong") } }
                 }.hasMessage("expected [subject[1][0]]:<\"[wrong]\"> but was:<\"[two]\"> ([[\"one\"], [\"two\"]])")
             }
         }
@@ -92,22 +102,30 @@ class LensAssertSpec : Spek({
 
         on("key()") {
             it("should pass a successful test") {
-                assert(subject, name = "subject").key("one").isEqualTo(mapOf("two" to 2))
+                assert(subject, name = "subject").key("one") { it.isEqualTo(mapOf("two" to 2)) }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject, name = "subject").key("one").isEqualTo(mapOf("wrong" to 2))
-                }.hasMessage("expected [subject[\"one\"]]:<{\"[wrong]\"=2}> but was:<{\"[two]\"=2}> ({\"one\"={\"two\"=2}})")
+                    assert(subject, name = "subject").key("one") { it.isEqualTo(mapOf("wrong" to 2)) }
+                }
+                    .hasMessage("expected [subject[\"one\"]]:<{\"[wrong]\"=2}> but was:<{\"[two]\"=2}> ({\"one\"={\"two\"=2}})")
+            }
+
+            it("should fail with missing key") {
+                Assertions.assertThatThrownBy {
+                    assert(subject, name = "subject").key("wrong") { it.isEqualTo(mapOf("two" to 2)) }
+                }
+                    .hasMessage("expected [subject] to have key:<\"wrong\">")
             }
 
             it("should pass a successful nested map test") {
-                assert(subject).key("one").key("two").isEqualTo(2)
+                assert(subject).key("one") { it.key("two") { it.isEqualTo(2) } }
             }
 
             it("should fail an unsuccessful nested prop test") {
                 Assertions.assertThatThrownBy {
-                    assert(subject, name = "subject").key("one").key("two").isEqualTo(0)
+                    assert(subject, name = "subject").key("one") { it.key("two") { it.isEqualTo(0) } }
                 }.hasMessage("expected [subject[\"one\"][\"two\"]]:<[0]> but was:<[2]> ({\"one\"={\"two\"=2}})")
             }
         }
@@ -119,22 +137,27 @@ class LensAssertSpec : Spek({
         on("lookup") {
             it("should pass a successful test") {
                 assert(subject, name = "subject")
-                        .key("key")
-                        .index(0)
-                        .prop(BasicDataObject::arg2)
-                        .prop(Nested::arg1)
-                        .isEqualTo(1)
+                    .key("key") {
+                        it.index(0) {
+                            it.prop(BasicDataObject::arg2)
+                                .prop(Nested::arg1)
+                                .isEqualTo(1)
+                        }
+                    }
             }
 
             it("should fail an unsuccessful test") {
                 Assertions.assertThatThrownBy {
                     assert(subject, name = "subject")
-                            .key("key")
-                            .index(0)
-                            .prop(BasicDataObject::arg2)
-                            .prop(Nested::arg1)
-                            .isEqualTo(0)
-                }.hasMessage("expected [subject[\"key\"][0].arg2.arg1]:<[0]> but was:<[1]> ({\"key\"=[BasicDataObject(arg1=test, arg2=Nested(arg1=1))]})")
+                        .key("key") {
+                            it.index(0) {
+                                it.prop(BasicDataObject::arg2)
+                                    .prop(Nested::arg1)
+                                    .isEqualTo(0)
+                            }
+                        }
+                }
+                    .hasMessage("expected [subject[\"key\"][0].arg2.arg1]:<[0]> but was:<[1]> ({\"key\"=[BasicDataObject(arg1=test, arg2=Nested(arg1=1))]})")
             }
         }
     }

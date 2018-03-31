@@ -18,6 +18,9 @@ message.
 consistent and better mirrors `assertAll { ... }` which has a similar behavior.
 - New dependency on kotlin-reflect
 - `contains`, `doesNotContain`, and `each` works on Iterable instead of Collection
+- better error messages for collections
+- more display types in `show()` (Char, Byte, Long, Float, primitive Arrays)
+- Add `@DslMarker` to help catch misleading nested assertions.
 
 ### Breaking Changes
 - Because of the above, `Assert<Collection>.all` and `Assert<Array>.all` have both been renamed to `each`.
