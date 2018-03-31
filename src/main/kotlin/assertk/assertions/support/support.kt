@@ -11,7 +11,7 @@ import assertk.fail
  */
 fun show(value: Any?, wrap: String = "<>"): String = "${wrap[0]}${display(value)}${wrap[1]}"
 
-private fun display(value: Any?): String {
+internal fun display(value: Any?): String {
     return when (value) {
         null -> "null"
         is String -> "\"$value\""

@@ -1,8 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assertions.support.expected
-import assertk.assertions.support.show
+import assertk.assertions.support.*
 
 /**
  * Returns an assert that assertion on the value at the given index in the list.
@@ -26,14 +25,26 @@ fun <T> Assert<List<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
  * @see [containsAll]
  */
 fun <T : List<*>> Assert<T>.containsExactly(vararg elements: Any?) {
-    if (actual.size == elements.size) {
-        for (i in 0 until actual.size) {
-            if (actual[i] != elements[i]) {
-                expected("to contain exactly:${show(elements)} but was:${show(actual)}")
-                break
-            }
+    if (actual == elements.asList()) return
+
+    val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+        override val oldListSize: Int = elements.size
+        override val newListSize: Int = actual.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            elements[oldItemPosition] == actual[newItemPosition]
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = true
+    }, detectMoves = false)
+
+    val diffList = diff.createDiffList(elements.asList(), actual)
+
+    expected(diffList.joinToString(prefix = "to contain exactly:\n", separator = "\n") { (index, item, op) ->
+        when (op) {
+            DiffUtil.DiffResult.OP_REMOVE -> "[$index] missing expected element:${show(item)}"
+            DiffUtil.DiffResult.OP_ADD -> "[$index] extra actual element:${show(item)}"
+            DiffUtil.DiffResult.OP_UNCHANGED -> "[$index] ${show(item)}"
+            else -> throw AssertionError()
         }
-    } else {
-        expected("to contain exactly:${show(elements)} but was:${show(actual)}")
-    }
+    })
 }
