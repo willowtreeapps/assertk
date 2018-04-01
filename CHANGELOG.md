@@ -24,6 +24,8 @@ consistent and better mirrors `assertAll { ... }` which has a similar behavior.
 
 ### Breaking Changes
 - Because of the above, `Assert<Collection>.all` and `Assert<Array>.all` have both been renamed to `each`.
+- `Assert<Collection>.containsExactly` is now `Assert<List>.containsExactly` as ordering does not matter on all
+collections (ex: `Set`).
 
 ### Deprecated
     src/main/kotlin/assertk/assert.kt
