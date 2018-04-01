@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk:0.9'
+  testCompile 'com.willowtreeapps.assertk:assertk:0.10'
 }
 ```
 
@@ -70,7 +70,7 @@ run even if the first one fails.
 
 ```kotlin
 val string = "Test"
-assert(string) {
+assert(string).all {
     startsWith("L")
     hasLength(3)
 }
