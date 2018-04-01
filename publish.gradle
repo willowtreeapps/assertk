@@ -38,8 +38,8 @@ signing {
     sign configurations.archives
 }
 
-def siteUrl = 'https://github.com/evant/assertk'
-def gitUrl = 'https://github.com/evant/assertk.git'
+def siteUrl = 'https://github.com/willowtreeapps/assertk'
+def gitUrl = 'https://github.com/willowtreeapps/assertk.git'
 
 pom {
     name project.name
