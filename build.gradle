@@ -1,74 +1,57 @@
-group 'com.willowtreeapps.assertk'
-version '0.10'
+allprojects {
+    group 'com.willowtreeapps.assertk'
+    version '0.10-SNAPSHOT'
+}
 
 buildscript {
-    ext.kotlin_version = '1.1.50'
+    ext.kotlin_version = '1.2.30'
     ext.dokka_version = '0.9.14'
-    ext.detekt_version = '1.0.0.RC5'
+    ext.detekt_version = '1.0.0.RC4-3'
 
     repositories {
         jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-        classpath "me.tatarka.gradle:pom:1.0"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
 }
 
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
-apply plugin: "io.gitlab.arturbosch.detekt"
-apply from: 'publish.gradle'
 
-repositories {
-    mavenCentral()
-    maven { url "http://dl.bintray.com/jetbrains/spek" }
-}
 
-dependencies {
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+subprojects {
+    apply plugin: "io.gitlab.arturbosch.detekt"
+    buildscript {
+        repositories {
+            jcenter()
+            mavenCentral()
+            maven { url "https://plugins.gradle.org/m2/" }
+        }
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    detekt {
+        version = detekt_version
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation 'org.jetbrains.spek:spek-api:1.1.5'
-    testRuntimeOnly 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
-    testImplementation 'org.assertj:assertj-core:3.6.2'
-}
+        profile("main") {
+            input = "$projectDir/src/main/kotlin"
+            config = "$projectDir/../detekt.yml"
+        }
 
-sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-}
-
-test {
-    useJUnitPlatform {
-        includeEngines 'junit-jupiter', 'spek'
+        profile("test") {
+            input = "$projectDir/src/test/kotlin"
+            config = "$projectDir/../detekt-test.yml"
+        }
     }
 }
 
 dokka {
     outputFormat = 'html'
     outputDirectory = "docs/javadoc"
-}
-
-detekt {
-    version = detekt_version
-
-    profile("main") {
-        input = "$projectDir/src/main/kotlin"
-        config = "$projectDir/detekt.yml"
-    }
-
-    profile("test") {
-        input = "$projectDir/src/test/kotlin"
-        config = "$projectDir/detekt-test.yml"
-    }
 }
