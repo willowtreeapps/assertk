@@ -39,11 +39,17 @@ sealed class AssertBlock<out T> {
      */
     abstract fun returnedValue(f: Assert<T>.() -> Unit)
 
+    abstract fun doesNotThrowAnyException()
+
     internal class Value<out T> internal constructor(private val value: T) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) = fail("expected exception but was:${show(value)}")
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
             f(assert(value))
+        }
+
+        override fun doesNotThrowAnyException() {
+            assert(value)
         }
     }
 
@@ -53,6 +59,8 @@ sealed class AssertBlock<out T> {
         }
 
         override fun returnedValue(f: Assert<T>.() -> Unit) = fail("expected value but threw:${show(error)}")
+
+        override fun doesNotThrowAnyException() = fail("expected to not throw an exception but threw:${show(error)}")
     }
 }
 

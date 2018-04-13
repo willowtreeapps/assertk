@@ -41,6 +41,11 @@ class AssertBlockSpec_On_a_returns_value_assert_block_value {
         }
         assertEquals("expected exception but was:<2>", error.message)
     }
+
+    @Test
+    fun it_should_pass_doesNotThrowAnyException() {
+        subject.doesNotThrowAnyException()
+    }
 }
 
 class AssertBlockSpec_On_a_throws_error_assert_block {
@@ -76,5 +81,14 @@ class AssertBlockSpec_On_a_throws_error_assert_block {
             }
         }
         assertEquals("expected value but threw:<${exceptionPackageName}Exception: test>", error.message)
+    }
+
+    @Test
+    fun it_should_fail_doesNotThrowAnyException (){
+        val error = assertFails {
+            subject.doesNotThrowAnyException()
+        }
+
+        assertEquals("expected to not throw an exception but threw:<${exceptionPackageName}Exception: test>", error.message)
     }
 }
