@@ -3,11 +3,11 @@ package test.assertk.assertions
 import assertk.assert
 import assertk.assertions.hasNotSameContentAs
 import assertk.assertions.hasSameContentAs
-import test.assertk.Assertions.Companion.assertThatThrownBy
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import kotlin.test.Test
-
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 class InputStreamSpec_an_empty_stream {
 
@@ -18,16 +18,21 @@ class InputStreamSpec_an_empty_stream {
 
     @Test
     fun it_has_the_same_content_as_another_empty_stream_using_hasNotSameContentAs() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(emptyStream()).hasNotSameContentAs(emptyStream())
-        }.hasMessage("expected streams not to be equal, but they were equal")
+        }
+        assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
     @Test
     fun it_has_not_the_same_content_as_any_other_non_empty_stream() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(emptyStream()).hasSameContentAs(streamA())
-        }.hasMessage("expected to have the same size, but actual stream size (0) differs from other stream size (10)")
+        }
+        assertEquals(
+            "expected to have the same size, but actual stream size (0) differs from other stream size (10)",
+            error.message
+        )
     }
 
     @Test
@@ -45,16 +50,21 @@ class InputStreamSpec_an_empty_stream_a_non_empty_stream {
 
     @Test
     fun it_has_the_same_content_as_another_stream_using_a_copy_of_the_byte_array_using_hasNotSameContentAs() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(streamA()).hasNotSameContentAs(streamA())
-        }.hasMessage("expected streams not to be equal, but they were equal")
+        }
+        assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
     @Test
     fun it_has_not_the_same_content_as_another_stream_using_another_byte_array() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(streamA()).hasSameContentAs(streamB())
-        }.hasMessage("expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x00, size=10. Other stream: value=0x64, size=10")
+        }
+        assertEquals(
+            "expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x00, size=10. Other stream: value=0x64, size=10",
+            error.message
+        )
     }
 
     @Test
@@ -68,9 +78,10 @@ class InputStreamSpec_an_empty_stream_a_non_empty_stream_which_is_the_prefix_of_
 
     @Test
     fun it_is_not_the_same_as_the_second_stream() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(prefixOfStreamA()).hasSameContentAs(streamA())
-        }.hasMessage("expected to have the same size, but actual size (5) differs from other size (10)")
+        }
+        assertEquals("expected to have the same size, but actual size (5) differs from other size (10)", error.message)
     }
 
     @Test
@@ -85,9 +96,10 @@ class InputStreamSpec_an_empty_stream_a_non_empty_stream_which_has_an_prefix_str
     @Test
     fun it_is_not_the_same_as_its_prefix_stream() {
 
-        assertThatThrownBy {
+        val error = assertFails {
             assert(streamA()).hasSameContentAs(prefixOfStreamA())
-        }.hasMessage("expected to have the same size, but actual size (10) differs from other size (5)")
+        }
+        assertEquals("expected to have the same size, but actual size (10) differs from other size (5)", error.message)
     }
 
     @Test
@@ -102,9 +114,13 @@ class InputStreamSpec_an_empty_stream_another_non_empty_stream_which_differs_fro
     @Test
     fun it_streamB_has_not_the_same_content_as_streamC() {
 
-        assertThatThrownBy {
+        val error = assertFails {
             assert(streamB()).hasSameContentAs(streamC())
-        }.hasMessage("expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x66, size=10. Other stream: value=0x77, size=10")
+        }
+        assertEquals(
+            "expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x66, size=10. Other stream: value=0x77, size=10",
+            error.message
+        )
 
     }
 

@@ -8,6 +8,8 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.toStringFun
 import test.assertk.AssertMultipleSpec.BasicObject
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 class AssertMultipleSpec_On_an_assert_block_with_a_value {
     private val subject = BasicObject("test", 1)
@@ -22,34 +24,47 @@ class AssertMultipleSpec_On_an_assert_block_with_a_value {
 
     @Test
     fun it_should_fail_the_first_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).all {
                 isInstanceOf(String::class)
                 toStringFun().isEqualTo("BasicObject(arg1=test, arg2=1)")
             }
-        }.hasMessage("expected to be instance of:<${String::class}> but had class:<${BasicObject::class}>")
+        }
+        assertEquals(
+            "expected to be instance of:<${String::class}> but had class:<${BasicObject::class}>",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_the_second_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).all {
                 isInstanceOf(BasicObject::class)
                 toStringFun().isEqualTo("wrong")
             }
-        }.hasMessage("expected [toString]:<\"[wrong]\"> but was:<\"[BasicObject(arg1=test, arg2=1)]\"> (BasicObject(arg1=test, arg2=1))")
+        }
+        assertEquals(
+            "expected [toString]:<\"[wrong]\"> but was:<\"[BasicObject(arg1=test, arg2=1)]\"> (BasicObject(arg1=test, arg2=1))",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_both_assertions() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert<Any>(subject).all {
                 isInstanceOf(String::class)
                 toStringFun().isEqualTo("wrong")
             }
-        }.hasMessage("""The following 2 assertions failed:
+        }
+
+        assertEquals(
+            """The following 2 assertions failed:
 - expected to be instance of:<${String::class}> but had class:<${BasicObject::class}>
-- expected [toString]:<"[wrong]"> but was:<"[BasicObject(arg1=test, arg2=1)]"> (BasicObject(arg1=test, arg2=1))""")
+- expected [toString]:<"[wrong]"> but was:<"[BasicObject(arg1=test, arg2=1)]"> (BasicObject(arg1=test, arg2=1))""",
+            error.message
+        )
     }
 }
 
@@ -67,34 +82,47 @@ class AssertMultipleSpec_On_an_assert_all_block {
 
     @Test
     fun it_should_fail_the_first_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assertAll {
                 assert(subject1).toStringFun().isEqualTo("wrong1")
                 assert(subject2).toStringFun().isEqualTo("BasicObject(arg1=test2, arg2=2)")
             }
-        }.hasMessage("expected [toString]:<\"[wrong1]\"> but was:<\"[BasicObject(arg1=test1, arg2=1)]\"> (BasicObject(arg1=test1, arg2=1))")
+        }
+        assertEquals(
+            "expected [toString]:<\"[wrong1]\"> but was:<\"[BasicObject(arg1=test1, arg2=1)]\"> (BasicObject(arg1=test1, arg2=1))",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_the_second_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assertAll {
                 assert(subject1).toStringFun().isEqualTo("BasicObject(arg1=test1, arg2=1)")
                 assert(subject2).toStringFun().isEqualTo("wrong2")
             }
-        }.hasMessage("expected [toString]:<\"[wrong2]\"> but was:<\"[BasicObject(arg1=test2, arg2=2)]\"> (BasicObject(arg1=test2, arg2=2))")
+        }
+        assertEquals(
+            "expected [toString]:<\"[wrong2]\"> but was:<\"[BasicObject(arg1=test2, arg2=2)]\"> (BasicObject(arg1=test2, arg2=2))",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_both_assertions() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assertAll {
                 assert(subject1).toStringFun().isEqualTo("wrong1")
                 assert(subject2).toStringFun().isEqualTo("wrong2")
             }
-        }.hasMessage("""The following 2 assertions failed:
+        }
+
+        assertEquals(
+            """The following 2 assertions failed:
 - expected [toString]:<"[wrong1]"> but was:<"[BasicObject(arg1=test1, arg2=1)]"> (BasicObject(arg1=test1, arg2=1))
-- expected [toString]:<"[wrong2]"> but was:<"[BasicObject(arg1=test2, arg2=2)]"> (BasicObject(arg1=test2, arg2=2))""")
+- expected [toString]:<"[wrong2]"> but was:<"[BasicObject(arg1=test2, arg2=2)]"> (BasicObject(arg1=test2, arg2=2))""",
+            error.message
+        )
     }
 }
 

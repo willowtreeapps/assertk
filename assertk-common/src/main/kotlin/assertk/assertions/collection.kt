@@ -5,6 +5,11 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
 /**
+ * Returns an assert on the Collection's size.
+ */
+fun <T : Collection<*>> Assert<T>.size() = prop("size", Collection<*>::size)
+
+/**
  * Asserts the collection is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]

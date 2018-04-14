@@ -3,11 +3,12 @@ package test.assertk.assertions
 import assertk.assert
 import assertk.assertions.*
 import assertk.assertions.support.show
-import test.assertk.Assertions
 import test.assertk.exceptionPackageName
 import test.assertk.shortTestExceptionPackageName
 import test.assertk.testExceptionPackageName
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 
 val TEST_EXCEPTION = TestException::class
@@ -25,9 +26,10 @@ class ThrowableSpec_a_Throwable_On_hasMessage() {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).message().isEqualTo("not test")
-        }.hasMessage("expected [message]:<\"[not ]test\"> but was:<\"[]test\"> (${subject})")
+        }
+        assertEquals("expected [message]:<\"[not ]test\"> but was:<\"[]test\"> ($subject)", error.message)
     }
 }
 
@@ -40,33 +42,49 @@ class ThrowableSpec_a_Throwable_On_hasCause() {
     @Test
     fun it_should_fail_an_unsuccessful_test_on_no_cause() {
         val causeless = TestException("test")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(causeless).cause().isEqualTo(cause)
-        }.hasMessage("expected [cause]:<${testExceptionPackageName}TestException: cause> but was:<null> ($causeless)")
+        }
+        assertEquals(
+            "expected [cause]:<${testExceptionPackageName}TestException: cause> but was:<null> ($causeless)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_cause_class() {
         val wrongCause = Exception("cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isEqualTo(wrongCause)
-        }.hasMessage("expected [cause]:<[${exceptionPackageName}]Exception: cause> but was:<[${testExceptionPackageName}Test]Exception: cause> (${subject})")
+        }
+        assertEquals(
+            "expected [cause]:<[$exceptionPackageName]Exception: cause> but was:<[${testExceptionPackageName}Test]Exception: cause> ($subject)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_message() {
         val wrongCause = TestException("wrong cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isEqualTo(wrongCause)
-        }.hasMessage("expected [cause]:<${shortTestExceptionPackageName}TestException: [wrong ]cause> but was:<${shortTestExceptionPackageName}TestException: []cause> (${subject})")
+        }
+        assertEquals(
+            "expected [cause]:<${shortTestExceptionPackageName}TestException: [wrong ]cause> but was:<${shortTestExceptionPackageName}TestException: []cause> ($subject)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_cause_class_and_message() {
         val wrongCause = Exception("wrong cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isEqualTo(wrongCause)
-        }.hasMessage("expected [cause]:<[${exceptionPackageName}Exception: wrong] cause> but was:<[${testExceptionPackageName}TestException:] cause> (${subject})")
+        }
+        assertEquals(
+            "expected [cause]:<[${exceptionPackageName}Exception: wrong] cause> but was:<[${testExceptionPackageName}TestException:] cause> ($subject)",
+            error.message
+        )
     }
 }
 
@@ -79,9 +97,10 @@ class ThrowableSpec_a_Throwable_On_hasNoCause() {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isNull()
-        }.hasMessage("expected [cause] to be null but was:<${cause}> (${subject})")
+        }
+        assertEquals("expected [cause] to be null but was:<$cause> ($subject)", error.message)
     }
 }
 
@@ -93,9 +112,10 @@ class ThrowableSpec_a_Throwable_On_hasMessageStartingWith {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).message().isNotNull { it.startsWith("f") }
-        }.hasMessage("expected [message] to start with:<\"f\"> but was:<\"test\"> (${subject})")
+        }
+        assertEquals("expected [message] to start with:<\"f\"> but was:<\"test\"> ($subject)", error.message)
     }
 }
 
@@ -107,9 +127,10 @@ class ThrowableSpec_a_Throwable_On_hasMessageContaining {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).message().isNotNull { it.contains("f") }
-        }.hasMessage("expected [message] to contain:<\"f\"> but was:<\"test\"> (${subject})")
+        }
+        assertEquals("expected [message] to contain:<\"f\"> but was:<\"test\"> ($subject)", error.message)
     }
 }
 
@@ -122,9 +143,10 @@ class ThrowableSpec_a_Throwable_On_hasMessageMatching {
     @Test
     fun it_should_fail_an_unsuccessful_test() {
         val regex = "f.*f".toRegex()
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).message().isNotNull { it.matches(regex) }
-        }.hasMessage("expected [message] to match:${show(regex)} but was:<\"test\"> (${subject})")
+        }
+        assertEquals("expected [message] to match:${show(regex)} but was:<\"test\"> ($subject)", error.message)
     }
 }
 
@@ -136,9 +158,10 @@ class ThrowableSpec_a_Throwable_On_hasMessageEndingWidth {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).message().isNotNull { it.endsWith("f") }
-        }.hasMessage("expected [message] to end with:<\"f\"> but was:<\"test\"> (${subject})")
+        }
+        assertEquals("expected [message] to end with:<\"f\"> but was:<\"test\"> ($subject)", error.message)
     }
 }
 
@@ -150,9 +173,13 @@ class ThrowableSpec_a_Throwable_On_hasCauseInstanceOfKClass {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isNotNull { it.isInstanceOf(DifferentException::class) }
-        }.hasMessage("expected [cause] to be instance of:<${DIFFERENT_EXCEPTION}> but had class:<${TEST_EXCEPTION}> (${subject})")
+        }
+        assertEquals(
+            "expected [cause] to be instance of:<$DIFFERENT_EXCEPTION> but had class:<$TEST_EXCEPTION> ($subject)",
+            error.message
+        )
     }
 }
 
@@ -164,9 +191,13 @@ class ThrowableSpec_a_Throwable_On_hasCauseWithClassKClass {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).cause().isNotNull { it.kClass().isEqualTo(Exception::class) }
-        }.hasMessage("expected [cause.class]:<class [${exceptionPackageName}]Exception> but was:<class [${testExceptionPackageName}Test]Exception> (${subject})")
+        }
+        assertEquals(
+            "expected [cause.class]:<class [$exceptionPackageName]Exception> but was:<class [${testExceptionPackageName}Test]Exception> ($subject)",
+            error.message
+        )
     }
 }
 
@@ -179,33 +210,49 @@ class ThrowableSpec_a_Throwable_On_hasRootCause() {
     @Test
     fun it_should_fail_an_unsuccessful_test_on_no_cause() {
         val causeless = TestException("test")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(causeless).rootCause().isEqualTo(rootCause)
-        }.hasMessage("expected [rootCause]:<${shortTestExceptionPackageName}TestException: [rootCause]> but was:<${shortTestExceptionPackageName}TestException: [test]>")
+        }
+        assertEquals(
+            "expected [rootCause]:<${shortTestExceptionPackageName}TestException: [rootCause]> but was:<${shortTestExceptionPackageName}TestException: [test]>",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_cause_class() {
         val wrongCause = Exception("cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).rootCause().isEqualTo(wrongCause)
-        }.hasMessage("expected [rootCause]:<[${exceptionPackageName}Exception: c]ause> but was:<[${testExceptionPackageName}TestException: rootC]ause> (${subject})")
+        }
+        assertEquals(
+            "expected [rootCause]:<[${exceptionPackageName}Exception: c]ause> but was:<[${testExceptionPackageName}TestException: rootC]ause> ($subject)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_message() {
         val wrongCause = TestException("wrong cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).rootCause().isEqualTo(wrongCause)
-        }.hasMessage("expected [rootCause]:<${shortTestExceptionPackageName}TestException: [wrong c]ause> but was:<${shortTestExceptionPackageName}TestException: [rootC]ause> (${subject})")
+        }
+        assertEquals(
+            "expected [rootCause]:<${shortTestExceptionPackageName}TestException: [wrong c]ause> but was:<${shortTestExceptionPackageName}TestException: [rootC]ause> ($subject)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_an_unsuccessful_test_on_wrong_cause_class_and_message() {
         val wrongCause = Exception("wrong cause")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).rootCause().isEqualTo(wrongCause)
-        }.hasMessage("expected [rootCause]:<[${exceptionPackageName}Exception: wrong c]ause> but was:<[${testExceptionPackageName}TestException: rootC]ause> (${subject})")
+        }
+        assertEquals(
+            "expected [rootCause]:<[${exceptionPackageName}Exception: wrong c]ause> but was:<[${testExceptionPackageName}TestException: rootC]ause> ($subject)",
+            error.message
+        )
     }
 }
 
@@ -217,9 +264,13 @@ class ThrowableSpec_a_Throwable_On_hasRootCauseInstanceOfKClass {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).rootCause().isInstanceOf(DifferentException::class)
-        }.hasMessage("expected [rootCause] to be instance of:<${DIFFERENT_EXCEPTION}> but had class:<${TEST_EXCEPTION}> (${subject})")
+        }
+        assertEquals(
+            "expected [rootCause] to be instance of:<$DIFFERENT_EXCEPTION> but had class:<$TEST_EXCEPTION> ($subject)",
+            error.message
+        )
     }
 }
 
@@ -231,9 +282,13 @@ class ThrowableSpec_a_Throwable_On_hasRootCauseWithClassKClass {
 
     @Test
     fun it_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(subject).rootCause().isNotNull { it.kClass().isEqualTo(Exception::class) }
-        }.hasMessage("expected [rootCause.class]:<class [${exceptionPackageName}]Exception> but was:<class [${testExceptionPackageName}Test]Exception> (${subject})")
+        }
+        assertEquals(
+            "expected [rootCause.class]:<class [$exceptionPackageName]Exception> but was:<class [${testExceptionPackageName}Test]Exception> ($subject)",
+            error.message
+        )
     }
 }
 

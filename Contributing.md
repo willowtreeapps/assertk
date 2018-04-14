@@ -6,9 +6,7 @@ Want to contribute, but not sure how? Here are some ideas to get you started.
 
 1. **Write unit tests.** Right now not all assertions are under test. The
    easiest thing to do is to take one of them and write a few tests.
-   `src/test/kotlin/test/assertk` houses all of the current unit tests. Unit
-   tests are run with [Spek](http://spekframework.org/) and assertions are done
-   with [AssertJ](http://joel-costigliola.github.io/assertj/).
+   `src/test/kotlin/test/assertk` houses all of the current unit tests.
 2. **Add a new assertion.** If you have an idea for a new assertion that's
    general enough, you can add it. Assertions are grouped under their type in
    `src/main/kotlin/assertk/assertions/`. Make sure you write unit test and docs
