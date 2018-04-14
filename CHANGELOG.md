@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `hasSameSizeAs`, `containsNone`, `index` assertions to array.
 - Add `isEmpty`, `isNotEmpty`, `isNullOrEmpty`, `hasSize` assertions to map.
 - Rename map's `containsExactly` to `containsOnly` to make it more clear that order doesn't matter.
+- Add `length` prop for CharSequences.
+- Un-deprecated several has* methods: `hasLength`, `hasSameLengthAs`.
 
 ## [0.10] - 2018-03-31
 ### Added

@@ -45,18 +45,13 @@ fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
  * Asserts the char sequence has the expected length.
  */
 @PlatformName("charSequenceHasLength")
-@Deprecated("Use length().isEqualTo(length) instead.",
-        replaceWith = ReplaceWith("length().isEqualTo(length)"))
 fun <T : CharSequence> Assert<T>.hasLength(length: Int) {
-    if (actual.length == length) return
-    expected("to have length:${show(length)} but was:${show(actual)} (${actual.length})")
+    length().isEqualTo(length)
 }
 
 /**
  * Asserts the char sequence has the same length as the expected one.
  */
-@Deprecated("Use length().isEqualTo(other.length) instead.",
-        replaceWith = ReplaceWith("length().isEqualTo(other.length)"))
 fun <T : CharSequence> Assert<T>.hasSameLengthAs(other: CharSequence) {
     val actualLength = actual.length
     val otherLength = other.length
