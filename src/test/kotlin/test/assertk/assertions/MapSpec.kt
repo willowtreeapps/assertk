@@ -8,6 +8,7 @@ import assertk.assertions.containsExactly
 import assertk.assertions.containsNone
 import assertk.assertions.doesNotContain
 import assertk.assertions.hasSameSizeAs
+import assertk.assertions.isEmpty
 import org.assertj.core.api.Assertions
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.given
@@ -231,6 +232,59 @@ class MapSpec : Spek({
                 }.hasMessage("The following 2 assertions failed:\n"
                         + "- expected to have same size as:<{1='x'}> (1) but was size:(2)\n"
                         + "- expected to have same size as:<{1='x'}> (1) but was size:(0)")
+            }
+        }
+        on("isEmpty()"){
+            it("given an empty map," +
+                "test should pass"){
+                assert(emptyMap<Any,Any>()).isEmpty()
+            }
+
+            it("given an map that hasn't been populated," +
+                "test should pass"){
+                val map = mapOf<Int,String>()
+                assert(map).isEmpty()
+            }
+
+            it("given an non-empty map of Ints to Strings," +
+                "test should fail"){
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(mapOf(1 to 'x' ,2 to 'y')).isEmpty()
+                    }
+                }.hasMessage("expected to be empty but was:<{1='x', 2='y'}>")
+            }
+
+            it("given an non-empty map of nulls to nulls," +
+                "test should fail"){
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(mapOf(null to null)).isEmpty()
+                    }
+                }.hasMessage("expected to be empty but was:<{null=null}>")
+            }
+
+            it("given an non-empty map of Strings to Ints and empty map," +
+                "test should fail with only one error message"){
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(mapOf('x' to 1)).isEmpty()
+                        assert(emptyMap<Any?,Any?>()).isEmpty()
+                    }
+                }.hasMessage("expected to be empty but was:<{'x'=1}>")
+            }
+
+            it("given one passing and 2 failing," +
+                "test should fail with one error message per failed assertion"){
+                Assertions.assertThatThrownBy {
+                    assertAll {
+                        assert(mapOf('x' to 1)).isEmpty()
+                        assert(emptyMap<Any,Any>()).isEmpty()
+                        assert(mapOf(10 to 10.5, 20 to 21)).isEmpty()
+                    }
+                }.hasMessage("The following 2 assertions failed:\n" +
+                    "- expected to be empty but was:<{'x'=1}>\n" +
+                    "- expected to be empty but was:<{10=10.5, 20=21}>")
             }
         }
     }

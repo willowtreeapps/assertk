@@ -101,3 +101,11 @@ fun <K, V> Assert<Map<K, V>>.key(key: K, f: (Assert<V>) -> Unit) {
         expected("to have key:${show(key)}")
     }
 }
+
+/**
+ * Asserts the map is empty.
+ */
+fun <T : Map<*,*>> Assert<T>.isEmpty() {
+    if (actual.isEmpty()) return
+    expected("to be empty but was:${show(actual)}")
+}
