@@ -38,14 +38,16 @@ ext {
 
 node {
     version = nodeVersion
-    download = false
+    download = true
 }
 
-npmInstall.workingDir = file("..")
-
-task runNodeTests(type: NodeTask, dependsOn: [compileTestKotlin2Js, npmInstall, populateNodeModules]) {
-    script = file('../node_modules/.bin/mocha')
-    args = [projectDir.toPath().relativize(file(compileTestKotlin2Js.outputFile).toPath())]
+task installMocha(type: NpmTask) {
+    args = ['install', 'mocha']
 }
 
-test.dependsOn runNodeTests
+task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules, installMocha]) {
+    script = file('node_modules/mocha/bin/mocha')
+    args = [compileTestKotlin2Js.outputFile]
+}
+
+test.dependsOn runMocha
