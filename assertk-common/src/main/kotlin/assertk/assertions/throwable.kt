@@ -23,32 +23,31 @@ fun <T : Throwable> Assert<T>.rootCause() = prop("rootCause", Throwable::rootCau
 /**
  * Asserts the throwable has the expected message.
  */
-@Deprecated(message = "Use message().isEqualTo(message) instead.",
-        replaceWith = ReplaceWith("message().isEqualTo(message)"))
 fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
-    assert(actual.message, "message").isNotNull {
-        it.isEqualTo(message)
-    }
+    message().isEqualTo(message)
 }
 
 /**
  * Asserts the throwable has the expected cause.
  * @see [hasNoCause]
  */
-@Deprecated(message = "Use cause().isEqualTo(cause) instead.",
-        replaceWith = ReplaceWith("cause().isEqualTo(cause)"))
 fun <T : Throwable> Assert<T>.hasCause(cause: Throwable) {
-    assert(actual.cause, "cause").isEqualTo(cause)
+    cause().isEqualTo(cause)
 }
 
 /**
  * Asserts the throwable has no cause.
  * @see [hasCause]
  */
-@Deprecated(message = "Use cause().isNull() instead.", replaceWith = ReplaceWith("cause().isNull()"))
 fun <T : Throwable> Assert<T>.hasNoCause() {
-    if (actual.cause == null) return
-    expected("[cause] to not exist but was:${show(actual.cause)}")
+    cause().isNull()
+}
+
+/**
+ * Asserts the throwable has the expected root cause.
+ */
+fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
+    rootCause().isEqualTo(cause)
 }
 
 /**
@@ -106,16 +105,6 @@ fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
     assert(actual.cause, "cause").isNotNull {
         it.kClass().isEqualTo(kclass)
     }
-}
-
-/**
- * Asserts the throwable has the expected root cause.
- */
-@Deprecated(message = "Use rootCause().isEqualTo(cause) instead.",
-        replaceWith = ReplaceWith("rootCause().isEqualTo(cause)"))
-fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
-    assert(actual.rootCause(), "root cause").isEqualTo(cause)
-
 }
 
 /**

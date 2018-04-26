@@ -6,6 +6,8 @@ import assertk.assertions.isNegative
 import assertk.assertions.isPositive
 import assertk.assertions.message
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 
 class AssertBlockSpec_On_a_returns_value_assert_block_value {
@@ -22,20 +24,22 @@ class AssertBlockSpec_On_a_returns_value_assert_block_value {
 
     @Test
     fun it_should_fail_an_unsuccessful_return_value_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             subject.returnedValue {
                 isNegative()
             }
-        }.hasMessage("expected to be negative but was:<2>")
+        }
+        assertEquals("expected to be negative but was:<2>", error.message)
     }
 
     @Test
     fun it_should_fail_a_throws_error_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             subject.thrownError {
                 message().isEqualTo("error")
             }
-        }.hasMessage("expected exception but was:<2>")
+        }
+        assertEquals("expected exception but was:<2>", error.message)
     }
 }
 
@@ -53,19 +57,24 @@ class AssertBlockSpec_On_a_throws_error_assert_block {
 
     @Test
     fun it_should_fail_a_unsuccessful_throws_error_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             subject.thrownError {
                 message().isEqualTo("wrong")
             }
-        }.hasMessage("expected [message]:<\"[wrong]\"> but was:<\"[test]\"> (${exceptionPackageName}Exception: test)")
+        }
+        assertEquals(
+            "expected [message]:<\"[wrong]\"> but was:<\"[test]\"> (${exceptionPackageName}Exception: test)",
+            error.message
+        )
     }
 
     @Test
     fun it_should_fail_a_returns_value_assertion() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             subject.returnedValue {
                 isPositive()
             }
-        }.hasMessage("expected value but threw:<${exceptionPackageName}Exception: test>")
+        }
+        assertEquals("expected value but threw:<${exceptionPackageName}Exception: test>", error.message)
     }
 }

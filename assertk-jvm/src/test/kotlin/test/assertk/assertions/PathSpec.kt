@@ -2,12 +2,9 @@ package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertions.*
-import test.assertk.Assertions.Companion.assertThatThrownBy
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
+import kotlin.test.*
 
 private var regularFile: Path? = null
 private var directory: Path? = null
@@ -33,16 +30,18 @@ class PathSpec_a_regular_file {
 
     @Test
     fun it_is_not_a_folder() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(regularFile!!).isDirectory()
-        }.hasMessage("expected <$regularFile> to be a directory, but it is not")
+        }
+        assertEquals("expected <$regularFile> to be a directory, but it is not", error.message)
     }
 
     @Test
     fun it_is_not_hidden() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(regularFile!!).isHidden()
-        }.hasMessage("expected <$regularFile> to be hidden, but it is not")
+        }
+        assertEquals("expected <$regularFile> to be hidden, but it is not", error.message)
     }
 
     @Test
@@ -52,9 +51,10 @@ class PathSpec_a_regular_file {
 
     @Test
     fun it_is_not_a_symbolic_link() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(regularFile!!).isSymbolicLink()
-        }.hasMessage("expected <$regularFile> to be a symbolic link, but it is not")
+        }
+        assertEquals("expected <$regularFile> to be a symbolic link, but it is not", error.message)
     }
 
     @Test
@@ -89,9 +89,10 @@ class PathSpec_a_directory {
 
     @Test
     fun it_is_not_a_regular_file() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(directory!!).isRegularFile()
-        }.hasMessage("expected <$directory> to be a regular file, but it is not")
+        }
+        assertEquals("expected <$directory> to be a regular file, but it is not", error.message)
     }
 
     @Test
@@ -101,9 +102,10 @@ class PathSpec_a_directory {
 
     @Test
     fun it_is_not_hidden() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(directory!!).isHidden()
-        }.hasMessage("expected <$directory> to be hidden, but it is not")
+        }
+        assertEquals("expected <$directory> to be hidden, but it is not", error.message)
     }
 
     @Test
@@ -113,9 +115,10 @@ class PathSpec_a_directory {
 
     @Test
     fun it_is_not_a_symbolic_link() {
-        assertThatThrownBy {
+        val error = assertFails {
             assert(directory!!).isSymbolicLink()
-        }.hasMessage("expected <$directory> to be a symbolic link, but it is not")
+        }
+        assertEquals("expected <$directory> to be a symbolic link, but it is not", error.message)
     }
 
     @Test

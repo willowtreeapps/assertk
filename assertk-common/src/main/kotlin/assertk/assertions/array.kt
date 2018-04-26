@@ -8,6 +8,11 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
 /**
+ * Returns an assert on the Arrays's size.
+ */
+fun <T> Assert<Array<T>>.size() = prop("size", Array<T>::size)
+
+/**
  * Asserts the array is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]

@@ -2,11 +2,9 @@ package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertions.*
-import test.assertk.Assertions
 import java.io.File
 import java.nio.file.Files
-import kotlin.test.BeforeTest
-import kotlin.test.Test
+import kotlin.test.*
 
 class FileSpec_a_file_On_exists() {
     val file = File.createTempFile("exists", "txt")
@@ -19,9 +17,10 @@ class FileSpec_a_file_On_exists() {
     @Test
     fun it_given_a_file_doesnt_exist_should_fail_an_unsuccessful_test() {
         file.delete()
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).exists()
-        }.hasMessage("expected to exist")
+        }
+        assertEquals("expected to exist", error.message)
     }
 }
 
@@ -36,9 +35,10 @@ class FileSpec_a_file_On_isDirectory() {
 
     @Test
     fun it_given_a_file_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).isDirectory()
-        }.hasMessage("expected to be a directory")
+        }
+        assertEquals("expected to be a directory", error.message)
     }
 }
 
@@ -53,9 +53,10 @@ class FileSpec_a_file_On_isFile() {
 
     @Test
     fun it_given_a_directory_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(directory).isFile()
-        }.hasMessage("expected to be a file")
+        }
+        assertEquals("expected to be a file", error.message)
     }
 }
 
@@ -69,9 +70,10 @@ class FileSpec_a_file_On_isNotHidden() {
 
     @Test
     fun it_given_a_file_isnt_hidden_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).isHidden()
-        }.hasMessage("expected to be hidden")
+        }
+        assertEquals("expected to be hidden", error.message)
     }
 }
 
@@ -91,16 +93,21 @@ class FileSpec_a_file_On_hasName() {
 
     @Test
     fun it_given_files_name_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).name().isEqualTo("file")
-        }.hasMessage("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt/file.txt)")
+        }
+        assertEquals("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt/file.txt)", error.message)
     }
 
     @Test
     fun it_given_directorys_name_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(directory).name().isEqualTo("assertKt")
-        }.hasMessage("expected [name]:<\"[assertKt]\"> but was:<\"[${directory.name}]\"> (assertKt/directory)")
+        }
+        assertEquals(
+            "expected [name]:<\"[assertKt]\"> but was:<\"[${directory.name}]\"> (assertKt/directory)",
+            error.message
+        )
     }
 }
 
@@ -114,9 +121,13 @@ class FileSpec_a_file_On_hasPath() {
 
     @Test
     fun it_given_a_files_path_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).path().isEqualTo("/directory")
-        }.hasMessage("expected [path]:<\"[/directory]\"> but was:<\"[${file.path}]\"> (assertKt/file.txt)")
+        }
+        assertEquals(
+            "expected [path]:<\"[/directory]\"> but was:<\"[${file.path}]\"> (assertKt/file.txt)",
+            error.message
+        )
     }
 }
 
@@ -130,9 +141,13 @@ class FileSpec_a_file_On_hasParent() {
 
     @Test
     fun it_given_a_files_parent_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).parent().isEqualTo("directory")
-        }.hasMessage("expected [parent]:<\"[directory]\"> but was:<\"[${file.parent}]\"> (assertKt/file.txt)")
+        }
+        assertEquals(
+            "expected [parent]:<\"[directory]\"> but was:<\"[${file.parent}]\"> (assertKt/file.txt)",
+            error.message
+        )
     }
 }
 
@@ -146,15 +161,18 @@ class FileSpec_a_file_On_hasExtension() {
 
     @Test
     fun it_given_a_files_extension_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).extension().isEqualTo("png")
-        }.hasMessage("expected [extension]:<\"[png]\"> but was:<\"[${file.extension}]\"> (file.txt)")
+        }
+        assertEquals("expected [extension]:<\"[png]\"> but was:<\"[${file.extension}]\"> (file.txt)", error.message)
     }
 }
 
 class FileSpec_a_file_On_hasText() {
     val file = File.createTempFile("file_contains", ".txt")
-    val text = "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two,' said Deep Thought, with infinite majesty and calm."
+    val text =
+        "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two,' said Deep Thought, with infinite majesty and calm."
+
     @BeforeTest
     fun setup() {
         file.writeText(text)
@@ -167,16 +185,19 @@ class FileSpec_a_file_On_hasText() {
 
     @Test
     fun it_given_a_files_text_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).text().isEqualTo("Forty-two!")
-        }.hasMessageStartingWith("expected [text]:<\"[Forty-two!]\"> but was:<\"[$text]\">")
-                .hasMessageContaining("file_contains")
+        }
+        assertTrue(error.message!!.startsWith("expected [text]:<\"[Forty-two!]\"> but was:<\"[$text]\">"))
+        assertTrue(error.message!!.contains("file_contains"))
     }
 }
 
 class FileSpec_a_file_On_containsText() {
     val file = File.createTempFile("file_contains", ".txt")
-    val text = "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two,' said Deep Thought, with infinite majesty and calm."
+    val text =
+        "The Answer to the Great Question... Of Life, the Universe and Everything... Is... Forty-two,' said Deep Thought, with infinite majesty and calm."
+
     @BeforeTest
     fun setup() {
         file.writeText(text)
@@ -189,10 +210,11 @@ class FileSpec_a_file_On_containsText() {
 
     @Test
     fun it_given_a_files_text_should_fail_an_unsuccessful_test() {
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).text().contains("Forty-two!")
-        }.hasMessageStartingWith("expected [text] to contain:<\"Forty-two!\"> but was:<\"$text\">")
-                .hasMessageContaining("file_contains")
+        }
+        assertTrue(error.message!!.startsWith("expected [text] to contain:<\"Forty-two!\"> but was:<\"$text\">"))
+        assertTrue(error.message!!.contains("file_contains"))
     }
 }
 
@@ -212,10 +234,11 @@ class FileSpec_a_file_On_matchesText() {
     @Test
     fun it_given_a_files_regexp_should_fail_an_unsuccessful_test() {
         val incorrectRegexp = ".*d".toRegex()
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(file).text().matches(incorrectRegexp)
-        }.hasMessageStartingWith("expected [text] to match:</$incorrectRegexp/> but was:<\"$text\">")
-                .hasMessageContaining("file_contains")
+        }
+        assertTrue(error.message!!.startsWith("expected [text] to match:</$incorrectRegexp/> but was:<\"$text\">"))
+        assertTrue(error.message!!.contains("file_contains"))
     }
 }
 
@@ -231,16 +254,18 @@ class FileSpec_a_file_On_hasDirectChild() {
     @Test
     fun it_given_a_nonempty_directory_with_no_exists_child__should_fail_an_unsuccessful_test() {
         val newFile = File.createTempFile("file", ".txt")
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(directory).hasDirectChild(newFile)
-        }.hasMessage("expected to have direct child <$newFile>")
+        }
+        assertEquals("expected to have direct child <$newFile>", error.message)
     }
 
     @Test
     fun it_given_a_empty_directory_should_fail_an_unsuccessful_test() {
         directory.listFiles().forEach { it.delete() }
-        Assertions.assertThatThrownBy {
+        val error = assertFails {
             assert(directory).hasDirectChild(file)
-        }.hasMessage("expected to have direct child <$file>")
+        }
+        assertEquals("expected to have direct child <$file>", error.message)
     }
 }

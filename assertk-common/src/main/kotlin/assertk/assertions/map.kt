@@ -6,6 +6,11 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
 /**
+ * Returns an assert on the Maps's size.
+ */
+fun <T : Map<*, *>> Assert<T>.size() = prop("size", Map<*, *>::size)
+
+/**
  * Asserts the collection is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
