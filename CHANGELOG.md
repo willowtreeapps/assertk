@@ -11,9 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `isEmpty`, `isNotEmpty`, `isNullOrEmpty`, `hasSize` assertions to map.
 - Rename map's `containsExactly` to `containsOnly` to make it more clear that order doesn't matter.
 - Add `length` prop for CharSequences.
-- Un-deprecated several has* methods: `hasLength`, `hasSameLengthAs`, `hasMessage`, `hasCause`, `hasNoCause`.
+- Un-deprecated several has* methods: `hasLength`, `hasSameLengthAs`, `hasMessage`, `hasCause`, `hasNoCause`, `hasRootCause`.
+- `hasCause` and `hasRootCause` check exception type and message instead of using `equals`. This makes them more useful
+as exceptions don't typically implement `equals`
 
 ## [0.10] - 2018-03-31
+
 ### Added
 - Add docs to all assertions.
 - Add Path assertions.
