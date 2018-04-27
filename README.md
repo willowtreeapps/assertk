@@ -124,6 +124,13 @@ assert { 1 + 1 }.returnedValue {
 // -> expected to be negative but was:<2>
 ```
 
+You can also assert that there no exceptions thrown
+```kotlin
+assert {
+    aMethodThatMightThrow()
+}.doesNotThrowAnyException()
+```
+
 ### Table Assertions
 
 If you have multiple sets of values you want to test with, you can create a table assertion.
