@@ -48,6 +48,15 @@ fun Assert<String>.contains(other: CharSequence, ignoreCase: Boolean = false) {
 }
 
 /**
+ * Asserts the string does not contain the specified string.
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.doesNotContain(other: CharSequence, ignoreCase: Boolean = false) {
+    if (!actual.contains(other, ignoreCase)) return
+    expected("to not contain:${show(other)}")
+}
+
+/**
  * Asserts the string starts with the expected string.
  * @param ignoreCase true to compare ignoring case, the default if false.
  * @see [endsWith]

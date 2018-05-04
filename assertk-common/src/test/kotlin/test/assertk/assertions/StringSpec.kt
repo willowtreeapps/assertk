@@ -93,6 +93,34 @@ class StringSpec_a_String_On_contains() {
     }
 }
 
+class StringSpec_a_String_On_doesNotContain() {
+    @Test
+    fun it_Given_a_string_that_does_not_contain_a_substring_test_should_pass() {
+        assert("test").doesNotContain("not")
+    }
+
+    @Test
+    fun it_Given_a_string_that_contains_a_substring_test_should_fail() {
+        val error = assertFails {
+            assert("test").doesNotContain("est")
+        }
+        assertEquals("expected to not contain:<\"est\">", error.message)
+    }
+
+    @Test
+    fun it_Given_a_string_that_contains_a_substring_ignoring_case_test_should_fail() {
+        val error = assertFails {
+            assert("Test").doesNotContain("EST", true)
+        }
+        assertEquals("expected to not contain:<\"EST\">", error.message)
+    }
+
+    @Test
+    fun it_Given_a_string_that_does_not_contain_a_substring_not_ignoring_case_test_should_pass() {
+        assert("Test").doesNotContain("EST", false)
+    }
+}
+
 class StringSpec_a_String_On_startsWith() {
     @Test
     fun it_Given_a_string_that_starts_with_a_substring_test_should_pass() {
