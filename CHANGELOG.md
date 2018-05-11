@@ -15,6 +15,7 @@ Important: this means the maven coordinate has changed for java projects, it is 
 - Un-deprecated several has* methods: `hasLength`, `hasSameLengthAs`, `hasMessage`, `hasCause`, `hasNoCause`, `hasRootCause`.
 - `hasCause` and `hasRootCause` check exception type and message instead of using `equals`. This makes them more useful
 as exceptions don't typically implement `equals`
+- Uses [opentest4j](https://github.com/ota4j-team/opentest4j) assertions. This should allow better IDE integration etc.
 
 ## [0.10] - 2018-03-31
 

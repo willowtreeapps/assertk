@@ -1,7 +1,9 @@
 apply plugin: 'kotlin-platform-common'
+apply plugin: 'java-library'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-common"
+    api "org.jetbrains.kotlin:kotlin-stdlib-common"
+    implementation 'com.willowtreeapps.opentest4k:opentest4k-common:1.1.0'
     testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common"
     testCompile "org.jetbrains.kotlin:kotlin-test-common"
 }

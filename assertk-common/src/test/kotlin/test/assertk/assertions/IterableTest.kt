@@ -47,9 +47,9 @@ class IterableTest {
             assert(listOf(1, 2, 3) as Iterable<Int>).each { it.isLessThan(2) }
         }
         assertEquals(
-            """The following 2 assertions failed:
-                |- expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
-                |- expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
+            """The following assertions failed (2 failures)
+              |${"\t"}expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
+              |${"\t"}expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
             """.trimMargin(), error.message
         )
     }

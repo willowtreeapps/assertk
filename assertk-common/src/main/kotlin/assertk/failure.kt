@@ -1,5 +1,8 @@
 package assertk
 
+import com.willowtreeapps.opentest4k.AssertionFailedError
+import com.willowtreeapps.opentest4k.MultipleFailuresError
+
 /**
  * Assertions are run in a failure context which captures failures to report them.
  */
@@ -58,23 +61,18 @@ internal class SoftFailure : Failure {
 
     override fun invoke() {
         if (!failures.isEmpty()) {
-            fail(compositeErrorMessage(failures))
+            FailureContext.failure.fail(compositeErrorMessage(failures))
         }
     }
 
-    private fun compositeErrorMessage(errors: List<AssertionError>): String {
+    private fun compositeErrorMessage(errors: List<AssertionError>): AssertionError {
         return if (errors.size == 1) {
-            errors.first().message.orEmpty()
+            errors.first()
         } else {
-            errors.joinToString(
-                    prefix = "The following ${errors.size} assertions failed:\n",
-                    transform = { "- ${it.message}" },
-                    separator = "\n"
-            )
+            MultipleFailuresError("The following assertions failed", errors)
         }
     }
 }
-
 
 /**
  * Fail the test with the given {@link AssertionError}.
@@ -86,10 +84,8 @@ fun fail(error: AssertionError) {
 /**
  * Fail the test with the given message.
  */
-fun fail(message: String) {
-    FailureContext.failure.fail(AssertionError(message))
+fun fail(message: String, expected: Any? = null, actual: Any? = null) {
+    FailureContext.failure.fail(AssertionFailedError(message, expected, actual, null))
 }
 
-expect
-@Suppress("UndocumentedPublicFunction")
-internal inline fun failWithNotInStacktrace(error: AssertionError): Nothing
+internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothing

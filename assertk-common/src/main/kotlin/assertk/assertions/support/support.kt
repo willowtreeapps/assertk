@@ -46,12 +46,16 @@ internal expect fun displayPlatformSpecific(value: Any?): String
  */
 fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
     if (expected == null || actual == null || expected == actual) {
-        expected(":${show(expected)} but was:${show(actual)}")
+        expected(message = ":${show(expected)} but was:${show(actual)}", expected = expected, actual = actual)
     } else {
         val extractor = DiffExtractor(display(expected), display(actual))
         val prefix = extractor.compactPrefix()
         val suffix = extractor.compactSuffix()
-        expected(":<$prefix${extractor.expectedDiff()}$suffix> but was:<$prefix${extractor.actualDiff()}$suffix>")
+        expected(
+            message = ":<$prefix${extractor.expectedDiff()}$suffix> but was:<$prefix${extractor.actualDiff()}$suffix>",
+            expected = expected,
+            actual = actual
+        )
     }
 }
 
@@ -62,10 +66,14 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  *
  * -> "expected to be: <1> but was <2>"
  */
-fun <T> Assert<T>.expected(message: String) {
+fun <T> Assert<T>.expected(message: String, expected: Any? = null, actual: Any? = null) {
     val maybeSpace = if (message.startsWith(":")) "" else " "
     val maybeInstance = if (context != null) " ${show(context, "()")}" else ""
-    fail("expected${formatName(name)}$maybeSpace$message$maybeInstance")
+    fail(
+        message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
+        expected = expected,
+        actual = actual
+    )
 }
 
 private fun formatName(name: String?): String {
