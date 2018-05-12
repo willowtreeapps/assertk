@@ -5,7 +5,7 @@ allprojects {
 
 buildscript {
     ext.kotlin_version = '1.2.30'
-    ext.dokka_version = '0.9.14'
+    ext.dokka_version = '0.9.16'
     ext.detekt_version = '1.0.0.RC5'
 
     repositories {
@@ -22,10 +22,9 @@ buildscript {
     }
 }
 
-apply plugin: 'org.jetbrains.dokka'
-
 subprojects {
     apply plugin: "io.gitlab.arturbosch.detekt"
+
     buildscript {
         repositories {
             jcenter()
@@ -33,10 +32,12 @@ subprojects {
             maven { url "https://plugins.gradle.org/m2/" }
         }
     }
+
     repositories {
         jcenter()
         mavenCentral()
     }
+
     detekt {
         version = detekt_version
 
@@ -50,9 +51,4 @@ subprojects {
             config = "$projectDir/../detekt-test.yml"
         }
     }
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "docs/javadoc"
 }

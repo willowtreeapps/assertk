@@ -16,9 +16,14 @@ task sourcesJar(type: Jar) {
     from(platformSrc + commonSrc)
 }
 
+
 task javadocsJar(type: Jar) {
     classifier = 'javadoc'
-    from javadoc.destinationDir
+    from "$buildDir/docs"
+}
+
+if (tasks.findByName('dokka') != null) {
+    javadocsJar.dependsOn('dokka')
 }
 
 artifacts {

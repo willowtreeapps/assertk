@@ -40,4 +40,10 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+apply plugin: 'org.jetbrains.dokka'
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/docs"
+}
+
 apply from: '../publish.gradle'
