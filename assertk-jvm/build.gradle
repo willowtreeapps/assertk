@@ -1,5 +1,4 @@
 buildscript {
-
     repositories {
         jcenter()
         maven {
@@ -14,12 +13,10 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'kotlin-platform-jvm'
-apply from: 'publish.gradle'
 
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "http://dl.bintray.com/jetbrains/spek" }
 }
 
 dependencies {
@@ -42,3 +39,5 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+apply from: '../publish.gradle'

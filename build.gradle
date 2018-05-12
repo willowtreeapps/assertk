@@ -17,6 +17,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath "me.tatarka.gradle:pom:1.0"
     }
 }
 

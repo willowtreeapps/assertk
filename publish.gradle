@@ -2,30 +2,23 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: 'me.tatarka.gradle.pom'
 
-def isAndroid = plugins.hasPlugin('com.android.library')
-
 ext {
     pomFile = file("${project.buildDir}/generated-pom.xml")
     isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
 }
 
-if (isAndroid) {
-    task javadoc(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-    }
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from(sourceSets.main.kotlin)
+    duplicatesStrategy = 'exclude'
+    def platformSrc = sourceSets.main.kotlin
+    def commonSrc = project(':assertk-common').sourceSets.main.kotlin
+    from(platformSrc + commonSrc)
 }
 
 task javadocsJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc.destinationDir
-}
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    if (isAndroid) {
-        from android.sourceSets.main.java.srcDirs
-    } else {
-        from sourceSets.main.allSource
-    }
 }
 
 artifacts {
@@ -43,9 +36,6 @@ def gitUrl = 'https://github.com/willowtreeapps/assertk.git'
 
 pom {
     name project.name
-    if (isAndroid) {
-        packaging 'aar'
-    }
     description 'assertions for kotlin inspired by assertj'
     url siteUrl
 
@@ -89,11 +79,7 @@ publishing {
 
     publications {
         lib(MavenPublication) {
-            if (isAndroid) {
-                artifact "$buildDir/outputs/aar/${project.name}-release.aar"
-            } else {
-                from components.java
-            }
+            from components.java
 
             artifact sourcesJar
             artifact javadocsJar

@@ -49,3 +49,5 @@ task runNodeTests(type: NodeTask, dependsOn: [compileTestKotlin2Js, npmInstall, 
 }
 
 test.dependsOn runNodeTests
+
+apply from: '../publish.gradle'
