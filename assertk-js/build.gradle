@@ -41,10 +41,10 @@ node {
     download = false
 }
 
-npmInstall.workingDir = file("..")
+npmInstall.workingDir = file(projectDir)
 
 task runNodeTests(type: NodeTask, dependsOn: [compileTestKotlin2Js, npmInstall, populateNodeModules]) {
-    script = file('../node_modules/.bin/mocha')
+    script = file("$projectDir/node_modules/.bin/mocha")
     args = [projectDir.toPath().relativize(file(compileTestKotlin2Js.outputFile).toPath())]
 }
 
