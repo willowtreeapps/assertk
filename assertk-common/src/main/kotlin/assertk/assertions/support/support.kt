@@ -9,7 +9,11 @@ import assertk.fail
  * @param wrap What characters to wrap around the value. This should be a pair of characters where the first is at the
  * beginning and the second is at the end. For example, "()" will show (value). The default is "<>".
  */
-fun show(value: Any?, wrap: String = "<>"): String = "${wrap[0]}${display(value)}${wrap[1]}"
+fun show(value: Any?, wrap: String = "<>"): String =
+    "${prefix(wrap)}${display(value)}${suffix(wrap)}"
+
+private fun prefix(wrap: String): String = if (wrap.length > 0) wrap[0].toString() else ""
+private fun suffix(wrap: String): String = if (wrap.length > 1) wrap[1].toString() else ""
 
 internal fun display(value: Any?): String {
     return when (value) {
@@ -20,22 +24,22 @@ internal fun display(value: Any?): String {
         is Array<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Collection<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Map<*, *> -> value.entries.joinToString(
-                prefix = "{",
-                postfix = "}",
-                transform = { (k, v) -> "${display(k)}=${display(v)}" })
+            prefix = "{",
+            postfix = "}",
+            transform = { (k, v) -> "${display(k)}=${display(v)}" })
         is BooleanArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is CharArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is IntArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is DoubleArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is LongArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is ShortArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is ByteArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is FloatArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         else -> displayPlatformSpecific(value)
     }
 }
 
-expect
-@Suppress("UndocumentedPublicFunction")
-internal fun displayPlatformSpecific(value: Any?): String
+internal expect fun displayPlatformSpecific(value: Any?): String
 
 /**
  * Fails an assert with the given expected and actual values.

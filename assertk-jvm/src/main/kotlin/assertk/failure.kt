@@ -2,9 +2,7 @@
 
 package assertk
 
-actual
-@Suppress("NOTHING_TO_INLINE", "UndocumentedPublicFunction")
-internal inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
+internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
     val filtered = error.stackTrace
             .dropWhile { it.className.startsWith("assertk") }
             .toTypedArray()
