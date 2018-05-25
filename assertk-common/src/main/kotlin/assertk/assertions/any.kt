@@ -152,6 +152,29 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P)
 
 
 /**
+ * Asserts the value has the expected kotlin class. This is an exact match, so `assert("test").hasClass(String::class)`
+ * is successful but `assert("test").hasClass(Any::class)` fails.
+ * @see [doesNotHaveClass]
+ * @see [isInstanceOf]
+ */
+fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
+    if (kclass == actual::class) return
+    expected("to have class:${show(kclass)} but was:${show(actual::class)}")
+}
+
+/**
+ * Asserts the value does not have the expected kotlin class. This is an exact match, so
+ * `assert("test").doesNotHaveClass(String::class)` is fails but `assert("test").doesNotHaveClass(Any::class)` is
+ * successful.
+ * @see [hasClass]
+ * @see [isNotInstanceOf]
+ */
+fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) {
+    if (kclass != actual::class) return
+    expected("to not have class:${show(kclass)}")
+}
+
+/**
  * Asserts the value is not an instance of the expected kotlin class. Both
  * `assert("test").isNotInstanceOf(String::class)` and `assert("test").isNotInstanceOf(Any::class)` fails.
  * @see [isInstanceOf]
