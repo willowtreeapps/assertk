@@ -26,7 +26,31 @@ class JavaAnyTest {
         val error = assertFails {
             assert(subject).isInstanceOf(DifferentObject::class.java)
         }
-        assertEquals("expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>", error.message)
+        assertEquals(
+            "expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>",
+            error.message
+        )
+    }
+
+    @Test fun isInstanceOf_jclass_run_block_when_passes() {
+        val error = assertFails {
+            assert(subject as TestObject).isInstanceOf(BasicObject::class.java) {
+                it.prop("str", BasicObject::str).isEqualTo("wrong")
+            }
+        }
+        assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
+    }
+
+    @Test fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
+        val error = assertFails {
+            assert(subject as TestObject).isInstanceOf(DifferentObject::class.java) {
+                it.isNull()
+            }
+        }
+        assertEquals(
+            "expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>",
+            error.message
+        )
     }
 
     @Test fun isNotInstanceOf_jclass_different_class_passess() {

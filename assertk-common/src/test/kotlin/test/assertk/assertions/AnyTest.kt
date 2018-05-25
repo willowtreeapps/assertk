@@ -214,7 +214,7 @@ class AnyTest {
     }
 
     @Test fun isInstanceOf_kclass_same_class_passes() {
-        assert(subject).isInstanceOf(BasicObject::class)
+        assert(subject as TestObject).isInstanceOf(BasicObject::class)
     }
 
     @Test fun isInstanceOf_kclass_parent_class_passes() {
@@ -224,6 +224,27 @@ class AnyTest {
     @Test fun isInstanceOf_kclass_different_class_fails() {
         val error = assertFails {
             assert(subject).isInstanceOf(DifferentObject::class)
+        }
+        assertEquals(
+            "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
+            error.message
+        )
+    }
+
+    @Test fun isInstanceOf_kclass_run_block_when_passes() {
+        val error = assertFails {
+            assert(subject as TestObject).isInstanceOf(BasicObject::class) {
+                it.prop("str", BasicObject::str).isEqualTo("wrong")
+            }
+        }
+        assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
+    }
+
+    @Test fun isInstanceOf_kclass_doesnt_run_block_when_fails() {
+        val error = assertFails {
+            assert(subject as TestObject).isInstanceOf(DifferentObject::class) {
+                it.isNull()
+            }
         }
         assertEquals(
             "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
