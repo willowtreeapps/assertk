@@ -1,6 +1,0 @@
-$dokka.format:html
-$dokka.linkExtension:html
-
-assertk
-assertk.assertions
-assertk.assertions.support

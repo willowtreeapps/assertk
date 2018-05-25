@@ -10,8 +10,8 @@ buildscript {
 
 dependencies {
     expectedBy project(":assertk-common")
-    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js"
 }
 
 
@@ -49,3 +49,5 @@ task runNodeTests(type: NodeTask, dependsOn: [compileTestKotlin2Js, npmInstall, 
 }
 
 test.dependsOn runNodeTests
+
+apply from: '../publish.gradle'

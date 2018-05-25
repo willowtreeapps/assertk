@@ -1,5 +1,4 @@
 buildscript {
-
     repositories {
         jcenter()
         maven {
@@ -14,22 +13,20 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'kotlin-platform-jvm'
-apply from: 'publish.gradle'
 
 repositories {
     mavenCentral()
     jcenter()
-    maven { url "http://dl.bintray.com/jetbrains/spek" }
 }
 
 dependencies {
     expectedBy project(":assertk-common")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
 
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib"
+    api "org.jetbrains.kotlin:kotlin-reflect"
 }
 
 sourceSets {
@@ -42,3 +39,11 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+apply plugin: 'org.jetbrains.dokka'
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/docs"
+}
+
+apply from: '../publish.gradle'

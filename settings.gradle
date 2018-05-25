@@ -1,6 +1,5 @@
 rootProject.name = 'assertk'
 
-include ':assertk-jvm'
-include ':assertk-common'
+include 'assertk-common'
+include 'assertk-jvm'
 include 'assertk-js'
-

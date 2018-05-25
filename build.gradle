@@ -5,7 +5,7 @@ allprojects {
 
 buildscript {
     ext.kotlin_version = '1.2.30'
-    ext.dokka_version = '0.9.14'
+    ext.dokka_version = '0.9.16'
     ext.detekt_version = '1.0.0.RC5'
 
     repositories {
@@ -17,13 +17,14 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath "me.tatarka.gradle:pom:1.0"
     }
 }
 
-apply plugin: 'org.jetbrains.dokka'
-
 subprojects {
     apply plugin: "io.gitlab.arturbosch.detekt"
+
     buildscript {
         repositories {
             jcenter()
@@ -31,10 +32,12 @@ subprojects {
             maven { url "https://plugins.gradle.org/m2/" }
         }
     }
+
     repositories {
         jcenter()
         mavenCentral()
     }
+
     detekt {
         version = detekt_version
 
@@ -48,9 +51,4 @@ subprojects {
             config = "$projectDir/../detekt-test.yml"
         }
     }
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "docs/javadoc"
 }

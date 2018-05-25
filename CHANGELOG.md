@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- Split into multi-platform modules
+- Split into multi-platform modules: `assertk-common`, `assertk-jvm`, and `assertk-js`
+Important: this means the maven coordinate has changed for java projects, it is now `com.willowtreeapps:assertk:assertk-jvm:0.11`.
 - Add `hasSameSizeAs`, `containsNone`, `index` assertions to array.
 - Add `isEmpty`, `isNotEmpty`, `isNullOrEmpty`, `hasSize` assertions to map.
 - Rename map's `containsExactly` to `containsOnly` to make it more clear that order doesn't matter.
