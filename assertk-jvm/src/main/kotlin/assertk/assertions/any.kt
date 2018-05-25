@@ -2,6 +2,7 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import kotlin.reflect.KCallable
@@ -27,8 +28,6 @@ fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
     if (jclass == actual.javaClass) return
     expected("to have class:${show(jclass)} but was:${show(actual.javaClass)}")
 }
-
-
 
 /**
  * Asserts the value has the expected java class. This is an exact match, so
@@ -82,9 +81,13 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any> Assert<T>.isInstanceOf(jclass: Class<out T>) {
-    if (jclass.isInstance(actual)) return
-    expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
+fun <T : Any, S: T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
+    if (jclass.isInstance(actual))  {
+        @Suppress("UNCHECKED_CAST")
+        assert(actual as S, name = name).all(f)
+    } else {
+        expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
+    }
 }
 
 /**

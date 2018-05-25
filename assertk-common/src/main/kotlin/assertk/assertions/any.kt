@@ -169,9 +169,13 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any> Assert<T>.isInstanceOf(kclass: KClass<out T>) {
-    if (kclass.isInstance(actual)) return
-    expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
+fun <T : Any, S: T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit = {}) {
+    if (kclass.isInstance(actual)) {
+        @Suppress("UNCHECKED_CAST")
+        assert(actual as S, name = name).all(f)
+    } else {
+        expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
+    }
 }
 
 
