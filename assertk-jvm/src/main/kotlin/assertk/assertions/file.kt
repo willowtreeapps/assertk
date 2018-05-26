@@ -5,6 +5,7 @@ import assertk.assertions.support.show
 import assertk.Assert
 import java.io.File
 import java.nio.charset.Charset
+import kotlin.math.exp
 
 /**
  * Returns an assert on the file's name.
@@ -83,50 +84,38 @@ fun Assert<File>.isNotHidden() {
 /**
  * Asserts the file has the expected name.
  */
-@Deprecated(message = "Use name().isEqualTo(expected) instead",
-        replaceWith = ReplaceWith("name().isEqualTo(expected)"))
 fun Assert<File>.hasName(expected: String) {
-    assert(actual.name, "name").isEqualTo(expected)
+    name().isEqualTo(expected)
 }
 
 /**
  * Asserts the file has the expected path.
  */
-@Deprecated(message = "Use path().isEqualTo(expected) instead",
-        replaceWith = ReplaceWith("path().isEqualTo(expected)"))
 fun Assert<File>.hasPath(expected: String) {
-    assert(actual.path, "path").isEqualTo(expected)
+    path().isEqualTo(expected)
 }
 
 /**
  * Asserts the file has the expected parent path.
  */
-@Deprecated(message = "Use parent().isEqualTo(expected) instead",
-        replaceWith = ReplaceWith("parent().isEqualTo(expected)"))
 fun Assert<File>.hasParent(expected: String) {
-    assert(actual.parent, "parent").isEqualTo(expected)
+    parent().isEqualTo(expected)
 }
 
 /**
  * Asserts the file has the expected extension.
  */
-@Deprecated(message = "Use extension().isEqualTo(expected) instead",
-        replaceWith = ReplaceWith("extension().isEqualTo(expected)"))
 fun Assert<File>.hasExtension(expected: String) {
-    assert(actual.extension, "extension").isEqualTo(expected)
+    extension().isEqualTo(expected)
 }
 
 /**
  * Asserts the file contains exactly the expected text (and nothing else).
  * @param charset The character set of the file, default is [Charsets.UTF_8]
- * @see [containsText]
- * @see [matchesText]
+ * @see [hasBytes]
  */
-@Deprecated(message = "Use text(charset).isEqualTo(expected) instead",
-        replaceWith = ReplaceWith("text(charset).isEqualTo(expected)"))
 fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
-    val text = actual.readText(charset)
-    assert(text, "text").isEqualTo(expected)
+    text(charset).isEqualTo(expected)
 }
 
 /**

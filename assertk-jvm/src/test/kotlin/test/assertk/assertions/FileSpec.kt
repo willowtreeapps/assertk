@@ -83,18 +83,18 @@ class FileSpec_a_file_On_hasName() {
 
     @Test
     fun it_given_a_files_name_should_pass_a_successful_test() {
-        assert(file).name().isEqualTo("file.txt")
+        assert(file).hasName("file.txt")
     }
 
     @Test
     fun it_given_a_directorys_name_should_pass_a_successful_test() {
-        assert(directory).name().isEqualTo("directory")
+        assert(directory).hasName("directory")
     }
 
     @Test
     fun it_given_files_name_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(file).name().isEqualTo("file")
+            assert(file).hasName("file")
         }
         assertEquals("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt/file.txt)", error.message)
     }
@@ -102,7 +102,7 @@ class FileSpec_a_file_On_hasName() {
     @Test
     fun it_given_directorys_name_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(directory).name().isEqualTo("assertKt")
+            assert(directory).hasName("assertKt")
         }
         assertEquals(
             "expected [name]:<\"[assertKt]\"> but was:<\"[${directory.name}]\"> (assertKt/directory)",
@@ -116,13 +116,13 @@ class FileSpec_a_file_On_hasPath() {
 
     @Test
     fun it_given_a_files_path_should_pass_a_successful_test() {
-        assert(file).path().isEqualTo("assertKt/file.txt")
+        assert(file).hasPath("assertKt/file.txt")
     }
 
     @Test
     fun it_given_a_files_path_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(file).path().isEqualTo("/directory")
+            assert(file).hasPath("/directory")
         }
         assertEquals(
             "expected [path]:<\"[/directory]\"> but was:<\"[${file.path}]\"> (assertKt/file.txt)",
@@ -136,13 +136,13 @@ class FileSpec_a_file_On_hasParent() {
 
     @Test
     fun it_given_a_files_parent_should_pass_a_successful_test() {
-        assert(file).parent().isEqualTo("assertKt")
+        assert(file).hasParent("assertKt")
     }
 
     @Test
     fun it_given_a_files_parent_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(file).parent().isEqualTo("directory")
+            assert(file).hasParent("directory")
         }
         assertEquals(
             "expected [parent]:<\"[directory]\"> but was:<\"[${file.parent}]\"> (assertKt/file.txt)",
@@ -156,13 +156,13 @@ class FileSpec_a_file_On_hasExtension() {
 
     @Test
     fun it_given_a_files_extension_should_pass_a_successful_test() {
-        assert(file).extension().isEqualTo("txt")
+        assert(file).hasExtension("txt")
     }
 
     @Test
     fun it_given_a_files_extension_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(file).extension().isEqualTo("png")
+            assert(file).hasExtension("png")
         }
         assertEquals("expected [extension]:<\"[png]\"> but was:<\"[${file.extension}]\"> (file.txt)", error.message)
     }
@@ -180,13 +180,13 @@ class FileSpec_a_file_On_hasText() {
 
     @Test
     fun it_given_a_files_text_should_pass_a_successful_test() {
-        assert(file).text().isEqualTo(text)
+        assert(file).hasText(text)
     }
 
     @Test
     fun it_given_a_files_text_should_fail_an_unsuccessful_test() {
         val error = assertFails {
-            assert(file).text().isEqualTo("Forty-two!")
+            assert(file).hasText("Forty-two!")
         }
         assertTrue(error.message!!.startsWith("expected [text]:<\"[Forty-two!]\"> but was:<\"[$text]\">"))
         assertTrue(error.message!!.contains("file_contains"))

@@ -19,8 +19,6 @@ fun <T : Any> Assert<T>.jClass() = prop("class", { it::class.java })
  * @see [doesNotHaveClass]
  * @see [isInstanceOf]
  */
-@Deprecated(message = "Use jClass().isEqualTo(jclass) instead.",
-        replaceWith = ReplaceWith("jClass().isEqualTo(jclass)"))
 fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
     if (jclass == actual.javaClass) return
     expected("to have class:${show(jclass)} but was:${show(actual.javaClass)}")
@@ -33,8 +31,6 @@ fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
  * @see [hasClass]
  * @see [isNotInstanceOf]
  */
-@Deprecated(message = "Use jClass().isNotEqualTo(jclass) instead.",
-        replaceWith = ReplaceWith("jClass().isNotEqualTo(jclass)"))
 fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
     if (jclass != actual.javaClass) return
     expected("to not have class:${show(jclass)}")

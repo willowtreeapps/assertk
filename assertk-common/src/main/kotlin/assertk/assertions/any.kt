@@ -92,23 +92,15 @@ fun <T> Assert<T>.isNotIn(vararg values: T) {
 /**
  * Asserts the value has the expected string from it's [toString].
  */
-@Deprecated(message = "Use toStringFun().isEqualTo(string) instead.",
-        replaceWith = ReplaceWith("toStringFun().isEqualTo(string)"))
 fun <T> Assert<T>.hasToString(string: String) {
-    val result = actual.toString()
-    if (result == string) return
-    expected("toString() to be:${show(string)} but was:${show(result)}")
+    toStringFun().isEqualTo(string)
 }
 
 /**
  * Asserts the value has the expected hash code from it's [hashCode].
  */
-@Deprecated(message = "Use hashCodeFun().isEqualTo(hashCode) instead.",
-        replaceWith = ReplaceWith("hashCodeFun().isEqualTo(hashCode)"))
 fun <T : Any> Assert<T>.hasHashCode(hashCode: Int) {
-    val result = actual.hashCode()
-    if (result == hashCode) return
-    expected("hashCode() to be:${show(hashCode)} but was:${show(result)}")
+    hashCodeFun().isEqualTo(hashCode)
 }
 
 // nullable
