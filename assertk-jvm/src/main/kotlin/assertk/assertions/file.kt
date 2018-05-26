@@ -1,11 +1,10 @@
 package assertk.assertions
 
+import assertk.Assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
-import assertk.Assert
 import java.io.File
 import java.nio.charset.Charset
-import kotlin.math.exp
 
 /**
  * Returns an assert on the file's name.
@@ -124,11 +123,13 @@ fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
  * @see [hasText]
  * @see [matchesText]
  */
-@Deprecated(message = "Use text(charset).contains(expected) instead",
-        replaceWith = ReplaceWith("text(charset).contains(expected)"))
+@Deprecated(
+    message = "Use text(charset).contains(expected) instead",
+    replaceWith = ReplaceWith("text(charset).contains(expected)"),
+    level = DeprecationLevel.ERROR
+)
 fun Assert<File>.containsText(expected: String, charset: Charset = Charsets.UTF_8) {
-    val text = actual.readText(charset)
-    assert(text, "text").contains(expected)
+    text(charset).contains(expected)
 }
 
 /**
@@ -137,11 +138,13 @@ fun Assert<File>.containsText(expected: String, charset: Charset = Charsets.UTF_
  * @see [hasText]
  * @see [matchesText]
  */
-@Deprecated(message = "Use text(charset).matches(expected) instead",
-        replaceWith = ReplaceWith("text(charset).matches(expected)"))
+@Deprecated(
+    message = "Use text(charset).matches(expected) instead",
+    replaceWith = ReplaceWith("text(charset).matches(expected)"),
+    level = DeprecationLevel.ERROR
+)
 fun Assert<File>.matchesText(expected: Regex, charset: Charset = Charsets.UTF_8) {
-    val text = actual.readText(charset)
-    assert(text, "text").matches(expected)
+    text(charset).matches(expected)
 }
 
 /**
