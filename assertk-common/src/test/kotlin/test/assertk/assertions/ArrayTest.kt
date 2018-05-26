@@ -7,6 +7,32 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 class ArrayTest {
+    //region isEqualTo
+    @Test fun isEqualTo_same_contents_passes() {
+        assert(arrayOf("one")).isEqualTo(arrayOf("one"))
+    }
+
+    @Test fun isEqualTo_different_contents_fails() {
+        val error = assertFails {
+            assert(arrayOf("one")).isEqualTo(arrayOf("two"))
+        }
+        assertEquals("expected:<[\"[two]\"]> but was:<[\"[one]\"]>", error.message)
+    }
+    //endregion
+
+    //region isNotEqualTo
+    @Test fun isNotEqualTo_different_contents_passes() {
+        assert(arrayOf("one")).isNotEqualTo(arrayOf("two"))
+    }
+
+    @Test fun isNotEqualTo_same_contents_fails() {
+        val error = assertFails {
+            assert(arrayOf("one")).isNotEqualTo(arrayOf("one"))
+        }
+        assertEquals("expected to not be equal to:<[\"one\"]>", error.message)
+    }
+    //endregion
+
     //region isEmpty
     @Test fun isEmpty_empty_passes() {
         assert(emptyArray<Any?>()).isEmpty()
