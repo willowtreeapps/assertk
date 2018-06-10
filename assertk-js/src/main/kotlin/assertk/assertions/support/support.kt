@@ -1,7 +1,7 @@
 package assertk.assertions.support
 
-actual
-@Suppress("UndocumentedPublicFunction")
-internal fun displayPlatformSpecific(value: Any?): String {
+internal actual fun displayPlatformSpecific(value: Any?): String {
+    "".toList().joinToString(transform = { it.toByte().toString()})
     return value.toString()
+
 }
