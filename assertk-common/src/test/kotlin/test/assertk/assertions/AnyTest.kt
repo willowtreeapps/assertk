@@ -213,6 +213,31 @@ class AnyTest {
         assertEquals("expected to not be null", error.message)
     }
 
+    @Test fun hasClass_same_class_passes() {
+        assert(subject).hasClass(BasicObject::class)
+    }
+
+    @Test fun hasClass_parent_class_fails() {
+        val error = assertFails {
+            assert(subject).hasClass(TestObject::class)
+        }
+        assertEquals(
+            "expected to have class:<${TestObject::class}> but was:<${BasicObject::class}>",
+            error.message
+        )
+    }
+
+    @Test fun doesNotHaveClass_parent_class_passes() {
+        assert(subject).doesNotHaveClass(TestObject::class)
+    }
+
+    @Test fun doesNotHaveClass_same_class_fails() {
+        val error = assertFails {
+            assert(subject).doesNotHaveClass(BasicObject::class)
+        }
+        assertEquals("expected to not have class:<${BasicObject::class}>", error.message)
+    }
+
     @Test fun isInstanceOf_kclass_same_class_passes() {
         assert(subject as TestObject).isInstanceOf(BasicObject::class)
     }

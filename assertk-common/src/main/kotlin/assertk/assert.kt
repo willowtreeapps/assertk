@@ -83,8 +83,11 @@ fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name
  * }
  * ```
  */
-@Deprecated(message = "Use assert(actual, name).all(f) instead.",
-        replaceWith = ReplaceWith("assert(actual, name).all(f)"))
+@Deprecated(
+    message = "Use assert(actual, name).all(f) instead.",
+    replaceWith = ReplaceWith("assert(actual, name).all(f)"),
+    level = DeprecationLevel.ERROR
+)
 fun <T> assert(actual: T, name: String? = null, f: Assert<T>.() -> Unit) {
     FailureContext.run(SoftFailure()) {
         f(assert(actual, name))

@@ -16,10 +16,11 @@ fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace
  */
 @Deprecated(
     message = "Use cause().isNotNull { it.isInstanceOf(jclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(jclass) }")
+    replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(jclass) }"),
+    level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
-    assert(actual.cause, "cause").isNotNull {
+    cause().isNotNull {
         it.isInstanceOf(jclass)
     }
 }
@@ -31,10 +32,11 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
  */
 @Deprecated(
     message = "Use cause().isNotNull { it.jClass().isEqualTo(jclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.jClass().isEqualTo(jclass) }")
+    replaceWith = ReplaceWith("cause().isNotNull { it.jClass().isEqualTo(jclass) }"),
+    level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
-    assert(actual.cause, "cause").isNotNull {
+    cause().isNotNull {
         it.jClass().isEqualTo(jclass)
     }
 }
@@ -46,10 +48,11 @@ fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
  */
 @Deprecated(
     message = "Use rootCause().isInstanceOf(jclass) instead.",
-    replaceWith = ReplaceWith("rootCause().isInstanceOf(jclass)")
+    replaceWith = ReplaceWith("rootCause().isInstanceOf(jclass)"),
+    level = DeprecationLevel.ERROR
 )
-fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
-    hasRootCauseInstanceOf(jclass.kotlin)
+fun Assert<Throwable>.hasRootCauseInstanceOf(jclass: Class<Throwable>) {
+    rootCause().isInstanceOf(jclass)
 }
 
 /**
@@ -58,11 +61,12 @@ fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(jclass: Class<out T>) {
  * @see [hasCauseWithClass]
  */
 @Deprecated(
-    message = "Use rootCause().isNotNull { it.jClass().isEqualTo(jclass) } instead.",
-    replaceWith = ReplaceWith("rootCause().isNotNull { it.jClass().isEqualTo(jclass) }")
+    message = "Use rootCause().jClass().isEqualTo(jclass) instead.",
+    replaceWith = ReplaceWith("rootCause().jClass().isEqualTo(jclass) }"),
+    level = DeprecationLevel.ERROR
 )
-fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<out T>) {
-    hasRootCauseWithClass(jclass.kotlin)
+fun Assert<Throwable>.hasRootCauseWithClass(jclass: Class<Throwable>) {
+    rootCause().jClass().isEqualTo(jclass)
 }
 
 /**
@@ -70,9 +74,10 @@ fun <T : Throwable> Assert<T>.hasRootCauseWithClass(jclass: Class<out T>) {
  */
 @Deprecated(
     message = "Use stackTrace().contains(description) instead.",
-    replaceWith = ReplaceWith("stackTrace().contains(description)")
+    replaceWith = ReplaceWith("stackTrace().contains(description)"),
+    level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasStackTraceContaining(description: String) {
-    assert(actual.stackTrace.map { it.toString() }, "stack trace").contains(description)
+    stackTrace().contains(description)
 }
 
