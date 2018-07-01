@@ -6,6 +6,7 @@ import assertk.assertAll
 import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import assertk.assertions.support.fail
 
 $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
 
@@ -14,6 +15,31 @@ $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArra
  */
 @PlatformName("$NSize")
 fun Assert<$T>.size() = prop("size", $T::size)
+
+/**
+ * Asserts the $T contents are equal to the expected one, using [contentDeepEquals].
+ * @see isNotEqualTo
+ */
+fun Assert<$T>.isEqualTo(expected: $T) {
+    if (actual.contentEquals(expected)) return
+    fail(expected, actual)
+}
+
+/**
+ * Asserts the $T contents are not equal to the expected one, using [contentDeepEquals].
+ * @see isEqualTo
+ */
+fun Assert<$T>.isNotEqualTo(expected: $T) {
+    if (!(actual.contentEquals(expected))) return
+    val showExpected = show(expected)
+    val showActual = show(actual)
+    // if they display the same, only show one.
+    if (showExpected == showActual) {
+        expected("to not be equal to:$showActual")
+    } else {
+        expected(":$showExpected not to be equal to:$showActual")
+    }
+}
 
 /**
  * Asserts the $T is empty.

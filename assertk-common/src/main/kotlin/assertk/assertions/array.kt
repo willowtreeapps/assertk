@@ -5,12 +5,38 @@ import assertk.PlatformName
 import assertk.assertAll
 import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
+import assertk.assertions.support.fail
 import assertk.assertions.support.show
 
 /**
  * Returns an assert on the Arrays's size.
  */
 fun <T> Assert<Array<T>>.size() = prop("size", Array<T>::size)
+
+/**
+ * Asserts the array contents are equal to the expected one, using [contentDeepEquals].
+ * @see isNotEqualTo
+ */
+fun <T> Assert<Array<T>>.isEqualTo(expected: Array<T>) {
+    if (actual.contentDeepEquals(expected)) return
+    fail(expected, actual)
+}
+
+/**
+ * Asserts the array contents are not equal to the expected one, using [contentDeepEquals].
+ * @see isEqualTo
+ */
+fun <T> Assert<Array<T>>.isNotEqualTo(expected: Array<T>) {
+    if (!(actual.contentDeepEquals(expected))) return
+    val showExpected = show(expected)
+    val showActual = show(actual)
+    // if they display the same, only show one.
+    if (showExpected == showActual) {
+        expected("to not be equal to:$showActual")
+    } else {
+        expected(":$showExpected not to be equal to:$showActual")
+    }
+}
 
 /**
  * Asserts the array is empty.

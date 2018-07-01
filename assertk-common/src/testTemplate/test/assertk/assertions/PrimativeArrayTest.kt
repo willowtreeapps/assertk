@@ -10,6 +10,32 @@ import kotlin.test.assertFails
 $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
 
 class $TTest {
+    //region isEqualTo
+    @Test fun isEqualTo_same_contents_passes() {
+        assert($NOf(0.to$E())).isEqualTo($NOf(0.to$E()))
+    }
+
+//    @Test fun isEqualTo_different_contents_fails() {
+//        val error = assertFails {
+//            assert($NOf(97.to$E())).isEqualTo($NOf(98.to$E()))
+//        }
+//        assertEquals("expected:<[[${show(98.to$E(), "")}]]> but was:<[[${show(97.to$E(), "")}]]>", error.message)
+//    }
+    //endregion
+
+    //region isNotEqualTo
+    @Test fun isNotEqualTo_different_contents_passes() {
+        assert($NOf(0.to$E())).isNotEqualTo($NOf(1.to$E()))
+    }
+
+    @Test fun isNotEqualTo_same_contents_fails() {
+        val error = assertFails {
+            assert($NOf(0.to$E())).isNotEqualTo($NOf(0.to$E()))
+        }
+        assertEquals("expected to not be equal to:<[${show(0.to$E(), "")}]>", error.message)
+    }
+    //endregion
+
     //region isEmpty
     @Test fun isEmpty_empty_passes() {
         assert($NOf()).isEmpty()
