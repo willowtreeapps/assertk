@@ -1,4 +1,5 @@
 @file:JvmName("AnyJVMKt")
+
 package assertk.assertions
 
 import assertk.Assert
@@ -6,6 +7,8 @@ import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
 
 /**
  * Returns an assert on the java class of the value.
@@ -42,8 +45,8 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S: T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
-    if (jclass.isInstance(actual))  {
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
+    if (jclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
         assert(actual as S, name = name).all(f)
     } else {
@@ -72,3 +75,27 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) {
  * ```
  */
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }
+
+/**
+ * Like [Assert.isEqualTo] but reports exactly which properties differ. Only supports data classes. Note: you should
+ * _not_ use this if your data class has a custom [Any.equals] since it can be misleading.
+ */
+fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) {
+    if (!actual::class.isData) {
+        throw IllegalArgumentException("only supports data classes")
+    }
+    all {
+        isDataClassEqualToImpl(expected, actual::class)
+    }
+}
+
+private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?) {
+    if (actual == expected) return
+    if (kclass != null && kclass.isData) {
+        for (prop in kclass.memberProperties) {
+            prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
+        }
+    } else {
+        isEqualTo(expected)
+    }
+}

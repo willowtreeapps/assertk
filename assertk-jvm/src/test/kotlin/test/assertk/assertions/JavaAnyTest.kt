@@ -10,10 +10,13 @@ class JavaAnyTest {
     val p: String = JavaAnyTest::class.java.name
     val subject = BasicObject("test")
 
+    //region jClass
     @Test fun extracts_jClass() {
         assertEquals(BasicObject::class.java, assert(subject as TestObject).jClass().actual)
     }
+    //endregion
 
+    //region isInstanceOf
     @Test fun isInstanceOf_jclass_same_class_passes() {
         assert(subject).isInstanceOf(BasicObject::class.java)
     }
@@ -52,7 +55,9 @@ class JavaAnyTest {
             error.message
         )
     }
+    //endregion
 
+    //region isNotInstanceOf
     @Test fun isNotInstanceOf_jclass_different_class_passess() {
         assert(subject).isNotInstanceOf(DifferentObject::class.java)
     }
@@ -70,7 +75,9 @@ class JavaAnyTest {
         }
         assertEquals("expected to not be instance of:<$p\$TestObject>", error.message)
     }
+    //endregion
 
+    //region prop
     @Test fun prop_callable_extract_prop_passes() {
         assert(subject).prop(BasicObject::str).isEqualTo("test")
     }
@@ -81,6 +88,27 @@ class JavaAnyTest {
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
+    //endregion
+
+    //region isDataClassEqualTo
+    @Test fun isDataClassEqualTo_equal_data_classes_passes() {
+        assert(DataClass(InnerDataClass("test"), 1, 'a'))
+            .isDataClassEqualTo(DataClass(InnerDataClass("test"), 1, 'a'))
+    }
+
+    @Test fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
+        val error = assertFails {
+            assert(DataClass(InnerDataClass("test"), 1, 'a'))
+                .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
+        }
+        assertEquals(
+            """The following assertions failed (2 failures)
+            |${"\t"}expected [one.inner]:<"[wrong]"> but was:<"[test]"> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+            |${"\t"}expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+        """.trimMargin(), error.message
+        )
+    }
+    //endregion
 
     open class TestObject
 
@@ -98,5 +126,9 @@ class JavaAnyTest {
     }
 
     class DifferentObject : TestObject()
+
+    data class DataClass(val one: InnerDataClass, val two: Int, val three: Char)
+
+    data class InnerDataClass(val inner: String)
 }
 
