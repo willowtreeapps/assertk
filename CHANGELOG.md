@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.11] - 2018-08-04
+
 ### Added
 - Split into multi-platform modules: `assertk-common`, `assertk-jvm`, and `assertk-js`
 Important: this means the maven coordinate has changed for java projects, it is now `com.willowtreeapps:assertk:assertk-jvm:0.11`.
