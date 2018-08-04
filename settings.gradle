@@ -3,3 +3,5 @@ rootProject.name = 'assertk'
 include 'assertk-common'
 include 'assertk-jvm'
 include 'assertk-js'
+
+enableFeaturePreview('IMPROVED_POM_SUPPORT')
