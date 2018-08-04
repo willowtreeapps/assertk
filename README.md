@@ -1,6 +1,6 @@
 # assertk
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk-common/badge.svg?style=flat)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.willowtreeapps.assertk%22)
 [![Build status](https://travis-ci.org/willowtreeapps/assertk.svg?branch=master)](https://travis-ci.org/willowtreeapps/assertk)
 
 assertions for kotlin inspired by assertj
@@ -49,7 +49,8 @@ class PersonTest {
 }
 ```
 
-You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk/assertk.assertions/index.html).
+You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk-jvm/assertk.assertions/index.html).
+(Due to a limitation in dokka this is currently only the jvm assertions)
 
 ### Nullability
 Since null is a first-class concept in kotlin's type system, you need to be explicit in your assertions.
