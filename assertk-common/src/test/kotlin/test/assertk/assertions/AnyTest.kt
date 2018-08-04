@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertions.*
+import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -222,7 +223,7 @@ class AnyTest {
             assert(subject).hasClass(TestObject::class)
         }
         assertEquals(
-            "expected to have class:<${TestObject::class}> but was:<${BasicObject::class}>",
+            "expected to have class:${show(TestObject::class)} but was:${show(BasicObject::class)}",
             error.message
         )
     }
@@ -235,7 +236,7 @@ class AnyTest {
         val error = assertFails {
             assert(subject).doesNotHaveClass(BasicObject::class)
         }
-        assertEquals("expected to not have class:<${BasicObject::class}>", error.message)
+        assertEquals("expected to not have class:${show(BasicObject::class)}", error.message)
     }
 
     @Test fun isInstanceOf_kclass_same_class_passes() {
@@ -251,7 +252,7 @@ class AnyTest {
             assert(subject).isInstanceOf(DifferentObject::class)
         }
         assertEquals(
-            "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
+            "expected to be instance of:${show(DifferentObject::class)} but had class:${show(BasicObject::class)}",
             error.message
         )
     }
@@ -272,7 +273,7 @@ class AnyTest {
             }
         }
         assertEquals(
-            "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
+            "expected to be instance of:${show(DifferentObject::class)} but had class:${show(BasicObject::class)}",
             error.message
         )
     }
@@ -285,14 +286,14 @@ class AnyTest {
         val error = assertFails {
             assert(subject).isNotInstanceOf(BasicObject::class)
         }
-        assertEquals("expected to not be instance of:<${BasicObject::class}>", error.message)
+        assertEquals("expected to not be instance of:${show(BasicObject::class)}", error.message)
     }
 
     @Test fun isNotInstanceOf_kclass_parent_class_fails() {
         val error = assertFails {
             assert(subject).isNotInstanceOf(TestObject::class)
         }
-        assertEquals("expected to not be instance of:<${TestObject::class}>", error.message)
+        assertEquals("expected to not be instance of:${show(TestObject::class)}", error.message)
     }
 
     companion object {

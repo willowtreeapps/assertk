@@ -1,8 +1,11 @@
 package assertk
 
-expect
 /**
  * Allows to resolve name conflicts from common modules.
  */
-annotation class PlatformName(val name: String)
+expect annotation class PlatformName(val name: String)
 
+/**
+ * Kotlin native requires objects to be ThreadLocal to be mutable.
+ */
+expect annotation class ThreadLocal()

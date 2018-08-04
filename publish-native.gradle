@@ -1,0 +1,28 @@
+apply plugin: 'maven-publish'
+
+ext {
+    pomFile = file("${project.buildDir}/generated-pom.xml")
+    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
+}
+
+publishing {
+    repositories {
+        maven {
+            if (project.ext.isReleaseVersion) {
+                url 'https://api.bintray.com/maven/evant/maven/assertk/;publish=1'
+
+                credentials {
+                    username = project.findProperty('bintray.username')
+                    password = project.findProperty('bintray.apikey')
+                }
+            } else {
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+
+                credentials {
+                    username = project.findProperty('sonatype.username')
+                    password = project.findProperty('sonatype.password')
+                }
+            }
+        }
+    }
+}

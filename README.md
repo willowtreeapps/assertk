@@ -24,6 +24,35 @@ dependencies {
 Replace dependency on `assertk-jvm` with `assertk-js` or `assertk-common` to use it in JavaScript and common projects,
 respectively.
 
+### Kotlin Native
+There's experimental support for kotlin native, using the new [gradle dsl](https://github.com/ilmat192/Kotlin-Native-Gradle-Experiments)
+Targets: 'linux', 'macos_x64', 'ios_arm64', and 'ios_x64' are supported.
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.8.1"
+    }
+}
+
+apply plugin 'org.jetbrains.kotlin.platform.native'
+
+repositories {
+    maven { url "https://dl.bintray.com/evant/maven" }
+}
+
+dependencies {
+    testImplementation 'com.willowtreeapps.assertk:assertk-native:0.11-preview01'
+}
+```
+
+make sure you add `enableFeaturePreview('GRADLE_METADATA')` to your `settings.gradle`.
+
 ## Usage
 
 Simple usage is to wrap the value you are testing in `assert()` and call assertion methods on the result.

@@ -1,0 +1,23 @@
+apply plugin: 'kotlin-platform-native'
+
+version '0.11-preview01'
+
+sourceSets.main {
+    kotlin.srcDir 'src/main'
+
+    component {
+        outputKinds = [KLIBRARY]
+        target 'linux', 'macos_x64', 'ios_arm64', 'ios_x64'
+    }
+}
+
+repositories {
+    maven { url "https://dl.bintray.com/evant/maven" }
+}
+
+dependencies {
+    expectedBy project(':assertk-common')
+    implementation 'com.willowtreeapps.opentest4k:opentest4k-native:1.1.0-preview01'
+}
+
+apply from: '../publish-native.gradle'

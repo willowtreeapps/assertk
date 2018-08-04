@@ -1,6 +1,5 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
-apply plugin: 'me.tatarka.gradle.pom'
 
 ext {
     pomFile = file("${project.buildDir}/generated-pom.xml")
@@ -26,45 +25,8 @@ if (tasks.findByName('dokka') != null) {
     javadocsJar.dependsOn('dokka')
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocsJar
-}
-
-signing {
-    required { signatory != null && project.ext.isReleaseVersion }
-    sign configurations.archives
-}
-
 def siteUrl = 'https://github.com/willowtreeapps/assertk'
 def gitUrl = 'https://github.com/willowtreeapps/assertk.git'
-
-pom {
-    name project.name
-    description 'assertions for kotlin inspired by assertj'
-    url siteUrl
-
-    scm {
-        url siteUrl
-        connection gitUrl
-        developerConnection gitUrl
-    }
-
-    licenses {
-        license {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-        }
-    }
-
-    developers {
-        developer {
-            id 'evant'
-            name 'Evan Tatarka'
-        }
-    }
-}
 
 publishing {
     repositories {
@@ -85,19 +47,32 @@ publishing {
     publications {
         lib(MavenPublication) {
             from components.java
-
             artifact sourcesJar
             artifact javadocsJar
 
-            if (signing.required) {
-                // Sign the artifacts.
-                project.tasks.signArchives.signatureFiles.each {
-                    artifact(it) {
-                        def matcher = it.file =~ /-?(?<classifier>sources|javadoc)?\.(?<extension>jar|aar)\.asc$/
-                        if (matcher.find()) {
-                            classifier = matcher.group('classifier')
-                            extension = matcher.group('extension') + '.asc'
-                        }
+            pom {
+                name = project.name
+                description = 'assertions for kotlin inspired by assertj'
+                url = siteUrl
+
+                scm {
+                    url = siteUrl
+                    connection  = gitUrl
+                    developerConnection = gitUrl
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'evant'
+                        name = 'Evan Tatarka'
                     }
                 }
             }
@@ -105,29 +80,7 @@ publishing {
     }
 }
 
-if (signing.required) {
-    project.afterEvaluate {
-        // Sign the pom.xml.
-        publishing.publications.lib(MavenPublication) {
-            pom.withXml {
-                writeTo(project.ext.pomFile)
-                def pomAscFile = signing.sign(project.ext.pomFile).signatureFiles[0]
-                artifact(pomAscFile) {
-                    classifier = null
-                    extension = 'pom.asc'
-                }
-                project.ext.pomFile.delete()
-            }
-        }
-    }
-}
-
-model {
-    tasks.publishLibPublicationToMavenLocal {
-        dependsOn(project.tasks.signArchives)
-    }
-
-    tasks.publishLibPublicationToMavenRepository {
-        dependsOn(project.tasks.signArchives)
-    }
+signing {
+    required { signatory != null && project.ext.isReleaseVersion }
+    sign publishing.publications.lib
 }

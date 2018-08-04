@@ -1,6 +1,10 @@
 package test.assertk.assertions.support
 
 import assertk.assertions.support.show
+import test.assertk.Platform
+import test.assertk.assertions.AnyTest
+import test.assertk.exceptionPackageName
+import test.assertk.platform
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -83,6 +87,19 @@ class SupportTest {
 
     @Test fun show_different_wrapper() {
         assertEquals("{42}", show(42, "{}"))
+    }
+
+    @Test fun show_platform_kclass() {
+        assertEquals("<class ${exceptionPackageName}Exception>", show(Exception::class))
+    }
+
+    @Test fun show_lib_kclass() {
+        //js backend currently doesn't support class.qualifiedName
+        if (platform == Platform.JS) {
+            assertEquals("<class TestObject>", show(AnyTest.Companion.TestObject::class))
+        } else {
+            assertEquals("<class test.assertk.assertions.AnyTest.Companion.TestObject>", show(AnyTest.Companion.TestObject::class))
+        }
     }
     //endregion
 }

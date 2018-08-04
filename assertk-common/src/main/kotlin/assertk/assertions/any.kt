@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun <T : Any> Assert<T>.kClass() = prop("class", { it::class })
+fun <T : Any> Assert<T>.kClass() = prop("class") { it::class }
 
 /**
  * Returns an assert on the toString method of the value.

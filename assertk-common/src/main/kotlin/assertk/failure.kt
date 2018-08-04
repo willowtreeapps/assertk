@@ -6,6 +6,7 @@ import com.willowtreeapps.opentest4k.MultipleFailuresError
 /**
  * Assertions are run in a failure context which captures failures to report them.
  */
+@ThreadLocal // Required for kotlin native, this is fine since you aren't expected to jump threads when running assertions.
 internal object FailureContext {
     internal var failure: Failure = SimpleFailure()
 
