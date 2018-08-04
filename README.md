@@ -5,7 +5,9 @@
 
 assertions for kotlin inspired by assertj
 
-## Download
+## Setup
+
+### Gradle/JVM
 
 ```groovy
 repositories {
@@ -13,9 +15,14 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk:0.10'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.11'
 }
 ```
+
+### Javascript/Common
+
+Replace dependency on `assertk-jvm` with `assertk-js` or `assertk-common` to use it in JavaScript and common projects,
+respectively.
 
 ## Usage
 
