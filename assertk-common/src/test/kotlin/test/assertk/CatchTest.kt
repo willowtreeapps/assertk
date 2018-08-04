@@ -5,18 +5,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class CatchSpec_an_exception_On_catch {
-    private val subject = TestException()
-
-    @Test
-    fun it_should_catch_and_return_a_exception() {
-        val error = catch { throw subject }
-
+class CatchTest {
+    @Test fun catchs_and_returns_an_exception() {
+        val error = catch { throw TestException() }
         assertEquals("test", error?.message)
     }
 
-    @Test
-    fun it_should_return_null_when_no_exception_is_thrown() {
+    @Test fun returns_null_when_no_exception_is_thrown() {
         val error = catch { }
         assertNull(error)
     }
