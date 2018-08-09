@@ -201,3 +201,19 @@ fun Assert<...>.myAssertion() {
 
 ## Contributing to assertk
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/master/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/master/code-of-conduct.md).
+
+## Known Issues
+
+### More than one file was found with OS independent path 'META-INF/main.kotlin_module'
+
+This is a known issue for multiplatform projects https://youtrack.jetbrains.com/issue/KT-23574, workaround is to do
+
+```
+android {
+    packagingOptions {
+        exclude '/META-INF/main.kotlin_module'
+    }
+}
+```
+
+as per https://youtrack.jetbrains.com/issue/KT-23695
