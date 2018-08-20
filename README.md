@@ -1,6 +1,6 @@
 # assertk
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk-common/badge.svg?style=flat)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.willowtreeapps.assertk%22)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.willowtreeapps.assertk/assertk-common/badge.svg?style=flat)](https://search.maven.org/search?q=g:com.willowtreeapps.assertk)
 [![Build status](https://travis-ci.org/willowtreeapps/assertk.svg?branch=master)](https://travis-ci.org/willowtreeapps/assertk)
 
 assertions for kotlin inspired by assertj
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.11'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.12'
 }
 ```
 
