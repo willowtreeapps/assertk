@@ -1,10 +1,10 @@
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.11'
+    version '0.12'
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.41'
+    ext.kotlin_version = '1.2.50'
     ext.dokka_version = '0.9.16'
     ext.detekt_version = '1.0.0.RC5'
 

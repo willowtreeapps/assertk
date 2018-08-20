@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.12] - 2018-08-20
+
+### Fixed
+- Bumped the kotlin version to 1.2.50 to fix a packaging issue.
+- Remove `<packaging>pom</packaging>` as it should be using the default jar packaging.
+
 ## [0.11] - 2018-08-04
 
 ### Added
