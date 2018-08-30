@@ -9,7 +9,7 @@ import assertk.assertions.support.show
  * @see [isNotZero]
  */
 fun <T : Number> Assert<T>.isZero() {
-    if (actual == 0) return
+    if (actual.toDouble() == 0.0) return
     expected("to be 0 but was:${show(actual)}")
 }
 
@@ -18,7 +18,7 @@ fun <T : Number> Assert<T>.isZero() {
  * @see [isZero]
  */
 fun <T : Number> Assert<T>.isNotZero() {
-    if (actual != 0) return
+    if (actual.toDouble() != 0.0) return
     expected("to not be 0")
 }
 
@@ -26,9 +26,8 @@ fun <T : Number> Assert<T>.isNotZero() {
  * Asserts the number is greater than 0.
  * @see [isNegative]
  */
-fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
-    @Suppress("UNCHECKED_CAST", "UnsafeCast")
-    if (actual > 0 as T) return
+fun <T : Number> Assert<T>.isPositive() {
+    if (actual.toDouble() > 0) return
     expected("to be positive but was:${show(actual)}")
 }
 
@@ -36,8 +35,7 @@ fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
  * Asserts the number is less than 0.
  * @see [isPositive]
  */
-fun <T> Assert<T>.isNegative() where T : Number, T : Comparable<T> {
-    @Suppress("UNCHECKED_CAST", "UnsafeCast")
-    if (actual < 0 as T) return
+fun <T : Number> Assert<T>.isNegative() {
+    if (actual.toDouble() < 0) return
     expected("to be negative but was:${show(actual)}")
 }
