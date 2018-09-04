@@ -4,11 +4,9 @@ allprojects {
 }
 
 buildscript {
-    ext.versions = [
-        kotlin: '1.2.61',
-        dokka:  '0.9.17',
-        detekt: '1.0.0.RC8'
-    ]
+    ext.kotlin_version = '1.2.61'
+    ext.dokka_version = '0.9.17'
+    ext.detekt_version = '1.0.0.RC8'
 
     repositories {
         jcenter()
@@ -16,9 +14,9 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath "me.tatarka.gradle:pom:1.0"
         classpath 'org.ajoberstar:gradle-git-publish:1.0.1'
@@ -42,7 +40,7 @@ subprojects {
     }
 
     detekt {
-        version = versions.detekt
+        version = detekt_version
 
         profile("main") {
             input = "$projectDir/src/main/kotlin"

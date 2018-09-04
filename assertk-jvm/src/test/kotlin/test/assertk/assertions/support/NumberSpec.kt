@@ -26,7 +26,7 @@ class BigDecimalSpecNumberOnIsZero {
     }
 }
 
-class BigIntegerSpecNumbeOnisZero {
+class BigIntegerSpecNumberOnisZero {
 
     @Test
     fun itGivenZeroTestShouldPass() {
@@ -42,7 +42,7 @@ class BigIntegerSpecNumbeOnisZero {
     }
 }
 
-class BigDecimalSpecNumberOnisPositive {
+class BigDecimalSpecNumberOnIsPositive {
     @Test
     fun itGivenPositiveNumberTestShouldPass() {
         assertk.assert(BigDecimal.ONE).isPositive()
