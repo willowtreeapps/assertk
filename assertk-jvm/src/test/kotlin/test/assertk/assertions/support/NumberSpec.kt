@@ -10,15 +10,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 
-class BigDecimalSpec_a_Number_On_isZero() {
+class BigDecimalSpecNumberOnIsZero {
 
     @Test
-    fun it_Given_a_zero_test_should_pass() {
+    fun itGivenZeroTestShouldPass() {
         assertk.assert(BigDecimal.ZERO).isZero()
     }
 
     @Test
-    fun it_Given_a_not_zero_test_should_fail() {
+    fun itGivenNoZeroTestShouldFail() {
         val error = assertFails {
             assertk.assert(BigDecimal.ONE).isZero()
         }
@@ -26,10 +26,10 @@ class BigDecimalSpec_a_Number_On_isZero() {
     }
 }
 
-class BigIntegerSpec_a_Number_On_isZero() {
+class BigIntegerSpecNumbeOnisZero {
 
     @Test
-    fun it_Given_a_zero_test_should_pass() {
+    fun itGivenZeroTestShouldPass() {
         assertk.assert(BigInteger.ZERO).isZero()
     }
 
@@ -42,14 +42,14 @@ class BigIntegerSpec_a_Number_On_isZero() {
     }
 }
 
-class BigDecimalSpec_a_Number_On_isPositive() {
+class BigDecimalSpecNumberOnisPositive {
     @Test
-    fun it_Given_a_positive_number_test_should_pass() {
+    fun itGivenPositiveNumberTestShouldPass() {
         assertk.assert(BigDecimal.ONE).isPositive()
     }
 
     @Test
-    fun it_Given_a_zero_number_test_should_fail() {
+    fun itGivenZeroNumberTestShouldFail() {
         val error = assertFails {
             assertk.assert(BigDecimal.ZERO).isPositive()
         }
@@ -57,7 +57,7 @@ class BigDecimalSpec_a_Number_On_isPositive() {
     }
 
     @Test
-    fun it_Given_a_negative_number_test_should_fail() {
+    fun itGivenNegativeNumberTestShouldFail() {
         val error = assertFails {
             assertk.assert(BigDecimal.ONE.negate()).isPositive()
         }
@@ -65,9 +65,9 @@ class BigDecimalSpec_a_Number_On_isPositive() {
     }
 }
 
-class NumberSpec_a_Number_On_isNegative() {
+class NumberSpecNumberOnIsNegative {
     @Test
-    fun it_Given_a_zero_number_test_should_fail() {
+    fun itGivenZeroNumberTestShouldFail() {
         val error = assertFails {
             assertk.assert(BigDecimal.ZERO).isNegative()
         }
@@ -75,7 +75,7 @@ class NumberSpec_a_Number_On_isNegative() {
     }
 
     @Test
-    fun it_Give_a_positive_number_test_should_fail() {
+    fun itGivePositiveNumberTestShouldFail() {
         val error = assertFails {
             assertk.assert(BigDecimal.ONE).isNegative()
         }
@@ -83,7 +83,7 @@ class NumberSpec_a_Number_On_isNegative() {
     }
 
     @Test
-    fun it_Given_a_negative_number_test_should_pass() {
+    fun itGivenNegativeNumberTestShouldPass() {
         assertk.assert(BigDecimal.ONE.negate()).isNegative()
     }
 }
