@@ -4,9 +4,9 @@ allprojects {
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.61'
-    ext.dokka_version = '0.9.17'
-    ext.detekt_version = '1.0.0.RC8'
+    ext.kotlin_version = '1.2.50'
+    ext.dokka_version = '0.9.16'
+    ext.detekt_version = '1.0.0.RC5'
 
     repositories {
         jcenter()
