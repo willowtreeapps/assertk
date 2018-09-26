@@ -72,6 +72,7 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
+ * @see [containsOnly]
  */
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
     if (actual.containsAll(elements.toList())) {
@@ -80,4 +81,17 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
 
     val notFound = elements.filterNot { it in actual }
     expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
+}
+
+/**
+ * Asserts the collection contains only the expected elements, in any order.
+ * @see [containsExactly]
+ * @see [containsAll]
+ * @see [containsNone]
+ */
+fun <T : List<*>> Assert<T>.containsOnly(vararg elements: Any?) {
+    containsAll(*elements)
+
+    val unexpected = actual.filterNot { elements.contains(it) }.takeIf { it.isNotEmpty() } ?: return
+    expected("to contain only:${show(elements)} some elements were not expected:${show(unexpected)}")
 }

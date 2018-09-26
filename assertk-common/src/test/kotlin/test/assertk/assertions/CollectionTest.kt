@@ -8,11 +8,11 @@ import kotlin.test.assertFails
 
 class CollectionTest {
     //region isEmpty
-    @Test fun isEmpty_empty_passes() {
+    @Test fun isEmptyPasses() {
         assert(emptyList<Any?>()).isEmpty()
     }
 
-    @Test fun isEmpty_non_empty_fails() {
+    @Test fun isEmptyFails() {
         val error = assertFails {
             assert(listOf<Any?>(null)).isEmpty()
         }
@@ -21,11 +21,11 @@ class CollectionTest {
     //endregion
 
     //region isNotEmpty
-    @Test fun isNotEmpty_non_empty_passes() {
+    @Test fun isNotEmptyPasses() {
         assert(listOf<Any?>(null)).isNotEmpty()
     }
 
-    @Test fun isNotEmpty_empty_fails() {
+    @Test fun isNotEmptyFails() {
         val error = assertFails {
             assert(emptyList<Any?>()).isNotEmpty()
         }
@@ -34,15 +34,15 @@ class CollectionTest {
     //endregion
 
     //region isNullOrEmpty
-    @Test fun isNullOrEmpty_null_passes() {
+    @Test fun isNullOrEmptyWithNullPasses() {
         assert(null as List<Any?>?).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_empty_passes() {
+    @Test fun isNullOrEmptyPasses() {
         assert(emptyList<Any?>()).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_non_empty_fails() {
+    @Test fun isNullOrEmptyFails() {
         val error = assertFails {
             assert(listOf<Any?>(null)).isNullOrEmpty()
         }
@@ -51,11 +51,11 @@ class CollectionTest {
     //endregion
 
     //region hasSize
-    @Test fun hasSize_correct_size_passes() {
+    @Test fun hasSizePasses() {
         assert(emptyList<Any?>()).hasSize(0)
     }
 
-    @Test fun hasSize_wrong_size_fails() {
+    @Test fun hasSizeFails() {
         val error = assertFails {
             assert(emptyList<Any?>()).hasSize(1)
         }
@@ -64,11 +64,11 @@ class CollectionTest {
     //endregion
 
     //region hasSameSizeAs
-    @Test fun hasSameSizeAs_equal_sizes_passes() {
+    @Test fun hasSameSizeAsPasses() {
         assert(emptyList<Any?>()).hasSameSizeAs(emptyList<Any?>())
     }
 
-    @Test fun hasSameSizeAs_non_equal_sizes_fails() {
+    @Test fun hasSameSizeAsFails() {
         val error = assertFails {
             assert(emptyList<Any?>()).hasSameSizeAs(listOf<Any?>(null))
         }
@@ -77,11 +77,11 @@ class CollectionTest {
     //endregion
 
     //region containsNone
-    @Test fun containsNone_missing_elements_passes() {
+    @Test fun containsNonePasses() {
         assert(emptyList<Any?>()).containsNone(1)
     }
 
-    @Test fun containsNone_present_element_fails() {
+    @Test fun containsNoneFails() {
         val error = assertFails {
             assert(listOf(1, 2)).containsNone(2, 3)
         }
@@ -90,15 +90,35 @@ class CollectionTest {
     //region
 
     //region containsAll
-    @Test fun containsAll_all_elements_passes() {
+    @Test fun containsAllPasses() {
         assert(listOf(1, 2)).containsAll(2, 1)
     }
 
-    @Test fun containsAll_some_elements_fails() {
+    @Test fun containsAllFails() {
         val error = assertFails {
             assert(listOf(1)).containsAll(1, 2)
         }
         assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
+    }
+    //endregion
+
+    //region containsOnly
+    @Test fun containsOnlyPasses() {
+        assert(listOf(1, 2)).containsOnly(2, 1)
+    }
+
+    @Test fun containsOnlyElementsMissingFails() {
+        val error = assertFails {
+            assert(listOf(1)).containsOnly(1, 2)
+        }
+        assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
+    }
+
+    @Test fun containsOnlyUnexpectedElementsFails() {
+        val error = assertFails {
+            assert(listOf(1, 2, 3)).containsOnly(1, 2)
+        }
+        assertEquals("expected to contain only:<[1, 2]> some elements were not expected:<[3]>", error.message)
     }
     //endregion
 }
