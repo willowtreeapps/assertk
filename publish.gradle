@@ -89,13 +89,6 @@ publishing {
             artifact sourcesJar
             artifact javadocsJar
 
-            pom.withXml {
-                // Remove <packaging>pom</packaging> as it should be the default jar
-                def children = asNode().children()
-                def versionIndex = children.indexOf(children.find {it.name().localPart == 'packaging'})
-                if (versionIndex != -1) children.remove(versionIndex)
-            }
-
             if (signing.required) {
                 // Sign the artifacts.
                 project.tasks.signArchives.signatureFiles.each {
