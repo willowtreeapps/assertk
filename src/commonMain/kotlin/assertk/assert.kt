@@ -297,3 +297,18 @@ fun catch(f: () -> Unit): Throwable? {
         return e
     }
 }
+
+/**
+ * Runs the given lambda if the block throws expected error, otherwise fails.
+ */
+inline fun <reified E : Throwable> AssertBlock<Any>.thrownExpectedError(crossinline f: Assert<E>.() -> Unit) {
+    thrownError {
+        if (this.actual is E) {
+            @Suppress("UNCHECKED_CAST")
+            f.invoke(this as Assert<E>)
+        }
+        else {
+            fail("expected Throwable to be of type ${show(E::class)} but actual was ${show(actual::class)}")
+        }
+    }
+}
