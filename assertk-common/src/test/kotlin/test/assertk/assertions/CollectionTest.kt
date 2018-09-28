@@ -8,7 +8,7 @@ import kotlin.test.assertFails
 
 class CollectionTest {
     //region isEmpty
-    @Test fun isEmptyPasses() {
+    @Test fun isEmpty_empty_passes() {
         assert(emptyList<Any?>()).isEmpty()
     }
 
