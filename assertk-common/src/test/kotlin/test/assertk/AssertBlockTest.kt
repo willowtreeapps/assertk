@@ -6,6 +6,7 @@ import assertk.assertions.isNegative
 import assertk.assertions.isPositive
 import assertk.assertions.message
 import assertk.assertions.support.show
+import assertk.thrownExpectedError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -78,6 +79,28 @@ class AssertBlockTest {
         }
         assertEquals(
             "expected to not throw an exception but threw:<${exceptionPackageName}Exception: test>",
+            error.message
+        )
+    }
+    //endregion
+
+    //region throwsExpectedException
+    @Test fun throwsExpectedException_passes() {
+        assert { throw IllegalStateException("you illegal!") }
+        .thrownExpectedError<IllegalStateException> {
+            message().isEqualTo("you illegal!")
+        }
+    }
+
+    @Test fun throwsExpectedException_fails() {
+        val error = assertFails {
+            assert { throw IllegalStateException("you illegal!") }
+                .thrownExpectedError<IllegalArgumentException> {
+                    message().isEqualTo("you illegal!")
+                }
+        }
+        assertEquals(
+            "expected Throwable to be of type <class ${exceptionPackageName}IllegalArgumentException> but actual was <class ${exceptionPackageName}IllegalStateException>",
             error.message
         )
     }
