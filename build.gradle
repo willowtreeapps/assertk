@@ -1,6 +1,6 @@
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.12'
+    version '0.13-SNAPSHOT'
 }
 
 buildscript {
