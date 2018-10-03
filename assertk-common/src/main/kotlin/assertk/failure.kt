@@ -17,10 +17,12 @@ internal object FailureContext {
         if (this.failure is SimpleFailure) {
             val tmp = this.failure
             this.failure = failure
-            val result = f()
-            this.failure = tmp
-            failure()
-            return result
+            try {
+                return f()
+            } finally {
+                this.failure = tmp
+                failure()
+            }
         } else {
             return f()
         }
