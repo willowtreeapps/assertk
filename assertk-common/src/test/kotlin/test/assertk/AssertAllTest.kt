@@ -6,9 +6,11 @@ import assertk.assertAll
 import assertk.assertions.endsWith
 import assertk.assertions.isEqualTo
 import assertk.assertions.startsWith
+import assertk.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertFalse
 
 class AssertAllTest {
     //region all
@@ -84,6 +86,19 @@ class AssertAllTest {
             """.trimMargin(),
             error.message
         )
+    }
+
+    @Test fun leaves_soft_assert_scope_properly_on_exception() {
+        val error = assertFails {
+            try {
+                assert("This").all {
+                    throw AssertionError()
+                }
+            } catch (e: Throwable) {
+            }
+            fail(AssertionError("Fail"))
+        }
+        assertEquals("Fail", error.message)
     }
     //endregion
 }
