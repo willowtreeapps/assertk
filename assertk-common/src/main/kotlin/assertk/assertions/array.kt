@@ -152,6 +152,7 @@ fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
  * Asserts the array contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
  * @see [containsAll]
+ * @see [containsOnly]
  */
 @PlatformName("arrayContainsExactly")
 fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
