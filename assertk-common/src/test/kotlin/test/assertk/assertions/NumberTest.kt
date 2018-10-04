@@ -9,78 +9,71 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
-class NumberSpec_a_Number_On_isZero() {
-    @Test
-    fun it_Given_a_zero_test_should_pass() {
+class NumberTest {
+
+    //region isZero
+    @Test fun isZero_value_zero_passes() {
         assert(0).isZero()
     }
 
-    @Test
-    fun it_Given_a_not_zero_test_should_fail() {
+    @Test fun isZero_value_non_zero_fails() {
         val error = assertFails {
             assert(1).isZero()
         }
         assertEquals("expected to be 0 but was:<1>", error.message)
     }
-}
+    //endregion
 
-class NumberSpec_a_Number_On_isNotZero() {
-    @Test
-    fun it_Given_a_zero_test_should_fail() {
+    //region isNonZero
+    @Test fun isNonZero_value_non_zero_passes() {
+        assert(1).isNotZero()
+    }
+
+    @Test fun isNonZero_value_zero_fails() {
         val error = assertFails {
             assert(0).isNotZero()
         }
         assertEquals("expected to not be 0", error.message)
     }
+    //endregion
 
-    @Test
-    fun it_Given_a_not_zero_test_should_pass() {
-        assert(1).isNotZero()
-    }
-}
-
-class NumberSpec_a_Number_On_isPositive() {
-    @Test
-    fun it_Given_a_positive_number_test_should_pass() {
+    //region isPositive
+    @Test fun isPositive_value_positive_passes() {
         assert(1).isPositive()
     }
 
-    @Test
-    fun it_Given_a_zero_number_test_should_fail() {
+    @Test fun isPositive_value_zero_fails() {
         val error = assertFails {
             assert(0).isPositive()
         }
         assertEquals("expected to be positive but was:<0>", error.message)
     }
 
-    @Test
-    fun it_Given_a_negative_number_test_should_fail() {
+    @Test fun isPositive_value_negative_fails() {
         val error = assertFails {
             assert(-1).isPositive()
         }
         assertEquals("expected to be positive but was:<-1>", error.message)
     }
-}
+    //endregion
 
-class NumberSpec_a_Number_On_isNegative() {
-    @Test
-    fun it_Given_a_zero_number_test_should_fail() {
+    //region isNegative
+    @Test fun isNegative_value_negative_passes() {
+        assert(-1).isNegative()
+    }
+
+    @Test fun isNegative_value_zero_fails() {
         val error = assertFails {
             assert(0).isNegative()
         }
         assertEquals("expected to be negative but was:<0>", error.message)
     }
 
-    @Test
-    fun it_Give_a_positive_number_test_should_fail() {
+    @Test fun isNegative_value_positive_fails() {
         val error = assertFails {
             assert(1).isNegative()
         }
         assertEquals("expected to be negative but was:<1>", error.message)
     }
-
-    @Test
-    fun it_Given_a_negative_number_test_should_pass() {
-        assert(-1).isNegative()
-    }
+    //endregion
 }
