@@ -122,7 +122,7 @@ fun <T : Any> Assert<T?>.isNull() {
  * }
  * ```
  */
-fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
+fun <T : Any> Assert<T?>.isNotNull(f: Assert<T>.() -> Unit = {}) {
     if (actual != null) {
         assert(actual, name = name).all(f)
     } else {
@@ -136,7 +136,7 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
  * @param extract The function to extract the property value out of the value of the current assert.
  *
  * ```
- * assert(person).prop("name", { it.name }).isEqualTo("Sue")
+ * assert(person).prop("name") { it.name }.isEqualTo("Sue")
  * ```
  */
 fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P)
@@ -184,7 +184,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S: T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit = {}) {
+fun <T : Any, S: T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: Assert<S>.() -> Unit = {}) {
     if (kclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
         assert(actual as S, name = name).all(f)

@@ -32,8 +32,8 @@ fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
  */
 fun <T : Throwable> Assert<T>.hasCause(cause: Throwable) {
     cause().isNotNull {
-        it.kClass().isEqualTo(cause::class)
-        it.hasMessage(cause.message)
+        kClass().isEqualTo(cause::class)
+        hasMessage(cause.message)
     }
 }
 
@@ -59,56 +59,48 @@ fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
  * Asserts the throwable has a message starting with the expected string.
  */
 @Deprecated(
-    message = "Use message().isNotNull { it.startsWith(prefix) } instead.",
-    replaceWith = ReplaceWith("message().isNotNull { it.startsWith(prefix) }"),
+    message = "Use message().isNotNull { startsWith(prefix) } instead.",
+    replaceWith = ReplaceWith("message().isNotNull { startsWith(prefix) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageStartingWith(prefix: String) {
-    assert(actual.message, "message").isNotNull {
-        it.startsWith(prefix)
-    }
+    assert(actual.message, "message").isNotNull { startsWith(prefix) }
 }
 
 /**
  * Asserts the throwable has a message containing the expected string.
  */
 @Deprecated(
-    message = "Use message().isNotNull { it.contains(string) } instead.",
-    replaceWith = ReplaceWith("message().isNotNull { it.contains(string) }"),
+    message = "Use message().isNotNull { contains(string) } instead.",
+    replaceWith = ReplaceWith("message().isNotNull { contains(string) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageContaining(string: String) {
-    assert(actual.message, "message").isNotNull {
-        it.contains(string)
-    }
+    assert(actual.message, "message").isNotNull { contains(string) }
 }
 
 /**
  * Asserts the throwable has a messaging matching the expected regular expression.
  */
 @Deprecated(
-    message = "Use message().isNotNull { it.matches(regex) } instead.",
-    replaceWith = ReplaceWith("message().isNotNull { it.matches(regex) }"),
+    message = "Use message().isNotNull { matches(regex) } instead.",
+    replaceWith = ReplaceWith("message().isNotNull { matches(regex) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageMatching(regex: Regex) {
-    assert(actual.message, "message").isNotNull {
-        it.matches(regex)
-    }
+    assert(actual.message, "message").isNotNull { matches(regex) }
 }
 
 /**
  * Asserts the throwable has a message ending with the expected string.
  */
 @Deprecated(
-    message = "Use message().isNotNull { it.endsWith(suffix) } instead.",
-    replaceWith = ReplaceWith("message().isNotNull { it.endsWith(suffix) }"),
+    message = "Use message().isNotNull { endsWith(suffix) } instead.",
+    replaceWith = ReplaceWith("message().isNotNull { endsWith(suffix) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
-    assert(actual.message, "message").isNotNull {
-        it.endsWith(suffix)
-    }
+    assert(actual.message, "message").isNotNull { endsWith(suffix) }
 }
 
 /**
@@ -117,14 +109,12 @@ fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
  * @see [hasRootCauseWithClass]
  */
 @Deprecated(
-    message = "Use cause().isNotNull { it.kClass().isEqualTo(kclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.kClass().isEqualTo(kclass) }"),
+    message = "Use cause().isNotNull { kClass().isEqualTo(kclass) } instead.",
+    replaceWith = ReplaceWith("cause().isNotNull { kClass().isEqualTo(kclass) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.cause, "cause").isNotNull {
-        it.kClass().isEqualTo(kclass)
-    }
+    assert(actual.cause, "cause").isNotNull { kClass().isEqualTo(kclass) }
 }
 
 /**
@@ -133,14 +123,12 @@ fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
  * @see [hasCauseWithClass]
  */
 @Deprecated(
-    message = "Use rootCause().isNotNull { it.kClass().isEqualTo(kclass) } instead.",
-    replaceWith = ReplaceWith("rootCause().isNotNull { it.kClass().isEqualTo(kclass) }"),
+    message = "Use rootCause().isNotNull { kClass().isEqualTo(kclass) } instead.",
+    replaceWith = ReplaceWith("rootCause().isNotNull { kClass().isEqualTo(kclass) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.kClass().isEqualTo(kclass)
-    }
+    assert(actual.rootCause(), "root cause").isNotNull { kClass().isEqualTo(kclass) }
 }
 
 /**
@@ -149,14 +137,12 @@ fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
  * @see [hasRootCauseInstanceOf]
  */
 @Deprecated(
-    message = "Use cause().isNotNull { it.isInstanceOf(kclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(kclass) }"),
+    message = "Use cause().isNotNull { isInstanceOf(kclass) } instead.",
+    replaceWith = ReplaceWith("cause().isNotNull { isInstanceOf(kclass) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.cause, "cause").isNotNull {
-        it.isInstanceOf(kclass)
-    }
+    assert(actual.cause, "cause").isNotNull { isInstanceOf(kclass) }
 }
 
 /**
@@ -170,9 +156,7 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.isInstanceOf(kclass)
-    }
+    assert(actual.rootCause(), "root cause").isNotNull { isInstanceOf(kclass) }
 }
 
 private fun Throwable.rootCause(): Throwable = this.cause?.rootCause() ?: this

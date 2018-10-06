@@ -220,16 +220,16 @@ class ArrayTest {
 
     //region each
     @Test fun each_empty_list_passes() {
-        assert(emptyArray<Int>()).each { it.isEqualTo(1) }
+        assert(emptyArray<Int>()).each { isEqualTo(1) }
     }
 
     @Test fun each_content_passes() {
-        assert(arrayOf(1, 2)).each { it.isGreaterThan(0) }
+        assert(arrayOf(1, 2)).each { isGreaterThan(0) }
     }
 
     @Test fun each_non_matching_content_fails() {
         val error = assertFails {
-            assert(arrayOf(1, 2, 3)).each { it.isLessThan(2) }
+            assert(arrayOf(1, 2, 3)).each { isLessThan(2) }
         }
         assertEquals(
             """The following assertions failed (2 failures)
@@ -242,12 +242,12 @@ class ArrayTest {
 
     //region index
     @Test fun index_successful_assertion_passes() {
-        assert(arrayOf("one", "two"), name = "subject").index(0) { it.isEqualTo("one") }
+        assert(arrayOf("one", "two"), name = "subject").index(0) { isEqualTo("one") }
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
         val error = assertFails {
-            assert(arrayOf("one", "two"), name = "subject").index(0) { it.isEqualTo("wrong") }
+            assert(arrayOf("one", "two"), name = "subject").index(0) { isEqualTo("wrong") }
         }
         assertEquals(
             "expected [subject[0]]:<\"[wrong]\"> but was:<\"[one]\"> ([\"one\", \"two\"])",
@@ -257,7 +257,7 @@ class ArrayTest {
 
     @Test fun index_out_of_range_fails() {
         val error = assertFails {
-            assert(arrayOf("one", "two"), name = "subject").index(-1) { it.isEqualTo(listOf("one")) }
+            assert(arrayOf("one", "two"), name = "subject").index(-1) { isEqualTo(listOf("one")) }
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }

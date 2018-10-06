@@ -75,12 +75,12 @@ class ListTest {
 
     //region index
     @Test fun index_successful_assertion_passes() {
-        assert(listOf("one", "two"), name = "subject").index(0) { it.isEqualTo("one") }
+        assert(listOf("one", "two"), name = "subject").index(0) { isEqualTo("one") }
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
         val error = assertFails {
-            assert(listOf("one", "two"), name = "subject").index(0) { it.isEqualTo("wrong") }
+            assert(listOf("one", "two"), name = "subject").index(0) { isEqualTo("wrong") }
         }
         assertEquals(
             "expected [subject[0]]:<\"[wrong]\"> but was:<\"[one]\"> ([\"one\", \"two\"])",
@@ -90,7 +90,7 @@ class ListTest {
 
     @Test fun index_out_of_range_fails() {
         val error = assertFails {
-            assert(listOf("one", "two"), name = "subject").index(-1) { it.isEqualTo(listOf("one")) }
+            assert(listOf("one", "two"), name = "subject").index(-1) { isEqualTo(listOf("one")) }
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }

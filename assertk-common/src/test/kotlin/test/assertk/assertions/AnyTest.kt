@@ -195,20 +195,20 @@ class AnyTest {
     }
 
     @Test fun isNotNull_non_null_and_equal_object_passes() {
-        assert(nullableSubject).isNotNull { it.isEqualTo(subject) }
+        assert(nullableSubject).isNotNull { isEqualTo(subject) }
     }
 
     @Test fun isNotNull_non_null_and_non_equal_object_fails() {
         val unequal = BasicObject("not test")
         val error = assertFails {
-            assert(nullableSubject).isNotNull { it.isEqualTo(unequal) }
+            assert(nullableSubject).isNotNull { isEqualTo(unequal) }
         }
         assertEquals("expected:<[not ]test> but was:<[]test>", error.message)
     }
 
     @Test fun isNotNull_null_and_equal_object_fails() {
         val error = assertFails {
-            assert(null as String?).isNotNull { it.isEqualTo(null) }
+            assert(null as String?).isNotNull { isEqualTo(null) }
         }
         assertEquals("expected to not be null", error.message)
     }
@@ -259,7 +259,7 @@ class AnyTest {
     @Test fun isInstanceOf_kclass_run_block_when_passes() {
         val error = assertFails {
             assert(subject as TestObject).isInstanceOf(BasicObject::class) {
-                it.prop("str", BasicObject::str).isEqualTo("wrong")
+                prop("str", BasicObject::str).isEqualTo("wrong")
             }
         }
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
@@ -268,7 +268,7 @@ class AnyTest {
     @Test fun isInstanceOf_kclass_doesnt_run_block_when_fails() {
         val error = assertFails {
             assert(subject as TestObject).isInstanceOf(DifferentObject::class) {
-                it.isNull()
+                isNull()
             }
         }
         assertEquals(

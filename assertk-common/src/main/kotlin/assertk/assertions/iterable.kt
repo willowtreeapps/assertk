@@ -28,11 +28,11 @@ fun <T : Iterable<*>> Assert<T>.doesNotContain(element: Any?) {
  *
  * ```
  * assert(listOf("one", "two")).each {
- *   it.hasLength(3)
+ *   hasLength(3)
  * }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
+fun <E, T : Iterable<E>> Assert<T>.each(f: Assert<E>.() -> Unit) {
     assertAll {
         actual.forEachIndexed { index, item ->
             f(assert(item, "${name ?: ""}${show(index, "[]")}"))

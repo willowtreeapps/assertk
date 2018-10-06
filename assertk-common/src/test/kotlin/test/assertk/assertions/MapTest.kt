@@ -156,19 +156,19 @@ class MapTest {
 
     //region key
     @Test fun index_successful_assertion_passes() {
-        assert(mapOf("one" to 1, "two" to 2), name = "subject").key("one") { it.isEqualTo(1) }
+        assert(mapOf("one" to 1, "two" to 2), name = "subject").key("one") { isEqualTo(1) }
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
         val error = assertFails {
-            assert(mapOf("one" to 1, "two" to 2), name = "subject").key("one") { it.isEqualTo(2) }
+            assert(mapOf("one" to 1, "two" to 2), name = "subject").key("one") { isEqualTo(2) }
         }
         assertEquals("expected [subject[\"one\"]]:<[2]> but was:<[1]> ({\"one\"=1, \"two\"=2})", error.message)
     }
 
     @Test fun index_missing_key_fails() {
         val error = assertFails {
-            assert(mapOf("one" to 1, "two" to 2), name = "subject").key("wrong") { it.isEqualTo(1) }
+            assert(mapOf("one" to 1, "two" to 2), name = "subject").key("wrong") { isEqualTo(1) }
         }
         assertEquals("expected [subject] to have key:<\"wrong\">", error.message)
     }

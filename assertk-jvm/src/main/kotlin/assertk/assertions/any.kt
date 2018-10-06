@@ -13,7 +13,7 @@ import kotlin.reflect.full.memberProperties
 /**
  * Returns an assert on the java class of the value.
  */
-fun <T : Any> Assert<T>.jClass() = prop("class", { it::class.java })
+fun <T : Any> Assert<T>.jClass() = prop("class") { it::class.java }
 
 
 /**
@@ -45,7 +45,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: Assert<S>.() -> Unit = {}) {
     if (jclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
         assert(actual as S, name = name).all(f)

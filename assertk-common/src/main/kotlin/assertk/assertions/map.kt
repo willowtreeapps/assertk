@@ -147,10 +147,10 @@ fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) {
  * Returns an assert that asserts on the value at the given key in the map.
  *
  * ```
- * assert(mapOf("key" to "value")).key("key") { it.isEqualTo("value") }
+ * assert(mapOf("key" to "value")).key("key") { isEqualTo("value") }
  * ```
  */
-fun <K, V> Assert<Map<K, V>>.key(key: K, f: (Assert<V>) -> Unit) {
+fun <K, V> Assert<Map<K, V>>.key(key: K, f: Assert<V>.() -> Unit) {
     if (key in actual) {
         f(assert(actual.getValue(key), "${name ?: ""}${show(key, "[]")}"))
     } else {

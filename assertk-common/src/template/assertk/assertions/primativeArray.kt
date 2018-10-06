@@ -140,11 +140,11 @@ fun Assert<$T>.containsAll(vararg elements: $E) {
  * Returns an assert that assertion on the value at the given index in the $T.
  *
  * ```
- * assert($NOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assert($NOf(0, 1, 2)).index(1) { isPositive() }
  * ```
  */
 @PlatformName("$NIndex")
-fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
+fun Assert<$T>.index(index: Int, f: Assert<$E>.() -> Unit) {
     if (index in 0 until actual.size) {
         f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
     } else {
@@ -178,12 +178,12 @@ fun Assert<$T>.containsExactly(vararg elements: $E) {
  *
  * ```
  * assert($NOf("one", "two")).each {
- *   it.hasLength(3)
+ *   hasLength(3)
  * }
  * ```
  */
 @PlatformName("$NEach")
-fun Assert<$T>.each(f: (Assert<$E>) -> Unit) {
+fun Assert<$T>.each(f: Assert<$E>.() -> Unit) {
     assertAll {
         actual.forEachIndexed { index, item ->
             f(assert(item, "${name ?: ""}${show(index, "[]")}"))

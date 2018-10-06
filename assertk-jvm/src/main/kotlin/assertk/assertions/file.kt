@@ -29,7 +29,7 @@ fun Assert<File>.extension() = prop("extension", File::extension)
 /**
  * Returns an assert on the file's contents as text.
  */
-fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = prop("text", { it.readText(charset) })
+fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = prop("text") { it.readText(charset) }
 
 /**
  * Returns an assert on the file's contents as bytes.

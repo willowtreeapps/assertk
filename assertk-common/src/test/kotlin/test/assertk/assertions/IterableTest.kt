@@ -35,16 +35,16 @@ class IterableTest {
 
     //region each
     @Test fun each_empty_list_passes() {
-        assert(emptyList<Int>() as Iterable<Int>).each { it.isEqualTo(1) }
+        assert(emptyList<Int>() as Iterable<Int>).each { isEqualTo(1) }
     }
 
     @Test fun each_content_passes() {
-        assert(listOf(1, 2) as Iterable<Int>).each { it.isGreaterThan(0) }
+        assert(listOf(1, 2) as Iterable<Int>).each { isGreaterThan(0) }
     }
 
     @Test fun each_non_matching_content_fails() {
         val error = assertFails {
-            assert(listOf(1, 2, 3) as Iterable<Int>).each { it.isLessThan(2) }
+            assert(listOf(1, 2, 3) as Iterable<Int>).each { isLessThan(2) }
         }
         assertEquals(
             """The following assertions failed (2 failures)

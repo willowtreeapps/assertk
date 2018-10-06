@@ -7,7 +7,7 @@ import assertk.Assert
 /**
  * Returns an assert on the throwable's stack trace.
  */
-fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace.map { it.toString() } })
+fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace") { it.stackTrace.map(Any::toString) }
 
 /**
  * Asserts the throwable's cause is an instance of the expected java class.
@@ -15,14 +15,12 @@ fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace
  * @see [hasRootCauseInstanceOf]
  */
 @Deprecated(
-    message = "Use cause().isNotNull { it.isInstanceOf(jclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.isInstanceOf(jclass) }"),
+    message = "Use cause().isNotNull { isInstanceOf(jclass) } instead.",
+    replaceWith = ReplaceWith("cause().isNotNull { isInstanceOf(jclass) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
-    cause().isNotNull {
-        it.isInstanceOf(jclass)
-    }
+    cause().isNotNull { isInstanceOf(jclass) }
 }
 
 /**
@@ -31,14 +29,12 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
  * @see [hasRootCauseWithClass]
  */
 @Deprecated(
-    message = "Use cause().isNotNull { it.jClass().isEqualTo(jclass) } instead.",
-    replaceWith = ReplaceWith("cause().isNotNull { it.jClass().isEqualTo(jclass) }"),
+    message = "Use cause().isNotNull { jClass().isEqualTo(jclass) } instead.",
+    replaceWith = ReplaceWith("cause().isNotNull { jClass().isEqualTo(jclass) }"),
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
-    cause().isNotNull {
-        it.jClass().isEqualTo(jclass)
-    }
+    cause().isNotNull { jClass().isEqualTo(jclass) }
 }
 
 /**
