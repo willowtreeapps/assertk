@@ -74,27 +74,6 @@ sealed class AssertBlock<out T> {
 fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name, null)
 
 /**
- * Asserts on the given value with an optional name. All assertions in the given lambda are run.
- *
- * ```
- * assert("test", name = "test") {
- *   startsWith(4)
- *   endsWith("t")
- * }
- * ```
- */
-@Deprecated(
-    message = "Use assert(actual, name).all(f) instead.",
-    replaceWith = ReplaceWith("assert(actual, name).all(f)"),
-    level = DeprecationLevel.ERROR
-)
-fun <T> assert(actual: T, name: String? = null, f: Assert<T>.() -> Unit) {
-    FailureContext.run(SoftFailure()) {
-        f(assert(actual, name))
-    }
-}
-
-/**
  * All assertions in the given lambda are run.
  *
  * ```

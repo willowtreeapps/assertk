@@ -126,7 +126,8 @@ fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) {
  */
 @Deprecated(
     message = "Use containsOnly instead.",
-    replaceWith = ReplaceWith("containsOnly(*elements)")
+    replaceWith = ReplaceWith("containsOnly(*elements)"),
+    level = DeprecationLevel.ERROR
 )
 @PlatformName("mapContainsExactly")
 fun <K, V> Assert<Map<K, V>>.containsExactly(vararg elements: Pair<K, V>) {
