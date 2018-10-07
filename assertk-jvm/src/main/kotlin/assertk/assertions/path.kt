@@ -1,8 +1,10 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.Path
@@ -62,12 +64,47 @@ fun Assert<Path>.isWritable() {
     }
 }
 
-/** Assert that the path points to the same object as the other path.
+/**
+ * Assert that the path points to the same object as the other path.
  *
  * @param expected the path which the actual is compared to.
  */
 fun Assert<Path>.isSameFileAs(expected: Path) {
     if (!Files.isSameFile(actual, expected)) {
         expected("${show(actual)} to be the same file as ${show(actual)} but is not")
+    }
+}
+
+/**
+ * Assert that Path contains exactly expected lines
+ *
+ * @param expected list of string to compare file contents
+ * @param charset charset to use when reading files
+ */
+fun Assert<Path>.lines(expected: List<String>, charset: Charset = Charsets.UTF_8) {
+    val lines = Files.readAllLines(actual, charset)
+    if (lines == expected) return
+
+    val diff = ListDiffer.diff(expected, lines)
+        .filterNot { it is ListDiffer.Edit.Eq }
+
+    expected(diff.joinToString(prefix = "<$actual> to contain exactly:\n", separator = "\n") { edit ->
+        when (edit) {
+            is ListDiffer.Edit.Del -> " at line:${edit.oldIndex} expected:${show(edit.oldValue)}"
+            is ListDiffer.Edit.Ins -> " at line:${edit.newIndex} unexpected:${show(edit.newValue)}"
+            else -> throw IllegalStateException()
+        }
+    })
+}
+
+/**
+ * Assert that Path contains exact bytes
+ *
+ * @param expected byte array to compare with path contents
+ */
+fun Assert<Path>.bytes(expected: ByteArray) {
+    val bytes = Files.readAllBytes(actual)!!
+    if(!bytes.contentEquals(expected)) {
+        expected("path <$actual> to contain bytes:${show(expected)} but was:${show(bytes)}")
     }
 }
