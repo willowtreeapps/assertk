@@ -101,4 +101,17 @@ class CollectionTest {
         assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
     }
     //endregion
+
+    //region containsOnly
+    @Test fun containsOnly_only_elements_passes() {
+        assert(listOf(1, 2)).containsOnly(2, 1)
+    }
+
+    @Test fun containsOnly_more_elements_fails() {
+        val error = assertFails{
+            assert(listOf(1, 2, 3)).containsOnly(2, 1)
+        }
+        assertEquals("expected to contain only:<[2, 1]> but extra elements were found:<[3]>", error.message)
+    }
+    //endregion
 }
