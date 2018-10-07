@@ -31,10 +31,11 @@ fun <T : Throwable> Assert<T>.hasMessage(message: String?) {
  * @see [hasNoCause]
  */
 fun <T : Throwable> Assert<T>.hasCause(cause: Throwable) {
-    cause().isNotNull {
-        it.kClass().isEqualTo(cause::class)
-        it.hasMessage(cause.message)
-    }
+    cause().isNotNull().all({
+        kClass().isEqualTo(cause::class)
+    }, {
+        hasMessage(cause.message)
+    })
 }
 
 /**
@@ -49,10 +50,11 @@ fun <T : Throwable> Assert<T>.hasNoCause() {
  * Asserts the throwable is similar to the expected root cause, checking the type and message.
  */
 fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
-    rootCause().all {
+    rootCause().all({
         kClass().isEqualTo(cause::class)
+    }, {
         hasMessage(cause.message)
-    }
+    })
 }
 
 /**
@@ -64,9 +66,7 @@ fun <T : Throwable> Assert<T>.hasRootCause(cause: Throwable) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageStartingWith(prefix: String) {
-    assert(actual.message, "message").isNotNull {
-        it.startsWith(prefix)
-    }
+    assert(actual.message, "message").isNotNull().startsWith(prefix)
 }
 
 /**
@@ -78,9 +78,7 @@ fun <T : Throwable> Assert<T>.hasMessageStartingWith(prefix: String) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageContaining(string: String) {
-    assert(actual.message, "message").isNotNull {
-        it.contains(string)
-    }
+    assert(actual.message, "message").isNotNull().contains(string)
 }
 
 /**
@@ -92,9 +90,7 @@ fun <T : Throwable> Assert<T>.hasMessageContaining(string: String) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageMatching(regex: Regex) {
-    assert(actual.message, "message").isNotNull {
-        it.matches(regex)
-    }
+    assert(actual.message, "message").isNotNull().matches(regex)
 }
 
 /**
@@ -106,9 +102,7 @@ fun <T : Throwable> Assert<T>.hasMessageMatching(regex: Regex) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
-    assert(actual.message, "message").isNotNull {
-        it.endsWith(suffix)
-    }
+    assert(actual.message, "message").isNotNull().endsWith(suffix)
 }
 
 /**
@@ -122,9 +116,7 @@ fun <T : Throwable> Assert<T>.hasMessageEndingWith(suffix: String) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.cause, "cause").isNotNull {
-        it.kClass().isEqualTo(kclass)
-    }
+    assert(actual.cause, "cause").isNotNull().kClass().isEqualTo(kclass)
 }
 
 /**
@@ -138,9 +130,7 @@ fun <T : Throwable> Assert<T>.hasCauseWithClass(kclass: KClass<out T>) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.kClass().isEqualTo(kclass)
-    }
+    assert(actual.rootCause(), "root cause").isNotNull().kClass().isEqualTo(kclass)
 }
 
 /**
@@ -154,9 +144,7 @@ fun <T : Throwable> Assert<T>.hasRootCauseWithClass(kclass: KClass<out T>) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.cause, "cause").isNotNull {
-        it.isInstanceOf(kclass)
-    }
+    assert(actual.cause, "cause").isNotNull().isInstanceOf(kclass)
 }
 
 /**
@@ -170,9 +158,7 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(kclass: KClass<out T>) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasRootCauseInstanceOf(kclass: KClass<out T>) {
-    assert(actual.rootCause(), "root cause").isNotNull {
-        it.isInstanceOf(kclass)
-    }
+    assert(actual.rootCause(), "root cause").isNotNull().isInstanceOf(kclass)
 }
 
 private fun Throwable.rootCause(): Throwable = this.cause?.rootCause() ?: this

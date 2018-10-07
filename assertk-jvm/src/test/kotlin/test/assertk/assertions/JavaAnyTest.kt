@@ -37,18 +37,15 @@ class JavaAnyTest {
 
     @Test fun isInstanceOf_jclass_run_block_when_passes() {
         val error = assertFails {
-            assert(subject as TestObject).isInstanceOf(BasicObject::class.java) {
-                it.prop("str", BasicObject::str).isEqualTo("wrong")
-            }
+            assert(subject as TestObject).isInstanceOf(BasicObject::class.java)
+                .prop("str", BasicObject::str).isEqualTo("wrong")
         }
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
     }
 
     @Test fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
         val error = assertFails {
-            assert(subject as TestObject).isInstanceOf(DifferentObject::class.java) {
-                it.isNull()
-            }
+            assert(subject as TestObject).isInstanceOf(DifferentObject::class.java).isNull()
         }
         assertEquals(
             "expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>",

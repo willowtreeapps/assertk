@@ -33,9 +33,5 @@ fun <T : Iterable<*>> Assert<T>.doesNotContain(element: Any?) {
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
-    assertAll {
-        actual.forEachIndexed { index, item ->
-            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
-        }
-    }
+    assertAll(actual.mapIndexed { index, item -> { f(assert(item, "${name ?: ""}${show(index, "[]")}")) } })
 }

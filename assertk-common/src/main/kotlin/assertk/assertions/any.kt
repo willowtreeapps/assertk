@@ -122,12 +122,17 @@ fun <T : Any> Assert<T?>.isNull() {
  * }
  * ```
  */
-fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
+fun <T : Any> Assert<T?>.isNotNull(): Assert<T> {
     if (actual != null) {
-        assert(actual, name = name).all(f)
+        return assert(actual, name = name)
     } else {
         expected("to not be null")
     }
+}
+
+@Deprecated(message = "Use isNotNull() instead", replaceWith = ReplaceWith("isNotNull().let(f)"))
+fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
+    isNotNull().apply(f)
 }
 
 /**
@@ -139,8 +144,8 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
  * assert(person).prop("name", { it.name }).isEqualTo("Sue")
  * ```
  */
-fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P)
-        = assert(extract(actual), "${if (this.name != null) this.name + "." else ""}$name")
+fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P) =
+    assert(extract(actual), "${if (this.name != null) this.name + "." else ""}$name")
 
 
 /**
@@ -184,15 +189,30 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S: T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit = {}) {
+fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>): Assert<S> {
     if (kclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
-        assert(actual as S, name = name).all(f)
+        return assert(actual as S, name = name)
     } else {
         expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
     }
 }
 
+/**
+ * Asserts the value is an instance of the expected kotlin class. Both `assert("test").isInstanceOf(String::class)` and
+ * `assert("test").isInstanceOf(Any::class)` is successful.
+ * @see [isNotInstanceOf]
+ * @see [hasClass]
+ */
+@Deprecated(message = "Use isInstanceOf(kclass) instead.", replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"))
+fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit) {
+    if (kclass.isInstance(actual)) {
+        @Suppress("UNCHECKED_CAST")
+        assert(actual as S, name = name).all(listOf(f))
+    } else {
+        expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
+    }
+}
 
 /**
  * Returns an assert that compares only the given properties on the calling class

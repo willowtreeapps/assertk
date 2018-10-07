@@ -2,27 +2,9 @@ package assertk
 
 import assertk.assertions.support.show
 
-private class TableFailure(private val table: Table) : Failure {
-    private val failures: MutableMap<Int, MutableList<AssertionError>> = LinkedHashMap()
-
-    override fun fail(error: AssertionError) {
-        failures.getOrPut(table.index, { ArrayList() }).plusAssign(error)
-    }
-
-    override fun invoke() {
-        if (!failures.isEmpty()) {
-            FailureContext.failure.fail(compositeErrorMessage(failures))
-        }
-    }
-
-    private fun compositeErrorMessage(errors: Map<Int, List<AssertionError>>): AssertionError {
-        return TableFailuresError(table, errors)
-    }
-}
-
 internal class TableFailuresError(
     private val table: Table,
-    private val errors: Map<Int, List<AssertionError>>
+    private val errors: Map<Int, List<Throwable>>
 ) : AssertionError() {
     override val message: String?
         get() {
@@ -87,13 +69,30 @@ sealed class Table(internal val columnNames: Array<String>) {
     }
 
     protected fun forAll(f: TableFun) {
-        FailureContext.run(TableFailure(this)) {
+        tableFailure { errors ->
             for (i in 0 until rows.size) {
                 index = i
-                f(rows[i])
+                try {
+                    f(rows[i])
+                } catch (e: Throwable) {
+                    errors.getOrPut(index) { ArrayList() }.add(e)
+                }
             }
         }
     }
+
+    private fun tableFailure(f: (MutableMap<Int, MutableList<Throwable>>) -> Unit) {
+        fun compositeErrorMessage(errors: Map<Int, List<Throwable>>): AssertionError {
+            return TableFailuresError(this, errors)
+        }
+
+        val failures: MutableMap<Int, MutableList<Throwable>> = LinkedHashMap()
+        f(failures)
+        if (!failures.isEmpty()) {
+            fail(compositeErrorMessage(failures))
+        }
+    }
+
 }
 
 /**

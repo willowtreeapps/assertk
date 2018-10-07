@@ -45,10 +45,26 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> {
     if (jclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
-        assert(actual as S, name = name).all(f)
+        return assert(actual as S, name = name)
+    } else {
+        expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
+    }
+}
+
+/**
+ * Asserts the value is an instance of the expected java class. Both `assert("test").isInstanceOf(String::class.java)`
+ * and `assert("test").isInstanceOf(Any::class.java)` is successful.
+ * @see [isNotInstanceOf]
+ * @see [hasClass]
+ */
+@Deprecated(message = "Use isInstanceOf(jclass) instead.", replaceWith = ReplaceWith("isInstanceOf(jclass).let(f)"))
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit) {
+    if (jclass.isInstance(actual)) {
+        @Suppress("UNCHECKED_CAST")
+        assert(actual as S, name = name).all(listOf(f))
     } else {
         expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
     }
@@ -84,17 +100,16 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) {
     if (!actual::class.isData) {
         throw IllegalArgumentException("only supports data classes")
     }
-    all {
-        isDataClassEqualToImpl(expected, actual::class)
-    }
+    isDataClassEqualToImpl(expected, actual::class)
 }
 
 private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?) {
     if (actual == expected) return
     if (kclass != null && kclass.isData) {
-        for (prop in kclass.memberProperties) {
-            prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
-        }
+        all(kclass.memberProperties.map { prop ->
+            fun Assert<T>.() =
+                prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
+        })
     } else {
         isEqualTo(expected)
     }

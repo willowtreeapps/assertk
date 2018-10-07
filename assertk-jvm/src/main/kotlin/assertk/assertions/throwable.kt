@@ -20,9 +20,7 @@ fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
-    cause().isNotNull {
-        it.isInstanceOf(jclass)
-    }
+    cause().isNotNull().isInstanceOf(jclass)
 }
 
 /**
@@ -36,9 +34,7 @@ fun <T : Throwable> Assert<T>.hasCauseInstanceOf(jclass: Class<out T>) {
     level = DeprecationLevel.ERROR
 )
 fun <T : Throwable> Assert<T>.hasCauseWithClass(jclass: Class<out T>) {
-    cause().isNotNull {
-        it.jClass().isEqualTo(jclass)
-    }
+    cause().isNotNull().jClass().isEqualTo(jclass)
 }
 
 /**

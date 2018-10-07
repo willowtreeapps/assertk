@@ -88,9 +88,43 @@ fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name
     replaceWith = ReplaceWith("assert(actual, name).all(f)"),
     level = DeprecationLevel.ERROR
 )
-fun <T> assert(actual: T, name: String? = null, f: Assert<T>.() -> Unit) {
-    FailureContext.run(SoftFailure()) {
-        f(assert(actual, name))
+fun <T> assert(actual: T, name: String? = null, vararg f: Assert<T>.() -> Unit) {
+    assert(actual, name).all(*f)
+}
+
+/**
+ * All assertions in the given lambda are run.
+ *
+ * ```
+ * assert("test", name = "test").all(
+ *  { startsWith("t") },
+ *  { endsWith("t") }
+ * )
+ * ```
+ */
+fun <T> Assert<T>.all(vararg assertions: Assert<T>.() -> Unit) {
+    all(assertions.asIterable())
+}
+
+/**
+ * All assertions in the given lambda are run.
+ *
+ * ```
+ * assert("test", name = "test").all(
+ *  { startsWith("t") },
+ *  { endsWith("t") }
+ * )
+ * ```
+ */
+fun <T> Assert<T>.all(assertions: Iterable<Assert<T>.() -> Unit>) {
+    softFailure { errors ->
+        for (assertion in assertions) {
+            try {
+                assertion()
+            } catch (e: Throwable) {
+                errors.add(e)
+            }
+        }
     }
 }
 
@@ -99,15 +133,13 @@ fun <T> assert(actual: T, name: String? = null, f: Assert<T>.() -> Unit) {
  *
  * ```
  * assert("test", name = "test").all {
- *   startsWith("t")
- *   endsWith("t")
+ *     startsWith("t")
  * }
  * ```
  */
+@Deprecated(message = "Use all(assertions) instead.")
 fun <T> Assert<T>.all(f: Assert<T>.() -> Unit) {
-    FailureContext.run(SoftFailure()) {
-        f()
-    }
+    f()
 }
 
 /**
@@ -126,12 +158,31 @@ fun <T> Assert<T>.all(f: Assert<T>.() -> Unit) {
  * ```
  */
 fun <T> assert(f: () -> T): AssertBlock<T> {
-    return FailureContext.run(SoftFailure()) {
-        @Suppress("TooGenericExceptionCaught")
-        try {
-            AssertBlock.Value(f())
-        } catch (e: Throwable) {
-            AssertBlock.Error(e)
+    return try {
+        AssertBlock.Value(f())
+    } catch (e: Throwable) {
+        AssertBlock.Error(e)
+    }
+}
+
+/**
+ * Runs all assertions in the given lambda and reports any failures.
+ */
+fun assertAll(vararg assertions: () -> Unit) {
+    assertAll(assertions.asIterable())
+}
+
+/**
+ * Runs all assertions in the given lambda and reports any failures.
+ */
+fun assertAll(assertions: Iterable<() -> Unit>) {
+    softFailure { errors ->
+        for (assertion in assertions) {
+            try {
+                assertion()
+            } catch (e: Throwable) {
+                errors.add(e)
+            }
         }
     }
 }
@@ -139,8 +190,9 @@ fun <T> assert(f: () -> T): AssertBlock<T> {
 /**
  * Runs all assertions in the given lambda and reports any failures.
  */
+@Deprecated(message = "Use assertAll(assertions) instead.")
 fun assertAll(f: () -> Unit) {
-    FailureContext.run(SoftFailure(), f)
+    f()
 }
 
 /**

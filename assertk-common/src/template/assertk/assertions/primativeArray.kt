@@ -140,10 +140,27 @@ fun Assert<$T>.containsAll(vararg elements: $E) {
  * Returns an assert that assertion on the value at the given index in the $T.
  *
  * ```
- * assert($NOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assert($NOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
 @PlatformName("$NIndex")
+fun Assert<$T>.index(index: Int): Assert<$E> {
+    if (index in 0 until actual.size) {
+        return assert(actual[index], "${name ?: ""}${show(index, "[]")}")
+    } else {
+        expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
+    }
+}
+
+/**
+ * Returns an assert that assertion on the value at the given index in the $T.
+ *
+ * ```
+ * assert($NOf(0, 1, 2)).index(1) { it.isPositive() }
+ * ```
+ */
+@PlatformName("$NIndexF")
+@Deprecated("Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
 fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
     if (index in 0 until actual.size) {
         f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
@@ -184,9 +201,5 @@ fun Assert<$T>.containsExactly(vararg elements: $E) {
  */
 @PlatformName("$NEach")
 fun Assert<$T>.each(f: (Assert<$E>) -> Unit) {
-    assertAll {
-        actual.forEachIndexed { index, item ->
-            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
-        }
-    }
+    assertAll(actual.mapIndexed { index, item -> { f(assert(item, "${name ?: ""}${show(index, "[]")}")) } })
 }

@@ -137,15 +137,27 @@ fun <T> Assert<Array<T>>.containsAll(vararg elements: Any?) {
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assert(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assert(arrayOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
-fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
+fun <T> Assert<Array<T>>.index(index: Int): Assert<T> {
     if (index in 0 until actual.size) {
-        f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
+        return assert(actual[index], "${name ?: ""}${show(index, "[]")}")
     } else {
         expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
     }
+}
+
+/**
+ * Returns an assert that assertion on the value at the given index in the array.
+ *
+ * ```
+ * assert(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
+ * ```
+ */
+@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
+fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
+    index(index).apply(f)
 }
 
 /**
@@ -174,15 +186,11 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) {
  *
  * ```
  * assert(arrayOf("one", "two")).each {
- *   it.hasLength(3)
+ *   hasLength(3)
  * }
  * ```
  */
 @PlatformName("arrayEach")
 fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) {
-    assertAll {
-        actual.forEachIndexed { index, item ->
-            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
-        }
-    }
+    assertAll(actual.mapIndexed { index, item -> { f(assert(item, "${name ?: ""}${show(index, "[]")}")) } })
 }

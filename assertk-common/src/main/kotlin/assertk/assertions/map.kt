@@ -150,6 +150,22 @@ fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) {
  * assert(mapOf("key" to "value")).key("key") { it.isEqualTo("value") }
  * ```
  */
+fun <K, V> Assert<Map<K, V>>.key(key: K): Assert<V> {
+    if (key in actual) {
+        return assert(actual.getValue(key), "${name ?: ""}${show(key, "[]")}")
+    } else {
+        expected("to have key:${show(key)}")
+    }
+}
+
+/**
+ * Returns an assert that asserts on the value at the given key in the map.
+ *
+ * ```
+ * assert(mapOf("key" to "value")).key("key") { it.isEqualTo("value") }
+ * ```
+ */
+@Deprecated(message = "Use key(key) instead.", replaceWith = ReplaceWith("key(key).let(f)"))
 fun <K, V> Assert<Map<K, V>>.key(key: K, f: (Assert<V>) -> Unit) {
     if (key in actual) {
         f(assert(actual.getValue(key), "${name ?: ""}${show(key, "[]")}"))

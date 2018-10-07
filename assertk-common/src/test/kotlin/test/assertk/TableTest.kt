@@ -28,8 +28,8 @@ class TableTest {
                 .row(1, 1)
                 .row(2, 3)
                 .forAll { a, b ->
-                    assert(a).isEqualTo(b)
                     invokeCount += 1
+                    assert(a).isEqualTo(b)
                 }
         }
 
@@ -50,8 +50,8 @@ class TableTest {
                 .row(1, 2)
                 .row(2, 3)
                 .forAll { a, b ->
-                    assert(a).isEqualTo(b)
                     invokeCount += 1
+                    assert(a).isEqualTo(b)
                 }
         }
 
