@@ -72,6 +72,7 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
+ * @see [containsOnly]
  */
 fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
     if (actual.containsAll(elements.toList())) {
@@ -86,6 +87,7 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
  * Asserts the collection contains only the expected elements
  * @see [containsNone]
  * @see [containsExactly]
+ * @see [containsAll]
  */
 fun <T : Collection<*>> Assert<T>.containsOnly(vararg elements: Any?) {
     containsAll(*elements)
