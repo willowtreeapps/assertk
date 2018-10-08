@@ -3,6 +3,7 @@ package assertk.assertions
 import assertk.Assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.Path
@@ -62,7 +63,8 @@ fun Assert<Path>.isWritable() {
     }
 }
 
-/** Assert that the path points to the same object as the other path.
+/**
+ * Assert that the path points to the same object as the other path.
  *
  * @param expected the path which the actual is compared to.
  */
@@ -70,4 +72,18 @@ fun Assert<Path>.isSameFileAs(expected: Path) {
     if (!Files.isSameFile(actual, expected)) {
         expected("${show(actual)} to be the same file as ${show(actual)} but is not")
     }
+}
+
+/**
+ * Assert on file lines
+ *
+ * @param charset charset to use when reading file
+ */
+fun Assert<Path>.lines(charset: Charset = Charsets.UTF_8): Assert<List<String>> {
+    return assert(Files.readAllLines(actual, charset))
+}
+
+/** Assert on file bytes */
+fun Assert<Path>.bytes(): Assert<ByteArray> {
+    return assert(Files.readAllBytes(actual))
 }
