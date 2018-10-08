@@ -8,6 +8,7 @@ import kotlin.test.*
 
 private var regularFile: Path? = null
 private var directory: Path? = null
+private var regularFileWithText: Path? = null
 
 class PathTest {
 
@@ -15,12 +16,14 @@ class PathTest {
     fun beforeGroup() {
         regularFile = createTempFile()
         directory = createTempDir()
+        regularFileWithText = createTempFileWithText()
     }
 
     @AfterTest
     fun afterGroup() {
-        regularFile?.let { Files.deleteIfExists(it) }
-        directory?.let { Files.deleteIfExists(it) }
+        regularFile?.let(Files::deleteIfExists)
+        directory?.let(Files::deleteIfExists)
+        regularFileWithText?.let(Files::deleteIfExists)
     }
 
     //region isRegularFile
@@ -113,11 +116,25 @@ class PathTest {
     @Test fun isSameFileAs_value_same_file_different_path_passes() {
         assert(regularFile!!).isSameFileAs(regularFile!!.toAbsolutePath())
     }
+
     @Test fun isSameFileAs_value_same_directory_different_path_passes() {
         assert(directory!!).isSameFileAs(directory!!.toAbsolutePath())
+    }
+    //endregion
+
+    //region lines
+    @Test fun lines_correct_string_passes() {
+        assert(regularFileWithText!!).lines().containsExactly("a", "b")
+    }
+    //endregion
+
+    //region bytes
+    @Test fun bytes_value_correct_byte_array_passes() {
+        assert(regularFile!!).bytes().isEqualTo(ByteArray(10))
     }
     //endregion
 }
 
 private fun createTempDir() = Files.createTempDirectory("tempDir")
 private fun createTempFile() = Files.createTempFile("tempFile", "").apply { toFile().writeBytes(ByteArray(10)) }
+private fun createTempFileWithText() = Files.createTempFile("tempFileWithText", "").apply { toFile().writeText("a\nb", Charsets.UTF_8) }
