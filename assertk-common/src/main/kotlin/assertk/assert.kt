@@ -1,6 +1,7 @@
 package assertk
 
 import assertk.assertions.support.show
+import com.willowtreeapps.opentest4k.MultipleFailuresError
 
 /**
  * Marks the assertion DSL.
@@ -117,14 +118,19 @@ fun <T> Assert<T>.all(vararg assertions: Assert<T>.() -> Unit) {
  * ```
  */
 fun <T> Assert<T>.all(assertions: Iterable<Assert<T>.() -> Unit>) {
-    softFailure { errors ->
-        for (assertion in assertions) {
-            try {
-                assertion()
-            } catch (e: Throwable) {
-                errors.add(e)
-            }
+    assertAll(assertions.map { f -> { f() } })
+}
+
+private fun compositeErrorMessage(errors: List<Throwable>): AssertionError {
+    return if (errors.size == 1) {
+        val singleError = errors.first()
+        if (singleError is AssertionError) {
+            singleError
+        } else {
+            AssertionError(singleError)
         }
+    } else {
+        MultipleFailuresError("The following assertions failed", errors)
     }
 }
 
@@ -176,14 +182,16 @@ fun assertAll(vararg assertions: () -> Unit) {
  * Runs all assertions in the given lambda and reports any failures.
  */
 fun assertAll(assertions: Iterable<() -> Unit>) {
-    softFailure { errors ->
-        for (assertion in assertions) {
-            try {
-                assertion()
-            } catch (e: Throwable) {
-                errors.add(e)
-            }
-        }
+    val errors = ArrayList<Throwable>()
+    for (assertion in assertions) {
+        collectFailures({
+            assertion()
+        }, { e ->
+            errors.add(e)
+        })
+    }
+    if (!errors.isEmpty()) {
+        fail(compositeErrorMessage(errors))
     }
 }
 
@@ -207,11 +215,12 @@ fun assertAll(f: () -> Unit) {
  * ```
  */
 fun catch(f: () -> Unit): Throwable? {
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("LiftReturnOrAssignment")
     try {
         f()
         return null
     } catch (e: Throwable) {
+        throwIfFatal(e)
         return e
     }
 }

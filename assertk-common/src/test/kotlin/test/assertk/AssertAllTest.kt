@@ -113,5 +113,14 @@ class AssertAllTest {
             error.message
         )
     }
+
+    @Test fun assertAll_single_failure_is_assertion_error() {
+        val error = assertFails {
+            assertAll(listOf({
+                throw Exception()
+            }))
+        }
+        assertEquals(AssertionError::class, error::class)
+    }
     //endregion
 }

@@ -11,3 +11,10 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
     (error as java.lang.Throwable).stackTrace = filtered
     throw error
 }
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun throwIfFatal(e: Throwable) {
+    if (e is OutOfMemoryError) {
+        throw e
+    }
+}

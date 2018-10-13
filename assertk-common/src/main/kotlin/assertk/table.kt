@@ -43,7 +43,6 @@ internal class TableFailuresError(
  */
 sealed class Table(internal val columnNames: Array<String>) {
     internal val rows = arrayListOf<Array<out Any?>>()
-    internal var index = 0
 
     protected interface TableFun {
         /**
@@ -69,27 +68,16 @@ sealed class Table(internal val columnNames: Array<String>) {
     }
 
     protected fun forAll(f: TableFun) {
-        tableFailure { errors ->
-            for (i in 0 until rows.size) {
-                index = i
-                try {
-                    f(rows[i])
-                } catch (e: Throwable) {
-                    errors.getOrPut(index) { ArrayList() }.add(e)
-                }
-            }
+        val errors: MutableMap<Int, MutableList<Throwable>> = LinkedHashMap()
+        for (i in 0 until rows.size) {
+            collectFailures({
+                f(rows[i])
+            }, {e ->
+                errors.getOrPut(i) { ArrayList() }.add(e)
+            })
         }
-    }
-
-    private fun tableFailure(f: (MutableMap<Int, MutableList<Throwable>>) -> Unit) {
-        fun compositeErrorMessage(errors: Map<Int, List<Throwable>>): AssertionError {
-            return TableFailuresError(this, errors)
-        }
-
-        val failures: MutableMap<Int, MutableList<Throwable>> = LinkedHashMap()
-        f(failures)
-        if (!failures.isEmpty()) {
-            fail(compositeErrorMessage(failures))
+        if (!errors.isEmpty()) {
+            fail(TableFailuresError(this, errors))
         }
     }
 

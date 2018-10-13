@@ -5,39 +5,6 @@ import com.willowtreeapps.opentest4k.MultipleFailuresError
 import com.willowtreeapps.opentest4k.failures
 
 /**
- * Failure that collects all failures and displays them at once.
- */
-internal fun softFailure(f: (SoftFailure) -> Unit) {
-    SoftFailure().apply(f)()
-}
-
-internal class SoftFailure {
-    private val errors = mutableListOf<Throwable>()
-
-    fun add(e: Throwable) {
-        if (e is MultipleFailuresError) {
-            errors.addAll(e.failures)
-        } else {
-            errors.add(e)
-        }
-    }
-
-    operator fun invoke() {
-        if (!errors.isEmpty()) {
-            throw compositeErrorMessage(errors)
-        }
-    }
-
-    fun compositeErrorMessage(errors: List<Throwable>): Throwable {
-        return if (errors.size == 1) {
-            errors.first()
-        } else {
-            MultipleFailuresError("The following assertions failed", errors)
-        }
-    }
-}
-
-/**
  * Fail the test with the given {@link AssertionError}.
  */
 fun fail(error: AssertionError): Nothing {
@@ -51,4 +18,30 @@ fun fail(message: String, expected: Any? = null, actual: Any? = null): Nothing {
     failWithNotInStacktrace(AssertionFailedError(message, expected, actual, null))
 }
 
+/**
+ * Used by methods that collect multiple failures, ex: `assertAll`.
+ */
+internal inline fun collectFailures(f: () -> Unit, catcher: (Throwable) -> Unit) {
+    try {
+        f()
+    } catch (e: Throwable) {
+        throwIfFatal(e)
+        if (e is MultipleFailuresError) {
+            for (failure in e.failures) {
+                catcher(failure)
+            }
+        } else {
+            catcher(e)
+        }
+    }
+}
+
+/**
+ * Excludes assertk from the stacktrace.
+ */
 internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothing
+
+/**
+ * Throws given exception if it can't be handled. Ex: out of memory.
+ */
+internal expect inline fun throwIfFatal(e: Throwable)
