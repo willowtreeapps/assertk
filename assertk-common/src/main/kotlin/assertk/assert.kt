@@ -58,11 +58,18 @@ sealed class AssertBlock<out T> {
             f(assert(error))
         }
 
-        override fun returnedValue(f: Assert<T>.() -> Unit) = fail("expected value but threw:${show(error)}")
+        override fun returnedValue(f: Assert<T>.() -> Unit) = fail("expected value but threw:${showError(error)}")
 
-        override fun doesNotThrowAnyException() = fail("expected to not throw an exception but threw:${show(error)}")
+        override fun doesNotThrowAnyException() = fail("expected to not throw an exception but threw:${showError(error)}")
     }
 }
+
+/**
+ * Calls platform specific function so that it is possible to show stacktrace if able
+ *
+ * TODO: use @OptionalExpectation (https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-optional-expectation/index.html) here once available and call default implementation of [show] for JS
+ */
+internal expect fun showError(e: Throwable):String
 
 /**
  * Asserts on the given value with an optional name.
