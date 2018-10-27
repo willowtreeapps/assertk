@@ -13,6 +13,7 @@ buildscript {
 
 apply plugin: 'java-library'
 apply plugin: 'kotlin-platform-jvm'
+apply plugin: 'jacoco'
 
 repositories {
     mavenCentral()
@@ -27,6 +28,27 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
     testImplementation "org.jetbrains.kotlin:kotlin-test"
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.61
+            }
+        }
+    }
+}
+
+jacocoTestCoverageVerification.dependsOn(jacocoTestReport)
+
+test.finalizedBy(jacocoTestCoverageVerification)
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
