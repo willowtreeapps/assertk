@@ -29,13 +29,4 @@ class PredicateTest {
     @Test fun least_expectancy_met_inline_condition_passes() {
         assert(listOf(1, 2, 3) as Iterable<Int>).areAtLeast(2) { listOf(1, 2, 3).contains(it) }
     }
-
-    @Test fun condition_empty_fails() {
-        val error = assertFails {
-            assert(listOf(5, 2, 3) as Iterable<Int>).areAtLeast(2)
-        }
-        assertEquals("expected condition should be not null", error.message)
-
-    }
-
 }

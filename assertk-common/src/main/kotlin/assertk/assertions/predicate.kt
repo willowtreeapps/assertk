@@ -15,12 +15,7 @@ import assertk.assertions.support.show
  * ```
  */
 
-fun <E, T : Iterable<E>> Assert<T>.areAtLeast(times: Int, f: ((E) -> Any)? = null) {
-    var count = 0
-    if (f == null) expected("condition should be not null")
-    actual.forEach { item ->
-        if (f?.let { it(item!!) } == true) count++
-    }
-    if (count >= times) return
+fun <E, T : Iterable<E>> Assert<T>.areAtLeast(times: Int, f: ((E) -> Boolean)) {
+    if (actual.filter { f(it) }.size >= times) return
     expected("atleast $times occurences in ${show(actual)}")
 }
