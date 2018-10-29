@@ -2,7 +2,6 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import kotlin.reflect.KClass
 
 /**
  * Returns an assert on the throwable's message.

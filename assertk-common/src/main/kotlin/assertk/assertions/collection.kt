@@ -94,9 +94,9 @@ fun <T : Collection<*>> Assert<T>.containsOnly(vararg elements: Any?) {
     val notInExpected = actual.filterNot { elements.contains(it) }
     if (notInExpected.isEmpty() && notInActual.isEmpty())
         return
-    if (notInActual.isNotEmpty()){
+    if (notInActual.isNotEmpty()) {
         expected("to contain only:${show(elements)} but some elements were not found:${show(notInActual)}")
-    } else if (notInExpected.isNotEmpty()){
+    } else if (notInExpected.isNotEmpty()) {
         expected("to contain only:${show(elements)} but extra elements were found:${show(notInExpected)}")
     }
 }

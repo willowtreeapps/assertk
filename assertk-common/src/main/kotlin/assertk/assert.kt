@@ -69,7 +69,7 @@ sealed class AssertBlock<out T> {
  *
  * TODO: use @OptionalExpectation (https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-optional-expectation/index.html) here once available and call default implementation of [show] for JS
  */
-internal expect fun showError(e: Throwable):String
+internal expect fun showError(e: Throwable): String
 
 /**
  * Asserts on the given value with an optional name.
