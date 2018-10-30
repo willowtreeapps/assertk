@@ -61,3 +61,14 @@ fun <A, B : Comparable<A>> Assert<B>.isStrictlyBetween(start: A, end: A) {
     if (actual > start && actual < end) return
     expected("to be strictly between:${show(start)} and ${show(end)} but was:${show(actual)}")
 }
+
+/**
+ * Asserts the value if it is close to the expected value with given delta.
+ */
+fun <T: Number> Assert<T>.isCloseTo(value: T, delta: T) {
+    val valueToDouble = value.toDouble()
+    val deltaToDouble = delta.toDouble()
+    val actualToDouble = actual.toDouble()
+    if (actualToDouble >= valueToDouble.minus(deltaToDouble) && actualToDouble <= valueToDouble.plus(deltaToDouble)) return
+    expected("${show(value)} to be close with ${show(actual)} with delta of ${show(delta)} but not")
+}

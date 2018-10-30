@@ -128,4 +128,24 @@ class ComparableTest {
         assertEquals("expected to be strictly between:<0> and <2> but was:<3>", error.message)
     }
     //endregion
+
+    //region isCloseTo
+    @Test
+    fun isCloseTo_with_equal_value_passes() {
+        assert(10.0f).isCloseTo(10.0f, 0.0)
+    }
+
+    @Test
+    fun isCloseTo_with_non_zero_delta_within_range_passes() {
+        assert(10L).isCloseTo(8, delta = 3)
+    }
+
+    @Test
+    fun isCloseTo_with_delta_out_of_range_fails() {
+        val error = assertFails {
+            assert(10.0).isCloseTo(15.0f, 3)
+        }
+        assertEquals("expected <15.0f> to be close with <10.0> with delta of <3> but not", error.message)
+    }
+    //endregion
 }
