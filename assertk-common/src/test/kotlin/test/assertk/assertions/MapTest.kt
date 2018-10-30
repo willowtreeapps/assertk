@@ -62,9 +62,7 @@ class MapTest {
         val error = assertFails {
             assert(mapOf("one" to 1)).containsAll("one" to 1, "two" to 2)
         }
-        assertEquals(
-                "expected to contain all:<{\"one\"=1, \"two\"=2}> but was:<{\"one\"=1}>",
-                error.message
+        assertEquals("expected to contain all:<{\"one\"=1, \"two\"=2}> but was:<{\"one\"=1}>", error.message
         )
     }
     //endregion
