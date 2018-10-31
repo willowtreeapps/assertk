@@ -84,7 +84,8 @@ fun <K, V> Assert<Map<K, V>>.contains(element: Pair<K, V>) {
 @PlatformName("mapContainsAll")
 fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) {
     if (elements.all { (k, v) -> actual[k] == v }) return
-    expected("to contain all:${show(elements.toMap())} but was:${show(actual)}")
+    val notFound = elements.filterNot { (k, v) -> actual[k] == v }
+    expected("to contain all:${show(elements.toMap())} but was:${show(actual)}. Missing elements: ${show(notFound.toMap())}")
 }
 
 /**
