@@ -8,11 +8,19 @@ import kotlin.test.assertFails
 
 class ComparableJvmTest {
     @Test
-    fun isCloseTo_with_delta_out_of_range_fails() {
+    fun isCloseToFloat_with_delta_out_of_range_fails() {
         val error = assertFails {
-            assert(10.1).isCloseTo(15.0f, 3)
+            assert(10.1f).isCloseTo(15.0f, 3f)
         }
-        assertEquals("expected <15> to be close with <10.1> with delta of <3> but not", error.message)
+        assertEquals("expected <10.1> to be close to <15> with delta of <3>, but was not", error.message)
+    }
+
+    @Test
+    fun isCloseToDouble_with_delta_out_of_range_fails() {
+        val error = assertFails {
+            assert(10.1).isCloseTo(15.0, 3.0)
+        }
+        assertEquals("expected <10.1> to be close to <15> with delta of <3>, but was not", error.message)
     }
 
 }

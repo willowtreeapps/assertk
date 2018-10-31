@@ -131,13 +131,23 @@ class ComparableTest {
 
     //region isCloseTo
     @Test
-    fun isCloseTo_with_equal_value_passes() {
-        assert(10.0f).isCloseTo(10.0f, 0.0)
+    fun isCloseToFloat_with_equal_value_passes() {
+        assert(10.0f).isCloseTo(10.0f, 0.0f)
     }
 
     @Test
-    fun isCloseTo_with_non_zero_delta_within_range_passes() {
-        assert(10L).isCloseTo(8, delta = 3)
+    fun isCloseToFloat_with_non_zero_delta_within_range_passes() {
+        assert(10.5f).isCloseTo(8.5f, delta = 3f)
+    }
+
+    @Test
+    fun isCloseToDouble_with_equal_value_passes() {
+        assert(10.0).isCloseTo(10.0, 0.0)
+    }
+
+    @Test
+    fun isCloseToDouble_with_non_zero_delta_within_range_passes() {
+        assert(10.0).isCloseTo(8.0, delta = 3.0)
     }
     //endregion
 }
