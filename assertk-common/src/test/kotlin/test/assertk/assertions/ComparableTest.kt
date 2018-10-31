@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assert
 import assertk.assertions.*
+import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -127,5 +128,44 @@ class ComparableTest {
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<3>", error.message)
     }
+    //endregion
+
+    //region isCloseTo
+    @Test
+    fun isCloseToFloat_with_equal_value_passes() {
+        assert(10.0f).isCloseTo(10.0f, 0.0f)
+    }
+
+    @Test
+    fun isCloseToFloat_with_non_zero_delta_within_range_passes() {
+        assert(10.5f).isCloseTo(8.5f, delta = 3f)
+    }
+
+    @Test
+    fun isCloseToDouble_with_equal_value_passes() {
+        assert(10.0).isCloseTo(10.0, 0.0)
+    }
+
+    @Test
+    fun isCloseToDouble_with_non_zero_delta_within_range_passes() {
+        assert(10.0).isCloseTo(8.0, delta = 3.0)
+    }
+
+    @Test
+    fun isCloseToFloat_with_delta_out_of_range_fails() {
+        val error = assertFails {
+            assert(10.1f).isCloseTo(15.0f, 3f)
+        }
+        assertEquals("expected ${show(10.1f)} to be close to ${show(15.0f)} with delta of ${show(3f)}, but was not", error.message)
+    }
+
+    @Test
+    fun isCloseToDouble_with_delta_out_of_range_fails() {
+        val error = assertFails {
+            assert(10.1).isCloseTo(15.0, 3.0)
+        }
+        assertEquals("expected ${show(10.1)} to be close to ${show(15.0)} with delta of ${show(3.0)}, but was not", error.message)
+    }
+
     //endregion
 }
