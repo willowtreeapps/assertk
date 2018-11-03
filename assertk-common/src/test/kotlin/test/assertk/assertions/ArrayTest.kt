@@ -146,11 +146,15 @@ class ArrayTest {
         assert(arrayOf(1, 2)).containsAll(2, 1)
     }
 
+    @Test fun containsAll_extra_elements_passes() {
+        assert(arrayOf(1, 2, 3)).containsAll(1, 2)
+    }
+
     @Test fun containsAll_some_elements_fails() {
         val error = assertFails {
             assert(arrayOf(1)).containsAll(1, 2)
         }
-        assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
+        assertEquals("expected to contain all:<[1, 2]> but was:<[1]>. Missing elements:<[2]>", error.message)
     }
     //endregion
 
