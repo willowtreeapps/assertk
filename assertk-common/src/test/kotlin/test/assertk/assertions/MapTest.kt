@@ -54,13 +54,15 @@ class MapTest {
         assert(mapOf("one" to 1, "two" to 2)).containsAll("two" to 2, "one" to 1)
     }
 
+    @Test fun containsAll_extra_elements_passes() {
+        assert(mapOf("one" to 1, "two" to 2, "three" to 3)).containsAll("one" to 1, "two" to 2)
+    }
+
     @Test fun containsAll_some_elements_fails() {
         val error = assertFails {
             assert(mapOf("one" to 1)).containsAll("one" to 1, "two" to 2)
         }
-        assertEquals(
-            "expected to contain all:<{\"one\"=1, \"two\"=2}> some elements were not found:<{\"two\"=2}>",
-            error.message
+        assertEquals("expected to contain all:<{\"one\"=1, \"two\"=2}> but was:<{\"one\"=1}>. Missing elements: <{\"two\"=2}>", error.message
         )
     }
     //endregion

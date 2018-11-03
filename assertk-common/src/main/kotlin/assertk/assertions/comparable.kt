@@ -61,3 +61,19 @@ fun <A, B : Comparable<A>> Assert<B>.isStrictlyBetween(start: A, end: A) {
     if (actual > start && actual < end) return
     expected("to be strictly between:${show(start)} and ${show(end)} but was:${show(actual)}")
 }
+
+/**
+ * Asserts the value if it is close to the expected value with given delta.
+ */
+fun Assert<Float>.isCloseTo(value: Float, delta: Float) {
+    if (actual >= value.minus(delta) && actual <= value.plus(delta)) return
+    expected("${show(actual)} to be close to ${show(value)} with delta of ${show(delta)}, but was not")
+}
+
+/**
+ * Asserts the value if it is close to the expected value with given delta.
+ */
+fun Assert<Double>.isCloseTo(value: Double, delta: Double) {
+    if (actual >= value.minus(delta) && actual <= value.plus(delta)) return
+    expected("${show(actual)} to be close to ${show(value)} with delta of ${show(delta)}, but was not")
+}

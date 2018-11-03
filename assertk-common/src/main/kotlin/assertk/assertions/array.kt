@@ -130,7 +130,7 @@ fun <T> Assert<Array<T>>.containsNone(vararg elements: Any?) {
 fun <T> Assert<Array<T>>.containsAll(vararg elements: Any?) {
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
-    expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
+    expected("to contain all:${show(elements)} but was:${show(actual)}. Missing elements:${show(notFound)}")
 }
 
 /**
