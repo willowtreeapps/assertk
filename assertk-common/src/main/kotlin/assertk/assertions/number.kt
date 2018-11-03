@@ -8,7 +8,7 @@ import assertk.assertions.support.show
  * Asserts the number is 0.
  * @see [isNotZero]
  */
-fun <T : Number> Assert<T>.isZero() {
+fun Assert<Number>.isZero() = given { actual ->
     if (actual == 0) return
     expected("to be 0 but was:${show(actual)}")
 }
@@ -17,7 +17,7 @@ fun <T : Number> Assert<T>.isZero() {
  * Asserts the number is not 0.
  * @see [isZero]
  */
-fun <T : Number> Assert<T>.isNotZero() {
+fun Assert<Number>.isNotZero() = given { actual ->
     if (actual != 0) return
     expected("to not be 0")
 }
@@ -26,7 +26,7 @@ fun <T : Number> Assert<T>.isNotZero() {
  * Asserts the number is greater than 0.
  * @see [isNegative]
  */
-fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
+fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> = given { actual ->
     @Suppress("UNCHECKED_CAST", "UnsafeCast")
     if (actual > 0 as T) return
     expected("to be positive but was:${show(actual)}")
@@ -36,7 +36,7 @@ fun <T> Assert<T>.isPositive() where T : Number, T : Comparable<T> {
  * Asserts the number is less than 0.
  * @see [isPositive]
  */
-fun <T> Assert<T>.isNegative() where T : Number, T : Comparable<T> {
+fun <T> Assert<T>.isNegative() where T : Number, T : Comparable<T> = given { actual ->
     @Suppress("UNCHECKED_CAST", "UnsafeCast")
     if (actual < 0 as T) return
     expected("to be negative but was:${show(actual)}")

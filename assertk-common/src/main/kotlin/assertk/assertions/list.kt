@@ -12,20 +12,33 @@ import assertk.assertions.support.show
  * assert(listOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
+@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
 fun <T> Assert<List<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
-    if (index in 0 until actual.size) {
-        f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
-    } else {
-        expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
-    }
+    index(index).let(f)
 }
+
+/**
+ * Returns an assert that assertion on the value at the given index in the list.
+ *
+ * ```
+ * assert(listOf(0, 1, 2)).index(1).isPositive()
+ * ```
+ */
+fun <T> Assert<List<T>>.index(index: Int): Assert<T> =
+    transform("${name ?: ""}${show(index, "[]")}") { actual ->
+        if (index in 0 until actual.size) {
+            actual[index]
+        } else {
+            expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
+        }
+    }
 
 /**
  * Asserts the list contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
  * @see [containsAll]
  */
-fun <T : List<*>> Assert<T>.containsExactly(vararg elements: Any?) {
+fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual == elements.asList()) return
 
     val diff = ListDiffer.diff(elements.asList(), actual)
