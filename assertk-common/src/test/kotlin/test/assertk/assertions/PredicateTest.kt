@@ -25,24 +25,25 @@ class PredicateTest {
     }
 
     @Test fun least_expectancy_not_met_fails() {
-        fun divisibleBy5(value: Int) : Boolean {
-           return value % 5 == 0
-        }
+        val divisibleBy5 : (Int) -> Boolean = { it % 5 == 0 }
+
         val error = assertFails {
-            assert(listOf(1, 5, 4)).areAtLeast(2) { divisibleBy5(it) }
+            assert(listOf(1, 5, 4)).atLeast(2) { it -> it.assertPredicate(divisibleBy5) }
         }
-        assertEquals("expected atleast 2 occurences in <[1, 5, 4]>", error.message)
+        assertEquals("expected atleast 2 occurences in <[1, 5, 4]> but [0],[2] did not match", error.message)
 
     }
 
     @Test fun least_expectancy_met_passes() {
-        fun divisibleBy5(value: Int) : Boolean {
-           return value % 5 == 0
-        }
-        assert(listOf(5, 2, 10) as Iterable<Int>).areAtLeast(2) { divisibleBy5(it) }
+        val divisibleBy5 : (Int) -> Boolean = { it % 5 == 0 }
+
+        assert(listOf(5, 2, 10) as Iterable<Int>).atLeast(2) { it -> it.assertPredicate(divisibleBy5) }
     }
 
     @Test fun least_expectancy_met_inline_condition_passes() {
-        assert(listOf(1, 2, 3) as Iterable<Int>).areAtLeast(2) { listOf(1, 2, 3).contains(it) }
+        val contains: (Int) -> Boolean = { listOf(1, 2, 3).contains(it) }
+
+        assert(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it -> it.assertPredicate(contains) }
     }
+
 }
