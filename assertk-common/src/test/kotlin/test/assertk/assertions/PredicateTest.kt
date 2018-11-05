@@ -8,6 +8,22 @@ import kotlin.test.assertFails
 
 class PredicateTest {
 
+    @Test fun assert_predicate_passes() {
+
+        val divisibleBy5 : (Int) -> Boolean = { it % 5 == 0 }
+
+        assert(10).assertPredicate(divisibleBy5)
+
+    }
+
+    @Test fun assert_predicate_fails() {
+        val divisibleBy5 : (Int) -> Boolean = { it % 5 == 0 }
+
+        val error = assertFails { assert(6).assertPredicate(divisibleBy5) }
+
+        assertEquals("expected 6 to satisfy the predicate", error.message)
+    }
+
     @Test fun least_expectancy_not_met_fails() {
         fun divisibleBy5(value: Int) : Boolean {
            return value % 5 == 0
