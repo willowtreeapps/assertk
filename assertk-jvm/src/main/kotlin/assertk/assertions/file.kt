@@ -5,6 +5,8 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import java.io.File
 import java.nio.charset.Charset
+import kotlin.io.extension
+import kotlin.io.readBytes
 
 /**
  * Returns an assert on the file's name.
@@ -29,7 +31,7 @@ fun Assert<File>.extension() = prop("extension", File::extension)
 /**
  * Returns an assert on the file's contents as text.
  */
-fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = prop("text", { it.readText(charset) })
+fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = prop("text") { it.readText(charset) }
 
 /**
  * Returns an assert on the file's contents as bytes.
@@ -39,7 +41,7 @@ fun Assert<File>.bytes() = prop("bytes", File::readBytes)
 /**
  * Asserts the file exists.
  */
-fun Assert<File>.exists() {
+fun Assert<File>.exists() = given { actual ->
     if (actual.exists()) return
     expected("to exist")
 }
@@ -48,7 +50,7 @@ fun Assert<File>.exists() {
  * Asserts the file is a directory.
  * @see [isFile]
  */
-fun Assert<File>.isDirectory() {
+fun Assert<File>.isDirectory() = given { actual ->
     if (actual.isDirectory) return
     expected("to be a directory")
 }
@@ -57,7 +59,7 @@ fun Assert<File>.isDirectory() {
  * Asserts the file is a simple file (not a directory).
  * @see [isDirectory]
  */
-fun Assert<File>.isFile() {
+fun Assert<File>.isFile() = given { actual ->
     if (actual.isFile) return
     expected("to be a file")
 }
@@ -66,7 +68,7 @@ fun Assert<File>.isFile() {
  * Asserts the file is hidden.
  * @see [isNotHidden]
  */
-fun Assert<File>.isHidden() {
+fun Assert<File>.isHidden() = given { actual ->
     if (actual.isHidden) return
     expected("to be hidden")
 }
@@ -75,7 +77,7 @@ fun Assert<File>.isHidden() {
  * Asserts the file is not hidden.
  * @see [isHidden]
  */
-fun Assert<File>.isNotHidden() {
+fun Assert<File>.isNotHidden() = given { actual ->
     if (!actual.isHidden) return
     expected("to not be hidden")
 }
@@ -120,7 +122,7 @@ fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
 /**
  * Asserts the file has the expected direct child.
  */
-fun Assert<File>.hasDirectChild(expected: File) {
+fun Assert<File>.hasDirectChild(expected: File) = given { actual ->
     if (actual.listFiles()?.contains(expected) == true) return
     expected("to have direct child ${show(expected)}")
 }

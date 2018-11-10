@@ -13,8 +13,7 @@ import kotlin.reflect.full.memberProperties
 /**
  * Returns an assert on the java class of the value.
  */
-fun <T : Any> Assert<T>.jClass() = prop("class", { it::class.java })
-
+fun <T : Any> Assert<T>.jClass() = prop("class") { it::class.java }
 
 /**
  * Asserts the value has the expected java class. This is an exact match, so
@@ -22,7 +21,7 @@ fun <T : Any> Assert<T>.jClass() = prop("class", { it::class.java })
  * @see [doesNotHaveClass]
  * @see [isInstanceOf]
  */
-fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) = given { actual ->
     if (jclass == actual.javaClass) return
     expected("to have class:${show(jclass)} but was:${show(actual.javaClass)}")
 }
@@ -34,7 +33,7 @@ fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) {
  * @see [hasClass]
  * @see [isNotInstanceOf]
  */
-fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) = given { actual ->
     if (jclass != actual.javaClass) return
     expected("to not have class:${show(jclass)}")
 }
@@ -45,13 +44,24 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit = {}) {
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = transform { actual ->
     if (jclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
-        assert(actual as S, name = name).all(f)
+        actual as S
     } else {
         expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
     }
+}
+
+/**
+ * Asserts the value is an instance of the expected java class. Both `assert("test").isInstanceOf(String::class.java)`
+ * and `assert("test").isInstanceOf(Any::class.java)` is successful.
+ * @see [isNotInstanceOf]
+ * @see [hasClass]
+ */
+@Deprecated(message = "Use isInstanceOf(jclass) instead.", replaceWith = ReplaceWith("isInstanceOf(jclass).let(f)"))
+fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit) {
+    isInstanceOf(jclass).let(f)
 }
 
 /**
@@ -60,7 +70,7 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> 
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) {
+fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual ->
     if (!jclass.isInstance(actual)) return
     expected("to not be instance of:${show(jclass)}")
 }
@@ -77,10 +87,10 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) {
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }
 
 /**
- * Like [Assert.isEqualTo] but reports exactly which properties differ. Only supports data classes. Note: you should
+ * Like [isEqualTo] but reports exactly which properties differ. Only supports data classes. Note: you should
  * _not_ use this if your data class has a custom [Any.equals] since it can be misleading.
  */
-fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) {
+fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) = given { actual ->
     if (!actual::class.isData) {
         throw IllegalArgumentException("only supports data classes")
     }
@@ -89,7 +99,7 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) {
     }
 }
 
-private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?) {
+private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?): Unit = given { actual ->
     if (actual == expected) return
     if (kclass != null && kclass.isData) {
         for (prop in kclass.memberProperties) {

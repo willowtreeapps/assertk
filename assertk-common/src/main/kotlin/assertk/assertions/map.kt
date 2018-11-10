@@ -8,14 +8,14 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the Maps's size.
  */
-fun <T : Map<*, *>> Assert<T>.size() = prop("size", Map<*, *>::size)
+fun Assert<Map<*, *>>.size() = prop("size", Map<*, *>::size)
 
 /**
  * Asserts the collection is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
  */
-fun <T : Map<*, *>> Assert<T>.isEmpty() {
+fun Assert<Map<*, *>>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
 }
@@ -24,7 +24,7 @@ fun <T : Map<*, *>> Assert<T>.isEmpty() {
  * Asserts the collection is not empty.
  * @see [isEmpty]
  */
-fun <T : Map<*, *>> Assert<T>.isNotEmpty() {
+fun Assert<Map<*, *>>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
 }
@@ -33,7 +33,7 @@ fun <T : Map<*, *>> Assert<T>.isNotEmpty() {
  * Asserts the collection is null or empty.
  * @see [isEmpty]
  */
-fun <T : Map<*, *>?> Assert<T>.isNullOrEmpty() {
+fun Assert<Map<*, *>?>.isNullOrEmpty() = given { actual ->
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }
@@ -41,14 +41,14 @@ fun <T : Map<*, *>?> Assert<T>.isNullOrEmpty() {
 /**
  * Asserts the collection has the expected size.
  */
-fun <T : Map<*, *>> Assert<T>.hasSize(size: Int) {
-    assert(actual.size, "size").isEqualTo(size)
+fun Assert<Map<*, *>>.hasSize(size: Int) {
+    size().isEqualTo(size)
 }
 
 /**
  * Asserts the map has the same size as the expected map.
  */
-fun <T : Map<*, *>> Assert<T>.hasSameSizeAs(other: Map<*, *>) {
+fun Assert<Map<*, *>>.hasSameSizeAs(other: Map<*, *>) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
     if (actualSize == otherSize) return
@@ -60,7 +60,7 @@ fun <T : Map<*, *>> Assert<T>.hasSameSizeAs(other: Map<*, *>) {
  * @see [doesNotContain]
  */
 @PlatformName("mapContains")
-fun <K, V> Assert<Map<K, V>>.contains(key: K, value: V) {
+fun <K, V> Assert<Map<K, V>>.contains(key: K, value: V) = given { actual ->
     if (actual[key] == value) {
         return
     }
@@ -82,7 +82,7 @@ fun <K, V> Assert<Map<K, V>>.contains(element: Pair<K, V>) {
  * @see [containsExactly]
  */
 @PlatformName("mapContainsAll")
-fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) {
+fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) = given { actual ->
     if (elements.all { (k, v) -> actual[k] == v }) return
     val notFound = elements.filterNot { (k, v) -> actual[k] == v }
     expected("to contain all:${show(elements.toMap())} but was:${show(actual)}. Missing elements: ${show(notFound.toMap())}")
@@ -93,7 +93,7 @@ fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) {
  * @see [contains]
  */
 @PlatformName("mapDoesNotContain")
-fun <K, V> Assert<Map<K, V>>.doesNotContain(key: K, value: V) {
+fun <K, V> Assert<Map<K, V>>.doesNotContain(key: K, value: V) = given { actual ->
     if (actual[key] != value) {
         return
     }
@@ -114,7 +114,7 @@ fun <K, V> Assert<Map<K, V>>.doesNotContain(element: Pair<K, V>) {
  * @see [containsAll]
  */
 @PlatformName("mapContainsNone")
-fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) {
+fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given { actual ->
     if (elements.all { (k, v) -> actual[k] != v }) return
     val notExpected = elements.filter { (k, v) -> actual[k] == v }
     expected("to contain none of:${show(elements.toMap())} some elements were not expected:${show(notExpected.toMap())}")
@@ -139,7 +139,7 @@ fun <K, V> Assert<Map<K, V>>.containsExactly(vararg elements: Pair<K, V>) {
  * @see [containsAll]
  */
 @PlatformName("mapContainsOnly")
-fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) {
+fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given { actual ->
     if (actual.size == elements.size && elements.all { (k, v) -> actual[k] == v }) return
     expected("to contain only:${show(mapOf(*elements))} but was:${show(actual)}")
 }
@@ -151,9 +151,21 @@ fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) {
  * assert(mapOf("key" to "value")).key("key") { it.isEqualTo("value") }
  * ```
  */
+@Deprecated(message = "Use key(key) instead.", replaceWith = ReplaceWith("key(key).let(f)"))
 fun <K, V> Assert<Map<K, V>>.key(key: K, f: (Assert<V>) -> Unit) {
+    key(key).let(f)
+}
+
+/**
+ * Returns an assert that asserts on the value at the given key in the map.
+ *
+ * ```
+ * assert(mapOf("key" to "value")).key("key").isEqualTo("value")
+ * ```
+ */
+fun <K, V> Assert<Map<K, V>>.key(key: K): Assert<V> = transform("${name ?: ""}${show(key, "[]")}") { actual ->
     if (key in actual) {
-        f(assert(actual.getValue(key), "${name ?: ""}${show(key, "[]")}"))
+        actual.getValue(key)
     } else {
         expected("to have key:${show(key)}")
     }

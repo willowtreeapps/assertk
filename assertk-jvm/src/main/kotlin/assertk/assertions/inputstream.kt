@@ -10,7 +10,7 @@ import java.io.InputStream
  *
  * @param expected which content is compared to the actual one
  */
-fun Assert<InputStream>.hasSameContentAs(expected: InputStream) {
+fun Assert<InputStream>.hasSameContentAs(expected: InputStream) = given { actual ->
     val msg = doTheStreamHaveTheSameContent(actual, expected)
     if (msg != null) {
         expected(msg)
@@ -23,12 +23,11 @@ fun Assert<InputStream>.hasSameContentAs(expected: InputStream) {
  *
  * @param expected which content is compared to the actual one
  */
-fun Assert<InputStream>.hasNotSameContentAs(expected: InputStream) {
+fun Assert<InputStream>.hasNotSameContentAs(expected: InputStream) = given { actual ->
     val msg = doTheStreamHaveTheSameContent(actual, expected)
     if (msg == null) {
         expected("streams not to be equal, but they were equal")
     }
-
 }
 
 private const val BUFFER_SIZE = 4096

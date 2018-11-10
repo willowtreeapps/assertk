@@ -8,7 +8,7 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the CharSequence's length.
  */
-fun <T : CharSequence> Assert<T>.length() = prop("length", CharSequence::length)
+fun Assert<CharSequence>.length() = prop("length", CharSequence::length)
 
 /**
  * Asserts the char sequence is empty.
@@ -16,7 +16,7 @@ fun <T : CharSequence> Assert<T>.length() = prop("length", CharSequence::length)
  * @see [isNullOrEmpty]
  */
 @PlatformName("isCharSequenceEmpty")
-fun <T : CharSequence> Assert<T>.isEmpty() {
+fun Assert<CharSequence>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
 }
@@ -26,7 +26,7 @@ fun <T : CharSequence> Assert<T>.isEmpty() {
  * @see [isEmpty]
  */
 @PlatformName("isCharSequenceNotEmpty")
-fun <T : CharSequence> Assert<T>.isNotEmpty() {
+fun Assert<CharSequence>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
 }
@@ -36,7 +36,7 @@ fun <T : CharSequence> Assert<T>.isNotEmpty() {
  * @see [isEmpty]
  */
 @PlatformName("isCharSequenceNullOrEmpty")
-fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
+fun Assert<CharSequence?>.isNullOrEmpty() = given { actual ->
     if (actual.isNullOrEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }
@@ -45,14 +45,14 @@ fun <T : CharSequence?> Assert<T>.isNullOrEmpty() {
  * Asserts the char sequence has the expected length.
  */
 @PlatformName("charSequenceHasLength")
-fun <T : CharSequence> Assert<T>.hasLength(length: Int) {
+fun Assert<CharSequence>.hasLength(length: Int) {
     length().isEqualTo(length)
 }
 
 /**
  * Asserts the char sequence has the same length as the expected one.
  */
-fun <T : CharSequence> Assert<T>.hasSameLengthAs(other: CharSequence) {
+fun Assert<CharSequence>.hasSameLengthAs(other: CharSequence) = given { actual ->
     val actualLength = actual.length
     val otherLength = other.length
     if (actualLength == otherLength) return

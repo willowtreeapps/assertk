@@ -7,14 +7,14 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the Collection's size.
  */
-fun <T : Collection<*>> Assert<T>.size() = prop("size", Collection<*>::size)
+fun Assert<Collection<*>>.size() = prop("size", Collection<*>::size)
 
 /**
  * Asserts the collection is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
  */
-fun <T : Collection<*>> Assert<T>.isEmpty() {
+fun Assert<Collection<*>>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
 }
@@ -23,7 +23,7 @@ fun <T : Collection<*>> Assert<T>.isEmpty() {
  * Asserts the collection is not empty.
  * @see [isEmpty]
  */
-fun <T : Collection<*>> Assert<T>.isNotEmpty() {
+fun Assert<Collection<*>>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
 }
@@ -32,7 +32,7 @@ fun <T : Collection<*>> Assert<T>.isNotEmpty() {
  * Asserts the collection is null or empty.
  * @see [isEmpty]
  */
-fun <T : Collection<*>?> Assert<T>.isNullOrEmpty() {
+fun Assert<Collection<*>?>.isNullOrEmpty() = given { actual ->
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }
@@ -40,14 +40,14 @@ fun <T : Collection<*>?> Assert<T>.isNullOrEmpty() {
 /**
  * Asserts the collection has the expected size.
  */
-fun <T : Collection<*>> Assert<T>.hasSize(size: Int) {
-    assert(actual.size, "size").isEqualTo(size)
+fun Assert<Collection<*>>.hasSize(size: Int) {
+    size().isEqualTo(size)
 }
 
 /**
  * Asserts the collection has the same size as the expected collection.
  */
-fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
+fun Assert<Collection<*>>.hasSameSizeAs(other: Collection<*>) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
     if (actualSize == otherSize) return
@@ -58,7 +58,7 @@ fun <T : Collection<*>> Assert<T>.hasSameSizeAs(other: Collection<*>) {
  * Asserts the collection does not contain any of the expected elements.
  * @see [containsAll]
  */
-fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
+fun Assert<Collection<*>>.containsNone(vararg elements: Any?) = given { actual ->
     if (elements.none { it in actual }) {
         return
     }
@@ -74,7 +74,7 @@ fun <T : Collection<*>> Assert<T>.containsNone(vararg elements: Any?) {
  * @see [containsExactly]
  * @see [containsOnly]
  */
-fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
+fun Assert<Collection<*>>.containsAll(vararg elements: Any?) = given { actual ->
     if (actual.containsAll(elements.toList())) {
         return
     }
@@ -89,14 +89,14 @@ fun <T : Collection<*>> Assert<T>.containsAll(vararg elements: Any?) {
  * @see [containsExactly]
  * @see [containsAll]
  */
-fun <T : Collection<*>> Assert<T>.containsOnly(vararg elements: Any?) {
+fun Assert<Collection<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
     val notInExpected = actual.filterNot { elements.contains(it) }
     if (notInExpected.isEmpty() && notInActual.isEmpty())
         return
-    if (notInActual.isNotEmpty()){
+    if (notInActual.isNotEmpty()) {
         expected("to contain only:${show(elements)} but some elements were not found:${show(notInActual)}")
-    } else if (notInExpected.isNotEmpty()){
+    } else if (notInExpected.isNotEmpty()) {
         expected("to contain only:${show(elements)} but extra elements were found:${show(notInExpected)}")
     }
 }

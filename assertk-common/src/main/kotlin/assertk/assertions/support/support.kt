@@ -66,7 +66,7 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  *
  * -> "expected to be: <1> but was <2>"
  */
-fun <T> Assert<T>.expected(message: String, expected: Any? = null, actual: Any? = null) {
+fun <T> Assert<T>.expected(message: String, expected: Any? = null, actual: Any? = null): Nothing {
     val maybeSpace = if (message.startsWith(":")) "" else " "
     val maybeInstance = if (context != null) " ${show(context, "()")}" else ""
     fail(

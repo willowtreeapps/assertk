@@ -2,7 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.PlatformName
-import assertk.assertAll
+import assertk.all
 import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
@@ -14,13 +14,13 @@ $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArra
  * Returns an assert on the $T's size.
  */
 @PlatformName("$NSize")
-fun Assert<$T>.size() = prop("size", $T::size)
+fun Assert<$T>.size() = prop("size") { it.size }
 
 /**
  * Asserts the $T contents are equal to the expected one, using [contentDeepEquals].
  * @see isNotEqualTo
  */
-fun Assert<$T>.isEqualTo(expected: $T) {
+fun Assert<$T>.isEqualTo(expected: $T) = given { actual ->
     if (actual.contentEquals(expected)) return
     fail(expected, actual)
 }
@@ -29,7 +29,7 @@ fun Assert<$T>.isEqualTo(expected: $T) {
  * Asserts the $T contents are not equal to the expected one, using [contentDeepEquals].
  * @see isEqualTo
  */
-fun Assert<$T>.isNotEqualTo(expected: $T) {
+fun Assert<$T>.isNotEqualTo(expected: $T) = given { actual ->
     if (!(actual.contentEquals(expected))) return
     val showExpected = show(expected)
     val showActual = show(actual)
@@ -47,7 +47,7 @@ fun Assert<$T>.isNotEqualTo(expected: $T) {
  * @see [isNullOrEmpty]
  */
 @PlatformName("$NIsEmpty")
-fun Assert<$T>.isEmpty() {
+fun Assert<$T>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
 }
@@ -57,7 +57,7 @@ fun Assert<$T>.isEmpty() {
  * @see [isEmpty]
  */
 @PlatformName("$NIsNotEmpty")
-fun Assert<$T>.isNotEmpty() {
+fun Assert<$T>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
 }
@@ -67,7 +67,7 @@ fun Assert<$T>.isNotEmpty() {
  * @see [isEmpty]
  */
 @PlatformName("$NIsNullOrEmpty")
-fun Assert<$T?>.isNullOrEmpty() {
+fun Assert<$T?>.isNullOrEmpty() = given { actual ->
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
 }
@@ -77,14 +77,14 @@ fun Assert<$T?>.isNullOrEmpty() {
  */
 @PlatformName("$NHasSize")
 fun Assert<$T>.hasSize(size: Int) {
-    assert(actual.size, "size").isEqualTo(size)
+    size().isEqualTo(size)
 }
 
 /**
  * Asserts the $T has the same size as the expected array.
  */
 @PlatformName("$NHasSameSizeAs")
-fun Assert<$T>.hasSameSizeAs(other: $T) {
+fun Assert<$T>.hasSameSizeAs(other: $T) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
     if (actualSize == otherSize) return
@@ -96,7 +96,7 @@ fun Assert<$T>.hasSameSizeAs(other: $T) {
  * @see [doesNotContain]
  */
 @PlatformName("$NContains")
-fun Assert<$T>.contains(element: $E) {
+fun Assert<$T>.contains(element: $E) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
 }
@@ -106,7 +106,7 @@ fun Assert<$T>.contains(element: $E) {
  * @see [contains]
  */
 @PlatformName("$NDoesNotContain")
-fun Assert<$T>.doesNotContain(element: $E) {
+fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
 }
@@ -115,7 +115,7 @@ fun Assert<$T>.doesNotContain(element: $E) {
  * Asserts the $T does not contain any of the expected elements.
  * @see [containsAll]
  */
-fun Assert<$T>.containsNone(vararg elements: $E) {
+fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
     if (elements.none { it in actual }) {
         return
     }
@@ -130,27 +130,41 @@ fun Assert<$T>.containsNone(vararg elements: $E) {
  * @see [containsExactly]
  */
 @PlatformName("$NContainsAll")
-fun Assert<$T>.containsAll(vararg elements: $E) {
+fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
     expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
 }
 
 /**
- * Returns an assert that assertion on the value at the given index in the $T.
+ * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
  * assert($NOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
-@PlatformName("$NIndex")
+@PlatformName("$NIndexOld")
+@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
 fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
-    if (index in 0 until actual.size) {
-        f(assert(actual[index], "${name ?: ""}${show(index, "[]")}"))
-    } else {
-        expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
-    }
+    index(index).let(f)
 }
+
+/**
+ * Returns an assert that assertion on the value at the given index in the array.
+ *
+ * ```
+ * assert($NOf(0, 1, 2)).index(1).isPositive()
+ * ```
+ */
+@PlatformName("$NIndex")
+fun Assert<$T>.index(index: Int): Assert<$E> =
+    transform("${name ?: ""}${show(index, "[]")}") { actual ->
+        if (index in 0 until actual.size) {
+            actual[index]
+        } else {
+            expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
+        }
+    }
 
 /**
  * Asserts the $T contains exactly the expected elements. They must be in the same order and
@@ -158,7 +172,7 @@ fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
  * @see [containsAll]
  */
 @PlatformName("$NContainsExactly")
-fun Assert<$T>.containsExactly(vararg elements: $E) {
+fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     if (actual.contentEquals(elements)) return
 
     val diff = ListDiffer.diff(elements.asList(), actual.asList())
@@ -183,10 +197,10 @@ fun Assert<$T>.containsExactly(vararg elements: $E) {
  * ```
  */
 @PlatformName("$NEach")
-fun Assert<$T>.each(f: (Assert<$E>) -> Unit) {
-    assertAll {
+fun Assert<$T>.each(f: (Assert<$E>) -> Unit) = given { actual ->
+    all {
         actual.forEachIndexed { index, item ->
-            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
+            f(assert(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
     }
 }
