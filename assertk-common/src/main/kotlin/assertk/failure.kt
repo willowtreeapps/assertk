@@ -54,7 +54,11 @@ internal class SimpleFailure : Failure {
 /**
  * Failure that collects all failures and displays them at once.
  */
-internal class SoftFailure : Failure {
+internal class SoftFailure(
+    val message: String = defaultMessage,
+    val failIf: (List<AssertionError>) -> Boolean = { it.isNotEmpty() }
+) :
+    Failure {
     private val failures: MutableList<AssertionError> = ArrayList()
 
     override fun fail(error: AssertionError) {
@@ -62,7 +66,7 @@ internal class SoftFailure : Failure {
     }
 
     override fun invoke() {
-        if (!failures.isEmpty()) {
+        if (failIf(failures)) {
             FailureContext.failure.fail(compositeErrorMessage(failures))
         }
     }
@@ -71,8 +75,12 @@ internal class SoftFailure : Failure {
         return if (errors.size == 1) {
             errors.first()
         } else {
-            MultipleFailuresError("The following assertions failed", errors)
+            MultipleFailuresError(message, errors)
         }
+    }
+
+    companion object {
+        const val defaultMessage = "The following assertions failed"
     }
 }
 

@@ -39,3 +39,18 @@ fun <E> Assert<Iterable<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
         }
     }
 }
+
+/**
+ * Asserts on each item in the iterable, passing if at least `times` items pass.
+ * The given lambda will be run for each item.
+ *
+ * ```
+ * assert(listOf(-1, 1, 2) as Iterable<Int>).atLeast(2) { it -> it.isPositive() }
+ * ```
+ */
+fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
+    var count = 0
+    all(message = "expected to pass at least $times times",
+        body = { each { item -> count++; f(item) } },
+        failIf = { count - it.size < times })
+}
