@@ -54,4 +54,26 @@ class IterableTest {
         )
     }
     //endregion
+
+    //region atLeast
+    @Test fun atLeast_to_many_failures_fails() {
+        val error = assertFails {
+            assert(listOf(1, 2, 3)).atLeast(2) { it -> it.isGreaterThan(2) }
+        }
+        assertEquals(
+            """expected to pass at least 2 times (2 failures)
+            |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
+            |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
+        """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun atLest_no_failures_passes() {
+        assert(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it -> it.isGreaterThan(0) }
+    }
+
+    @Test fun atLeast_less_than_times_failures_passes() {
+        assert(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it -> it.isGreaterThan(1) }
+    }
+    //endregion
 }
