@@ -1,7 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assertAll
+import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -9,7 +9,7 @@ import assertk.assertions.support.show
  * Asserts the iterable contains the expected element, using `in`.
  * @see [doesNotContain]
  */
-fun <T : Iterable<*>> Assert<T>.contains(element: Any?) {
+fun Assert<Iterable<*>>.contains(element: Any?) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
 }
@@ -18,7 +18,7 @@ fun <T : Iterable<*>> Assert<T>.contains(element: Any?) {
  * Asserts the iterable does not contain the expected element, using `!in`.
  * @see [contains]
  */
-fun <T : Iterable<*>> Assert<T>.doesNotContain(element: Any?) {
+fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
 }
@@ -32,10 +32,10 @@ fun <T : Iterable<*>> Assert<T>.doesNotContain(element: Any?) {
  * }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.each(f: (Assert<E>) -> Unit) {
-    assertAll {
+fun <E> Assert<Iterable<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
+    all {
         actual.forEachIndexed { index, item ->
-            f(assert(item, "${name ?: ""}${show(index, "[]")}"))
+            f(assert(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
     }
 }

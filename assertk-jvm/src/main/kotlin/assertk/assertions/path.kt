@@ -8,11 +8,23 @@ import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.Path
 
+/**
+ * Assert on file lines
+ *
+ * @param charset charset to use when reading file
+ */
+fun Assert<Path>.lines(charset: Charset = Charsets.UTF_8): Assert<List<String>> =
+    transform { actual -> Files.readAllLines(actual, charset) }
+
+/** Assert on file bytes */
+fun Assert<Path>.bytes(): Assert<ByteArray> =
+    transform { actual -> Files.readAllBytes(actual) }
+
 /** Assert that the path is a regular file.
  *
  * @param options indicating how symbolic links are handled
  */
-fun Assert<Path>.isRegularFile(vararg options: LinkOption) {
+fun Assert<Path>.isRegularFile(vararg options: LinkOption) = given { actual ->
     if (!Files.isRegularFile(actual, *options)) {
         expected("${show(actual)} to be a regular file, but it is not")
     }
@@ -22,42 +34,42 @@ fun Assert<Path>.isRegularFile(vararg options: LinkOption) {
  *
  * @param options indicating how symbolic links are handled
  */
-fun Assert<Path>.isDirectory(vararg options: LinkOption) {
+fun Assert<Path>.isDirectory(vararg options: LinkOption) = given { actual ->
     if (!Files.isDirectory(actual, *options)) {
         expected("${show(actual)} to be a directory, but it is not")
     }
 }
 
 /** Assert that the path is an executable. */
-fun Assert<Path>.isExecutable() {
+fun Assert<Path>.isExecutable() = given { actual ->
     if (!Files.isExecutable(actual)) {
         expected("${show(actual)} to be an executable, but it is not")
     }
 }
 
 /** Assert that the path is hidden. */
-fun Assert<Path>.isHidden() {
+fun Assert<Path>.isHidden() = given { actual ->
     if (!Files.isHidden(actual)) {
         expected("${show(actual)} to be hidden, but it is not")
     }
 }
 
 /** Assert that the path is readable. */
-fun Assert<Path>.isReadable() {
+fun Assert<Path>.isReadable() = given { actual ->
     if (!Files.isReadable(actual)) {
         expected("${show(actual)} to be readable, but it is not")
     }
 }
 
 /** Assert that the path is a symbolic link. */
-fun Assert<Path>.isSymbolicLink() {
+fun Assert<Path>.isSymbolicLink() = given { actual ->
     if (!Files.isSymbolicLink(actual)) {
         expected("${show(actual)} to be a symbolic link, but it is not")
     }
 }
 
 /** Assert that the path is writable link. */
-fun Assert<Path>.isWritable() {
+fun Assert<Path>.isWritable() = given { actual ->
     if (!Files.isWritable(actual)) {
         expected("${show(actual)} to be writable, but it is not")
     }
@@ -68,22 +80,8 @@ fun Assert<Path>.isWritable() {
  *
  * @param expected the path which the actual is compared to.
  */
-fun Assert<Path>.isSameFileAs(expected: Path) {
+fun Assert<Path>.isSameFileAs(expected: Path) = given { actual ->
     if (!Files.isSameFile(actual, expected)) {
         expected("${show(actual)} to be the same file as ${show(actual)} but is not")
     }
-}
-
-/**
- * Assert on file lines
- *
- * @param charset charset to use when reading file
- */
-fun Assert<Path>.lines(charset: Charset = Charsets.UTF_8): Assert<List<String>> {
-    return assert(Files.readAllLines(actual, charset))
-}
-
-/** Assert on file bytes */
-fun Assert<Path>.bytes(): Assert<ByteArray> {
-    return assert(Files.readAllBytes(actual))
 }

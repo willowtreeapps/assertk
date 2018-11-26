@@ -79,15 +79,19 @@ internal class SoftFailure : Failure {
 /**
  * Fail the test with the given {@link AssertionError}.
  */
-fun fail(error: AssertionError) {
-    FailureContext.failure.fail(error)
+fun fail(error: AssertionError): Nothing {
+    throw error
 }
 
 /**
  * Fail the test with the given message.
  */
-fun fail(message: String, expected: Any? = null, actual: Any? = null) {
-    FailureContext.failure.fail(AssertionFailedError(message, expected, actual, null))
+fun fail(message: String, expected: Any? = null, actual: Any? = null): Nothing {
+    throw AssertionFailedError(message, expected, actual, null)
+}
+
+fun notifyFailure(e: Throwable) {
+    FailureContext.failure.fail(if (e is AssertionError) e else AssertionError(e))
 }
 
 internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothing
