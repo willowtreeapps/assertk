@@ -44,7 +44,7 @@ class PersonTest {
     @Test
     fun testAge() {
         assert("age", person.age).isGreaterThan(20)
-        // -> expected [age] to be greater than:<20> but was:<10>
+        // -> expected [age] to be greater than:<20> but was:<18>
     }
 }
 ```
