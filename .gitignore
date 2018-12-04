@@ -9,3 +9,4 @@ Thumbs.db
 .envrc
 default.nix
 node_modules
+.java-version
