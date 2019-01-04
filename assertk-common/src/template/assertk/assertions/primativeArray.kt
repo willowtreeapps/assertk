@@ -3,7 +3,6 @@ package assertk.assertions
 import assertk.Assert
 import assertk.PlatformName
 import assertk.all
-import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import assertk.assertions.support.fail
@@ -175,16 +174,7 @@ fun Assert<$T>.index(index: Int): Assert<$E> =
 fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     if (actual.contentEquals(elements)) return
 
-    val diff = ListDiffer.diff(elements.asList(), actual.asList())
-        .filterNot { it is ListDiffer.Edit.Eq }
-
-    expected(diff.joinToString(prefix = "to contain exactly:\n", separator = "\n") { edit ->
-        when (edit) {
-            is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
-            is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"
-            else -> throw IllegalStateException()
-        }
-    })
+    expected(listDifferExpected(elements.toList(), actual.toList()))
 }
 
 /**

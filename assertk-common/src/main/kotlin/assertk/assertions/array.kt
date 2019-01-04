@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.*
-import assertk.assertions.support.ListDiffer
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -168,16 +167,7 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
 fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
 
-    val diff = ListDiffer.diff(elements.asList(), actual.asList())
-        .filterNot { it is ListDiffer.Edit.Eq }
-
-    expected(diff.joinToString(prefix = "to contain exactly:\n", separator = "\n") { edit ->
-        when (edit) {
-            is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
-            is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"
-            else -> throw IllegalStateException()
-        }
-    })
+    expected(listDifferExpected(elements.asList(), actual.asList()))
 }
 
 /**

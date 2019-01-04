@@ -187,6 +187,20 @@ class $TTest {
         )
     }
 
+    @Test fun containsExactly_same_indexes_are_together() {
+        val error = assertFails {
+            assert($NOf(1.to$E(), 1.to$E())).containsExactly(2.to$E(), 2.to$E())
+        }
+        assertEquals(
+            """expected to contain exactly:
+                | at index:0 expected:<${show(2.to$E(), "")}>
+                | at index:0 unexpected:<${show(1.to$E(), "")}>
+                | at index:1 expected:<${show(2.to$E(), "")}>
+                | at index:1 unexpected:<${show(1.to$E(), "")}>
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsExactly_extra_element_fails() {
         val error = assertFails {
             assert($NOf(1.to$E(), 2.to$E())).containsExactly(1.to$E(), 2.to$E(), 3.to$E())
