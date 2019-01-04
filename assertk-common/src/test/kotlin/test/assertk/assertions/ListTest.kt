@@ -26,6 +26,20 @@ class ListTest {
         )
     }
 
+    @Test fun containsExactly_same_indexes_are_together() {
+        val error = assertFails {
+            assert(listOf(1, 1)).containsExactly(2, 2)
+        }
+        assertEquals(
+            """expected to contain exactly:
+                | at index:0 expected:<2>
+                | at index:0 unexpected:<1>
+                | at index:1 expected:<2>
+                | at index:1 unexpected:<1>
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsExactly_missing_element_fails() {
         val error = assertFails {
             assert(listOf(1, 2)).containsExactly(3)
