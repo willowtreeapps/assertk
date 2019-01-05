@@ -1,6 +1,6 @@
 package test.assertk.assertions
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import kotlin.test.Test
@@ -10,12 +10,12 @@ import kotlin.test.assertFails
 class BooleanTest {
     //region isTrue
     @Test fun isTrue_true_value_passes() {
-        assert(true).isTrue()
+        assertThat(true).isTrue()
     }
 
     @Test fun isTrue_false_value_fails() {
         val error = assertFails {
-            assert(false).isTrue()
+            assertThat(false).isTrue()
         }
         assertEquals("expected to be true", error.message)
     }
@@ -23,12 +23,12 @@ class BooleanTest {
 
     //region isFalse
     @Test fun isFalse_false_value_passes() {
-        assert(false).isFalse()
+        assertThat(false).isFalse()
     }
 
     @Test fun isFalse_true_value_fails() {
         val error = assertFails {
-            assert(true).isFalse()
+            assertThat(true).isFalse()
         }
         assertEquals("expected to be false", error.message)
     }

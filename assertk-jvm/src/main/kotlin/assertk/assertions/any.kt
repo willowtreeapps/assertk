@@ -17,7 +17,7 @@ fun <T : Any> Assert<T>.jClass() = prop("class") { it::class.java }
 
 /**
  * Asserts the value has the expected java class. This is an exact match, so
- * `assert("test").hasClass(String::class.java)` is successful but `assert("test").hasClass(Any::class.java)` fails.
+ * `assertThat("test").hasClass(String::class.java)` is successful but `assertThat("test").hasClass(Any::class.java)` fails.
  * @see [doesNotHaveClass]
  * @see [isInstanceOf]
  */
@@ -28,7 +28,7 @@ fun <T : Any> Assert<T>.hasClass(jclass: Class<out T>) = given { actual ->
 
 /**
  * Asserts the value does not have the expected java class. This is an exact match, so
- * `assert("test").doesNotHaveClass(String::class.java)` is fails but `assert("test").doesNotHaveClass(Any::class.java)`
+ * `assertThat("test").doesNotHaveClass(String::class.java)` is fails but `assertThat("test").doesNotHaveClass(Any::class.java)`
  * is successful.
  * @see [hasClass]
  * @see [isNotInstanceOf]
@@ -39,8 +39,8 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) = given { actual 
 }
 
 /**
- * Asserts the value is an instance of the expected java class. Both `assert("test").isInstanceOf(String::class.java)`
- * and `assert("test").isInstanceOf(Any::class.java)` is successful.
+ * Asserts the value is an instance of the expected java class. Both `assertThat("test").isInstanceOf(String::class.java)`
+ * and `assertThat("test").isInstanceOf(Any::class.java)` is successful.
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
@@ -54,8 +54,8 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = trans
 }
 
 /**
- * Asserts the value is an instance of the expected java class. Both `assert("test").isInstanceOf(String::class.java)`
- * and `assert("test").isInstanceOf(Any::class.java)` is successful.
+ * Asserts the value is an instance of the expected java class. Both `assertThat("test").isInstanceOf(String::class.java)`
+ * and `assertThat("test").isInstanceOf(Any::class.java)` is successful.
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
@@ -65,8 +65,8 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> 
 }
 
 /**
- * Asserts the value is not an instance of the expected java class. Both `assert("test").isNotInstanceOf(String::class)`
- * and `assert("test").isNotInstanceOf(Any::class)` fails.
+ * Asserts the value is not an instance of the expected java class. Both `assertThat("test").isNotInstanceOf(String::class)`
+ * and `assertThat("test").isNotInstanceOf(Any::class)` fails.
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
@@ -81,7 +81,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
  * callable will be shown in failure messages.
  *
  * ```
- * assert(person).prop(Person::name).isEqualTo("Sue")
+ * assertThat(person).prop(Person::name).isEqualTo("Sue")
  * ```
  */
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }

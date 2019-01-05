@@ -1,6 +1,6 @@
 package test.assertk
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isPositive
 import assertk.assertions.support.show
 import kotlin.test.Test
@@ -9,7 +9,7 @@ import kotlin.test.assertFails
 
 class JSAssertBlockTest {
 
-    private val errorSubject = assert { throw Exception("test") }
+    private val errorSubject = assertThat { throw Exception("test") }
 
     //region thrown error
     @Test fun returnedValue_exception_in_block_fails() {

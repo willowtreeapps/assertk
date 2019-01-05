@@ -1,6 +1,6 @@
 package test.assertk
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isPositive
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class JVMAssertBlockTest {
 
-    private val errorSubject = assert { throw Exception("test") }
+    private val errorSubject = assertThat { throw Exception("test") }
 
     //region thrown error
     @Test fun returnedValue_exception_fails_with_stacktrace() {

@@ -1,6 +1,6 @@
 package test.assertk.assertions
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.exceptionPackageName
 import kotlin.test.Test
@@ -13,25 +13,25 @@ class ThrowableTest {
     val subject = Exception("test", cause)
 
     @Test fun extracts_message() {
-        assertEquals(subject.message, assert(subject).message().valueOrFail)
+        assertEquals(subject.message, assertThat(subject).message().valueOrFail)
     }
 
     @Test fun extracts_cause() {
-        assertEquals(cause, assert(subject).cause().valueOrFail)
+        assertEquals(cause, assertThat(subject).cause().valueOrFail)
     }
 
     @Test fun extracts_root_cause() {
-        assertEquals(rootCause, assert(subject).rootCause().valueOrFail)
+        assertEquals(rootCause, assertThat(subject).rootCause().valueOrFail)
     }
 
     //region hasMessage
     @Test fun hasMessage_same_message_passes() {
-        assert(subject).hasMessage("test")
+        assertThat(subject).hasMessage("test")
     }
 
     @Test fun hasMessage_different_message_fails() {
         val error = assertFails {
-            assert(subject).hasMessage("not test")
+            assertThat(subject).hasMessage("not test")
         }
         assertEquals("expected [message]:<\"[not ]test\"> but was:<\"[]test\"> ($subject)", error.message)
     }
@@ -39,13 +39,13 @@ class ThrowableTest {
 
     //region hasCause
     @Test fun hasCause_same_type_and_message_passes() {
-        assert(subject).hasCause(Exception("cause"))
+        assertThat(subject).hasCause(Exception("cause"))
     }
 
     @Test fun hasCause_no_cause_fails() {
         val causeless = Exception("test")
         val error = assertFails {
-            assert(causeless).hasCause(cause)
+            assertThat(causeless).hasCause(cause)
         }
         assertEquals(
             "expected [cause] to not be null ($subject)",
@@ -56,7 +56,7 @@ class ThrowableTest {
     @Test fun hasCause_different_message_fails() {
         val wrongCause = Exception("wrong")
         val error = assertFails {
-            assert(subject).hasCause(wrongCause)
+            assertThat(subject).hasCause(wrongCause)
         }
         assertEquals(
             "expected [cause.message]:<\"[wrong]\"> but was:<\"[cause]\"> ($subject)",
@@ -67,7 +67,7 @@ class ThrowableTest {
     @Test fun hasCause_different_type_fails() {
         val wrongCause = IllegalArgumentException("cause")
         val error = assertFails {
-            assert(subject).hasCause(wrongCause)
+            assertThat(subject).hasCause(wrongCause)
         }
         assertEquals(
             "expected [cause.class]:<class $exceptionPackageName[IllegalArgument]Exception> but was:<class $exceptionPackageName[]Exception> ($subject)",
@@ -79,12 +79,12 @@ class ThrowableTest {
     //region hasNoCause
     @Test fun hasNoCause_no_cause_passes() {
         val causeless = Exception("test")
-        assert(causeless).hasNoCause()
+        assertThat(causeless).hasNoCause()
     }
 
     @Test fun hasNoCause_cause_fails() {
         val error = assertFails {
-            assert(subject).hasNoCause()
+            assertThat(subject).hasNoCause()
         }
         assertEquals("expected [cause] to be null but was:<$cause> ($subject)", error.message)
     }
@@ -92,13 +92,13 @@ class ThrowableTest {
 
     //region hasRootCause
     @Test fun hasRootCause_same_root_cause_type_and_message_passes() {
-        assert(subject).hasRootCause(Exception("rootCause"))
+        assertThat(subject).hasRootCause(Exception("rootCause"))
     }
 
     @Test fun hasRootCause_wrong_cause_type_fails() {
         val wrongCause = IllegalArgumentException("rootCause")
         val error = assertFails {
-            assert(subject).hasRootCause(wrongCause)
+            assertThat(subject).hasRootCause(wrongCause)
         }
         assertEquals(
             "expected [rootCause.class]:<class $exceptionPackageName[IllegalArgument]Exception> but was:<class $exceptionPackageName[]Exception> ($subject)",
@@ -109,7 +109,7 @@ class ThrowableTest {
     @Test fun hasRootCause_wrong_cause_message_fails() {
         val wrongCause = Exception("wrong")
         val error = assertFails {
-            assert(subject).hasRootCause(wrongCause)
+            assertThat(subject).hasRootCause(wrongCause)
         }
         assertEquals(
             "expected [rootCause.message]:<\"[wrong]\"> but was:<\"[rootCause]\"> ($subject)",

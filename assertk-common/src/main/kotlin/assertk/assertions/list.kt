@@ -9,7 +9,7 @@ import assertk.assertions.support.show
  * Returns an assert that assertion on the value at the given index in the list.
  *
  * ```
- * assert(listOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assertThat(listOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
 @Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
@@ -21,7 +21,7 @@ fun <T> Assert<List<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
  * Returns an assert that assertion on the value at the given index in the list.
  *
  * ```
- * assert(listOf(0, 1, 2)).index(1).isPositive()
+ * assertThat(listOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
 fun <T> Assert<List<T>>.index(index: Int): Assert<T> =

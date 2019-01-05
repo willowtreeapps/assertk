@@ -1,6 +1,6 @@
 package test.assertk.assertions
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,22 +12,22 @@ class JavaAnyTest {
 
     //region jClass
     @Test fun extracts_jClass() {
-        assertEquals(BasicObject::class.java, assert(subject as TestObject).jClass().valueOrFail)
+        assertEquals(BasicObject::class.java, assertThat(subject as TestObject).jClass().valueOrFail)
     }
     //endregion
 
     //region isInstanceOf
     @Test fun isInstanceOf_jclass_same_class_passes() {
-        assert(subject).isInstanceOf(BasicObject::class.java)
+        assertThat(subject).isInstanceOf(BasicObject::class.java)
     }
 
     @Test fun isInstanceOf_jclass_parent_class_passes() {
-        assert(subject).isInstanceOf(TestObject::class.java)
+        assertThat(subject).isInstanceOf(TestObject::class.java)
     }
 
     @Test fun isInstanceOf_jclass_different_class_fails() {
         val error = assertFails {
-            assert(subject).isInstanceOf(DifferentObject::class.java)
+            assertThat(subject).isInstanceOf(DifferentObject::class.java)
         }
         assertEquals(
             "expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>",
@@ -37,7 +37,7 @@ class JavaAnyTest {
 
     @Test fun isInstanceOf_jclass_run_block_when_passes() {
         val error = assertFails {
-            assert(subject as TestObject)
+            assertThat(subject as TestObject)
                 .isInstanceOf(BasicObject::class.java)
                 .prop("str", BasicObject::str)
                 .isEqualTo("wrong")
@@ -47,7 +47,7 @@ class JavaAnyTest {
 
     @Test fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
         val error = assertFails {
-            assert(subject as TestObject)
+            assertThat(subject as TestObject)
                 .isInstanceOf(DifferentObject::class.java)
                 .isNull()
         }
@@ -60,19 +60,19 @@ class JavaAnyTest {
 
     //region isNotInstanceOf
     @Test fun isNotInstanceOf_jclass_different_class_passess() {
-        assert(subject).isNotInstanceOf(DifferentObject::class.java)
+        assertThat(subject).isNotInstanceOf(DifferentObject::class.java)
     }
 
     @Test fun isNotInstanceOf_jclass_same_class_fails() {
         val error = assertFails {
-            assert(subject).isNotInstanceOf(BasicObject::class.java)
+            assertThat(subject).isNotInstanceOf(BasicObject::class.java)
         }
         assertEquals("expected to not be instance of:<$p\$BasicObject>", error.message)
     }
 
     @Test fun isNotInstanceOf_jclass_parent_class_fails() {
         val error = assertFails {
-            assert(subject).isNotInstanceOf(TestObject::class.java)
+            assertThat(subject).isNotInstanceOf(TestObject::class.java)
         }
         assertEquals("expected to not be instance of:<$p\$TestObject>", error.message)
     }
@@ -80,12 +80,12 @@ class JavaAnyTest {
 
     //region prop
     @Test fun prop_callable_extract_prop_passes() {
-        assert(subject).prop(BasicObject::str).isEqualTo("test")
+        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
     }
 
     @Test fun prop_callable_extract_prop_includes_name_in_failure_message() {
         val error = assertFails {
-            assert(subject).prop(BasicObject::str).isEmpty()
+            assertThat(subject).prop(BasicObject::str).isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
@@ -93,13 +93,13 @@ class JavaAnyTest {
 
     //region isDataClassEqualTo
     @Test fun isDataClassEqualTo_equal_data_classes_passes() {
-        assert(DataClass(InnerDataClass("test"), 1, 'a'))
+        assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
             .isDataClassEqualTo(DataClass(InnerDataClass("test"), 1, 'a'))
     }
 
     @Test fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
         val error = assertFails {
-            assert(DataClass(InnerDataClass("test"), 1, 'a'))
+            assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
                 .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
         }
         assertEquals(
