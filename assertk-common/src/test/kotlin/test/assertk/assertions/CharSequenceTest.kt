@@ -9,7 +9,7 @@ import kotlin.test.assertFails
 class CharSequenceTest {
     //region props
     @Test fun extracts_length() {
-        assertEquals(4, assert("test").length().actual)
+        assertEquals(4, assert("test").length().valueOrFail)
     }
     //endregion
 

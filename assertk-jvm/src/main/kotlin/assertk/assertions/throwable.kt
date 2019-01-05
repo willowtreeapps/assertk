@@ -7,4 +7,4 @@ import assertk.Assert
 /**
  * Returns an assert on the throwable's stack trace.
  */
-fun <T : Throwable> Assert<T>.stackTrace() = prop("stack trace", { it.stackTrace.map { it.toString() } })
+fun Assert<Throwable>.stackTrace() = prop("stackTrace") { it.stackTrace.map(StackTraceElement::toString) }

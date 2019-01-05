@@ -13,7 +13,45 @@ annotation class AssertkDsl
  * @see [assert]
  */
 @AssertkDsl
-class Assert<out T> internal constructor(val actual: T, val name: String?, internal val context: Any?) {
+sealed class Assert<out T>(val name: String?, internal val context: Any?) {
+    /**
+     * Transforms an assertion from one type to another. If the assertion is failing the resulting assertion will still
+     * be failing, otherwise the mapping function is called. An optional name can be provided, otherwise this
+     * assertion's name will be used.
+     */
+    fun <R> transform(name: String? = this.name, transform: (T) -> R): Assert<R> {
+        return when (this) {
+            is ValueAssert -> {
+                try {
+                    assert(transform(value), name)
+                } catch (e: Throwable) {
+                    notifyFailure(e)
+                    FailingAssert<R>(e, name, context)
+                }
+            }
+            is FailingAssert -> FailingAssert(error, name, context)
+        }
+    }
+
+    /**
+     * Allows checking the actual value of an assert. This can be used to build your own custom assertions.
+     * ```
+     * fun Assert<Int>.isTen() = given { actual ->
+     *     if (actual == 10) return
+     *     expected("to be 10 but was:${show(actual)}")
+     * }
+     * ```
+     */
+    inline fun given(assertion: (T) -> Unit) {
+        if (this is ValueAssert) {
+            try {
+                assertion(value)
+            } catch (e: Throwable) {
+                notifyFailure(e)
+            }
+        }
+    }
+
     /**
      * Asserts on the given value with an optional name.
      *
@@ -21,8 +59,28 @@ class Assert<out T> internal constructor(val actual: T, val name: String?, inter
      * assert(true, name = "true").isTrue()
      * ```
      */
-    fun <R> assert(actual: R, name: String? = this.name)
-            : Assert<R> = Assert(actual, name, if (context != null || this.actual === actual) context else this.actual)
+    abstract fun <R> assert(actual: R, name: String? = this.name): Assert<R>
+
+    @Suppress("DeprecatedCallableAddReplaceWith")
+    @Deprecated(message = "Use `given` or `transform` to access the actual value instead")
+    val actual: T
+        get() = when (this) {
+            is ValueAssert -> value
+            is FailingAssert -> throw error
+        }
+}
+
+@AssertkDsl
+class ValueAssert<out T> internal constructor(val value: T, name: String?, context: Any?) :
+    Assert<T>(name, context) {
+
+    override fun <R> assert(actual: R, name: String?): Assert<R> =
+        ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
+}
+
+class FailingAssert<out T> internal constructor(val error: Throwable, name: String?, context: Any?) :
+    Assert<T>(name, context) {
+    override fun <R> assert(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
 }
 
 /**
@@ -42,7 +100,9 @@ sealed class AssertBlock<out T> {
     abstract fun doesNotThrowAnyException()
 
     internal class Value<out T> internal constructor(private val value: T) : AssertBlock<T>() {
-        override fun thrownError(f: Assert<Throwable>.() -> Unit) = fail("expected exception but was:${show(value)}")
+        override fun thrownError(f: Assert<Throwable>.() -> Unit) {
+            fail("expected exception but was:${show(value)}")
+        }
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
             f(assert(value))
@@ -58,9 +118,13 @@ sealed class AssertBlock<out T> {
             f(assert(error))
         }
 
-        override fun returnedValue(f: Assert<T>.() -> Unit) = fail("expected value but threw:${showError(error)}")
+        override fun returnedValue(f: Assert<T>.() -> Unit) {
+            fail("expected value but threw:${showError(error)}")
+        }
 
-        override fun doesNotThrowAnyException() = fail("expected to not throw an exception but threw:${showError(error)}")
+        override fun doesNotThrowAnyException() {
+            fail("expected to not throw an exception but threw:${showError(error)}")
+        }
     }
 }
 
@@ -78,7 +142,7 @@ internal expect fun showError(e: Throwable): String
  * assert(true, name = "true").isTrue()
  * ```
  */
-fun <T> assert(actual: T, name: String? = null): Assert<T> = Assert(actual, name, null)
+fun <T> assert(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
 
 /**
  * All assertions in the given lambda are run.

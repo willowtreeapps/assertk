@@ -13,15 +13,15 @@ class ThrowableTest {
     val subject = Exception("test", cause)
 
     @Test fun extracts_message() {
-        assertEquals(subject.message, assert(subject).message().actual)
+        assertEquals(subject.message, assert(subject).message().valueOrFail)
     }
 
     @Test fun extracts_cause() {
-        assertEquals(cause, assert(subject).cause().actual)
+        assertEquals(cause, assert(subject).cause().valueOrFail)
     }
 
     @Test fun extracts_root_cause() {
-        assertEquals(rootCause, assert(subject).rootCause().actual)
+        assertEquals(rootCause, assert(subject).rootCause().valueOrFail)
     }
 
     //region hasMessage

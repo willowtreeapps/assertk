@@ -26,6 +26,20 @@ class ListTest {
         )
     }
 
+    @Test fun containsExactly_same_indexes_are_together() {
+        val error = assertFails {
+            assert(listOf(1, 1)).containsExactly(2, 2)
+        }
+        assertEquals(
+            """expected to contain exactly:
+                | at index:0 expected:<2>
+                | at index:0 unexpected:<1>
+                | at index:1 expected:<2>
+                | at index:1 unexpected:<1>
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsExactly_missing_element_fails() {
         val error = assertFails {
             assert(listOf(1, 2)).containsExactly(3)
@@ -75,12 +89,12 @@ class ListTest {
 
     //region index
     @Test fun index_successful_assertion_passes() {
-        assert(listOf("one", "two"), name = "subject").index(0) { it.isEqualTo("one") }
+        assert(listOf("one", "two"), name = "subject").index(0).isEqualTo("one")
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
         val error = assertFails {
-            assert(listOf("one", "two"), name = "subject").index(0) { it.isEqualTo("wrong") }
+            assert(listOf("one", "two"), name = "subject").index(0).isEqualTo("wrong")
         }
         assertEquals(
             "expected [subject[0]]:<\"[wrong]\"> but was:<\"[one]\"> ([\"one\", \"two\"])",
@@ -90,7 +104,7 @@ class ListTest {
 
     @Test fun index_out_of_range_fails() {
         val error = assertFails {
-            assert(listOf("one", "two"), name = "subject").index(-1) { it.isEqualTo(listOf("one")) }
+            assert(listOf("one", "two"), name = "subject").index(-1).isEqualTo(listOf("one"))
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }

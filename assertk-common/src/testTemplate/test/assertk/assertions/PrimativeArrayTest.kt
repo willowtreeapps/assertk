@@ -187,6 +187,20 @@ class $TTest {
         )
     }
 
+    @Test fun containsExactly_same_indexes_are_together() {
+        val error = assertFails {
+            assert($NOf(1.to$E(), 1.to$E())).containsExactly(2.to$E(), 2.to$E())
+        }
+        assertEquals(
+            """expected to contain exactly:
+                | at index:0 expected:<${show(2.to$E(), "")}>
+                | at index:0 unexpected:<${show(1.to$E(), "")}>
+                | at index:1 expected:<${show(2.to$E(), "")}>
+                | at index:1 unexpected:<${show(1.to$E(), "")}>
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsExactly_extra_element_fails() {
         val error = assertFails {
             assert($NOf(1.to$E(), 2.to$E())).containsExactly(1.to$E(), 2.to$E(), 3.to$E())
@@ -245,12 +259,12 @@ class $TTest {
 
     //region index
     @Test fun index_successful_assertion_passes() {
-        assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(0) { it.isEqualTo(1.to$E()) }
+        assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(0).isEqualTo(1.to$E())
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
         val error = assertFails {
-            assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(0) { it.isGreaterThan(2.to$E()) }
+            assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(0).isGreaterThan(2.to$E())
         }
         assertEquals(
             "expected [subject[0]] to be greater than:<${show(2.to$E(), "")}> but was:<${show(1.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}])",
@@ -260,7 +274,7 @@ class $TTest {
 
     @Test fun index_out_of_range_fails() {
         val error = assertFails {
-            assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(-1) { it.isEqualTo(listOf(1.to$E())) }
+            assert($NOf(1.to$E(), 2.to$E()), name = "subject").index(-1).isEqualTo(listOf(1.to$E()))
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }

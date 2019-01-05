@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun <T : Any> Assert<T>.kClass() = prop("class", { it::class })
+fun <T : Any> Assert<T>.kClass() = prop("class") { it::class }
 
 /**
  * Returns an assert on the toString method of the value.
@@ -28,7 +28,7 @@ fun <T : Any> Assert<T>.hashCodeFun() = prop("hashCode", Any::hashCode)
  * @see [isNotEqualTo]
  * @see [isSameAs]
  */
-fun <T> Assert<T>.isEqualTo(expected: Any?) {
+fun <T> Assert<T>.isEqualTo(expected: Any?) = given { actual ->
     if (actual == expected) return
     fail(expected, actual)
 }
@@ -38,7 +38,7 @@ fun <T> Assert<T>.isEqualTo(expected: Any?) {
  * @see [isEqualTo]
  * @see [isNotSameAs]
  */
-fun <T> Assert<T>.isNotEqualTo(expected: Any?) {
+fun <T> Assert<T>.isNotEqualTo(expected: Any?) = given { actual ->
     if (actual != expected) return
     val showExpected = show(expected)
     val showActual = show(actual)
@@ -55,7 +55,7 @@ fun <T> Assert<T>.isNotEqualTo(expected: Any?) {
  * @see [isNotSameAs]
  * @see [isEqualTo]
  */
-fun <T> Assert<T>.isSameAs(expected: T) {
+fun <T> Assert<T>.isSameAs(expected: T) = given { actual ->
     if (actual === expected) return
     expected(":${show(expected)} and:${show(actual)} to refer to the same object")
 }
@@ -65,7 +65,7 @@ fun <T> Assert<T>.isSameAs(expected: T) {
  * @see [isSameAs]
  * @see [isNotEqualTo]
  */
-fun <T> Assert<T>.isNotSameAs(expected: Any?) {
+fun <T> Assert<T>.isNotSameAs(expected: Any?) = given { actual ->
     if (actual !== expected) return
     expected(":${show(expected)} to not refer to the same object")
 }
@@ -74,7 +74,7 @@ fun <T> Assert<T>.isNotSameAs(expected: Any?) {
  * Asserts the value is in the expected values, using `in`.
  * @see [isNotIn]
  */
-fun <T> Assert<T>.isIn(vararg values: T) {
+fun <T> Assert<T>.isIn(vararg values: T) = given { actual ->
     if (actual in values) return
     expected(":${show(values)} to contain:${show(actual)}")
 }
@@ -83,7 +83,7 @@ fun <T> Assert<T>.isIn(vararg values: T) {
  * Asserts the value is not in the expected values, using `!in`.
  * @see [isIn]
  */
-fun <T> Assert<T>.isNotIn(vararg values: T) {
+fun <T> Assert<T>.isNotIn(vararg values: T) = given { actual ->
     if (actual !in values) return
     expected(":${show(values)} to not contain:${show(actual)}")
 }
@@ -98,7 +98,7 @@ fun <T> Assert<T>.hasToString(string: String) {
 /**
  * Asserts the value has the expected hash code from it's [hashCode].
  */
-fun <T : Any> Assert<T>.hasHashCode(hashCode: Int) {
+fun Assert<Any>.hasHashCode(hashCode: Int) {
     hashCodeFun().isEqualTo(hashCode)
 }
 
@@ -106,7 +106,7 @@ fun <T : Any> Assert<T>.hasHashCode(hashCode: Int) {
 /**
  * Asserts the value is null.
  */
-fun <T : Any> Assert<T?>.isNull() {
+fun <T : Any> Assert<T?>.isNull() = given { actual ->
     if (actual == null) return
     expected("to be null but was:${show(actual)}")
 }
@@ -121,12 +121,21 @@ fun <T : Any> Assert<T?>.isNull() {
  * }
  * ```
  */
-fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
-    if (actual != null) {
-        assert(actual, name = name).all(f)
-    } else {
-        expected("to not be null")
-    }
+@Deprecated(message = "Use isNotNull() instead", replaceWith = ReplaceWith("isNotNull().let(f)"))
+fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
+    isNotNull().let(f)
+}
+
+/**
+ * Asserts the value is not null. You can pass in an optional lambda to run additional assertions on the non-null value.
+ *
+ * ```
+ * val name: String? = ...
+ * assert(name).isNotNull().hasLength(4)
+ * ```
+ */
+fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
+    actual ?: expected("to not be null")
 }
 
 /**
@@ -138,8 +147,8 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit = {}) {
  * assert(person).prop("name", { it.name }).isEqualTo("Sue")
  * ```
  */
-fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P) =
-        assert(extract(actual), "${if (this.name != null) this.name + "." else ""}$name")
+fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
+    transform("${if (this.name != null) this.name + "." else ""}$name", extract)
 
 /**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assert("test").hasClass(String::class)`
@@ -147,7 +156,7 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P) =
  * @see [doesNotHaveClass]
  * @see [isInstanceOf]
  */
-fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
+fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) = given { actual ->
     if (kclass == actual::class) return
     expected("to have class:${show(kclass)} but was:${show(actual::class)}")
 }
@@ -159,7 +168,7 @@ fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) {
  * @see [hasClass]
  * @see [isNotInstanceOf]
  */
-fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) {
+fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual ->
     if (kclass != actual::class) return
     expected("to not have class:${show(kclass)}")
 }
@@ -170,7 +179,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) {
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
+fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual ->
     if (!kclass.isInstance(actual)) return
     expected("to not be instance of:${show(kclass)}")
 }
@@ -181,10 +190,21 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) {
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit = {}) {
+@Deprecated(message = "Use isInstanceOf(kclass) instead.", replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"))
+fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit) {
+    isInstanceOf(kclass).let(f)
+}
+
+/**
+ * Asserts the value is an instance of the expected kotlin class. Both `assert("test").isInstanceOf(String::class)` and
+ * `assert("test").isInstanceOf(Any::class)` is successful.
+ * @see [isNotInstanceOf]
+ * @see [hasClass]
+ */
+fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>) = transform(name) { actual ->
     if (kclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
-        assert(actual as S, name = name).all(f)
+        actual as S
     } else {
         expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
     }
@@ -200,8 +220,10 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) ->
  * ```
  */
 fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
-    properties.forEach {
-        assert(it.get(actual), "${if (this.name != null) this.name + "." else ""}${it.name}")
-            .isEqualTo(it.get(other))
+    all {
+        for (prop in properties) {
+            transform("${if (this.name != null) this.name + "." else ""}${prop.name}", prop::get)
+                .isEqualTo(prop.get(other))
+        }
     }
 }
