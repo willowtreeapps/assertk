@@ -153,10 +153,40 @@ fun <T> assert(actual: T, name: String? = null): Assert<T> = ValueAssert(actual,
  *   endsWith("t")
  * }
  * ```
+ * @param message An optional message to show before all failures.
+ * @param body The body to execute.
  */
-fun <T> Assert<T>.all(f: Assert<T>.() -> Unit) {
-    FailureContext.run(SoftFailure()) {
-        f()
+fun <T> Assert<T>.all(message: String = SoftFailure.defaultMessage, body: Assert<T>.() -> Unit) {
+    all(message, body, { it.isNotEmpty() })
+}
+
+/**
+ * All assertions in the given lambda are run, with their failures collected. If `failIf` returns true then a failure
+ * happens, otherwise they are ignored.
+ *
+ * ```
+ * assert("test", name = "test").all(
+ *   message = "my message",
+ *   body = {
+ *     startsWith("t")
+ *     endsWith("t")
+ *   }, {
+ *     it.size > 1
+ *   }
+ * )
+ * ```
+ *
+ * @param message An optional message to show before all failures.
+ * @param body The body to execute.
+ * @param failIf Fails if this returns true, ignores failures otherwise.
+ */
+fun <T> Assert<T>.all(
+    message: String,
+    body: Assert<T>.() -> Unit,
+    failIf: (List<AssertionError>) -> Boolean
+) {
+    FailureContext.run(SoftFailure(message, failIf)) {
+        body()
     }
 }
 
