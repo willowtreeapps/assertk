@@ -8,6 +8,6 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
         .dropWhile { it.className.startsWith("assertk") }
         .toTypedArray()
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "UnsafeCast")
-    (error as java.lang.Throwable).stackTrace = filtered
+    error.stackTrace = filtered
     throw error
 }

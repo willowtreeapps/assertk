@@ -21,7 +21,7 @@ fun <T> Assert<T>.toStringFun() = prop("toString", Any?::toString)
 /**
  * Returns an assert on the hasCode method of the value.
  */
-fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
+fun <T : Any> Assert<T>.hashCodeFun() = prop("hashCode", Any::hashCode)
 
 /**
  * Asserts the value is equal to the expected one, using `==`.
@@ -183,7 +183,6 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
     if (!kclass.isInstance(actual)) return
     expected("to not be instance of:${show(kclass)}")
 }
-
 
 /**
  * Asserts the value is an instance of the expected kotlin class. Both `assert("test").isInstanceOf(String::class)` and
