@@ -1,6 +1,6 @@
 package test.assertk
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.tableOf
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class TableTest {
             .row(1, 1)
             .row(2, 2)
             .forAll { a, b ->
-                assert(a).isEqualTo(b)
+                assertThat(a).isEqualTo(b)
                 invokeCount += 1
             }
 
@@ -28,7 +28,7 @@ class TableTest {
                 .row(1, 1)
                 .row(2, 3)
                 .forAll { a, b ->
-                    assert(a).isEqualTo(b)
+                    assertThat(a).isEqualTo(b)
                     invokeCount += 1
                 }
         }
@@ -50,7 +50,7 @@ class TableTest {
                 .row(1, 2)
                 .row(2, 3)
                 .forAll { a, b ->
-                    assert(a).isEqualTo(b)
+                    assertThat(a).isEqualTo(b)
                     invokeCount += 1
                 }
         }

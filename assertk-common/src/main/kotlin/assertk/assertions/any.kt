@@ -116,7 +116,7 @@ fun <T : Any> Assert<T?>.isNull() = given { actual ->
  *
  * ```
  * val name: String? = ...
- * assert(name).isNotNull() {
+ * assertThat(name).isNotNull() {
  *   it.hasLength(4)
  * }
  * ```
@@ -131,7 +131,7 @@ fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
  *
  * ```
  * val name: String? = ...
- * assert(name).isNotNull().hasLength(4)
+ * assertThat(name).isNotNull().hasLength(4)
  * ```
  */
 fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
@@ -144,15 +144,15 @@ fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
  * @param extract The function to extract the property value out of the value of the current assert.
  *
  * ```
- * assert(person).prop("name", { it.name }).isEqualTo("Sue")
+ * assertThat(person).prop("name", { it.name }).isEqualTo("Sue")
  * ```
  */
 fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
     transform("${if (this.name != null) this.name + "." else ""}$name", extract)
 
 /**
- * Asserts the value has the expected kotlin class. This is an exact match, so `assert("test").hasClass(String::class)`
- * is successful but `assert("test").hasClass(Any::class)` fails.
+ * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass(String::class)`
+ * is successful but `assertThat("test").hasClass(Any::class)` fails.
  * @see [doesNotHaveClass]
  * @see [isInstanceOf]
  */
@@ -163,7 +163,7 @@ fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) = given { actual ->
 
 /**
  * Asserts the value does not have the expected kotlin class. This is an exact match, so
- * `assert("test").doesNotHaveClass(String::class)` is fails but `assert("test").doesNotHaveClass(Any::class)` is
+ * `assertThat("test").doesNotHaveClass(String::class)` is fails but `assertThat("test").doesNotHaveClass(Any::class)` is
  * successful.
  * @see [hasClass]
  * @see [isNotInstanceOf]
@@ -175,7 +175,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual
 
 /**
  * Asserts the value is not an instance of the expected kotlin class. Both
- * `assert("test").isNotInstanceOf(String::class)` and `assert("test").isNotInstanceOf(Any::class)` fails.
+ * `assertThat("test").isNotInstanceOf(String::class)` and `assertThat("test").isNotInstanceOf(Any::class)` fails.
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
@@ -185,8 +185,8 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
 }
 
 /**
- * Asserts the value is an instance of the expected kotlin class. Both `assert("test").isInstanceOf(String::class)` and
- * `assert("test").isInstanceOf(Any::class)` is successful.
+ * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf(String::class)` and
+ * `assertThat("test").isInstanceOf(Any::class)` is successful.
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
@@ -196,8 +196,8 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) ->
 }
 
 /**
- * Asserts the value is an instance of the expected kotlin class. Both `assert("test").isInstanceOf(String::class)` and
- * `assert("test").isInstanceOf(Any::class)` is successful.
+ * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf(String::class)` and
+ * `assertThat("test").isInstanceOf(Any::class)` is successful.
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
@@ -216,7 +216,7 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>) = transform(name)
  * @param properties properties of the type with which to compare
  *
  * ```
- * assert(person).isEqualToWithGivenProperties(other, Person::name, Person::age)
+ * assertThat(person).isEqualToWithGivenProperties(other, Person::name, Person::age)
  * ```
  */
 fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {

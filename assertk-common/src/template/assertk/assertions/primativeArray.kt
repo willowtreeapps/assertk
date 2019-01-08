@@ -139,7 +139,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assert($NOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assertThat($NOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
 @PlatformName("$NIndexOld")
@@ -152,7 +152,7 @@ fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assert($NOf(0, 1, 2)).index(1).isPositive()
+ * assertThat($NOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
 @PlatformName("$NIndex")
@@ -181,7 +181,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
  * Asserts on each item in the $T. The given lambda will be run for each item.
  *
  * ```
- * assert($NOf("one", "two")).each {
+ * assertThat($NOf("one", "two")).each {
  *   it.hasLength(3)
  * }
  * ```
@@ -190,7 +190,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
 fun Assert<$T>.each(f: (Assert<$E>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assert(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
     }
 }

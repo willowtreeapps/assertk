@@ -1,6 +1,8 @@
 package assertk.assertions
 
-import assertk.*
+import assertk.Assert
+import assertk.PlatformName
+import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -134,7 +136,7 @@ fun <T> Assert<Array<T>>.containsAll(vararg elements: Any?) = given { actual ->
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assert(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
+ * assertThat(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
 @Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
@@ -146,7 +148,7 @@ fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assert(arrayOf(0, 1, 2)).index(1).isPositive()
+ * assertThat(arrayOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
 fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
@@ -174,7 +176,7 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) = given { actual
  * Asserts on each item in the array. The given lambda will be run for each item.
  *
  * ```
- * assert(arrayOf("one", "two")).each {
+ * assertThat(arrayOf("one", "two")).each {
  *   it.hasLength(3)
  * }
  * ```
@@ -183,7 +185,7 @@ fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) = given { actual
 fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assert(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
     }
 }

@@ -1,6 +1,6 @@
 package test.assertk.assertions
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.hasNotSameContentAs
 import assertk.assertions.hasSameContentAs
 import java.io.ByteArrayInputStream
@@ -13,12 +13,12 @@ class InputStreamTest {
 
     //region hasSameContentAs
     @Test fun hasSameContentAs_on_empty_streams_passes() {
-        assert(emptyStream()).hasSameContentAs(emptyStream())
+        assertThat(emptyStream()).hasSameContentAs(emptyStream())
     }
 
     @Test fun hasSameContentAs_on_different_streams_fails() {
         val error = assertFails {
-            assert(emptyStream()).hasSameContentAs(streamA())
+            assertThat(emptyStream()).hasSameContentAs(streamA())
         }
         assertEquals(
             "expected to have the same size, but actual stream size (0) differs from other stream size (10)",
@@ -28,7 +28,7 @@ class InputStreamTest {
 
     @Test fun hasSameContentAs_on_different_non_empty_streams_fails() {
         val error = assertFails {
-            assert(streamA()).hasSameContentAs(streamB())
+            assertThat(streamA()).hasSameContentAs(streamB())
         }
         assertEquals(
             "expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x00, size=10. Other stream: value=0x64, size=10",
@@ -37,24 +37,24 @@ class InputStreamTest {
     }
 
     @Test fun hasSameContentAs_with_same_streams_passes() {
-        assert(streamA()).hasSameContentAs(streamA())
+        assertThat(streamA()).hasSameContentAs(streamA())
     }
 
     @Test fun hasSameContent_on_different_sized_streams_fails() {
         val error = assertFails {
-            assert(prefixOfStreamA()).hasSameContentAs(streamA())
+            assertThat(prefixOfStreamA()).hasSameContentAs(streamA())
         }
         assertEquals("expected to have the same size, but actual size (5) differs from other size (10)", error.message)
 
         val error2 = assertFails {
-            assert(streamA()).hasSameContentAs(prefixOfStreamA())
+            assertThat(streamA()).hasSameContentAs(prefixOfStreamA())
         }
         assertEquals("expected to have the same size, but actual size (10) differs from other size (5)", error2.message)
     }
 
     @Test fun hasSameContentAs_streams_different_in_single_value_fails() {
         val error = assertFails {
-            assert(streamB()).hasSameContentAs(streamC())
+            assertThat(streamB()).hasSameContentAs(streamC())
         }
         assertEquals(
             "expected to have the same content, but actual stream differs at pos 0. Actual stream: value=0x66, size=10. Other stream: value=0x77, size=10",
@@ -67,30 +67,30 @@ class InputStreamTest {
     //region hasNotSameContentAs
     @Test fun hasNotSameContentAs_on_empty_streams_fails() {
         val error = assertFails {
-            assert(emptyStream()).hasNotSameContentAs(emptyStream())
+            assertThat(emptyStream()).hasNotSameContentAs(emptyStream())
         }
         assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
     @Test fun hasNotSameContentAs_on_different_streams_passes() {
-        assert(emptyStream()).hasNotSameContentAs(streamA())
+        assertThat(emptyStream()).hasNotSameContentAs(streamA())
     }
 
     @Test fun hasNotSameContentAs_on_same_streams_fails() {
         val error = assertFails {
-            assert(streamA()).hasNotSameContentAs(streamA())
+            assertThat(streamA()).hasNotSameContentAs(streamA())
         }
         assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
     @Test fun hasNotSameContentAs_on_different_non_empty_streams_passes() {
-        assert(streamA()).hasNotSameContentAs(streamB())
+        assertThat(streamA()).hasNotSameContentAs(streamB())
     }
 
     @Test fun hasNotSameContentAs_on_different_sized_streams_passes() {
-        assert(prefixOfStreamA()).hasNotSameContentAs(streamA())
-        assert(streamA()).hasNotSameContentAs(prefixOfStreamA())
-        assert(streamB()).hasNotSameContentAs(streamC())
+        assertThat(prefixOfStreamA()).hasNotSameContentAs(streamA())
+        assertThat(streamA()).hasNotSameContentAs(prefixOfStreamA())
+        assertThat(streamB()).hasNotSameContentAs(streamC())
     }
     //endregion
 }

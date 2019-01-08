@@ -1,9 +1,8 @@
 package test.assertk
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNegative
-import assertk.assertions.isPositive
 import assertk.assertions.message
 import assertk.assertions.support.show
 import kotlin.test.Test
@@ -11,8 +10,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 class AssertBlockTest {
-    val returnSubject = assert { 1 + 1 }
-    val errorSubject = assert { throw Exception("test") }
+    val returnSubject = assertThat { 1 + 1 }
+    val errorSubject = assertThat { throw Exception("test") }
 
     //region returnedValue
     @Test fun returnedValue_successful_assertion_passes() {

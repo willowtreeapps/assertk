@@ -28,7 +28,7 @@ fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
  * Asserts on each item in the iterable. The given lambda will be run for each item.
  *
  * ```
- * assert(listOf("one", "two")).each {
+ * assertThat(listOf("one", "two")).each {
  *   it.hasLength(3)
  * }
  * ```
@@ -36,7 +36,7 @@ fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
 fun <E> Assert<Iterable<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assert(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
     }
 }

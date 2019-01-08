@@ -10,7 +10,7 @@ annotation class AssertkDsl
 
 /**
  * An assertion. Holds an actual value to assertion on and an optional name.
- * @see [assert]
+ * @see [assertThat]
  */
 @AssertkDsl
 sealed class Assert<out T>(val name: String?, internal val context: Any?) {
@@ -23,7 +23,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
         return when (this) {
             is ValueAssert -> {
                 try {
-                    assert(transform(value), name)
+                    assertThat(transform(value), name)
                 } catch (e: Throwable) {
                     notifyFailure(e)
                     FailingAssert<R>(e, name, context)
@@ -59,7 +59,17 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assert(true, name = "true").isTrue()
      * ```
      */
-    abstract fun <R> assert(actual: R, name: String? = this.name): Assert<R>
+    @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"))
+    fun <R> assert(actual: R, name: String? = this.name): Assert<R> = assertThat(actual, name)
+
+    /**
+     * Asserts on the given value with an optional name.
+     *
+     * ```
+     * assertThat(true, name = "true").isTrue()
+     * ```
+     */
+    abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
 
     @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated(message = "Use `given` or `transform` to access the actual value instead")
@@ -74,13 +84,13 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
 class ValueAssert<out T> internal constructor(val value: T, name: String?, context: Any?) :
     Assert<T>(name, context) {
 
-    override fun <R> assert(actual: R, name: String?): Assert<R> =
+    override fun <R> assertThat(actual: R, name: String?): Assert<R> =
         ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
 }
 
 class FailingAssert<out T> internal constructor(val error: Throwable, name: String?, context: Any?) :
     Assert<T>(name, context) {
-    override fun <R> assert(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
+    override fun <R> assertThat(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
 }
 
 /**
@@ -105,17 +115,17 @@ sealed class AssertBlock<out T> {
         }
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
-            f(assert(value))
+            f(assertThat(value))
         }
 
         override fun doesNotThrowAnyException() {
-            assert(value)
+            assertThat(value)
         }
     }
 
     internal class Error<out T> internal constructor(private val error: Throwable) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
-            f(assert(error))
+            f(assertThat(error))
         }
 
         override fun returnedValue(f: Assert<T>.() -> Unit) {
@@ -142,13 +152,23 @@ internal expect fun showError(e: Throwable): String
  * assert(true, name = "true").isTrue()
  * ```
  */
-fun <T> assert(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
+@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"))
+fun <T> assert(actual: T, name: String? = null): Assert<T> = assertThat(actual, name)
+
+/**
+ * Asserts on the given value with an optional name.
+ *
+ * ```
+ * assertThat(true, name = "true").isTrue()
+ * ```
+ */
+fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
 
 /**
  * All assertions in the given lambda are run.
  *
  * ```
- * assert("test", name = "test").all {
+ * assertThat("test", name = "test").all {
  *   startsWith("t")
  *   endsWith("t")
  * }
@@ -205,7 +225,25 @@ fun <T> Assert<T>.all(
  * }
  * ```
  */
-fun <T> assert(f: () -> T): AssertBlock<T> {
+@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(f)"))
+fun <T> assert(f: () -> T): AssertBlock<T> = assertThat(f)
+
+/**
+ * Asserts on the given block. You can test that it returns a value or throws an exception.
+ *
+ * ```
+ * assertThat { 1 + 1 }.returnedValue {
+ *   isPositive()
+ * }
+ *
+ * assertThat {
+ *   throw Exception("error")
+ * }.thrownError {
+ *   hasMessage("error")
+ * }
+ * ```
+ */
+fun <T> assertThat(f: () -> T): AssertBlock<T> {
     return FailureContext.run(SoftFailure()) {
         @Suppress("TooGenericExceptionCaught")
         try {
@@ -229,9 +267,7 @@ fun assertAll(f: () -> Unit) {
  *
  * ```
  * val exception = catch { throw Exception("error") }
- * assert(exception).isNotNull {
- *   hasMessage("error")
- * }
+ * assertThat(exception).isNotNull().hasMessage("error")
  * ```
  */
 fun catch(f: () -> Unit): Throwable? {
