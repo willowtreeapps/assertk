@@ -81,7 +81,7 @@ class AssertBlockTest {
 
     //region throwsExpectedException
     @Test fun throwsExpectedException_passes() {
-        assert { throw IllegalStateException("you illegal!") }
+        assertThat { throw IllegalStateException("you illegal!") }
         .thrownExpectedError<IllegalStateException> {
             message().isEqualTo("you illegal!")
         }
@@ -89,7 +89,7 @@ class AssertBlockTest {
 
     @Test fun throwsExpectedException_fails() {
         val error = assertFails {
-            assert { throw IllegalStateException("you illegal!") }
+            assertThat { throw IllegalStateException("you illegal!") }
                 .thrownExpectedError<IllegalArgumentException> {
                     message().isEqualTo("you illegal!")
                 }
