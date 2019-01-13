@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.12'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.13'
 }
 ```
 
@@ -29,7 +29,7 @@ respectively.
 Simple usage is to wrap the value you are testing in `assert()` and call assertion methods on the result.
 
 ```kotlin
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.*
 
 class PersonTest {
@@ -37,13 +37,13 @@ class PersonTest {
 
     @Test
     fun testName() {
-        assert(person.name).isEqualTo("Alice")
+        assertThat(person.name).isEqualTo("Alice")
         // -> expected:<["Alice"]> but was:<["Bob"]>
     }
 
     @Test
     fun testAge() {
-        assert("age", person.age).isGreaterThan(20)
+        assertThat("age", person.age).isGreaterThan(20)
         // -> expected [age] to be greater than:<20> but was:<18>
     }
 }
@@ -57,16 +57,13 @@ Since null is a first-class concept in kotlin's type system, you need to be expl
 
 ```kotlin
 val nullString: String? = null
-assert(nullString).hasLength(4)
+assertThat(nullString).hasLength(4)
 ```
-will not compile, since `hasLength()` only makes sense on non-null values. You can use `isNotNull()` which takes an
-optional lambda to handle this.
+will not compile, since `hasLength()` only makes sense on non-null values. You can chain `isNotNull()` to handle this.
 
 ```kotlin
 val nullString: String? = null
-assert(nullString).isNotNull {
-    it.hasLength(4)
-}
+assertThat(nullString).isNotNull().hasLength(4)
 // -> expected to not be null
 ```
 This will first ensure the string is not null before running any other checks.
@@ -78,7 +75,7 @@ run even if the first one fails.
 
 ```kotlin
 val string = "Test"
-assert(string).all {
+assertThat(string).all {
     startsWith("L")
     hasLength(3)
 }
@@ -91,8 +88,8 @@ You can wrap multiple assertions in an `assertAll` to ensure all of them get run
 
 ```kotlin
 assertAll {
-    assert(false).isTrue()
-    assert(true).isFalse()
+    assertThat(false).isTrue()
+    assertThat(true).isFalse()
 }
 // -> The following 2 assertions failed:
 //    - expected to be true
@@ -107,16 +104,16 @@ The first is to wrap in a `catch` block to store the result, then assert on that
 
 ```kotlin
 val exception = catch { throw Exception("error") }
-assert(exception).isNotNull {
+assertThat(exception).isNotNull {
     it.hasMessage("wrong")
 }
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
 ```
 
-Your other option is to use an `assert` with a single lambda arg to capture the error.
+Your other option is to use an `assertThat` with a single lambda arg to capture the error.
 
 ```kotlin
-assert {
+assertThat {
     throw Exception("error")
 }.thrownError {
     hasMessage("wrong")
@@ -126,7 +123,7 @@ assert {
 
 This method also allows you to assert on return values.
 ```kotlin
-assert { 1 + 1 }.returnedValue {
+assertThat { 1 + 1 }.returnedValue {
     isNegative()
 }
 // -> expected to be negative but was:<2>
@@ -134,7 +131,7 @@ assert { 1 + 1 }.returnedValue {
 
 You can also assert that there no exceptions thrown
 ```kotlin
-assert {
+assertThat {
     aMethodThatMightThrow()
 }.doesNotThrowAnyException()
 ```
@@ -148,7 +145,7 @@ tableOf("a", "b", "result")
     .row(0, 0, 1)
     .row(1, 2, 4)
     .forAll { a, b, result ->
-        assert(a + b).isEqualTo(result)
+        assertThat(a + b).isEqualTo(result)
     }
 // -> the following 2 assertions failed:
 //    on row:(a=<0>,b=<0>,result=<1>)
@@ -165,38 +162,23 @@ One of the goals of this library is to make custom assertions easy to make. All 
 
 ```kotlin
 fun Assert<Person>.hasAge(expected: Int) {
-    assert("age", actual.age).isEqualTo(expected)
+    assertThat("age", actual.age).isEqualTo(expected)
 }
 
-assert(person).hasAge(10)
+assertThat(person).hasAge(10)
 // -> expected [age]:<10> but was:<18>
 ```
 
-If you want to customize the message, you usually want to use `expected()` and `show()`.
+For completely custom assertions, you can access the actual value with `given` and fail with `expected()` and `show()`.
 
 ```kotlin
-fun Assert<Person>.hasAge(expected: Int) {
+fun Assert<Person>.hasAge(expected: Int) = given { actual ->
     if (actual.age == expected) return
     expected("age:${show(expected)} but was age:${show(actual.age)}")
 }
 
-assert(person).hasAge(10)
+assertThat(person).hasAge(10)
 // -> expected age:<10> but was age:<18>
-```
-
-### Important Note:
-You can't assume that `expected` or `fail` will stop execution in a custom assertion. This is because it might be used
-in an `assertAll` block which ensures all assertions are run. Make sure you return early if you want execution to always
-stop.
-
-```kotlin
-fun Assert<...>.myAssertion() {
-  while (true) {
-    ...
-    expected("to be something but wasn't")
-    break // Need to break out of the loop!
-  }
-}
 ```
 
 ## Contributing to assertk
