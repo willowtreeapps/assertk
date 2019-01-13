@@ -1,13 +1,29 @@
 language: java
-
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
 script:
 - ./gradlew test
 - ./gradlew detektCheck
+deploy:
+  provider: releases
+  api_key:
+    secure: uxQlikggDFxArieO+3mYmqz3v+kr3aIc5+jUXv/w0OjbWwXWmrd1Bc6dYZWyZG3jFYEvaAZwpXRh8rWE7d/UlBpRaQOdc+Du52wIvynnOKJIDOo2qODRuynO2aPHDx2FYh7SQB6P5Ro6hqGrBN4i6fqwQDBII9RlPdh3hm+rGt+pUe5O8sRv70droMgk7/60Tvi6F6SmwGqoNVuhp27fi9yhEJFKiUCnd20DUHOlArD0C7Cy0matF7MGqOJUGWi59kj9u5jwM/g44/kUVFAEQaDF6BuonihpXL0ZC/mEICZWt5f1oOm1tvpdkoj1LOtWcx2IGyD/0JN0Ri3v0HIljEbuuPuhOymPRo/6opZF/LcmLeK5AaiPkqP0Ae++cKVrRofbqPzf4UiaI1uSfaSNfzba0ttyhXoCuInlWFPuyj1k8sxt5b5fdVwC2AZZpw2YJmeRjH2rhpc9qckOZbV0r3odmnLTg/G2qFnB/07mlXY5NL+VvLaBvDm6aqN6YYKagO99dEPlFdgPXagD+xbVURHzrAQZ/J9LSI5GjAl6lKSo5p1hsTJy1yeelSBFMiRRLG8EKs3popUnRHZxxBq6eJETIpDQq9el7GL4HdOvghPnI1AQ7D1Dg+YkEsIcuatl2hvLe/ZHtWgGW12ZlrRJqJ8yAdxvJ+7OPLTHq5x9Ru4=
+  file_glob: true
+  file: "**/build/libs/*.jar"
+  skip_cleanup: true
+  on:
+    repo: willowtreeapps/assertk
+    branch: master
+    tags: true
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_f50c3bc2eace_key -iv $encrypted_f50c3bc2eace_iv
+  -in deployment/signingkey.asc.enc -out deployment/signingkey.asc -d
+- gpg --fast-import deployment/signingkey.asc
+- openssl aes-256-cbc -K $encrypted_f50c3bc2eace_key -iv $encrypted_f50c3bc2eace_iv
+  -in deployment/gradle.properties.enc -out $HOME/.gradle/gradle.properties -d
+- ./gradlew publish
