@@ -200,7 +200,8 @@ fun <T> Assert<T>.all(message: String = SoftFailure.defaultMessage, body: Assert
  * @param body The body to execute.
  * @param failIf Fails if this returns true, ignores failures otherwise.
  */
-fun <T> Assert<T>.all(
+// Hide for now, not sure if happy with api.
+internal fun <T> Assert<T>.all(
     message: String,
     body: Assert<T>.() -> Unit,
     failIf: (List<AssertionError>) -> Boolean
