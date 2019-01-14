@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add `isDataClassEqualTo` for better messaging when comparing data classes.
+- Add `matchesPredicate` to match against a predicate function/lambda.
+- Add `atLeast` iterable assertion which passes if the assertion on each item passes at least n times.
+- Add `isCloseTo` for floats and doubles to check that a value is within a delta of what's expected.
+- Add `lines` and `bytes` to Path assertions for asserting on a file's contents.
+- Add `containsOnly` for Collection assertions.
+
+### Changed
+- Sort `containsExactly` output by index to make it easier to compare.
+- `containsAll` now includes the expected map.
+
+### Fixed
+- Number assertions now work correctly on BigInteger and BigDecimal
+- Soft assertions breaking if exception is thrown.
+
+### Deprecated
+- Deprecated `assert` in favor of `assertThat`.
+- Deprecated accessing the `actual` value on an assertion directly. Instead use `given` which will provide it in a lambda.
+
+### Breaking Changes
+- Previously deprecated methods (as of 0.10) are now errors.
 
 ## [0.12] - 2018-08-20
 
