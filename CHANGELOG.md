@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `containsOnly` for Collection assertions.
 
 ### Changed
-- Sort containsExactly output by index to make it easier to compare.
+- Sort `containsExactly` output by index to make it easier to compare.
 - `containsAll` now includes the expected map.
 
 ### Fixed
-- Number assertions now work correctl on BigInteger and BigDecimal
+- Number assertions now work correctly on BigInteger and BigDecimal
 - Soft assertions breaking if exception is thrown.
 
 ### Deprecated
