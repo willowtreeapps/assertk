@@ -26,7 +26,7 @@ respectively.
 
 ## Usage
 
-Simple usage is to wrap the value you are testing in `assert()` and call assertion methods on the result.
+Simple usage is to wrap the value you are testing in `assertThat()` and call assertion methods on the result.
 
 ```kotlin
 import assertk.assertThat
