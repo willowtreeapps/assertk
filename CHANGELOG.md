@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Deprecated
 - Deprecated `assert` in favor of `assertThat`.
 - Deprecated accessing the `actual` value on an assertion directly. Instead use `given` which will provide it in a lambda.
+- Deprecated some methods that took a lambda, replacing them with versions that chain instead.
+  * `isNotNull()`
+  * `isInstanceOf()`
+  * `index()`
+  * `key()`
 
 ### Breaking Changes
 - Previously deprecated methods (as of 0.10) are now errors.
