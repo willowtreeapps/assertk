@@ -1,6 +1,7 @@
 package assertk
 
 import assertk.assertions.support.show
+import kotlin.reflect.KProperty0
 
 /**
  * Marks the assertion DSL.
@@ -163,6 +164,22 @@ fun <T> assert(actual: T, name: String? = null): Assert<T> = assertThat(actual, 
  * ```
  */
 fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
+
+/**
+ * Asserts on the given property reference using its name, if no explicit name is specified. This method
+ * should be preferred in cases, where property references can be used, as it uses the property's name
+ * for the assertion automatically. The name may optionally be overridden, if needed.
+ *
+ * ```
+ * data class Person(val name: String)
+ *
+ * val p = Person("Hugo")
+ *
+ * assertThat(p::name).contains("u")
+ * ```
+ */
+fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
+        assertThat(getter.get(), name ?: getter.name)
 
 /**
  * All assertions in the given lambda are run.
