@@ -26,7 +26,7 @@ respectively.
 
 ## Usage
 
-Simple usage is to wrap the value you are testing in `assertThat()` and call assertion methods on the result.
+Simple usage is to wrap the value or property you are testing in `assertThat()` and call assertion methods on the result.
 
 ```kotlin
 import assertk.assertThat
@@ -43,8 +43,14 @@ class PersonTest {
 
     @Test
     fun testAge() {
-        assertThat("age", person.age).isGreaterThan(20)
+        assertThat(person.age, "age").isGreaterThan(20)
         // -> expected [age] to be greater than:<20> but was:<18>
+    }
+
+    @Test
+    fun testNameProperty() {
+        assertThat(person::name).isEqualTo("Alice")
+        // -> expected [name]:<["Alice"]> but was:<["Bob"]>
     }
 }
 ```
