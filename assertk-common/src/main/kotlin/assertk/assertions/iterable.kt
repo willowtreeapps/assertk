@@ -55,3 +55,21 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
         body = { each { item -> count++; f(item) } },
         failIf = { count - it.size < times })
 }
+/**
+ * Asserts the iterable is empty.
+ * @see [isNotEmpty]
+ * @see [isNullOrEmpty]
+ */
+fun Assert<Iterable<*>>.isEmpty() = given { actual ->
+    if (actual.none()) return
+    expected("to be empty but was:${show(actual)}")
+}
+
+/**
+ * Asserts the iterable is not empty.
+ * @see [isEmpty]
+ */
+fun Assert<Iterable<*>>.isNotEmpty() = given { actual ->
+    if (actual.any()) return
+    expected("to not be empty")
+}
