@@ -130,6 +130,29 @@ class AnyTest {
         assertEquals("expected:<[not test1, test, not test2]> to not contain:<test>", error.message)
     }
 
+    @Test fun hasToString_equal_string_passes() {
+        assertThat(subject).hasToString("test")
+    }
+
+    @Test fun hasToString_not_equal_string_fails() {
+        val error = assertFails {
+            assertThat(subject).hasToString("not test")
+        }
+        assertEquals("expected [toString]:<\"[not ]test\"> but was:<\"[]test\"> (test)", error.message)
+    }
+
+    @Test fun hasHashCode_equal_value_passes() {
+        assertThat(subject).hasHashCode(42)
+    }
+
+    @Test fun hasHashCode_not_equal_value_fails() {
+        val error = assertFails {
+            assertThat(subject).hasHashCode(1337)
+        }
+        assertEquals("expected [hashCode]:<[1337]> but was:<[42]> (test)", error.message)
+    }
+
+
     private val testObject = BasicObject("test", 99, 3.14)
 
     @Test fun isEqualToWithGivenProperties_regular_equals_fail() {
