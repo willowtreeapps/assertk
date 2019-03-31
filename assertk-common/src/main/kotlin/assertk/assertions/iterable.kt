@@ -55,6 +55,37 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
         body = { each { item -> count++; f(item) } },
         failIf = { count - it.size < times })
 }
+
+/**
+ * Asserts on each item in the iterable, passing if at most `times` items pass.
+ * The given lambda will be run for each item.
+ *
+ * ```
+ * assert(listOf(-2, -1, 1) as Iterable<Int>).atMost(2) { it -> it.isPositive() }
+ * ```
+ */
+fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
+    var count = 0
+    all(message = "expected to pass at most $times times",
+            body = { each { item -> count++; f(item)} },
+            failIf = { count - it.size > times})
+}
+
+/**
+ * Asserts on each item in the iterable, passing if exactly `times` items pass.
+ * The given lambda will be run for each item.
+ *
+ * ```
+ * assert(listOf(-1, 1, 2) as Iterable<Int>).exactly(2) { it -> it.isPositive() }
+ * ```
+ */
+fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
+    var count = 0
+    all(message = "expected to pass exactly $times times",
+            body = { each { item -> count++; f(item)} },
+            failIf = { count - it.size != times})
+}
+
 /**
  * Asserts the iterable is empty.
  * @see [isNotEmpty]

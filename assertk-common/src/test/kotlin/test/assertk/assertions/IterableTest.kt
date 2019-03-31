@@ -56,7 +56,7 @@ class IterableTest {
     //endregion
 
     //region atLeast
-    @Test fun atLeast_to_many_failures_fails() {
+    @Test fun atLeast_too_many_failures_fails() {
         val error = assertFails {
             assertThat(listOf(1, 2, 3)).atLeast(2) { it -> it.isGreaterThan(2) }
         }
@@ -68,13 +68,61 @@ class IterableTest {
         )
     }
 
-    @Test fun atLest_no_failures_passes() {
+    @Test fun atLeast_no_failures_passes() {
         assertThat(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it -> it.isGreaterThan(0) }
     }
 
     @Test fun atLeast_less_than_times_failures_passes() {
         assertThat(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it -> it.isGreaterThan(1) }
     }
+    //endregion
+
+    //region atMost
+    @Test fun atMost_too_many_failures_passes() {
+        assertThat(listOf(0, 1, 2, 3)).atMost(2) { it -> it.isGreaterThan(2) }
+    }
+
+    @Test fun atMost_more_than_times_passed_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(0) }
+        }
+        assertEquals(
+                """expected to pass at most 2 times""".trimMargin(), error.message
+        )
+    }
+
+    @Test fun atMost_less_than_times_failures_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(1) }
+    }
+    //endregion
+
+
+    //region exactly
+    @Test fun exactly_too_few_passes_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3)).exactly(2) { it -> it.isGreaterThan(2) }
+        }
+        assertEquals(
+                """expected to pass exactly 2 times (2 failures)
+            |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
+            |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
+        """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun exactly_too_many_passes_fails() {
+        val error = assertFails {
+            assertThat(listOf(5, 4, 3)).exactly(2) { it -> it.isGreaterThan(2) }
+        }
+        assertEquals(
+                """expected to pass exactly 2 times""".trimMargin(), error.message
+        )
+    }
+
+    @Test fun exactly_times_passed_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(0) }
+    }
+
     //endregion
 
     //region isEmpty
