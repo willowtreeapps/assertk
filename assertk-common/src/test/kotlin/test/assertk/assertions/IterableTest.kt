@@ -78,10 +78,6 @@ class IterableTest {
     //endregion
 
     //region atMost
-    @Test fun atMost_too_many_failures_passes() {
-        assertThat(listOf(0, 1, 2, 3)).atMost(2) { it -> it.isGreaterThan(2) }
-    }
-
     @Test fun atMost_more_than_times_passed_fails() {
         val error = assertFails {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(0) }
@@ -91,7 +87,12 @@ class IterableTest {
         )
     }
 
-    @Test fun atMost_less_than_times_failures_passes() {
+    @Test fun atMost_exactly_times_passed_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(1) }
+    }
+
+
+    @Test fun atMost_less_than_times_passed_passes() {
         assertThat(listOf(1, 2) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(1) }
     }
     //endregion
