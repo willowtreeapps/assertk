@@ -1,0 +1,42 @@
+version: 2.1
+orbs:
+  gradle: circleci/gradle@1.0.10
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/openjdk:11-jdk
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - gradle/with_cache:
+          steps:
+            - run:
+                name: Run Tests
+                command: ./gradlew test
+            - run:
+                name: Run Detekt
+                command: ./gradlew detektCheck
+            - gradle/collect_test_results:
+                test_results_path: assertk-common/build/test-results
+                reports_path: assertk-common/build/reports
+            - gradle/collect_test_results:
+                test_results_path: assertk-jvm/build/test-results
+                reports_path: assertk-jvm/build/reports
+            - gradle/collect_test_results:
+                test_results_path: assertk-js/build/test-results
+                reports_path: assertk-js/build/reports
+            - deploy:
+                command: |
+                  if [ \"${CIRCLE_BRANCH}\" == \"master\" ]; then
+                    echo \"$MAVEN_CENTRAL_SEC_RING\" | base64 -d > $HOME/secring.gpg
+                    gpg --import --batch $HOME/secring.gpg
+                    ./gradlew publish -Psonatype.username=\"$SONATYPE_USERNAME\" -Psonatype.password=\"$SONATYPE_PASSWORD\" -Psigning.keyId=34BCD878 -Psigning.password=\"$MAVEN_CENTRAL_KEY_PASSPHRASE\" -Psigning.secretKeyRingFile=$HOME/secring.gpg -Porg.gradle.parallel=false
+                  fi
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          context: opensource-maven
