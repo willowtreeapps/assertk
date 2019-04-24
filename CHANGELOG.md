@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add `assertThat` for Kotlin property based assertions.
 
+### Fixed
+- Fixed showing null expected/actual values in intellj when those values aren't provided. (#180)
 
 ## [0.13] - 2019-01-17
 
