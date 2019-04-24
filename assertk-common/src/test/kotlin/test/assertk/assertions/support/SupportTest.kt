@@ -1,8 +1,10 @@
 package test.assertk.assertions.support
 
+import assertk.assertThat
+import assertk.assertions.support.expected
 import assertk.assertions.support.show
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import com.willowtreeapps.opentest4k.*
+import kotlin.test.*
 
 class SupportTest {
     //region show
@@ -83,6 +85,34 @@ class SupportTest {
 
     @Test fun show_different_wrapper() {
         assertEquals("{42}", show(42, "{}"))
+    }
+    //endregion
+
+    //region expected
+    @Test fun expected_throws_assertion_failed_error_with_actual_and_expected_present_and_defined() {
+        val error = assertFails {
+            assertThat(0).expected("message", "expected", "actual")
+        }
+
+        assertEquals(AssertionFailedError::class, error::class)
+        error as AssertionFailedError
+        assertEquals("expected" as Any?, error.expected?.value)
+        assertEquals("actual" as Any?, error.actual?.value)
+        assertTrue(error.isExpectedDefined)
+        assertTrue(error.isActualDefined)
+    }
+
+    @Test fun expected_throws_assertion_failed_error_with_actual_and_expected_not_defined() {
+        val error = assertFails {
+            assertThat(0).expected("message")
+        }
+
+        assertEquals(AssertionFailedError::class, error::class)
+        error as AssertionFailedError
+        assertNull(error.expected)
+        assertNull(error.actual)
+        assertFalse(error.isExpectedDefined)
+        assertFalse(error.isActualDefined)
     }
     //endregion
 }

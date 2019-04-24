@@ -91,11 +91,21 @@ fun fail(error: AssertionError): Nothing {
     throw error
 }
 
+internal val NONE: Any = Any()
+
 /**
  * Fail the test with the given message.
  */
-fun fail(message: String, expected: Any? = null, actual: Any? = null): Nothing {
-    throw AssertionFailedError(message, expected, actual, null)
+fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
+    if (expected === NONE && actual === NONE) {
+        throw AssertionFailedError(message)
+    } else {
+        throw AssertionFailedError(
+            message,
+            if (expected === NONE) null else expected,
+            if (actual === NONE) null else actual
+        )
+    }
 }
 
 fun notifyFailure(e: Throwable) {
