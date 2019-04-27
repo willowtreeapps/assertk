@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNegative
 import assertk.assertions.message
 import assertk.assertions.support.show
+import assertk.showError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -25,6 +26,13 @@ class AssertBlockTest {
             }
         }
         assertEquals("expected to be negative but was:<2>", error.message)
+    }
+
+    @Test fun returnedValue_exception_in_block_fails() {
+        val error = assertFails {
+            errorSubject.returnedValue {  }
+        }
+        assertEquals("expected value but threw:${show(Exception("test"))}", error.message!!.lineSequence().first())
     }
     //endregion
 
@@ -60,6 +68,14 @@ class AssertBlockTest {
     //region doesNotThrowAnyException
     @Test fun doesNotThrowAnyException_no_exception_passes() {
         returnSubject.doesNotThrowAnyException()
+    }
+
+    @Test fun doesNotThrowAnyException_exception_fails() {
+        val error = assertFails {
+            errorSubject.doesNotThrowAnyException()
+        }
+
+        assertEquals("expected to not throw an exception but threw:${show(Exception("test"))}", error.message!!.lineSequence().first())
     }
     //endregion
 }

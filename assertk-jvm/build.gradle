@@ -34,13 +34,14 @@ jacocoTestReport {
         xml.enabled false
         csv.enabled false
     }
+    sourceDirectories.from("../assertk-common/src/main/kotlin")
 }
 
 jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.61
+                minimum = 0.62
             }
         }
     }
