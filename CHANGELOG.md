@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.14] - 2019-04-27
 ### Added
 - Add `assertThat` for Kotlin property based assertions.
 
 ### Fixed
 - Fixed showing null expected/actual values in intellj when those values aren't provided. (#180)
+- Fixed IndexOutOfBoundsException in containsExactly differ (#185)
+- Fixed block asserts not respecting assertAll
 
 ## [0.13] - 2019-01-17
 
