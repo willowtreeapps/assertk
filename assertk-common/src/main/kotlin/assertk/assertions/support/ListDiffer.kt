@@ -84,7 +84,7 @@ internal object ListDiffer {
                 k - 1
             }
 
-            val prevX = v[prevK]
+            val prevX = v.ringIndex(prevK)
             val prevY = prevX - prevK
 
             while (x > prevX && y > prevY) {
