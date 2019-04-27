@@ -26,6 +26,19 @@ class ListTest {
         )
     }
 
+    // https://github.com/willowtreeapps/assertk/issues/185
+    @Test fun containsExactly_elements_in_different_order_fails2() {
+        val error = assertFails {
+            assertThat(listOf("1", "2", "3")).containsExactly("2", "3", "1")
+        }
+        assertEquals(
+            """expected to contain exactly:
+                | at index:0 unexpected:<"1">
+                | at index:2 expected:<"1">
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsExactly_same_indexes_are_together() {
         val error = assertFails {
             assertThat(listOf(1, 1)).containsExactly(2, 2)
