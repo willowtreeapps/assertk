@@ -1,13 +1,17 @@
 package test.assertk
 
-import assertk.*
+import assertk.all
+import assertk.assertAll
+import assertk.assertThat
 import assertk.assertions.endsWith
 import assertk.assertions.isEqualTo
 import assertk.assertions.startsWith
+import assertk.assertions.support.show
+import assertk.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
-import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class AssertAllTest {
     //region all
@@ -96,6 +100,52 @@ class AssertAllTest {
             fail(AssertionError("Fail"))
         }
         assertEquals("Fail", error.message)
+    }
+
+    @Test fun assertAll_fails_multiple_block_thrownError_assertions() {
+        val error = assertFails {
+            assertAll {
+                assertThat { 1 + 1 }.thrownError { }
+                assertThat { 2 + 3 }.thrownError { }
+            }
+        }
+        assertEquals(
+            """The following assertions failed (2 failures)
+              |${"\t"}expected exception but was:<2>
+              |${"\t"}expected exception but was:<5>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun assertAll_fails_multiple_block_returnedValue_assertions() {
+        val error = assertFails {
+            assertAll {
+                assertThat { throw Exception("error1") }.returnedValue {}
+                assertThat { throw Exception("error2") }.returnedValue {}
+            }
+        }
+        assertEquals(
+            "The following assertions failed (2 failures)".trimMargin(),
+            error.message!!.lineSequence().first()
+        )
+        assertTrue(error.message!!.contains("\texpected value but threw:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\texpected value but threw:${show(Exception("error2"))}"))
+    }
+
+    @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
+        val error = assertFails {
+            assertAll {
+                assertThat { throw Exception("error1") }.doesNotThrowAnyException()
+                assertThat { throw Exception("error2") }.doesNotThrowAnyException()
+            }
+        }
+        assertEquals(
+            "The following assertions failed (2 failures)".trimMargin(),
+            error.message!!.lineSequence().first()
+        )
+        assertTrue(error.message!!.contains("\texpected to not throw an exception but threw:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\texpected to not throw an exception but threw:${show(Exception("error2"))}"))
     }
     //endregion
 }

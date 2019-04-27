@@ -2,6 +2,7 @@ package test.assertk.assertions.support
 
 import assertk.assertThat
 import assertk.assertions.support.expected
+import assertk.assertions.support.fail
 import assertk.assertions.support.show
 import com.willowtreeapps.opentest4k.*
 import kotlin.test.*
@@ -85,6 +86,51 @@ class SupportTest {
 
     @Test fun show_different_wrapper() {
         assertEquals("{42}", show(42, "{}"))
+    }
+    //endregion
+
+    //region fail
+    @Test fun fail_expected_and_actual_the_same_shows_simple_message_without_diff() {
+        val error = assertFails {
+            assertThat(0).fail(1, 1)
+        }
+
+        assertEquals("expected:<1> but was:<1>", error.message)
+    }
+
+    @Test fun fail_expected_null_shows_simple_message_without_diff() {
+        val error = assertFails {
+            assertThat(0).fail(null, 1)
+        }
+
+        assertEquals("expected:<null> but was:<1>", error.message)
+    }
+
+    @Test fun fail_actual_null_shows_simple_message_without_diff() {
+        val error = assertFails {
+            assertThat(0).fail(1, null)
+        }
+
+        assertEquals("expected:<1> but was:<null>", error.message)
+    }
+
+    @Test fun fail_short_expected_and_actual_different_shows_simple_diff() {
+        val error = assertFails {
+            assertThat(0).fail("test1", "test2")
+        }
+
+        assertEquals("expected:<\"test[1]\"> but was:<\"test[2]\">", error.message)
+    }
+
+    @Test fun fail_long_expected_and_actual_different_shows_compact_diff() {
+        val error = assertFails {
+            assertThat(0).fail(
+                "this is a long prefix 1 this is a long suffix",
+                "this is a long prefix 2 this is a long suffix"
+            )
+        }
+
+        assertEquals("expected:<...is is a long prefix [1] this is a long suff...> but was:<...is is a long prefix [2] this is a long suff...>", error.message)
     }
     //endregion
 

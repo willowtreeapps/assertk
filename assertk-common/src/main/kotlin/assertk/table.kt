@@ -10,7 +10,7 @@ private class TableFailure(private val table: Table) : Failure {
     }
 
     override fun invoke() {
-        if (!failures.isEmpty()) {
+        if (failures.isNotEmpty()) {
             FailureContext.failure.fail(compositeErrorMessage(failures))
         }
     }
