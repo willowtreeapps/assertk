@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNegative
 import assertk.assertions.message
 import assertk.assertions.support.show
-import assertk.showError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
