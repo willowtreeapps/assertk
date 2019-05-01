@@ -55,6 +55,24 @@ class IterableTest {
     }
     //endregion
 
+    //region none
+    @Test fun none_empty_list_passes() {
+        assertThat(emptyList<Int>() as Iterable<Int>).none { it -> it.isEqualTo(1) }
+    }
+
+    @Test fun none_matching_content_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2) as Iterable<Int>).none { it -> it.isGreaterThan(0) }
+        }
+        assertEquals("expected none to pass", error.message
+        )
+    }
+
+    @Test fun each_non_matching_content_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it -> it.isLessThan(2) }
+    }
+    //endregion
+
     //region atLeast
     @Test fun atLeast_too_many_failures_fails() {
         val error = assertFails {

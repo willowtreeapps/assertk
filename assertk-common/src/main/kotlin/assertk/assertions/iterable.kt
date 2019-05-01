@@ -2,7 +2,6 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -38,6 +37,24 @@ fun <E> Assert<Iterable<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
         actual.forEachIndexed { index, item ->
             f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
         }
+    }
+}
+
+/**
+ * Asserts on each item in the iterable, passing if none of the items pass.
+ * The given lambda will be run for each item.
+ *
+ * ```
+ * assertThat(listOf("one", "two")).none {
+ *   it.hasLength(2)
+ * }
+ * ```
+ */
+fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) = given { actual ->
+    if (actual.count() > 0) {
+        all(message = "expected none to pass",
+                body = { each { item -> f(item) } },
+                failIf = { it.isEmpty() })
     }
 }
 
