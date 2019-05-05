@@ -1,60 +1,96 @@
+plugins {
+    id 'maven-publish'
+    id 'signing'
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.30'
+    id 'org.jetbrains.dokka' version '0.9.17'
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC14'
+    id 'org.ajoberstar.git-publish' version '2.1.1'
+}
+
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.14'
+    version '0.15-SNAPSHOT'
 }
 
-buildscript {
-    ext.kotlin_version = '1.2.50'
-    ext.dokka_version = '0.9.16'
-    ext.detekt_version = '1.0.0.RC5'
+ext {
+    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
+}
 
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-        classpath "me.tatarka.gradle:pom:1.0"
-        classpath 'org.ajoberstar:gradle-git-publish:1.0.1'
+configurations.all {
+    // Don't cache SNAPSHOT deps
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    if (!isReleaseVersion) {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
     }
 }
 
-subprojects {
-    apply plugin: "io.gitlab.arturbosch.detekt"
+task compileTemplates(type: TemplateTask) {
+    inputDir = file('src/template')
+    outputDir = file("$buildDir/generated/template")
+}
 
-    buildscript {
-        repositories {
-            jcenter()
-            mavenCentral()
-            maven { url "https://plugins.gradle.org/m2/" }
+task compileTestTemplates(type: TemplateTask) {
+    inputDir = file('src/testTemplate')
+    outputDir = file("$buildDir/generated/testTemplate")
+}
+
+
+kotlin {
+    jvm()
+    js()
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+                implementation 'com.willowtreeapps.opentest4k:opentest4k:1.1.1-SNAPSHOT'
+            }
+            kotlin.srcDirs += files(compileTemplates)
         }
-    }
-
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-
-    detekt {
-        version = detekt_version
-
-        profile("main") {
-            input = "$projectDir/src/main/kotlin"
-            config = "$projectDir/../detekt.yml"
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+            kotlin.srcDirs += files(compileTestTemplates)
         }
-
-        profile("test") {
-            input = "$projectDir/src/test/kotlin"
-            config = "$projectDir/../detekt-test.yml"
+        jvmMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                compileOnly kotlin('reflect')
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation project('java-interop')
+                implementation kotlin('test-junit')
+                implementation kotlin('reflect')
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
         }
     }
 }
 
-apply plugin: 'org.ajoberstar.git-publish'
+[compileKotlinMetadata, compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
+[compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
+
+task test {
+    dependsOn(jvmTest, jsTest)
+}
 
 gitPublish {
     repoUri = 'git@github.com:willowtreeapps/assertk.git'
@@ -64,3 +100,154 @@ gitPublish {
         into 'javadoc'
     }
 }
+
+task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
+    input = files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin)
+    config = files("detekt.yml")
+    reports {
+        xml.destination = file("$buildDir/reports/detektMain/detekt.xml")
+        html.destination = file("$buildDir/reports/detektMain/detekt.html")
+    }
+}
+
+task detektTest(type: io.gitlab.arturbosch.detekt.Detekt) {
+    input = files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin)
+    config = files("detekt-test.yml")
+    reports {
+        xml.destination = file("$buildDir/reports/detektTest/detekt.xml")
+        html.destination = file("$buildDir/reports/detektTest/detekt.html")
+    }
+}
+
+tasks.detekt.dependsOn(detektMain, detektTest)
+
+task dokkaCommon(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/common"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+}
+
+task dokkaJs(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["JS", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/js"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+        platforms = ["JS"]
+    }
+}
+
+task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["JVM", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/jvm"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
+        platforms = ["JVM"]
+    }
+}
+
+task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
+    archiveClassifier.set('javadoc')
+    from "$buildDir/javadoc/common"
+}
+
+task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
+    archiveClassifier.set('javadoc')
+    from "$buildDir/javadoc/js"
+}
+
+task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
+    archiveClassifier.set('javadoc')
+    from "$buildDir/javadoc/jvm"
+}
+
+task emptySourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+}
+
+publishing {
+    repositories {
+        maven {
+            if (project.ext.isReleaseVersion) {
+                url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            } else {
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            }
+
+            credentials {
+                username = project.findProperty('sonatype.username')
+                password = project.findProperty('sonatype.password')
+            }
+        }
+    }
+
+    publications {
+        js {
+            artifact dokkaJavadocJsJar
+        }
+        jvm {
+            artifact dokkaJavadocJvmJar
+        }
+        metadata {
+            artifact dokkaJavadocCommonJar
+        }
+        kotlinMultiplatform {
+            // Source jars are only created for platforms, not the common artifact.
+            artifact emptySourcesJar
+            artifact dokkaJavadocCommonJar
+        }
+
+        all {
+            def siteUrl = 'https://github.com/willowtreeapps/opentest4k'
+            def gitUrl = 'https://github.com/willowtreeapps/opentest4k.git'
+
+            pom {
+                name = project.name
+                description = 'assertions for kotlin inspired by assertj'
+                url = siteUrl
+
+                scm {
+                    url = siteUrl
+                    connection = gitUrl
+                    developerConnection = gitUrl
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'evant'
+                        name = 'Evan Tatarka'
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    publishing.publications.all { sign it }
+}
+

@@ -1,7 +1,5 @@
 rootProject.name = 'assertk'
 
-include 'assertk-common'
-include 'assertk-jvm'
-include 'assertk-js'
+include 'java-interop'
 
-enableFeaturePreview('IMPROVED_POM_SUPPORT')
+enableFeaturePreview('GRADLE_METADATA')
