@@ -16,6 +16,11 @@ ext {
     isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
 }
 
+configurations.all {
+    // Don't cache SNAPSHOT deps
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 repositories {
     mavenCentral()
     jcenter()
