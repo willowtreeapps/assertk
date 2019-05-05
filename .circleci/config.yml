@@ -1,39 +1,98 @@
 version: 2.1
 orbs:
   gradle: circleci/gradle@1.0.10
+_defaults: &defaults
+  working_directory: ~/code
+  environment:
+    JVM_OPTS: -Xmx3200m
+_gradle_checksum: &gradle_checksum
+  name: Generate Cache Checksum
+  command: >-
+    find . -name 'build.gradle' | sort | xargs cat | shasum | awk '{print
+    $1}' > /tmp/gradle_cache_seed
 jobs:
-  build:
-    working_directory: ~/code
+  build-linux:
     docker:
       - image: circleci/openjdk:8-jdk
-    environment:
-      JVM_OPTS: -Xmx3200m
+    <<: *defaults
     steps:
       - checkout
-      - gradle/with_cache:
-          steps:
-            - run:
-                name: Run Checks
-                command: ./gradlew check
-            - gradle/collect_test_results:
-                test_results_path: assertk-common/build/test-results
-                reports_path: assertk-common/build/reports
-            - gradle/collect_test_results:
-                test_results_path: assertk-jvm/build/test-results
-                reports_path: assertk-jvm/build/reports
-            - gradle/collect_test_results:
-                test_results_path: assertk-js/build/test-results
-                reports_path: assertk-js/build/reports
-            - deploy:
-                command: |
-                  if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                    echo "$MAVEN_CENTRAL_SEC_RING" | base64 -d > $HOME/secring.gpg
-                    gpg --import --batch $HOME/secring.gpg
-                    ./gradlew publish -Psonatype.username="$SONATYPE_USERNAME" -Psonatype.password="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg -Porg.gradle.parallel=false
-                  fi
+      # We can't use gradle/with_cache because it does not include the .konan dir where there kotlin native compiler lives
+      - run:
+          <<: *gradle_checksum
+      - restore_cache:
+          key: >-
+            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-linux
+      - run:
+          name: Run Tests
+          command: ./gradlew check
+      - gradle/collect_test_results:
+          test_results_path: build/test-results
+          reports_path: build/reports
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "$MAVEN_CENTRAL_SEC_RING" | base64 -d > $HOME/secring.gpg
+              gpg --import --batch $HOME/secring.gpg
+              ./gradlew publish -Psonatype.username="$SONATYPE_USERNAME" -Psonatype.password="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg -Porg.gradle.parallel=false
+            fi
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+            - ~/.konan
+          key: >-
+            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-linux
+  build-macos:
+    macos:
+      xcode: "10.2.1"
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: homebrew
+      - run:
+          name: Download Gpg
+          command: brew install gpg
+      - run:
+          name: Download openjdk
+          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+      - save_cache:
+          paths:
+            - /usr/local/Homebrew
+          key: homebrew
+      # We can't use gradle/with_cache because it incorrectly uses the same cache key from build-linux
+      - run:
+          <<: *gradle_checksum
+      - restore_cache:
+          key: >-
+            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-macos
+      - run:
+          name: Run Tests
+          command: ./gradlew macosTest iosTest
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "$MAVEN_CENTRAL_SEC_RING" | base64 -D -o $HOME/secring.gpg
+              gpg --import --batch $HOME/secring.gpg
+              ./gradlew publishIosArm64PublicationToMavenRepository publishIosX64PublicationToMavenRepository publishIosX64PublicationToMavenRepository publishMacosPublicationToMavenRepository -Psonatype.username="$SONATYPE_USERNAME" -Psonatype.password="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg -Porg.gradle.parallel=false
+            fi
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+            - ~/.konan
+          key: >-
+            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-macos
 workflows:
   version: 2
   build:
     jobs:
-      - build:
+      - build-linux:
+          context: opensource-maven
+      - build-macos:
           context: opensource-maven

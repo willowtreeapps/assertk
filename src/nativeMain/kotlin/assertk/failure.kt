@@ -1,5 +1,8 @@
 package assertk
 
+import kotlin.native.concurrent.ThreadLocal
+import kotlin.native.concurrent.AtomicInt
+
 @Suppress("NOTHING_TO_INLINE")
 internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
     throw error
@@ -21,11 +24,32 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
  * limitations under the License.
  */
 actual open class ThreadLocalRef<T> actual constructor() {
-    private var localValue: T? = null
+    private val threadLocalId = ThreadLocalIdCounter.nextThreadLocalId()
 
-    actual fun get(): T? = localValue
+    actual fun get(): T? {
+        return if (ThreadLocalState.threadLocalMap.containsKey(threadLocalId)) {
+            @Suppress("UNCHECKED_CAST")
+            ThreadLocalState.threadLocalMap[threadLocalId] as T
+        } else {
+            null
+        }
+    }
 
     actual fun set(value: T?) {
-        localValue = value
+        if (value == null) {
+            ThreadLocalState.threadLocalMap.remove(threadLocalId)
+        } else {
+            ThreadLocalState.threadLocalMap.put(threadLocalId, value)
+        }
     }
+}
+
+@ThreadLocal
+private object ThreadLocalState {
+    val threadLocalMap = HashMap<Int, Any>()
+}
+
+private object ThreadLocalIdCounter {
+    val threadLocalId = AtomicInt(0)
+    fun nextThreadLocalId(): Int = threadLocalId.addAndGet(1)
 }
