@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id 'maven-publish'
     id 'signing'
@@ -43,6 +45,10 @@ task compileTestTemplates(type: TemplateTask) {
 kotlin {
     jvm()
     js()
+    linuxX64('linux')
+    iosArm64()
+    iosX64()
+    macosX64('macos')
 
     sourceSets {
         commonMain {
@@ -82,14 +88,40 @@ kotlin {
                 implementation kotlin('test-js')
             }
         }
+        nativeMain {
+            dependsOn(commonMain)
+        }
+        nativeTest {
+            dependsOn(commonTest)
+        }
+        [linuxMain, iosArm64Main, iosX64Main, macosMain].each {
+            it.dependsOn(nativeMain)
+        }
+        [linuxTest, iosArm64Test, iosX64Test, macosTest].each {
+            it.dependsOn(nativeTest)
+        }
     }
 }
 
 [compileKotlinMetadata, compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
 [compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
 
+task iosTest(type: Exec) {
+    onlyIf { Os.isFamily(Os.FAMILY_MAC) }
+    dependsOn(linkTestDebugExecutableIosX64)
+    def testExecutable = linkTestDebugExecutableIosX64.outputFile
+    inputs.file(testExecutable)
+    configure {
+        commandLine("xcrun", "simctl", "spawn", "iPhone 8", testExecutable.get())
+    }
+}
+
+task nativeTest {
+    dependsOn(linuxTest, macosTest, iosTest)
+}
+
 task test {
-    dependsOn(jvmTest, jsTest)
+    dependsOn(jvmTest, jsTest, nativeTest)
 }
 
 gitPublish {
@@ -162,6 +194,21 @@ task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
     }
 }
 
+task dokkaNative(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Native", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/native"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.nativeMain.kotlin.srcDirs[0]
+        platforms = ["Native"]
+    }
+}
+
 task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
     archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/common"
@@ -175,6 +222,11 @@ task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
 task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
     archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/jvm"
+}
+
+task dokkaJavadocNativeJar(type: Jar, dependsOn: dokkaNative) {
+    archiveClassifier.set('javadoc')
+    from "$buildDir/javadoc/native"
 }
 
 task emptySourcesJar(type: Jar) {
@@ -203,6 +255,15 @@ publishing {
         }
         jvm {
             artifact dokkaJavadocJvmJar
+        }
+        linux {
+            artifact dokkaJavadocNativeJar
+        }
+        // These aren't available if you aren't on macos
+        if (Os.isFamily(Os.FAMILY_MAC)) {
+            [iosArm64, iosX64, macos].each {
+                it.artifact dokkaJavadocNativeJar
+            }
         }
         metadata {
             artifact dokkaJavadocCommonJar

@@ -7,25 +7,31 @@ import com.willowtreeapps.opentest4k.MultipleFailuresError
  * Assertions are run in a failure context which captures failures to report them.
  */
 internal object FailureContext {
-    internal var failure: Failure = SimpleFailure()
+    private val failureRef = ThreadLocalRef<Failure>().apply {
+        value = SimpleFailure()
+    }
 
     /**
      * Run the given block of assertions in the given context. If we are already in a context a new one will not be
      * created.
      */
     fun <T> run(failure: Failure, f: () -> T): T {
-        if (this.failure is SimpleFailure) {
-            val tmp = this.failure
-            this.failure = failure
+        val currentFailure = failureRef.value
+        if (currentFailure is SimpleFailure) {
+            failureRef.value = failure
             try {
                 return f()
             } finally {
-                this.failure = tmp
+                failureRef.value = currentFailure
                 failure()
             }
         } else {
             return f()
         }
+    }
+
+    fun fail(error: AssertionError) {
+        failureRef.value!!.fail(error)
     }
 }
 
@@ -67,7 +73,7 @@ internal class SoftFailure(
 
     override fun invoke() {
         if (failIf(failures)) {
-            FailureContext.failure.fail(compositeErrorMessage(failures))
+            FailureContext.fail(compositeErrorMessage(failures))
         }
     }
 
@@ -109,7 +115,33 @@ fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
 }
 
 fun notifyFailure(e: Throwable) {
-    FailureContext.failure.fail(if (e is AssertionError) e else AssertionError(e))
+    FailureContext.fail(if (e is AssertionError) e else AssertionError(e))
 }
 
 internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothing
+
+/*
+ * Copyright (C) 2018 Touchlab, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+expect open class ThreadLocalRef<T>() {
+    fun get(): T?
+    fun set(value: T?)
+}
+
+var <T> ThreadLocalRef<T>.value: T?
+    get() = get()
+    set(value) {
+        set(value)
+    }
