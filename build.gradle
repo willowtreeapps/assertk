@@ -43,8 +43,16 @@ task compileTestTemplates(type: TemplateTask) {
 
 
 kotlin {
-    jvm()
-    js()
+    jvm {
+        compilations.main.kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+    js {
+        compilations.main.kotlinOptions {
+            moduleKind = "umd"
+        }
+    }
     linuxX64('linux')
     iosArm64()
     iosX64()
