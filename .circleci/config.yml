@@ -13,7 +13,7 @@ _gradle_checksum: &gradle_checksum
 jobs:
   build-linux:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
     <<: *defaults
     steps:
       - checkout
@@ -58,7 +58,7 @@ jobs:
           command: brew install gpg
       - run:
           name: Download openjdk
-          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk11
       - save_cache:
           paths:
             - /usr/local/Homebrew
