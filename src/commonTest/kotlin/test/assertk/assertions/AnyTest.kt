@@ -176,7 +176,6 @@ class AnyTest {
         assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
     }
 
-
     @Test fun prop_passes() {
         assertThat(subject).prop("str") { it.str }.isEqualTo("test")
     }

@@ -117,19 +117,18 @@ private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?
  * @param properties properties of the type with which been ignored
  *
  * ```
- * assertThat(person).isEqualToIgnoringGivenFields(other, Person::name, Person::age)
+ * assertThat(person).isEqualToIgnoringGivenProperties(other, Person::name, Person::age)
  * ```
  */
-fun <T : Any> Assert<T>.isEqualToIgnoringGivenFields(other: T, vararg properties: KProperty1<T, Any>) {
+fun <T : Any> Assert<T>.isEqualToIgnoringGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
     all {
         for (prop in other::class.members) {
             if (prop is KProperty1<*, *> && !properties.contains(prop)) {
                 @Suppress("UNCHECKED_CAST")
                 val force = prop as KProperty1<T, Any>
                 transform("${if (this.name != null) this.name + "." else ""}${prop.name}", force::get)
-                        .isEqualTo(prop.get(other))
+                    .isEqualTo(prop.get(other))
             }
         }
-
     }
 }
