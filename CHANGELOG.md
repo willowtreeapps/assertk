@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Add `isEqualToIgnoringGivenProperties` for the JVM
+- Add support for kotlin native
+- Add `none` assertion for iterables
+
+### Changed
+- Minimum supported kotlin version is 1.30.0
+- Common artifact changed from `assertk-common` to `assertk`
+
 ## [0.14] - 2019-04-27
+
 ### Added
 - Add `assertThat` for Kotlin property based assertions.
 
