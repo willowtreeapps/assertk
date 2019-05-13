@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Minimum supported kotlin version is 1.30.0
 - Common artifact changed from `assertk-common` to `assertk`
+- All previous deprecations on now at level error
+
+### Removed
+- Deprecated `containsExactly` for maps
 
 ## [0.14] - 2019-04-27
 

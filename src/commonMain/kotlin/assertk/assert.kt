@@ -60,7 +60,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assert(true, name = "true").isTrue()
      * ```
      */
-    @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"))
+    @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"), level = DeprecationLevel.ERROR)
     fun <R> assert(actual: R, name: String? = this.name): Assert<R> = assertThat(actual, name)
 
     /**
@@ -73,7 +73,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
     abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
 
     @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated(message = "Use `given` or `transform` to access the actual value instead")
+    @Deprecated(message = "Use `given` or `transform` to access the actual value instead", level = DeprecationLevel.ERROR)
     val actual: T
         get() = when (this) {
             is ValueAssert -> value
@@ -153,7 +153,7 @@ internal expect fun showError(e: Throwable): String
  * assert(true, name = "true").isTrue()
  * ```
  */
-@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"))
+@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"), level = DeprecationLevel.ERROR)
 fun <T> assert(actual: T, name: String? = null): Assert<T> = assertThat(actual, name)
 
 /**
@@ -243,7 +243,7 @@ internal fun <T> Assert<T>.all(
  * }
  * ```
  */
-@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(f)"))
+@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(f)"), level = DeprecationLevel.ERROR)
 fun <T> assert(f: () -> T): AssertBlock<T> = assertThat(f)
 
 /**
