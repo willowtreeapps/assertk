@@ -60,7 +60,7 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = trans
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-@Deprecated(message = "Use isInstanceOf(jclass) instead.", replaceWith = ReplaceWith("isInstanceOf(jclass).let(f)"))
+@Deprecated(message = "Use isInstanceOf(jclass) instead.", replaceWith = ReplaceWith("isInstanceOf(jclass).let(f)"), level = DeprecationLevel.ERROR)
 fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit) {
     isInstanceOf(jclass).let(f)
 }

@@ -143,7 +143,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  * ```
  */
 @PlatformName("$NIndexOld")
-@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
+@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"), level = DeprecationLevel.ERROR)
 fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
     index(index).let(f)
 }

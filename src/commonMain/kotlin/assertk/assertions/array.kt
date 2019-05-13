@@ -139,7 +139,7 @@ fun <T> Assert<Array<T>>.containsAll(vararg elements: Any?) = given { actual ->
  * assertThat(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
-@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"))
+@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"), level = DeprecationLevel.ERROR)
 fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
     index(index).let(f)
 }

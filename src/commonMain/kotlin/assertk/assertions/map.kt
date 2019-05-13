@@ -121,20 +121,6 @@ fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given {
 }
 
 /**
- * Asserts the map contains exactly the expected elements. There must not be any extra elements.
- * @see [containsAll]
- */
-@Deprecated(
-    message = "Use containsOnly instead.",
-    replaceWith = ReplaceWith("containsOnly(*elements)"),
-    level = DeprecationLevel.ERROR
-)
-@PlatformName("mapContainsExactly")
-fun <K, V> Assert<Map<K, V>>.containsExactly(vararg elements: Pair<K, V>) {
-    containsOnly(*elements)
-}
-
-/**
  * Asserts the map contains only the expected elements. There must not be any extra elements.
  * @see [containsAll]
  */
@@ -151,7 +137,7 @@ fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given {
  * assertThat(mapOf("key" to "value")).key("key") { it.isEqualTo("value") }
  * ```
  */
-@Deprecated(message = "Use key(key) instead.", replaceWith = ReplaceWith("key(key).let(f)"))
+@Deprecated(message = "Use key(key) instead.", replaceWith = ReplaceWith("key(key).let(f)"), level = DeprecationLevel.ERROR)
 fun <K, V> Assert<Map<K, V>>.key(key: K, f: (Assert<V>) -> Unit) {
     key(key).let(f)
 }
