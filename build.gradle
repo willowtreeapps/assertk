@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.15'
+    version '0.16-SNAPSHOT'
 }
 
 ext {
