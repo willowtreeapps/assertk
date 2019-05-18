@@ -187,3 +187,13 @@ assertThat(person).hasAge(10)
 
 ## Contributing to assertk
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/master/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/master/code-of-conduct.md).
+
+## Known Issues
+
+1. You get `java.lang.AssertionError: java.lang.NoClassDefFoundError: org/opentest4j/AssertionFailedError` when running a failing test from intellij.
+
+    I've filed a [bug](https://youtrack.jetbrains.com/issue/IDEA-214533) about this, it works correctly when running on the cmdline with gradle. To workaround, you can explicilty add `opentest4j` as a dependency.
+
+   ```groovy
+   testComple 'org.opentest4j:opentest4j:1.1.1'
+   ```
