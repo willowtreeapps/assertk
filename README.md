@@ -15,13 +15,13 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.14'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.15'
 }
 ```
 
 ### Javascript/Common
 
-Replace dependency on `assertk-jvm` with `assertk-js` or `assertk-common` to use it in JavaScript and common projects,
+Replace dependency on `assertk-jvm` with `assertk-js` or `assertk` to use it in JavaScript and common projects,
 respectively.
 
 ## Usage

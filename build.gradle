@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.15-SNAPSHOT'
+    version '0.15'
 }
 
 ext {
@@ -62,7 +62,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-                implementation 'com.willowtreeapps.opentest4k:opentest4k:1.1.1-SNAPSHOT'
+                implementation 'com.willowtreeapps.opentest4k:opentest4k:1.1.1'
             }
             kotlin.srcDirs += files(compileTemplates)
         }
