@@ -1,0 +1,49 @@
+// Configures testing for JS modules
+
+apply plugin: 'com.moowork.node'
+
+task populateNodeModules(type: Copy, dependsOn: compileKotlinJs) {
+    from compileKotlinJs.destinationDir
+    into "${buildDir}/node_modules"
+
+    afterEvaluate {
+        configurations.jsTestRuntimeClasspath.each {
+            from zipTree(it.absolutePath).matching {
+                include '*.js'
+                include '*.js.map'
+            }
+        }
+    }
+}
+
+node {
+    version = "8.11.4"
+    download = true
+}
+
+task installMocha(type: NpmTask) {
+    def mocha_version = '5.2.0'
+
+    inputs.property('mocha_version', mocha_version)
+    outputs.dir('node_modules')
+
+    args = ['install', "mocha@${mocha_version}"]
+}
+
+task mochaTest(type: NodeTask, dependsOn: [compileTestKotlinJs, populateNodeModules, installMocha]) {
+    script = file('node_modules/mocha/bin/mocha')
+    args = [compileTestKotlinJs.outputFile]
+}
+
+// https://github.com/srs/gradle-node-plugin/issues/301
+repositories.whenObjectAdded {
+    if (it instanceof IvyArtifactRepository) {
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+clean {
+    delete 'node_modules'
+}
