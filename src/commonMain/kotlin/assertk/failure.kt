@@ -16,6 +16,10 @@ internal object FailureContext {
      * created.
      */
     fun <T> run(failure: Failure, f: () -> T): T {
+        return runInline(failure, f)
+    }
+
+    inline fun <T> runInline(failure: Failure, f: () -> T): T {
         val currentFailure = failureRef.value
         if (currentFailure is SimpleFailure) {
             failureRef.value = failure

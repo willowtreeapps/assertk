@@ -60,7 +60,11 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assert(true, name = "true").isTrue()
      * ```
      */
-    @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"), level = DeprecationLevel.ERROR)
+    @Deprecated(
+        "Renamed assertThat",
+        replaceWith = ReplaceWith("assertThat(actual, name)"),
+        level = DeprecationLevel.ERROR
+    )
     fun <R> assert(actual: R, name: String? = this.name): Assert<R> = assertThat(actual, name)
 
     /**
@@ -73,7 +77,10 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
     abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
 
     @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated(message = "Use `given` or `transform` to access the actual value instead", level = DeprecationLevel.ERROR)
+    @Deprecated(
+        message = "Use `given` or `transform` to access the actual value instead",
+        level = DeprecationLevel.ERROR
+    )
     val actual: T
         get() = when (this) {
             is ValueAssert -> value
@@ -179,7 +186,8 @@ fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(act
  * ```
  */
 fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
-        assertThat(getter.get(), name ?: getter.name)
+    assertThat(getter.get(), name ?: getter.name)
+
 
 /**
  * All assertions in the given lambda are run.
