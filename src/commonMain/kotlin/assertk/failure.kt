@@ -1,33 +1,28 @@
 package assertk
 
+import assertk.Failure.Companion.soft
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import com.willowtreeapps.opentest4k.MultipleFailuresError
+import kotlin.js.JsName
 
 /**
  * Assertions are run in a failure context which captures failures to report them.
  */
 internal object FailureContext {
     private val failureRef = ThreadLocalRef<Failure>().apply {
-        value = SimpleFailure()
+        value = SimpleFailure
     }
 
-    /**
-     * Run the given block of assertions in the given context. If we are already in a context a new one will not be
-     * created.
-     */
-    fun <T> run(failure: Failure, f: () -> T): T {
-        val currentFailure = failureRef.value
-        if (currentFailure is SimpleFailure) {
+    fun pushFailure(failure: Failure): Failure {
+        val previousFailure = failureRef.value!!
+        if (previousFailure == SimpleFailure) {
             failureRef.value = failure
-            try {
-                return f()
-            } finally {
-                failureRef.value = currentFailure
-                failure()
-            }
-        } else {
-            return f()
         }
+        return previousFailure
+    }
+
+    fun popFailure(previousFailure: Failure) {
+        failureRef.value = previousFailure
     }
 
     fun fail(error: AssertionError) {
@@ -35,7 +30,12 @@ internal object FailureContext {
     }
 }
 
-internal interface Failure {
+/**
+ * Interface for reporting failures. They should be collected by [fail] and then triggered by [invoke]. The default
+ * implementation throws an exception immediately. The [soft] implementation will collect failures and throw an
+ * exception when [invoke] is called.
+ */
+interface Failure {
     /**
      * Record a failure. Depending on the implementation this may throw an exception or collect the failure for later.
      */
@@ -46,12 +46,53 @@ internal interface Failure {
      */
     operator fun invoke() {
     }
+
+    /**
+     * Pushes this failure making it the current context for use with [fail]. You should prefer using [run] instead as
+     * it will properly pop the failure for you.
+     *
+     * @return The previous failure. This should be passed to [pop].
+     */
+    fun pushFailure(): Failure {
+        return FailureContext.pushFailure(this)
+    }
+
+    /**
+     * Pops this failure making the current context throw immediately again. You should prefer using [run] instead as
+     * it will properly call this for you.
+     *
+     * @param previousFailure The previous failure, returned from [push]
+     */
+    fun popFailure(previousFailure: Failure) {
+        FailureContext.popFailure(previousFailure)
+    }
+
+    companion object {
+        /**
+         * Returns a new soft failure.
+         */
+        fun soft(): Failure = SoftFailure()
+    }
+}
+
+/**
+ * Run the given block of assertions with tis Failure. If we are already in a Failure a new one will not be
+ * created.
+ */
+inline fun <T> Failure.run(f: () -> T): T {
+    val previousFailure = pushFailure()
+    try {
+        return f()
+    } finally {
+        popFailure(previousFailure)
+        invoke()
+    }
 }
 
 /**
  * Failure that immediately thrown an exception.
  */
-internal class SimpleFailure : Failure {
+internal object SimpleFailure : Failure {
     override fun fail(error: AssertionError) {
         failWithNotInStacktrace(error)
     }

@@ -87,7 +87,7 @@ sealed class Table(internal val columnNames: Array<String>) {
     }
 
     protected fun forAll(f: TableFun) {
-        FailureContext.run(TableFailure(this)) {
+        TableFailure(this).run {
             for (i in 0 until rows.size) {
                 index = i
                 f(rows[i])

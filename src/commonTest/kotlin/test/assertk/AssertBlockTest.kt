@@ -29,7 +29,7 @@ class AssertBlockTest {
 
     @Test fun returnedValue_exception_in_block_fails() {
         val error = assertFails {
-            errorSubject.returnedValue {  }
+            errorSubject.returnedValue { }
         }
         assertEquals("expected value but threw:${show(Exception("test"))}", error.message!!.lineSequence().first())
     }
@@ -74,7 +74,10 @@ class AssertBlockTest {
             errorSubject.doesNotThrowAnyException()
         }
 
-        assertEquals("expected to not throw an exception but threw:${show(Exception("test"))}", error.message!!.lineSequence().first())
+        assertEquals(
+            "expected to not throw an exception but threw:${show(Exception("test"))}",
+            error.message!!.lineSequence().first()
+        )
     }
     //endregion
 }
