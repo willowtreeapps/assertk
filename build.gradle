@@ -47,6 +47,9 @@ kotlin {
         compilations.main.kotlinOptions {
             jvmTarget = "1.8"
         }
+        compilations.test.kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
     js {
         compilations.main.kotlinOptions {

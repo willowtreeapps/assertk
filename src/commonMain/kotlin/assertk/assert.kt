@@ -60,7 +60,11 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assert(true, name = "true").isTrue()
      * ```
      */
-    @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"), level = DeprecationLevel.ERROR)
+    @Deprecated(
+        "Renamed assertThat",
+        replaceWith = ReplaceWith("assertThat(actual, name)"),
+        level = DeprecationLevel.ERROR
+    )
     fun <R> assert(actual: R, name: String? = this.name): Assert<R> = assertThat(actual, name)
 
     /**
@@ -73,7 +77,10 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
     abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
 
     @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated(message = "Use `given` or `transform` to access the actual value instead", level = DeprecationLevel.ERROR)
+    @Deprecated(
+        message = "Use `given` or `transform` to access the actual value instead",
+        level = DeprecationLevel.ERROR
+    )
     val actual: T
         get() = when (this) {
             is ValueAssert -> value
@@ -98,6 +105,18 @@ class FailingAssert<out T> internal constructor(val error: Throwable, name: Stri
  * An assertion on a block of code. Can assert that it either throws and error or returns a value.
  */
 sealed class AssertBlock<out T> {
+
+    companion object {
+        inline fun <T> from(f: () -> T): AssertBlock<T> {
+            @Suppress("TooGenericExceptionCaught")
+            return try {
+                Value(f())
+            } catch (e: Throwable) {
+                Error(e)
+            }
+        }
+    }
+
     /**
      * Runs the given lambda if the block throws an error, otherwise fails.
      */
@@ -110,7 +129,7 @@ sealed class AssertBlock<out T> {
 
     abstract fun doesNotThrowAnyException()
 
-    internal class Value<out T> internal constructor(private val value: T) : AssertBlock<T>() {
+    class Value<out T>(private val value: T) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
             notifyFailure(AssertionError("expected exception but was:${show(value)}"))
         }
@@ -124,7 +143,7 @@ sealed class AssertBlock<out T> {
         }
     }
 
-    internal class Error<out T> internal constructor(private val error: Throwable) : AssertBlock<T>() {
+    class Error<out T>(private val error: Throwable) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
             f(assertThat(error))
         }
@@ -179,7 +198,7 @@ fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(act
  * ```
  */
 fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
-        assertThat(getter.get(), name ?: getter.name)
+    assertThat(getter.get(), name ?: getter.name)
 
 /**
  * All assertions in the given lambda are run.
@@ -223,7 +242,7 @@ internal fun <T> Assert<T>.all(
     body: Assert<T>.() -> Unit,
     failIf: (List<AssertionError>) -> Boolean
 ) {
-    FailureContext.run(SoftFailure(message, failIf)) {
+    SoftFailure(message, failIf).run {
         body()
     }
 }
@@ -261,22 +280,13 @@ fun <T> assert(f: () -> T): AssertBlock<T> = assertThat(f)
  * }
  * ```
  */
-fun <T> assertThat(f: () -> T): AssertBlock<T> {
-    return FailureContext.run(SoftFailure()) {
-        @Suppress("TooGenericExceptionCaught")
-        try {
-            AssertBlock.Value(f())
-        } catch (e: Throwable) {
-            AssertBlock.Error(e)
-        }
-    }
-}
+inline fun <T> assertThat(f: () -> T): AssertBlock<T> = Failure.soft().run { AssertBlock.from(f) }
 
 /**
  * Runs all assertions in the given lambda and reports any failures.
  */
-fun assertAll(f: () -> Unit) {
-    FailureContext.run(SoftFailure(), f)
+inline fun assertAll(f: () -> Unit) {
+    Failure.soft().run(f)
 }
 
 /**
