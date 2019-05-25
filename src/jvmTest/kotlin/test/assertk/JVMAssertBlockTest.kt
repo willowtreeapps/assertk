@@ -1,7 +1,13 @@
 package test.assertk
 
 import assertk.assertThat
+import assertk.assertions.hasMessage
+import assertk.assertions.isEqualTo
 import assertk.assertions.isPositive
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -12,7 +18,6 @@ class JVMAssertBlockTest {
 
     private val errorSubject = assertThat { throw Exception("test") }
 
-    //region thrown error
     @Test fun returnedValue_exception_fails_with_stacktrace() {
         val error = assertFails {
             errorSubject.returnedValue {
@@ -36,8 +41,39 @@ class JVMAssertBlockTest {
         assertNotNull(error.message)
         val errorLines = error.message!!.split("\n")
         assertTrue(errorLines.size > 1)
-        assertEquals("expected to not throw an exception but threw:<${exceptionPackageName}Exception: test>", errorLines[0])
+        assertEquals(
+            "expected to not throw an exception but threw:<${exceptionPackageName}Exception: test>",
+            errorLines[0]
+        )
         assertEquals("${exceptionPackageName}Exception: test", errorLines[1])
     }
-    //endregion
+
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @Test fun returnedValue_works_in_coroutine_test() {
+        runBlocking {  }
+        runBlockingTest {
+            assertThat {
+                asyncReturnValue()
+            }.returnedValue { isEqualTo(1) }
+        }
+    }
+
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @Test fun returnedValue_exception_works_in_coroutine_test() {
+        runBlockingTest {
+            assertThat {
+                asyncThrows()
+            }.thrownError { hasMessage("test") }
+        }
+    }
+
+    private suspend fun asyncReturnValue(): Int {
+        delay(10000)
+        return 1
+    }
+
+    private suspend fun asyncThrows() {
+        delay(10000)
+        throw  Exception("test")
+    }
 }

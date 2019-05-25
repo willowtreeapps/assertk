@@ -65,6 +65,16 @@ kotlin {
     iosX64()
     macosX64('macos')
 
+    targets.all {
+        if (name != 'metadata') {
+            compilations.test.kotlinOptions {
+                freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+            }
+        }
+    }
+
+    def kotlin_coroutines_version = '1.2.1'
+
     sourceSets {
         commonMain {
             dependencies {
@@ -91,6 +101,7 @@ kotlin {
                 implementation project('java-interop')
                 implementation kotlin('test-junit')
                 implementation kotlin('reflect')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
             }
         }
         jsMain {
@@ -104,6 +115,7 @@ kotlin {
         jsTest {
             dependencies {
                 implementation kotlin('test-js')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlin_coroutines_version"
             }
         }
         nativeMain {
@@ -117,6 +129,26 @@ kotlin {
         }
         [linuxTest, iosArm64Test, iosX64Test, macosTest].each {
             it.dependsOn(nativeTest)
+        }
+        linuxTest {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-linuxx64:$kotlin_coroutines_version"
+            }
+        }
+        iosArm64Test {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosarm64:$kotlin_coroutines_version"
+            }
+        }
+        iosX64Test {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosx64:$kotlin_coroutines_version"
+            }
+        }
+        macosTest {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-macosx64:$kotlin_coroutines_version"
+            }
         }
     }
 }
