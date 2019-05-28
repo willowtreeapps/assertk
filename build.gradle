@@ -12,7 +12,7 @@ plugins {
 
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.16'
+    version '0.17-SNAPSHOT'
 }
 
 ext {
@@ -92,6 +92,9 @@ kotlin {
         }
         jsMain {
             dependencies {
+		// kotlin-js doesn't handle this as a transitive dep correctly
+		// when it's scoped as runtime.
+                api 'com.willowtreeapps.opentest4k:opentest4k-js:1.1.2'
                 implementation kotlin('stdlib-js')
             }
         }
