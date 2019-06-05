@@ -35,7 +35,8 @@ internal object FailureContext {
  * implementation throws an exception immediately. The [soft] implementation will collect failures and throw an
  * exception when [invoke] is called.
  */
-interface Failure {
+@PublishedApi
+internal interface Failure {
     /**
      * Record a failure. Depending on the implementation this may throw an exception or collect the failure for later.
      */
@@ -76,10 +77,11 @@ interface Failure {
 }
 
 /**
- * Run the given block of assertions with tis Failure. If we are already in a Failure a new one will not be
+ * Run the given block of assertions with its Failure. If we are already in a Failure a new one will not be
  * created.
  */
-inline fun <T> Failure.run(f: () -> T): T {
+@PublishedApi
+internal inline fun <T> Failure.run(f: () -> T): T {
     val previousFailure = pushFailure()
     try {
         return f()

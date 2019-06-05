@@ -88,15 +88,15 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
         }
 }
 
-@AssertkDsl
-class ValueAssert<out T> internal constructor(val value: T, name: String?, context: Any?) :
+@PublishedApi
+internal class ValueAssert<out T>(val value: T, name: String?, context: Any?) :
     Assert<T>(name, context) {
 
     override fun <R> assertThat(actual: R, name: String?): Assert<R> =
         ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
 }
 
-class FailingAssert<out T> internal constructor(val error: Throwable, name: String?, context: Any?) :
+internal class FailingAssert<out T>(val error: Throwable, name: String?, context: Any?) :
     Assert<T>(name, context) {
     override fun <R> assertThat(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
 }
@@ -129,7 +129,8 @@ sealed class AssertBlock<out T> {
 
     abstract fun doesNotThrowAnyException()
 
-    class Value<out T>(private val value: T) : AssertBlock<T>() {
+    @PublishedApi
+    internal class Value<out T>(private val value: T) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
             notifyFailure(AssertionError("expected exception but was:${show(value)}"))
         }
@@ -143,7 +144,8 @@ sealed class AssertBlock<out T> {
         }
     }
 
-    class Error<out T>(private val error: Throwable) : AssertBlock<T>() {
+    @PublishedApi
+    internal class Error<out T>(private val error: Throwable) : AssertBlock<T>() {
         override fun thrownError(f: Assert<Throwable>.() -> Unit) {
             f(assertThat(error))
         }
