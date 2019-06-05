@@ -64,7 +64,8 @@ class IterableTest {
         val error = assertFails {
             assertThat(listOf(1, 2) as Iterable<Int>).none { it -> it.isGreaterThan(0) }
         }
-        assertEquals("expected none to pass", error.message
+        assertEquals(
+            "expected none to pass", error.message
         )
     }
 
@@ -101,7 +102,7 @@ class IterableTest {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).atMost(2) { it -> it.isGreaterThan(0) }
         }
         assertEquals(
-                """expected to pass at most 2 times""".trimMargin(), error.message
+            """expected to pass at most 2 times""".trimMargin(), error.message
         )
     }
 
@@ -122,7 +123,7 @@ class IterableTest {
             assertThat(listOf(1, 2, 3)).exactly(2) { it -> it.isGreaterThan(2) }
         }
         assertEquals(
-                """expected to pass exactly 2 times (2 failures)
+            """expected to pass exactly 2 times (2 failures)
             |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
         """.trimMargin(), error.message
@@ -134,7 +135,7 @@ class IterableTest {
             assertThat(listOf(5, 4, 3)).exactly(2) { it -> it.isGreaterThan(2) }
         }
         assertEquals(
-                """expected to pass exactly 2 times""".trimMargin(), error.message
+            """expected to pass exactly 2 times""".trimMargin(), error.message
         )
     }
 
@@ -146,11 +147,12 @@ class IterableTest {
 
     //region isEmpty
     @Test fun empty_itreable_passes_is_empty() {
-        val empty : List<Int> = emptyList()
+        val empty: List<Int> = emptyList()
         assertThat(empty as Iterable<Int>).isEmpty()
     }
+
     @Test fun non_empty_itreable_fails_is_empty() {
-        val nonEmpty : List<Int> = listOf(1)
+        val nonEmpty: List<Int> = listOf(1)
         val error = assertFails {
             assertThat(nonEmpty as Iterable<Int>).isEmpty()
         }
@@ -163,12 +165,78 @@ class IterableTest {
         val nonEmpty: List<Int> = listOf(1)
         assertThat(nonEmpty as Iterable<Int>).isNotEmpty()
     }
+
     @Test fun empty_itreable_fails_is_not_empty() {
-        val empty : List<Int> = emptyList()
+        val empty: List<Int> = emptyList()
         val error = assertFails {
             assertThat(empty as Iterable<Int>).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
     }
     //endregion
+
+    //region extracting
+    @Test fun single_extracting_function_passes() {
+        assertThat(listOf("one", "two")).extracting { it.length }.containsExactly(3, 3)
+    }
+
+    @Test fun single_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(listOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
+        }
+        assertEquals(
+            """expected to contain exactly:
+            | at index:0 expected:<2>
+            | at index:0 unexpected:<3>
+            | at index:1 expected:<2>
+            | at index:1 unexpected:<3> (["one", "two"])""".trimMargin(), error.message
+        )
+    }
+
+    @Test fun pair_extracting_function_passes() {
+        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            .extracting(Thing::one, Thing::two)
+            .containsExactly("one" to 1, "two" to 2)
+    }
+
+    @Test fun pair_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+                .extracting(Thing::one, Thing::two)
+                .containsExactly("one" to 2, "two" to 1)
+        }
+        assertEquals(
+            """expected to contain exactly:
+            | at index:0 expected:<("one", 2)>
+            | at index:0 unexpected:<("one", 1)>
+            | at index:1 expected:<("two", 1)>
+            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun triple_extracting_function_passes() {
+        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            .extracting(Thing::one, Thing::two, Thing::three)
+            .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
+    }
+
+    @Test fun triple_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+                .extracting(Thing::one, Thing::two, Thing::three)
+                .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
+        }
+        assertEquals(
+            """expected to contain exactly:
+            | at index:0 expected:<("one", 1, '2')>
+            | at index:0 unexpected:<("one", 1, '1')>
+            | at index:1 expected:<("two", 2, '3')>
+            | at index:1 unexpected:<("two", 2, '2')> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            error.message
+        )
+    }
+    //region extracting
+
+    data class Thing(val one: String, val two: Int, val three: Char)
 }
