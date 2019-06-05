@@ -173,7 +173,7 @@ gitPublish {
     repoUri = 'git@github.com:willowtreeapps/assertk.git'
     branch = 'gh-pages'
     contents {
-        from 'assertk-jvm/build/docs'
+        from 'build/javadoc/jvm'
         into 'javadoc'
     }
 }
@@ -226,7 +226,7 @@ task dokkaJs(type: org.jetbrains.dokka.gradle.DokkaTask) {
 
 task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
     impliedPlatforms = ["JVM", "Common"]
-    kotlinTasks { [] }
+    kotlinTasks { [compileKotlinJvm] }
     outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc/jvm"
     sourceRoot {

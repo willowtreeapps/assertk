@@ -55,7 +55,7 @@ class PersonTest {
 }
 ```
 
-You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk-jvm/assertk.assertions/index.html).
+You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk.assertions/index.html).
 (Due to a limitation in dokka this is currently only the jvm assertions)
 
 ### Nullability
