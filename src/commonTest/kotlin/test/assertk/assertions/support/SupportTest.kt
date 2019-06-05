@@ -77,6 +77,14 @@ class SupportTest {
         assertEquals("<{1=5, 2=6}>", show(mapOf(1 to 5, 2 to 6)))
     }
 
+    @Test fun show_pair() {
+        assertEquals("<(\"one\", '2')>", show("one" to '2'))
+    }
+
+    @Test fun show_triple() {
+        assertEquals("<(\"one\", '2', 3)>", show(Triple("one", '2', 3)))
+    }
+
     @Test fun show_custom_type() {
         val other = object : Any() {
             override fun toString(): String = "different"
@@ -130,7 +138,10 @@ class SupportTest {
             )
         }
 
-        assertEquals("expected:<...is is a long prefix [1] this is a long suff...> but was:<...is is a long prefix [2] this is a long suff...>", error.message)
+        assertEquals(
+            "expected:<...is is a long prefix [1] this is a long suff...> but was:<...is is a long prefix [2] this is a long suff...>",
+            error.message
+        )
     }
     //endregion
 
