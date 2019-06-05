@@ -3,7 +3,9 @@ package test.assertk
 import assertk.assertThat
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
 import assertk.assertions.isPositive
+import assertk.catch
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -50,7 +52,6 @@ class JVMAssertBlockTest {
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_works_in_coroutine_test() {
-        runBlocking {  }
         runBlockingTest {
             assertThat {
                 asyncReturnValue()
@@ -64,6 +65,16 @@ class JVMAssertBlockTest {
             assertThat {
                 asyncThrows()
             }.thrownError { hasMessage("test") }
+        }
+    }
+
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @Test fun catch_works_in_coroutine_test() {
+        runBlockingTest {
+            val error = catch {
+                asyncThrows()
+            }
+            assertThat(error).isNotNull().hasMessage("test")
         }
     }
 

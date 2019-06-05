@@ -300,8 +300,8 @@ inline fun assertAll(f: () -> Unit) {
  * assertThat(exception).isNotNull().hasMessage("error")
  * ```
  */
-fun catch(f: () -> Unit): Throwable? {
-    @Suppress("TooGenericExceptionCaught")
+@Suppress("TooGenericExceptionCaught")
+inline fun catch(f: () -> Unit): Throwable? {
     try {
         f()
         return null
