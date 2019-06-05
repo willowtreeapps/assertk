@@ -280,4 +280,69 @@ class ArrayTest {
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }
     //endregion
+
+    //region extracting
+    @Test fun single_extracting_function_passes() {
+        assertThat(arrayOf("one", "two")).extracting { it.length }.containsExactly(3, 3)
+    }
+
+    @Test fun single_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(arrayOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
+        }
+        assertEquals(
+            "expected to contain exactly:\n" +
+                    " at index:0 expected:<2>\n" +
+                    " at index:0 unexpected:<3>\n" +
+                    " at index:1 expected:<2>\n" +
+                    " at index:1 unexpected:<3> ([\"one\", \"two\"])", error.message
+        )
+    }
+
+    @Test fun pair_extracting_function_passes() {
+        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            .extracting(Thing::one, Thing::two)
+            .containsExactly("one" to 1, "two" to 2)
+    }
+
+    @Test fun pair_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(arrayOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+                .extracting(Thing::one, Thing::two)
+                .containsExactly("one" to 2, "two" to 1)
+        }
+        assertEquals(
+            """expected to contain exactly:
+            | at index:0 expected:<("one", 2)>
+            | at index:0 unexpected:<("one", 1)>
+            | at index:1 expected:<("two", 1)>
+            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun triple_extracting_function_passes() {
+        assertThat(arrayOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            .extracting(Thing::one, Thing::two, Thing::three)
+            .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
+    }
+
+    @Test fun triple_extracting_function_fails() {
+        val error = assertFails {
+            assertThat(arrayOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+                .extracting(Thing::one, Thing::two, Thing::three)
+                .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
+        }
+        assertEquals(
+            """expected to contain exactly:
+            | at index:0 expected:<("one", 1, '2')>
+            | at index:0 unexpected:<("one", 1, '1')>
+            | at index:1 expected:<("two", 2, '3')>
+            | at index:1 unexpected:<("two", 2, '2')> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            error.message
+        )
+    }
+    //region extracting
+
+    data class Thing(val one: String, val two: Int, val three: Char)
 }

@@ -189,3 +189,47 @@ fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
         }
     }
 }
+
+/**
+ * Extracts a value of from each item in the array, allowing you to assert on a list of those values.
+ *
+ * ```
+ * assertThat(people)
+ *   .extracting(Person::name)
+ *   .contains("Sue", "Bob")
+ * ```
+ */
+fun <E, R> Assert<Array<E>>.extracting(f1: (E) -> R): Assert<List<R>> = transform { actual ->
+    actual.map(f1)
+}
+
+/**
+ * Extracts two values of from each item in the array, allowing you to assert on a list of paris of those values.
+ *
+ * ```
+ * assertThat(people)
+ *   .extracting(Person::name, Person::age)
+ *   .contains("Sue" to 20, "Bob" to 22)
+ * ```
+ */
+fun <E, R1, R2> Assert<Array<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<List<Pair<R1, R2>>> =
+    transform { actual ->
+        actual.map { f1(it) to f2(it) }
+    }
+
+/**
+ * Extracts three values from each item in the array, allowing you to assert on a list of triples of those values.
+ *
+ * ```
+ * assertThat(people)
+ *   .extracting(Person::name, Person::age, Person::address)
+ *   .contains(Triple("Sue", 20, "123 Street"), Triple("Bob", 22, "456 Street")
+ * ```
+ */
+fun <E, R1, R2, R3> Assert<Array<E>>.extracting(
+    f1: (E) -> R1,
+    f2: (E) -> R2,
+    f3: (E) -> R3
+): Assert<List<Triple<R1, R2, R3>>> = transform { actual ->
+    actual.map { Triple(f1(it), f2(it), f3(it)) }
+}
