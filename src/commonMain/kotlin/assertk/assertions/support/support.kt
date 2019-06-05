@@ -36,6 +36,8 @@ internal fun display(value: Any?): String {
         is ShortArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is ByteArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is FloatArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is Pair<*, *> -> "(${display(value.first)}, ${display(value.second)})"
+        is Triple<*, *, *> -> "(${display(value.first)}, ${display(value.second)}, ${display(value.third)})"
         else -> displayPlatformSpecific(value)
     }
 }
