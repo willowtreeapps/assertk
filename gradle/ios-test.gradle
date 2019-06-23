@@ -2,10 +2,9 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 task iosTest(type: Exec) {
     onlyIf { Os.isFamily(Os.FAMILY_MAC) }
-    dependsOn(linkTestDebugExecutableIosX64)
-    def testExecutable = linkTestDebugExecutableIosX64.outputFile
-    inputs.file(testExecutable)
-    configure {
-        commandLine("xcrun", "simctl", "spawn", "iPhone 8", testExecutable.get())
-    }
+    dependsOn(iosX64TestBinaries)
+    def testFile = kotlin.targets.iosX64.binaries.getTest("DEBUG").outputFile
+    inputs.file(testFile)
+    commandLine("xcrun", "simctl", "spawn", "iPhone 8", testFile)
 }
+
