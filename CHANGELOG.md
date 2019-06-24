@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Add `extracting` to allow extracing a value for each item in an array.
+
+### Changed
+- Minimum supported kotlin version is 1.3.40
+- `assertThat {}` and `catch {}` are inlined for better coroutine support
+- Improved disaply of `Pair` and `Triple`
+
 ## [0.17] 2019-05-29
 
 ### Fixed
@@ -22,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `none` assertion for iterables
 
 ### Changed
-- Minimum supported kotlin version is 1.30.0
+- Minimum supported kotlin version is 1.3.30
 - Common artifact changed from `assertk-common` to `assertk`
 - All previous deprecations on now at level error
 
