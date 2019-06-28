@@ -37,6 +37,20 @@ class ThrowableTest {
     }
     //endregion
 
+    //region containsMessage
+    @Test fun messageContains_similar_message_passes() {
+        assertThat(subject).messageContains("es")
+    }
+
+    @Test fun messageContains_different_message_fails() {
+        val error = assertFails {
+            assertThat(subject).messageContains("not")
+        }
+        assertEquals("expected [message] to contain:<\"not\"> but was:<\"test\"> ($subject)", error.message)
+
+    }
+    //endregion
+
     //region hasCause
     @Test fun hasCause_same_type_and_message_passes() {
         assertThat(subject).hasCause(Exception("cause"))
