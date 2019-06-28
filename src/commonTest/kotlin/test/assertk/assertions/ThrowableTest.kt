@@ -37,7 +37,7 @@ class ThrowableTest {
     }
     //endregion
 
-    //region containsMessage
+    //region messageContains
     @Test fun messageContains_similar_message_passes() {
         assertThat(subject).messageContains("es")
     }
