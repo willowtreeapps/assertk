@@ -27,6 +27,13 @@ fun Assert<Throwable>.hasMessage(message: String?) {
 }
 
 /**
+ * Asserts the throwable contains the expected text
+ */
+fun Assert<Throwable>.messageContains(text: String) {
+    message().isNotNull().contains(text)
+}
+
+/**
  * Asserts the throwable is similar to the expected cause, checking the type and message.
  * @see [hasNoCause]
  */
