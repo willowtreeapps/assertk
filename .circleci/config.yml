@@ -13,7 +13,7 @@ _gradle_checksum: &gradle_checksum
 jobs:
   build-linux:
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: circleci/openjdk:8-jdk
     <<: *defaults
     steps:
       - checkout
