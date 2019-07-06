@@ -3,7 +3,6 @@ package assertk
 import assertk.Failure.Companion.soft
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import com.willowtreeapps.opentest4k.MultipleFailuresError
-import kotlin.js.JsName
 
 /**
  * Assertions are run in a failure context which captures failures to report them.

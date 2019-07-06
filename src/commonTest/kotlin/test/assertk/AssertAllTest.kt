@@ -1,13 +1,8 @@
 package test.assertk
 
-import assertk.all
-import assertk.assertAll
-import assertk.assertThat
-import assertk.assertions.endsWith
-import assertk.assertions.isEqualTo
-import assertk.assertions.startsWith
+import assertk.*
+import assertk.assertions.*
 import assertk.assertions.support.show
-import assertk.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -105,14 +100,14 @@ class AssertAllTest {
     @Test fun assertAll_fails_multiple_block_thrownError_assertions() {
         val error = assertFails {
             assertAll {
-                assertThat { 1 + 1 }.thrownError { }
-                assertThat { 2 + 3 }.thrownError { }
+                assertThat { 1 + 1 }.isFailure()
+                assertThat { 2 + 3 }.isFailure()
             }
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected exception but was:<2>
-              |${"\t"}expected exception but was:<5>
+              |${"\t"}expected failure but was success:<2>
+              |${"\t"}expected failure but was success:<5>
             """.trimMargin(),
             error.message
         )
@@ -121,31 +116,31 @@ class AssertAllTest {
     @Test fun assertAll_fails_multiple_block_returnedValue_assertions() {
         val error = assertFails {
             assertAll {
-                assertThat { throw Exception("error1") }.returnedValue {}
-                assertThat { throw Exception("error2") }.returnedValue {}
+                assertThat { throw Exception("error1") }.isSuccess()
+                assertThat { throw Exception("error2") }.isSuccess()
             }
         }
         assertEquals(
-            "The following assertions failed (2 failures)".trimMargin(),
+            "The following assertions failed (2 failures)",
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\texpected value but threw:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\texpected value but threw:${show(Exception("error2"))}"))
+        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error2"))}"))
     }
 
     @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
         val error = assertFails {
             assertAll {
-                assertThat { throw Exception("error1") }.doesNotThrowAnyException()
-                assertThat { throw Exception("error2") }.doesNotThrowAnyException()
+                assertThat { throw Exception("error1") }.isSuccess()
+                assertThat { throw Exception("error2") }.isSuccess()
             }
         }
         assertEquals(
             "The following assertions failed (2 failures)".trimMargin(),
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\texpected to not throw an exception but threw:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\texpected to not throw an exception but threw:${show(Exception("error2"))}"))
+        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error2"))}"))
     }
     //endregion
 }

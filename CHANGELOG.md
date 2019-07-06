@@ -8,11 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add `extracting` to allow extracing a value for each item in an array.
+- Add `Assert<Result<T>>.isSuccess()` and `Assert<Result<T>>.isFailure()` to replace `AssertBlock` assertions.
 
 ### Changed
 - Minimum supported kotlin version is 1.3.40
 - `assertThat {}` and `catch {}` are inlined for better coroutine support
-- Improved disaply of `Pair` and `Triple`
+- Improved display of `Pair` and `Triple`
+
+### Breaking Changes
+- `AssertBlock` is removed and it's methods have been turned into extension functions on `Assert<Result<T>>`.
+You can migrate by:
+  1. Alt-enter on `returnedValue`, `thrownError`, and `doesNotThrowAnyException` and select import.
+  2. Alt-enter on the deprecated version of above and choose replace with...
+  3. If your expression only has 1 value, you can replace ex: `isSucess().all { isEqualTo(1) }` with `isSuccess().isEqualTo(1)`
 
 ## [0.17] 2019-05-29
 

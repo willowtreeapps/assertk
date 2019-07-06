@@ -5,15 +5,18 @@ import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.catch
+import assertk.returnedValue
+import assertk.thrownError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlin.test.Test
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Test
 
-class NativeAssertBlockTest {
+class JVMAssertLambdaTest {
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_works_in_coroutine_test() {
-        runBlocking {
+        runBlockingTest {
             assertThat {
                 asyncReturnValue()
             }.returnedValue { isEqualTo(1) }
@@ -22,7 +25,7 @@ class NativeAssertBlockTest {
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_exception_works_in_coroutine_test() {
-        runBlocking {
+        runBlockingTest {
             assertThat {
                 asyncThrows()
             }.thrownError { hasMessage("test") }
@@ -31,7 +34,7 @@ class NativeAssertBlockTest {
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     @Test fun catch_works_in_coroutine_test() {
-        runBlocking {
+        runBlockingTest {
             val error = catch {
                 asyncThrows()
             }
@@ -39,13 +42,13 @@ class NativeAssertBlockTest {
         }
     }
 
-    @Suppress("RedundantSuspendModifier")
     private suspend fun asyncReturnValue(): Int {
+        delay(10000)
         return 1
     }
 
-    @Suppress("RedundantSuspendModifier")
     private suspend fun asyncThrows() {
+        delay(10000)
         throw  Exception("test")
     }
 }
