@@ -5,7 +5,7 @@ plugins {
     id 'signing'
     id 'org.jetbrains.kotlin.multiplatform' version '1.3.40'
     id 'org.jetbrains.dokka' version '0.9.17'
-    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC14'
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC16'
     id 'org.ajoberstar.git-publish' version '2.1.1'
     id 'com.moowork.node' version '1.2.0'
 }
@@ -181,6 +181,8 @@ gitPublish {
 task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
     input = files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin)
     config = files("detekt.yml")
+    // https://github.com/arturbosch/detekt/issues/1761
+    ignoreFailures = false
     reports {
         xml.destination = file("$buildDir/reports/detektMain/detekt.xml")
         html.destination = file("$buildDir/reports/detektMain/detekt.html")
@@ -190,6 +192,8 @@ task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
 task detektTest(type: io.gitlab.arturbosch.detekt.Detekt) {
     input = files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin)
     config = files("detekt-test.yml")
+    // https://github.com/arturbosch/detekt/issues/1761
+    ignoreFailures = false
     reports {
         xml.destination = file("$buildDir/reports/detektTest/detekt.xml")
         html.destination = file("$buildDir/reports/detektTest/detekt.html")
