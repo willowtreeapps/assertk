@@ -1,6 +1,9 @@
 package assertk
 
+import assertk.assertions.isFailure
+import assertk.assertions.isSuccess
 import assertk.assertions.support.show
+import kotlin.contracts.contract
 import kotlin.reflect.KProperty0
 
 /**
@@ -102,61 +105,74 @@ internal class FailingAssert<out T>(val error: Throwable, name: String?, context
 }
 
 /**
- * An assertion on a block of code. Can assert that it either throws and error or returns a value.
+ * Runs the given lambda if the block throws an error, otherwise fails.
  */
-sealed class AssertBlock<out T> {
+@Suppress("DEPRECATION")
+@Deprecated(
+    message = "Use isFailure().all(f) instead",
+    replaceWith = ReplaceWith("isFailure().all(f)", imports = ["assertk.assertions.isFailure", "assertk.all"])
+)
+fun <T> Assert<Result<T>>.thrownError(f: Assert<Throwable>.() -> Unit) {
+    isFailure().all(f)
+}
 
+/**
+ * Runs the given lambda if the block returns a value, otherwise fails.
+ */
+@Suppress("DEPRECATION")
+@Deprecated(
+    message = "Use isSuccess().all(f) instead",
+    replaceWith = ReplaceWith("isSuccess().all(f)", imports = ["assertk.assertions.isSuccess", "assertk.all"])
+)
+fun <T> Assert<Result<T>>.returnedValue(f: Assert<T>.() -> Unit) {
+    isSuccess().all(f)
+}
+
+@Suppress("DEPRECATION")
+@Deprecated(
+    message = "Use isSuccess() instead",
+    replaceWith = ReplaceWith("isSuccess()", imports = ["assertk.assertions.isSuccess", "assertk.assertions"])
+)
+fun <T> Assert<Result<T>>.doesNotThrowAnyException() {
+    isSuccess()
+}
+
+@Suppress("DEPRECATION")
+@Deprecated(message = "Use Assert<Result<T>> instead")
+typealias AssertBlock<T> = Assert<Result<T>>
+
+@Suppress("DEPRECATION")
+@Deprecated(message = "Temporary replacement for kotlin.Result until https://youtrack.jetbrains.com/issue/KT-32450 is fixed.")
+sealed class Result<out T> {
     companion object {
-        inline fun <T> from(f: () -> T): AssertBlock<T> {
-            @Suppress("TooGenericExceptionCaught")
+        fun <T> success(value: T): Result<T> = Success(value)
+        fun <T> failure(error: Throwable): Result<T> = Failure(error)
+
+        inline fun <R> runCatching(block: () -> R): Result<R> {
             return try {
-                Value(f())
+                success(block())
             } catch (e: Throwable) {
-                Error(e)
+                failure(e)
             }
         }
     }
 
-    /**
-     * Runs the given lambda if the block throws an error, otherwise fails.
-     */
-    abstract fun thrownError(f: Assert<Throwable>.() -> Unit)
-
-    /**
-     * Runs the given lambda if the block returns a value, otherwise fails.
-     */
-    abstract fun returnedValue(f: Assert<T>.() -> Unit)
-
-    abstract fun doesNotThrowAnyException()
-
-    @PublishedApi
-    internal class Value<out T>(private val value: T) : AssertBlock<T>() {
-        override fun thrownError(f: Assert<Throwable>.() -> Unit) {
-            notifyFailure(AssertionError("expected exception but was:${show(value)}"))
-        }
-
-        override fun returnedValue(f: Assert<T>.() -> Unit) {
-            f(assertThat(value))
-        }
-
-        override fun doesNotThrowAnyException() {
-            assertThat(value)
-        }
+    fun getOrNull(): T? = when (this) {
+        is Success -> value
+        is Failure -> null
     }
 
-    @PublishedApi
-    internal class Error<out T>(private val error: Throwable) : AssertBlock<T>() {
-        override fun thrownError(f: Assert<Throwable>.() -> Unit) {
-            f(assertThat(error))
-        }
+    fun exceptionOrNull(): Throwable? = when (this) {
+        is Success -> null
+        is Failure -> error
+    }
 
-        override fun returnedValue(f: Assert<T>.() -> Unit) {
-            notifyFailure(AssertionError("expected value but threw:${showError(error)}"))
-        }
+    private data class Success<T>(val value: T) : Result<T>() {
+        override fun toString(): String = "Success($value)"
+    }
 
-        override fun doesNotThrowAnyException() {
-            notifyFailure(AssertionError("expected to not throw an exception but threw:${showError(error)}"))
-        }
+    private data class Failure<T>(val error: Throwable) : Result<T>() {
+        override fun toString(): String = "Failure($error)"
     }
 }
 
@@ -214,8 +230,23 @@ fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
  * @param message An optional message to show before all failures.
  * @param body The body to execute.
  */
-fun <T> Assert<T>.all(message: String = SoftFailure.defaultMessage, body: Assert<T>.() -> Unit) {
+fun <T> Assert<T>.all(message: String, body: Assert<T>.() -> Unit) {
     all(message, body, { it.isNotEmpty() })
+}
+
+/**
+ * All assertions in the given lambda are run.
+ *
+ * ```
+ * assertThat("test", name = "test").all {
+ *   startsWith("t")
+ *   endsWith("t")
+ * }
+ * ```
+ * @param body The body to execute.
+ */
+fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
+    all(SoftFailure.defaultMessage, body, { it.isNotEmpty() })
 }
 
 /**
@@ -250,39 +281,33 @@ internal fun <T> Assert<T>.all(
 }
 
 /**
- * Asserts on the given block. You can test that it returns a value or throws an exception.
+ * Asserts on the given block returning an `Assert<Result<T>>`. You can test that it returns a value or throws an exception.
  *
  * ```
- * assert { 1 + 1 }.returnedValue {
- *   isPositive()
- * }
+ * assert { 1 + 1 }.isSuccess().isPositive()
  *
  * assert {
  *   throw Exception("error")
- * }.thrownError {
- *   hasMessage("error")
- * }
+ * }.isFailure().hasMessage("error")
  * ```
  */
+@Suppress("DEPRECATION")
 @Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(f)"), level = DeprecationLevel.ERROR)
-fun <T> assert(f: () -> T): AssertBlock<T> = assertThat(f)
+fun <T> assert(f: () -> T): Assert<Result<T>> = assertThat(f)
 
 /**
- * Asserts on the given block. You can test that it returns a value or throws an exception.
+ * Asserts on the given block returning an `Assert<Result<T>>`. You can test that it returns a value or throws an exception.
  *
  * ```
- * assertThat { 1 + 1 }.returnedValue {
- *   isPositive()
- * }
+ * assertThat { 1 + 1 }.isSuccess().isPositive()
  *
  * assertThat {
  *   throw Exception("error")
- * }.thrownError {
- *   hasMessage("error")
- * }
+ * }.isFailure().hasMessage("error")
  * ```
  */
-inline fun <T> assertThat(f: () -> T): AssertBlock<T> = Failure.soft().run { AssertBlock.from(f) }
+@Suppress("DEPRECATION")
+inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.runCatching(f))
 
 /**
  * Runs all assertions in the given lambda and reports any failures.
