@@ -326,6 +326,7 @@ inline fun assertAll(f: () -> Unit) {
  * ```
  */
 @Suppress("TooGenericExceptionCaught")
+@Deprecated("Use assertThat { }.isFailure() instead")
 inline fun catch(f: () -> Unit): Throwable? {
     try {
         f()
