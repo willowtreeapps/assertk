@@ -22,6 +22,9 @@ You can migrate by:
   2. Alt-enter on the deprecated version of above and choose replace with...
   3. If your expression only has 1 value, you can replace ex: `isSucess().all { isEqualTo(1) }` with `isSuccess().isEqualTo(1)`
 
+### Deprecated
+- Deprecated `catch` in favor of `assertThat {}.isFailure()`
+
 ## [0.17] 2019-05-29
 
 ### Fixed
