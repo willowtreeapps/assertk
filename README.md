@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.17'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.18'
 }
 ```
 
@@ -104,40 +104,19 @@ assertAll {
 
 ### Exceptions
 
-If you expect an exception to be thrown, you have a couple of options:
-
-The first is to wrap in a `catch` block to store the result, then assert on that.
-
-```kotlin
-val exception = catch { throw Exception("error") }
-assertThat(exception).isNotNull().hasMessage("wrong")
-// -> expected [message] to be:<["wrong"]> but was:<["error"]>
-```
-
-Your other option is to use an `assertThat` with a single lambda arg to capture the error.
+If you expect an exception to be thrown, you can use the version of `assertThat` that takes a lambda.
 
 ```kotlin
 assertThat {
     throw Exception("error")
-}.thrownError {
-    hasMessage("wrong")
-}
+}.isFailure().hasMessage("wrong")
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
 ```
 
-This method also allows you to assert on return values.
+This method also allows you to assert on successfully returned values.
 ```kotlin
-assertThat { 1 + 1 }.returnedValue {
-    isNegative()
-}
+assertThat { 1 + 1 }.isSucess().isNegative()
 // -> expected to be negative but was:<2>
-```
-
-You can also assert that there no exceptions thrown
-```kotlin
-assertThat {
-    aMethodThatMightThrow()
-}.doesNotThrowAnyException()
 ```
 
 ### Table Assertions
