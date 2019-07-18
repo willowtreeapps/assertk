@@ -20,12 +20,12 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-actual open class ThreadLocalRef<T> actual constructor() {
-    private var localValue: T? = null
+actual open class ThreadLocalRef<T> actual constructor(initial: () -> T) {
+    private var localValue: T = initial()
 
-    actual fun get(): T? = localValue
+    actual fun get(): T = localValue
 
-    actual fun set(value: T?) {
+    actual fun set(value: T) {
         localValue = value
     }
 }

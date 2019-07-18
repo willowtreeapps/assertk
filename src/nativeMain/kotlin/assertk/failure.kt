@@ -23,30 +23,28 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-actual open class ThreadLocalRef<T> actual constructor() {
+actual open class ThreadLocalRef<T> actual constructor(private val initial: () -> T) {
     private val threadLocalId = ThreadLocalIdCounter.nextThreadLocalId()
 
-    actual fun get(): T? {
+    actual fun get(): T {
         return if (ThreadLocalState.threadLocalMap.containsKey(threadLocalId)) {
             @Suppress("UNCHECKED_CAST")
             ThreadLocalState.threadLocalMap[threadLocalId] as T
         } else {
-            null
+            initial().also {
+                ThreadLocalState.threadLocalMap[threadLocalId] = it
+            }
         }
     }
 
-    actual fun set(value: T?) {
-        if (value == null) {
-            ThreadLocalState.threadLocalMap.remove(threadLocalId)
-        } else {
-            ThreadLocalState.threadLocalMap.put(threadLocalId, value)
-        }
+    actual fun set(value: T) {
+        ThreadLocalState.threadLocalMap[threadLocalId] = value
     }
 }
 
 @ThreadLocal
 private object ThreadLocalState {
-    val threadLocalMap = HashMap<Int, Any>()
+    val threadLocalMap = HashMap<Int, Any?>()
 }
 
 private object ThreadLocalIdCounter {

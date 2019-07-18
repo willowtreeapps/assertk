@@ -8,12 +8,10 @@ import com.willowtreeapps.opentest4k.MultipleFailuresError
  * Assertions are run in a failure context which captures failures to report them.
  */
 internal object FailureContext {
-    private val failureRef = ThreadLocalRef<Failure>().apply {
-        value = SimpleFailure
-    }
+    private val failureRef = ThreadLocalRef<Failure> { SimpleFailure }
 
     fun pushFailure(failure: Failure): Failure {
-        val previousFailure = failureRef.value!!
+        val previousFailure = failureRef.value
         if (previousFailure == SimpleFailure) {
             failureRef.value = failure
         }
@@ -25,7 +23,7 @@ internal object FailureContext {
     }
 
     fun fail(error: AssertionError) {
-        failureRef.value!!.fail(error)
+        failureRef.value.fail(error)
     }
 }
 
@@ -177,12 +175,12 @@ internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothi
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-expect open class ThreadLocalRef<T>() {
-    fun get(): T?
-    fun set(value: T?)
+expect open class ThreadLocalRef<T>(initial: () -> T) {
+    fun get(): T
+    fun set(value: T)
 }
 
-var <T> ThreadLocalRef<T>.value: T?
+var <T> ThreadLocalRef<T>.value: T
     get() = get()
     set(value) {
         set(value)
