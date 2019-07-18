@@ -27,4 +27,8 @@ internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothi
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-actual typealias ThreadLocalRef<T> = ThreadLocal<T>
+actual typealias ThreadLocalRef<T> = InitialValueThreadLocal<T>
+
+open class InitialValueThreadLocal<T>(private val initial: () -> T) : ThreadLocal<T>() {
+    override fun initialValue(): T = initial()
+}

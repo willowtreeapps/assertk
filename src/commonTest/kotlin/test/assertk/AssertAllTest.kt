@@ -143,4 +143,5 @@ class AssertAllTest {
         assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error2"))}"))
     }
     //endregion
+
 }
