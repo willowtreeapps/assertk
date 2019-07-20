@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.18'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.19'
 }
 ```
 
