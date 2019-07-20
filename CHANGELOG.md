@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.19] 2019-02-20
+
+### Fixed
+- Fixed thread-safety issue with soft assertions
+
 ## [0.18] 2019-07-12
 
 ### Added
-- Add `extracting` to allow extracing a value for each item in an array.
+- Add `extracting` to allow extracting a value for each item in an array.
 - Add `Assert<Result<T>>.isSuccess()` and `Assert<Result<T>>.isFailure()` to replace `AssertBlock` assertions.
 - Add `messageContains` for throwable.
 
