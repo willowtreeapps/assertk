@@ -145,11 +145,11 @@ One of the goals of this library is to make custom assertions easy to make. All 
 
 ```kotlin
 fun Assert<Person>.hasAge(expected: Int) {
-    assertThat("age", actual.age).isEqualTo(expected)
+    prop("age", Person::age).isEqualTo(expected)
 }
 
 assertThat(person).hasAge(10)
-// -> expected [age]:<10> but was:<18>
+// -> expected [age]:<1[0]> but was:<1[8]> (Person(age=18))
 ```
 
 For completely custom assertions, you can access the actual value with `given` and fail with `expected()` and `show()`.
