@@ -121,7 +121,11 @@ fun <T : Any> Assert<T?>.isNull() = given { actual ->
  * }
  * ```
  */
-@Deprecated(message = "Use isNotNull() instead", replaceWith = ReplaceWith("isNotNull().let(f)"), level = DeprecationLevel.ERROR)
+@Deprecated(
+    message = "Use isNotNull() instead",
+    replaceWith = ReplaceWith("isNotNull().let(f)"),
+    level = DeprecationLevel.ERROR
+)
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
     isNotNull().let(f)
 }
@@ -190,7 +194,11 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-@Deprecated(message = "Use isInstanceOf(kclass) instead.", replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"), level = DeprecationLevel.ERROR)
+@Deprecated(
+    message = "Use isInstanceOf(kclass) instead.",
+    replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"),
+    level = DeprecationLevel.ERROR
+)
 fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit) {
     isInstanceOf(kclass).let(f)
 }
@@ -207,6 +215,37 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>) = transform(name)
         actual as S
     } else {
         expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
+    }
+}
+
+/**
+ * Asserts the value corresponds to the expected one using the given correspondence function to compare them. This is
+ * useful when the objects don't have an [equals] implementation.
+ *
+ * @see [isEqualTo]
+ * @see [doesNotCorrespond]
+ */
+fun <T, E> Assert<T>.corresponds(expected: E, correspondence: (T, E) -> Boolean) = given { actual ->
+    if (correspondence(actual, expected)) return
+    fail(expected, actual)
+}
+
+/**
+ * Asserts the value does not correspond to the expected one using the given correspondence function to compare them.
+ * This is useful when the objects don't have an [equals] implementation.
+ *
+ * @see [corresponds]
+ * @see [isNotEqualTo]
+ */
+fun <T, E> Assert<T>.doesNotCorrespond(expected: E, correspondence: (T, E) -> Boolean) = given { actual ->
+    if (!correspondence(actual, expected)) return
+    val showExpected = show(expected)
+    val showActual = show(actual)
+    // if they display the same, only show one.
+    if (showExpected == showActual) {
+        expected("to not be equal to:$showActual")
+    } else {
+        expected(":$showExpected not to be equal to:$showActual")
     }
 }
 
