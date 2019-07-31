@@ -80,7 +80,7 @@ fun Assert<Array<*>>.hasSize(size: Int) {
  * Asserts the array has the same size as the expected array.
  */
 @PlatformName("arrayHasSameSizeAs")
-fun <T> Assert<Array<T>>.hasSameSizeAs(other: Array<*>) = given { actual ->
+fun Assert<Array<*>>.hasSameSizeAs(other: Array<*>) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
     if (actualSize == otherSize) return
@@ -92,7 +92,7 @@ fun <T> Assert<Array<T>>.hasSameSizeAs(other: Array<*>) = given { actual ->
  * @see [doesNotContain]
  */
 @PlatformName("arrayContains")
-fun <T> Assert<Array<T>>.contains(element: Any?) = given { actual ->
+fun Assert<Array<*>>.contains(element: Any?) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
 }
@@ -102,7 +102,7 @@ fun <T> Assert<Array<T>>.contains(element: Any?) = given { actual ->
  * @see [contains]
  */
 @PlatformName("arrayDoesNotContain")
-fun <T> Assert<Array<T>>.doesNotContain(element: Any?) = given { actual ->
+fun Assert<Array<*>>.doesNotContain(element: Any?) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
 }
@@ -111,7 +111,7 @@ fun <T> Assert<Array<T>>.doesNotContain(element: Any?) = given { actual ->
  * Asserts the collection does not contain any of the expected elements.
  * @see [containsAll]
  */
-fun <T> Assert<Array<T>>.containsNone(vararg elements: Any?) = given { actual ->
+fun Assert<Array<*>>.containsNone(vararg elements: Any?) = given { actual ->
     if (elements.none { it in actual }) {
         return
     }
@@ -126,7 +126,7 @@ fun <T> Assert<Array<T>>.containsNone(vararg elements: Any?) = given { actual ->
  * @see [containsExactly]
  */
 @PlatformName("arrayContainsAll")
-fun <T> Assert<Array<T>>.containsAll(vararg elements: Any?) = given { actual ->
+fun Assert<Array<*>>.containsAll(vararg elements: Any?) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
     expected("to contain all:${show(elements)} but was:${show(actual)}. Missing elements:${show(notFound)}")
@@ -166,7 +166,7 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
  * @see [containsAll]
  */
 @PlatformName("arrayContainsExactly")
-fun <T> Assert<Array<T>>.containsExactly(vararg elements: Any?) = given { actual ->
+fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
 
     expected(listDifferExpected(elements.asList(), actual.asList()))
