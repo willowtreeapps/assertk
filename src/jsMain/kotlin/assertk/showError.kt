@@ -2,4 +2,4 @@ package assertk
 
 import assertk.assertions.support.show
 
-internal actual fun showError(e: Throwable) = show(e)
+internal actual fun Assert<Any?>.showError(e: Throwable) = show(e)

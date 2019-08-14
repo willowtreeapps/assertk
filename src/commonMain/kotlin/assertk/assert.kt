@@ -3,7 +3,6 @@ package assertk
 import assertk.assertions.isFailure
 import assertk.assertions.isSuccess
 import assertk.assertions.support.show
-import kotlin.contracts.contract
 import kotlin.reflect.KProperty0
 
 /**
@@ -17,7 +16,7 @@ annotation class AssertkDsl
  * @see [assertThat]
  */
 @AssertkDsl
-sealed class Assert<out T>(val name: String?, internal val context: Any?) {
+sealed class Assert<out T>(val name: String?, internal val subject: Any?, internal val displayWith: (Any?) -> String?) {
     /**
      * Transforms an assertion from one type to another. If the assertion is failing the resulting assertion will still
      * be failing, otherwise the mapping function is called. An optional name can be provided, otherwise this
@@ -30,10 +29,10 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
                     assertThat(transform(value), name)
                 } catch (e: Throwable) {
                     notifyFailure(e)
-                    FailingAssert<R>(e, name, context)
+                    FailingAssert<R>(e, name, subject, displayWith)
                 }
             }
-            is FailingAssert -> FailingAssert(error, name, context)
+            is FailingAssert -> FailingAssert(error, name, subject, displayWith)
         }
     }
 
@@ -77,7 +76,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assertThat(true, name = "true").isTrue()
      * ```
      */
-    abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
+    abstract fun <R> assertThat(actual: R, name: String? = this.name, displayWith: (Any?) -> String? = this.displayWith): Assert<R>
 
     @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated(
@@ -92,16 +91,16 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
 }
 
 @PublishedApi
-internal class ValueAssert<out T>(val value: T, name: String?, context: Any?) :
-    Assert<T>(name, context) {
+internal class ValueAssert<out T>(val value: T, name: String?, context: Any?, displayWith: (Any?) -> String?) :
+    Assert<T>(name, context, displayWith) {
 
-    override fun <R> assertThat(actual: R, name: String?): Assert<R> =
-        ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
+    override fun <R> assertThat(actual: R, name: String?, displayWith: (Any?) -> String?): Assert<R> =
+        ValueAssert(actual, name, if (subject != null || this.value === actual) subject else this.value, displayWith)
 }
 
-internal class FailingAssert<out T>(val error: Throwable, name: String?, context: Any?) :
-    Assert<T>(name, context) {
-    override fun <R> assertThat(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
+internal class FailingAssert<out T>(val error: Throwable, name: String?, context: Any?, displayWith: (Any?) -> String?) :
+    Assert<T>(name, context, displayWith) {
+    override fun <R> assertThat(actual: R, name: String?, displayWith: (Any?) -> String?): Assert<R> = FailingAssert(error, name, subject, displayWith)
 }
 
 /**
@@ -181,7 +180,7 @@ sealed class Result<out T> {
  *
  * TODO: use @OptionalExpectation (https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-optional-expectation/index.html) here once available and call default implementation of [show] for JS
  */
-internal expect fun showError(e: Throwable): String
+internal expect fun Assert<Any?>.showError(e: Throwable): String
 
 /**
  * Asserts on the given value with an optional name.
@@ -200,7 +199,7 @@ fun <T> assert(actual: T, name: String? = null): Assert<T> = assertThat(actual, 
  * assertThat(true, name = "true").isTrue()
  * ```
  */
-fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
+fun <T> assertThat(actual: T, name: String? = null, displayWith: (Any?) -> String? = {null}): Assert<T> = ValueAssert(actual, name, null, displayWith)
 
 /**
  * Asserts on the given property reference using its name, if no explicit name is specified. This method

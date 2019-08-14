@@ -44,7 +44,7 @@ fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     expected(listDifferExpected(elements.toList(), actual))
 }
 
-internal fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
+internal fun Assert<Any?>.listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
     val diff = ListDiffer.diff(elements, actual)
         .filterNot { it is ListDiffer.Edit.Eq }
         .sortedBy { when(it) {

@@ -3,6 +3,7 @@ package test.assertk
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.length
 import assertk.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -51,6 +52,22 @@ class AssertTest {
         }
 
         assertEquals("error", error.message)
+    }
+    //endregion
+
+    //region displayWith
+    @Test fun assertThat_uses_custom_display_with() {
+        val error = assertFails {
+            assertThat(0, displayWith = { "test$it" }).isEqualTo(1)
+        }
+        assertEquals("expected:<test[1]> but was:<test[0]>", error.message)
+    }
+
+    @Test fun assertThat_uses_custom_display_with_subject() {
+        val error = assertFails {
+            assertThat("", displayWith = { "test$it" }).length().isEqualTo(1)
+        }
+        assertEquals("expected [length]:<test[1]> but was:<test[0]> (test)", error.message)
     }
     //endregion
 }
