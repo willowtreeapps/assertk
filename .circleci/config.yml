@@ -47,12 +47,12 @@ jobs:
             ".circleci/config.yml" }}-linux
   build-macos:
     macos:
-      xcode: "10.2.1"
+      xcode: "10.3.0"
     <<: *defaults
     steps:
       - checkout
       - restore_cache:
-          key: homebrew
+          key: homebrew-2
       - run:
           name: Download Gpg
           command: brew install gpg
@@ -62,7 +62,7 @@ jobs:
       - save_cache:
           paths:
             - /usr/local/Homebrew
-          key: homebrew
+          key: homebrew-2
       # We can't use gradle/with_cache because it incorrectly uses the same cache key from build-linux
       - run:
           <<: *gradle_checksum
