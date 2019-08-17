@@ -28,7 +28,7 @@ fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
  * @see [isNotEqualTo]
  * @see [isSameAs]
  */
-fun Assert<Any?>.isEqualTo(expected: Any?) = given { actual ->
+fun <T> Assert<T>.isEqualTo(expected: T) = given { actual ->
     if (actual == expected) return
     fail(expected, actual)
 }
@@ -120,7 +120,11 @@ fun Assert<Any?>.isNull() = given { actual ->
  * }
  * ```
  */
-@Deprecated(message = "Use isNotNull() instead", replaceWith = ReplaceWith("isNotNull().let(f)"), level = DeprecationLevel.ERROR)
+@Deprecated(
+    message = "Use isNotNull() instead",
+    replaceWith = ReplaceWith("isNotNull().let(f)"),
+    level = DeprecationLevel.ERROR
+)
 fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
     isNotNull().let(f)
 }
@@ -189,7 +193,11 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-@Deprecated(message = "Use isInstanceOf(kclass) instead.", replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"), level = DeprecationLevel.ERROR)
+@Deprecated(
+    message = "Use isInstanceOf(kclass) instead.",
+    replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"),
+    level = DeprecationLevel.ERROR
+)
 fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit) {
     isInstanceOf(kclass).let(f)
 }

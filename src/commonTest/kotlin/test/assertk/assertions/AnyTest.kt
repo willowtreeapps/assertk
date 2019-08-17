@@ -35,6 +35,19 @@ class AnyTest {
         assertEquals("expected:<[not ]test> but was:<[]test>", error.message)
     }
 
+    @Test fun isEqualTo_will_compile_comparing_various_types() {
+        assertThat(1).isEqualTo(1)
+        assertThat(1 as Int?).isEqualTo(1)
+        assertThat(1).isEqualTo(1 as Int?)
+        val obj = DifferentObject()
+        assertThat(obj).isEqualTo(obj)
+        assertThat(obj as TestObject).isEqualTo(obj)
+        assertThat(obj).isEqualTo(obj as TestObject)
+        assertFails {
+            assertThat(1).isEqualTo("string")
+        }
+    }
+
     @Test fun isNotEqualTo_non_equal_objects_passes() {
         val nonEqual = BasicObject("not test")
         assertThat(subject).isNotEqualTo(nonEqual)
