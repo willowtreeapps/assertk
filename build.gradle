@@ -329,7 +329,7 @@ publishing {
 
             pom {
                 name = project.name
-                description = 'assertions for kotlin inspired by assertj'
+                description = 'Assertions for Kotlin inspired by assertj'
                 url = siteUrl
 
                 scm {
@@ -360,4 +360,3 @@ publishing {
 signing {
     publishing.publications.all { sign it }
 }
-
