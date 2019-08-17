@@ -12,7 +12,7 @@ plugins {
 
 allprojects {
     group 'com.willowtreeapps.assertk'
-    version '0.19'
+    version '0.20-SNAPSHOT'
 }
 
 ext {
@@ -324,12 +324,12 @@ publishing {
         }
 
         all {
-            def siteUrl = 'https://github.com/willowtreeapps/opentest4k'
-            def gitUrl = 'https://github.com/willowtreeapps/opentest4k.git'
+            def siteUrl = 'https://github.com/willowtreeapps/assertk'
+            def gitUrl = 'https://github.com/willowtreeapps/assertk.git'
 
             pom {
                 name = project.name
-                description = 'assertions for kotlin inspired by assertj'
+                description = 'Assertions for Kotlin inspired by assertj'
                 url = siteUrl
 
                 scm {
@@ -360,4 +360,3 @@ publishing {
 signing {
     publishing.publications.all { sign it }
 }
-
