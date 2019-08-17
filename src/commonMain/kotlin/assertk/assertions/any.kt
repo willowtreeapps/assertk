@@ -11,24 +11,24 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun <T : Any> Assert<T>.kClass() = prop("class") { it::class }
+fun Assert<Any>.kClass() = prop("class") { it::class }
 
 /**
  * Returns an assert on the toString method of the value.
  */
-fun <T> Assert<T>.toStringFun() = prop("toString", Any?::toString)
+fun Assert<Any?>.toStringFun() = prop("toString", Any?::toString)
 
 /**
  * Returns an assert on the hasCode method of the value.
  */
-fun <T : Any> Assert<T>.hashCodeFun() = prop("hashCode", Any::hashCode)
+fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
 
 /**
  * Asserts the value is equal to the expected one, using `==`.
  * @see [isNotEqualTo]
  * @see [isSameAs]
  */
-fun <T> Assert<T>.isEqualTo(expected: Any?) = given { actual ->
+fun Assert<Any?>.isEqualTo(expected: Any?) = given { actual ->
     if (actual == expected) return
     fail(expected, actual)
 }
@@ -38,7 +38,7 @@ fun <T> Assert<T>.isEqualTo(expected: Any?) = given { actual ->
  * @see [isEqualTo]
  * @see [isNotSameAs]
  */
-fun <T> Assert<T>.isNotEqualTo(expected: Any?) = given { actual ->
+fun Assert<Any?>.isNotEqualTo(expected: Any?) = given { actual ->
     if (actual != expected) return
     val showExpected = show(expected)
     val showActual = show(actual)
@@ -65,7 +65,7 @@ fun <T> Assert<T>.isSameAs(expected: T) = given { actual ->
  * @see [isSameAs]
  * @see [isNotEqualTo]
  */
-fun <T> Assert<T>.isNotSameAs(expected: Any?) = given { actual ->
+fun Assert<Any?>.isNotSameAs(expected: Any?) = given { actual ->
     if (actual !== expected) return
     expected(":${show(expected)} to not refer to the same object")
 }
@@ -91,7 +91,7 @@ fun <T> Assert<T>.isNotIn(vararg values: T) = given { actual ->
 /**
  * Asserts the value has the expected string from it's [toString].
  */
-fun <T> Assert<T>.hasToString(string: String) {
+fun Assert<Any?>.hasToString(string: String) {
     toStringFun().isEqualTo(string)
 }
 
@@ -102,11 +102,10 @@ fun Assert<Any>.hasHashCode(hashCode: Int) {
     hashCodeFun().isEqualTo(hashCode)
 }
 
-// nullable
 /**
  * Asserts the value is null.
  */
-fun <T : Any> Assert<T?>.isNull() = given { actual ->
+fun Assert<Any?>.isNull() = given { actual ->
     if (actual == null) return
     expected("to be null but was:${show(actual)}")
 }
@@ -201,7 +200,7 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) ->
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>) = transform(name) { actual ->
+fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>): Assert<S> = transform(name) { actual ->
     if (kclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
         actual as S
