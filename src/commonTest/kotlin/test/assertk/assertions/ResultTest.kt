@@ -17,7 +17,11 @@ import kotlin.test.assertFails
 class ResultTest {
     // region success
     @Test fun success_passes() {
-        assertThat(Result.success(1)).returnedValue {  }
+        assertThat(Result.success(1)).isSuccess()
+    }
+
+    @Test fun success_on_null_passed() {
+        assertThat(Result.success(null)).isSuccess()
     }
 
     @Test fun success_fails() {
