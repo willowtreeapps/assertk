@@ -15,7 +15,12 @@ import assertk.showError
  * ```
  */
 fun <T> Assert<assertk.Result<T>>.isSuccess(): Assert<T> = transform { actual ->
-    actual.getOrNull() ?: expected("success but was failure:${showError(actual.exceptionOrNull()!!)}")
+    if (actual.isSuccess) {
+        @Suppress("UNCHECKED_CAST")
+        actual.getOrNull() as T
+    } else {
+        expected("success but was failure:${showError(actual.exceptionOrNull()!!)}")
+    }
 }
 
 /**
