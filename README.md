@@ -176,3 +176,24 @@ Contributions are more than welcome! Please see the [Contributing Guidelines](ht
    ```groovy
    testComple 'org.opentest4j:opentest4j:1.1.1'
    ```
+
+2. Gradle fails to find the correct variant if the `kapt` plugin is applied:
+```
+   > Could not resolve com.willowtreeapps.assertk:assertk-jvm:0.19.
+     Required by:
+         project :core-test
+      > Cannot choose between the following variants of com.willowtreeapps.assertk:assertk-jvm:0.19:
+          - jvm-api
+          - jvm-runtime
+          - metadata-api
+```
+This is a [known issue](https://youtrack.jetbrains.com/issue/KT-31641) with the kapt plugin, you can add the below to your gradle file to work around it
+```groovy
+configurations.all { configuration ->
+    // Workaround for kapt bug with MPP dependencies
+    // https://youtrack.jetbrains.com/issue/KT-31641
+    if (name.contains('kapt')) {
+        attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.class, Usage.JAVA_RUNTIME))
+    }
+}
+```
