@@ -218,6 +218,37 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>): Assert<S> = tran
 }
 
 /**
+ * Asserts the value corresponds to the expected one using the given correspondence function to compare them. This is
+ * useful when the objects don't have an [equals] implementation.
+ *
+ * @see [isEqualTo]
+ * @see [doesNotCorrespond]
+ */
+fun <T, E> Assert<T>.corresponds(expected: E, correspondence: (T, E) -> Boolean) = given { actual ->
+    if (correspondence(actual, expected)) return
+    fail(expected, actual)
+}
+
+/**
+ * Asserts the value does not correspond to the expected one using the given correspondence function to compare them.
+ * This is useful when the objects don't have an [equals] implementation.
+ *
+ * @see [corresponds]
+ * @see [isNotEqualTo]
+ */
+fun <T, E> Assert<T>.doesNotCorrespond(expected: E, correspondence: (T, E) -> Boolean) = given { actual ->
+    if (!correspondence(actual, expected)) return
+    val showExpected = show(expected)
+    val showActual = show(actual)
+    // if they display the same, only show one.
+    if (showExpected == showActual) {
+        expected("to not be equal to:$showActual")
+    } else {
+        expected(":$showExpected not to be equal to:$showActual")
+    }
+}
+
+/**
  * Returns an assert that compares only the given properties on the calling class
  * @param other Other value to compare to
  * @param properties properties of the type with which to compare
