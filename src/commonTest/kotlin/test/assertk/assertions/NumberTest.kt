@@ -1,10 +1,7 @@
 package test.assertk.assertions
 
 import assertk.assertThat
-import assertk.assertions.isNegative
-import assertk.assertions.isNotZero
-import assertk.assertions.isPositive
-import assertk.assertions.isZero
+import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -74,6 +71,15 @@ class NumberTest {
             assertThat(1).isNegative()
         }
         assertEquals("expected to be negative but was:<1>", error.message)
+    }
+    //endregion
+
+    //region isEqualTo
+    @Test fun isEqualTo_number_literal_is_inferred_based_on_type() {
+        assertThat(1.toByte()).isEqualTo(1)
+        assertThat(1.toShort()).isEqualTo(1)
+        assertThat(1).isEqualTo(1)
+        assertThat(1L).isEqualTo(1)
     }
     //endregion
 }

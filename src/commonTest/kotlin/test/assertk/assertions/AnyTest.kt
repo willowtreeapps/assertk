@@ -35,6 +35,19 @@ class AnyTest {
         assertEquals("expected:<[not ]test> but was:<[]test>", error.message)
     }
 
+    @Test fun isEqualTo_will_compile_comparing_various_types() {
+        assertThat(1).isEqualTo(1)
+        assertThat(1 as Int?).isEqualTo(1)
+        assertThat(1).isEqualTo(1 as Int?)
+        val obj = DifferentObject()
+        assertThat(obj).isEqualTo(obj)
+        assertThat(obj as TestObject).isEqualTo(obj)
+        assertThat(obj).isEqualTo(obj as TestObject)
+        assertFails {
+            assertThat(1).isEqualTo("string")
+        }
+    }
+
     @Test fun isNotEqualTo_non_equal_objects_passes() {
         val nonEqual = BasicObject("not test")
         assertThat(subject).isNotEqualTo(nonEqual)
@@ -312,6 +325,28 @@ class AnyTest {
             assertThat(subject).isNotInstanceOf(TestObject::class)
         }
         assertEquals("expected to not be instance of:<${TestObject::class}>", error.message)
+    }
+
+    @Test fun corresponds_equivalent_passes() {
+        assertThat(subject).corresponds(BasicObject("different")) { _, _ -> true }
+    }
+
+    @Test fun corresponds_not_equivalent_fails() {
+        val error = assertFails {
+            assertThat(subject).corresponds(BasicObject("test")) { _, _ -> false }
+        }
+        assertEquals("expected:<test> but was:<test>", error.message)
+    }
+
+    @Test fun doesNotCorrespond_equivalent_passes() {
+        assertThat(subject).doesNotCorrespond(BasicObject("different")) { _, _ -> false }
+    }
+
+    @Test fun doesNotCorrespond_not_equivalent_fails() {
+        val error = assertFails {
+            assertThat(subject).doesNotCorrespond(BasicObject("different")) { _, _ -> true }
+        }
+        assertEquals("expected:<different> not to be equal to:<test>", error.message)
     }
 
     companion object {
