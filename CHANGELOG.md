@@ -18,7 +18,7 @@ to the correct type. Before this change `assertThat(1L).isEqualTo(1)` would fail
 ### Fixed
 - Fixed `isSuccess` failing on null return values
 
-## [0.19] 2019-02-20
+## [0.19] 2019-07-20
 
 ### Fixed
 - Fixed thread-safety issue with soft assertions
