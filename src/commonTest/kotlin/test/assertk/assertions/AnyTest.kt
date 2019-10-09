@@ -178,7 +178,8 @@ class AnyTest {
         assertThat(subject).isEqualToWithGivenProperties(
             testObject,
             BasicObject::str,
-            BasicObject::double
+            BasicObject::double,
+            BasicObject::other
         )
     }
 

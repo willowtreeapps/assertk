@@ -113,12 +113,12 @@ class JavaAnyTest {
 
     //region isEqualToIgnoringGivenProperties
     @Test fun isEqualToIgnoringGivenProperties_passes() {
-        assertThat (BasicObject("Rarity")).isEqualToIgnoringGivenProperties(BasicObject("notRarity"), BasicObject::str)
+        assertThat(BasicObject("Rarity")).isEqualToIgnoringGivenProperties(BasicObject("notRarity"), BasicObject::str, BasicObject::other)
     }
 
     @Test fun isEqualToIgnoringGivenProperties_fails() {
         assertFails {
-            assertThat (BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str)
+            assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str)
         }
     }
     //endregion
@@ -128,7 +128,8 @@ class JavaAnyTest {
     class BasicObject(
         val str: String,
         val int: Int = 42,
-        val double: Double = 3.14
+        val double: Double = 3.14,
+        val other: BasicObject? = null
     ) : TestObject() {
         override fun toString(): String = str
 
