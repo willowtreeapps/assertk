@@ -257,7 +257,7 @@ fun <T, E> Assert<T>.doesNotCorrespond(expected: E, correspondence: (T, E) -> Bo
  * assertThat(person).isEqualToWithGivenProperties(other, Person::name, Person::age)
  * ```
  */
-fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any>) {
+fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any?>) {
     all {
         for (prop in properties) {
             transform("${if (this.name != null) this.name + "." else ""}${prop.name}", prop::get)
