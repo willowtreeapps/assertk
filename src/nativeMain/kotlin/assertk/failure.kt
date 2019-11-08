@@ -4,7 +4,7 @@ import kotlin.native.concurrent.ThreadLocal
 import kotlin.native.concurrent.AtomicInt
 
 @Suppress("NOTHING_TO_INLINE")
-internal actual inline fun failWithNotInStacktrace(error: AssertionError): Nothing {
+internal actual inline fun failWithNotInStacktrace(error: Throwable): Nothing {
     throw error
 }
 
