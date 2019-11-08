@@ -3,27 +3,24 @@ package assertk
 import assertk.Failure.Companion.soft
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import com.willowtreeapps.opentest4k.MultipleFailuresError
+import com.willowtreeapps.opentest4k.failures
 
 /**
  * Assertions are run in a failure context which captures failures to report them.
  */
 internal object FailureContext {
-    private val failureRef = ThreadLocalRef<Failure> { SimpleFailure }
+    private val failureRef = ThreadLocalRef<MutableList<Failure>> { mutableListOf(SimpleFailure) }
 
-    fun pushFailure(failure: Failure): Failure {
-        val previousFailure = failureRef.value
-        if (previousFailure == SimpleFailure) {
-            failureRef.value = failure
-        }
-        return previousFailure
+    fun pushFailure(failure: Failure) {
+        failureRef.value.add(failure)
     }
 
-    fun popFailure(previousFailure: Failure) {
-        failureRef.value = previousFailure
+    fun popFailure() {
+        failureRef.value.apply { if (size > 1) { removeAt(size - 1) } }
     }
 
-    fun fail(error: AssertionError) {
-        failureRef.value.fail(error)
+    fun fail(error: Throwable) {
+        failureRef.value.last().fail(error)
     }
 }
 
@@ -37,7 +34,7 @@ internal interface Failure {
     /**
      * Record a failure. Depending on the implementation this may throw an exception or collect the failure for later.
      */
-    fun fail(error: AssertionError)
+    fun fail(error: Throwable)
 
     /**
      * Triggers any collected failures.
@@ -48,21 +45,17 @@ internal interface Failure {
     /**
      * Pushes this failure making it the current context for use with [fail]. You should prefer using [run] instead as
      * it will properly pop the failure for you.
-     *
-     * @return The previous failure. This should be passed to [pop].
      */
-    fun pushFailure(): Failure {
-        return FailureContext.pushFailure(this)
+    fun pushFailure() {
+        FailureContext.pushFailure(this)
     }
 
     /**
      * Pops this failure making the current context throw immediately again. You should prefer using [run] instead as
      * it will properly call this for you.
-     *
-     * @param previousFailure The previous failure, returned from [push]
      */
-    fun popFailure(previousFailure: Failure) {
-        FailureContext.popFailure(previousFailure)
+    fun popFailure() {
+        FailureContext.popFailure()
     }
 
     companion object {
@@ -74,25 +67,23 @@ internal interface Failure {
 }
 
 /**
- * Run the given block of assertions with its Failure. If we are already in a Failure a new one will not be
- * created.
+ * Run the given block of assertions with its Failure.
  */
 @PublishedApi
 internal inline fun <T> Failure.run(f: () -> T): T {
-    val previousFailure = pushFailure()
+    pushFailure()
     try {
         return f()
     } finally {
-        popFailure(previousFailure)
+        popFailure()
         invoke()
-    }
-}
+    } }
 
 /**
  * Failure that immediately thrown an exception.
  */
 internal object SimpleFailure : Failure {
-    override fun fail(error: AssertionError) {
+    override fun fail(error: Throwable) {
         failWithNotInStacktrace(error)
     }
 }
@@ -102,13 +93,18 @@ internal object SimpleFailure : Failure {
  */
 internal class SoftFailure(
     val message: String = defaultMessage,
-    val failIf: (List<AssertionError>) -> Boolean = { it.isNotEmpty() }
+    val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() }
 ) :
     Failure {
-    private val failures: MutableList<AssertionError> = ArrayList()
+    private val failures: MutableList<Throwable> = ArrayList()
 
-    override fun fail(error: AssertionError) {
-        failures.add(error)
+    override fun fail(error: Throwable) {
+        // flatten multiple failures into this one.
+        if (error is MultipleFailuresError) {
+            failures.addAll(error.failures)
+        } else {
+            failures.add(error)
+        }
     }
 
     override fun invoke() {
@@ -117,7 +113,7 @@ internal class SoftFailure(
         }
     }
 
-    private fun compositeErrorMessage(errors: List<AssertionError>): AssertionError {
+    private fun compositeErrorMessage(errors: List<Throwable>): Throwable {
         return if (errors.size == 1) {
             errors.first()
         } else {
@@ -158,7 +154,7 @@ fun notifyFailure(e: Throwable) {
     FailureContext.fail(if (e is AssertionError) e else AssertionError(e))
 }
 
-internal expect inline fun failWithNotInStacktrace(error: AssertionError): Nothing
+internal expect inline fun failWithNotInStacktrace(error: Throwable): Nothing
 
 /*
  * Copyright (C) 2018 Touchlab, Inc.

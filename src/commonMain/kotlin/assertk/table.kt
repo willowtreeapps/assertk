@@ -3,9 +3,9 @@ package assertk
 import assertk.assertions.support.show
 
 private class TableFailure(private val table: Table) : Failure {
-    private val failures: MutableMap<Int, MutableList<AssertionError>> = LinkedHashMap()
+    private val failures: MutableMap<Int, MutableList<Throwable>> = LinkedHashMap()
 
-    override fun fail(error: AssertionError) {
+    override fun fail(error: Throwable) {
         failures.getOrPut(table.index, { ArrayList() }).plusAssign(error)
     }
 
@@ -15,14 +15,14 @@ private class TableFailure(private val table: Table) : Failure {
         }
     }
 
-    private fun compositeErrorMessage(errors: Map<Int, List<AssertionError>>): AssertionError {
+    private fun compositeErrorMessage(errors: Map<Int, List<Throwable>>): AssertionError {
         return TableFailuresError(table, errors)
     }
 }
 
 internal class TableFailuresError(
     private val table: Table,
-    private val errors: Map<Int, List<AssertionError>>
+    private val errors: Map<Int, List<Throwable>>
 ) : AssertionError() {
     override val message: String?
         get() {

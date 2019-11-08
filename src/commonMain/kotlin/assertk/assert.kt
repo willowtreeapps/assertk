@@ -278,7 +278,7 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
 internal fun <T> Assert<T>.all(
     message: String,
     body: Assert<T>.() -> Unit,
-    failIf: (List<AssertionError>) -> Boolean
+    failIf: (List<Throwable>) -> Boolean
 ) {
     SoftFailure(message, failIf).run {
         body()
