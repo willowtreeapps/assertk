@@ -131,7 +131,7 @@ class IterableTest {
             """expected to pass exactly 2 times (2 failures)
             |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
-        """.trimMargin(), error.message
+            """.trimMargin(), error.message
         )
     }
 
@@ -145,18 +145,35 @@ class IterableTest {
     }
 
     @Test fun exactly_times_passed_passes() {
-        assertThat(listOf(1, 2) as Iterable<Int>).atMost(2) { it.isGreaterThan(0) }
+        assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) { it.isGreaterThan(0) }
+    }
+    //endregion
+
+    //region any
+    @Test fun any_passes_if_one_item_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).any { it.isGreaterThan(1) }
     }
 
+    @Test fun any_fails_if_all_fail() {
+        val error = assertFails {
+            assertThat(listOf(1, 2)).any { it.isGreaterThan(3) }
+        }
+        assertEquals(
+            """expected any item to pass (2 failures)
+	        |${"\t"}expected [[0]] to be greater than:<3> but was:<1> ([1, 2])
+	        |${"\t"}expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
+            """.trimMargin(), error.message
+        )
+    }
     //endregion
 
     //region isEmpty
-    @Test fun empty_itreable_passes_is_empty() {
+    @Test fun empty_iterable_passes_is_empty() {
         val empty: List<Int> = emptyList()
         assertThat(empty as Iterable<Int>).isEmpty()
     }
 
-    @Test fun non_empty_itreable_fails_is_empty() {
+    @Test fun non_empty_iterable_fails_is_empty() {
         val nonEmpty: List<Int> = listOf(1)
         val error = assertFails {
             assertThat(nonEmpty as Iterable<Int>).isEmpty()
@@ -166,12 +183,12 @@ class IterableTest {
     //endregion
 
     //region isNotEmpty
-    @Test fun non_empty_itreable_passes_is_not_empty() {
+    @Test fun non_empty_iterable_passes_is_not_empty() {
         val nonEmpty: List<Int> = listOf(1)
         assertThat(nonEmpty as Iterable<Int>).isNotEmpty()
     }
 
-    @Test fun empty_itreable_fails_is_not_empty() {
+    @Test fun empty_iterable_fails_is_not_empty() {
         val empty: List<Int> = emptyList()
         val error = assertFails {
             assertThat(empty as Iterable<Int>).isNotEmpty()

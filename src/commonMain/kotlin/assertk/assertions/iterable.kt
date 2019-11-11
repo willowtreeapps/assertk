@@ -107,7 +107,7 @@ fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) = given { actual ->
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-1, 1, 2) as Iterable<Int>).atLeast(2) { it -> it.isPositive() }
+ * assert(listOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
@@ -122,7 +122,7 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-2, -1, 1) as Iterable<Int>).atMost(2) { it -> it.isPositive() }
+ * assert(listOf(-2, -1, 1)).atMost(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
@@ -137,7 +137,7 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-1, 1, 2) as Iterable<Int>).exactly(2) { it -> it.isPositive() }
+ * assert(listOf(-1, 1, 2)).exactly(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
@@ -145,6 +145,21 @@ fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
     all(message = "expected to pass exactly $times times",
         body = { each { item -> count++; f(item) } },
         failIf = { count - it.size != times })
+}
+
+/**
+ * Asserts on each item in the iterable, passing if any of the items pass.
+ * The given lambda will be run for each item.
+ *
+ * ```
+ * assert(listOf(-1, -2, 1)).any { it.isPositive() }
+ * ```
+ */
+fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) {
+    var count = 0
+    all(message = "expected any item to pass",
+        body = { each { item -> count++; f(item) } },
+        failIf = { count == 0 || it.size == count })
 }
 
 /**
