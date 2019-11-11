@@ -78,7 +78,7 @@ class IterableTest {
     //region atLeast
     @Test fun atLeast_too_many_failures_fails() {
         val error = assertFails {
-            assertThat(listOf(1, 2, 3)).atLeast(2) { it.isGreaterThan(2) }
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it.isGreaterThan(2) }
         }
         assertEquals(
             """expected to pass at least 2 times (2 failures)
@@ -125,7 +125,7 @@ class IterableTest {
     //region exactly
     @Test fun exactly_too_few_passes_fails() {
         val error = assertFails {
-            assertThat(listOf(1, 2, 3)).exactly(2) { it.isGreaterThan(2) }
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
         }
         assertEquals(
             """expected to pass exactly 2 times (2 failures)
@@ -137,7 +137,7 @@ class IterableTest {
 
     @Test fun exactly_too_many_passes_fails() {
         val error = assertFails {
-            assertThat(listOf(5, 4, 3)).exactly(2) { it.isGreaterThan(2) }
+            assertThat(listOf(5, 4, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
         }
         assertEquals(
             """expected to pass exactly 2 times""".trimMargin(), error.message
@@ -182,12 +182,12 @@ class IterableTest {
 
     //region extracting
     @Test fun single_extracting_function_passes() {
-        assertThat(listOf("one", "two")).extracting { it.length }.containsExactly(3, 3)
+        assertThat(listOf("one", "two") as Iterable<String>).extracting { it.length }.containsExactly(3, 3)
     }
 
     @Test fun single_extracting_function_fails() {
         val error = assertFails {
-            assertThat(listOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
+            assertThat(listOf("one", "two") as Iterable<String>).extracting { it.length }.containsExactly(2, 2)
         }
         assertEquals(
             """expected to contain exactly:
@@ -199,14 +199,14 @@ class IterableTest {
     }
 
     @Test fun pair_extracting_function_passes() {
-        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
             .extracting(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
     @Test fun pair_extracting_function_fails() {
         val error = assertFails {
-            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
         }
@@ -221,14 +221,14 @@ class IterableTest {
     }
 
     @Test fun triple_extracting_function_passes() {
-        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
             .extracting(Thing::one, Thing::two, Thing::three)
             .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
     }
 
     @Test fun triple_extracting_function_fails() {
         val error = assertFails {
-            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
+            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two, Thing::three)
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
         }
