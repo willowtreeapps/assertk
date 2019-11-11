@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
+import com.willowtreeapps.opentest4k.toValueWrapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -175,4 +176,16 @@ class MapTest {
         assertEquals("expected [subject] to have key:<\"wrong\">", error.message)
     }
     //endregion
+
+    @Test fun extracts_size() {
+        assertEquals(1, assertThat(mapOf("one" to 1)).size().valueOrFail)
+    }
+
+    @Test fun extracts_keys() {
+        assertEquals(setOf("one", "two"), assertThat(mapOf("one" to 1, "two" to 2)).keys().valueOrFail)
+    }
+
+    @Test fun extracts_values() {
+        assertEquals(listOf(1, 2), assertThat(mapOf("one" to 1, "two" to 2)).values().valueOrFail.toList())
+    }
 }

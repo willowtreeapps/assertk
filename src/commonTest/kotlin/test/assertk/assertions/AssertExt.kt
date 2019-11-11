@@ -4,7 +4,7 @@ import assertk.Assert
 import assertk.FailingAssert
 import assertk.ValueAssert
 
-val Assert<*>.valueOrFail
+val <T> Assert<T>.valueOrFail
     get() = when (this) {
         is ValueAssert -> value
         is FailingAssert -> throw error

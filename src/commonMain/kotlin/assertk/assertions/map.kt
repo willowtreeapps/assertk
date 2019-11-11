@@ -11,6 +11,16 @@ import assertk.assertions.support.show
 fun Assert<Map<*, *>>.size() = prop("size", Map<*, *>::size)
 
 /**
+ * Returns an assert on the Map's keys.
+ */
+fun <K> Assert<Map<K, *>>.keys(): Assert<Set<K>> = prop("keys", Map<K, *>::keys)
+
+/**
+ * Returns an assert on the Map's values.
+ */
+fun <V> Assert<Map<*, V>>.values(): Assert<Collection<V>> = prop("values", Map<*, V>::values)
+
+/**
  * Asserts the collection is empty.
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
