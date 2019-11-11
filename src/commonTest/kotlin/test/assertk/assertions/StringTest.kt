@@ -31,6 +31,27 @@ class StringTest {
         }
         assertEquals("expected:<\"[tesT]\"> but was:<\"[Test]\">", error.message)
     }
+
+    @Test fun isEqualTo_renders_different_line_endings() {
+        val error = assertFails {
+            assertThat("Test\n").isEqualTo("Test\r\n")
+        }
+        assertEquals("expected:<\"Test[\\r]\n\"> but was:<\"Test[]\n\">", error.message)
+    }
+
+    @Test fun isEqual_renders_tabs_vs_spaces() {
+        val error = assertFails {
+            assertThat("\tTest").isEqualTo("    Test")
+        }
+        assertEquals("expected:<\"[    ]Test\"> but was:<\"[\\t]Test\">", error.message)
+    }
+
+    @Test fun isEqual_renders_newline_vs_not() {
+        val error = assertFails {
+            assertThat("Test\n").isEqualTo("Test")
+        }
+        assertEquals("expected:<\"Test[]\"> but was:<\"Test[\\n]\">", error.message)
+    }
     //endregion
 
     //region isNotEqualTo

@@ -54,8 +54,10 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
         val extractor = DiffExtractor(display(expected), display(actual))
         val prefix = extractor.compactPrefix()
         val suffix = extractor.compactSuffix()
+        val expectedDiff = extractor.expectedDiff().renderSpecialWhitespace()
+        val actualDiff = extractor.actualDiff().renderSpecialWhitespace()
         expected(
-            message = ":<$prefix${extractor.expectedDiff()}$suffix> but was:<$prefix${extractor.actualDiff()}$suffix>",
+            message = ":<$prefix[${expectedDiff}]$suffix> but was:<$prefix[${actualDiff}]$suffix>",
             expected = expected,
             actual = actual
         )
@@ -84,5 +86,16 @@ private fun formatName(name: String?): String {
         ""
     } else {
         " [$name]"
+    }
+}
+
+private val specialWhitespace = Regex("[\r\n\t]|  +")
+
+private fun String.renderSpecialWhitespace(): String = replace(specialWhitespace) {
+    when (val v = it.value) {
+        "\r" -> "\\r"
+        "\n" -> "\\n"
+        "\t" -> "\\t"
+        else -> v
     }
 }
