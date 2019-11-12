@@ -89,7 +89,7 @@ private fun formatName(name: String?): String {
     }
 }
 
-private val specialWhitespace = Regex("[\r\n\t]|  +")
+private val specialWhitespace = Regex("[\r\n\t]")
 
 private fun String.renderSpecialWhitespace(): String = replace(specialWhitespace) {
     when (val v = it.value) {
