@@ -3,6 +3,7 @@ package assertk.assertions.support
 private const val MAX_CONTEXT_LENGTH = 20
 
 internal class DiffExtractor(val expected: String, val actual: String) {
+
     private val sharedPrefix: String
     private val sharedSuffix: String
 
@@ -23,8 +24,10 @@ internal class DiffExtractor(val expected: String, val actual: String) {
 
     private fun sharedSuffix(): String {
         var suffixLength = 0
-        val maxSuffixLength = minOf(expected.length - sharedPrefix.length,
-                actual.length - sharedPrefix.length) - 1
+        val maxSuffixLength = minOf(
+            expected.length - sharedPrefix.length,
+            actual.length - sharedPrefix.length
+        ) - 1
         while (suffixLength <= maxSuffixLength) {
             if (expected[expected.length - 1 - suffixLength] != actual[actual.length - 1 - suffixLength]) {
                 break
@@ -53,5 +56,8 @@ internal class DiffExtractor(val expected: String, val actual: String) {
     internal fun actualDiff(): String = extractDiff(actual)
 
     private fun extractDiff(source: String): String =
-            "[${source.substring(sharedPrefix.length, source.length - sharedSuffix.length)}]"
+        source.substring(
+            sharedPrefix.length,
+            source.length - sharedSuffix.length
+        )
 }
