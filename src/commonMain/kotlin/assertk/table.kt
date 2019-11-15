@@ -32,8 +32,7 @@ internal class TableFailuresError(
             } else {
                 "The following assertions failed ($errorCount failures)\n"
             }
-            return errors.map {
-                val (index, failures) = it
+            return errors.map { (index, failures) ->
                 failures.joinToString(
                     transform = { "\t${it.message}" },
                     prefix = "\t${rowMessage(index)}\n",
@@ -76,10 +75,8 @@ sealed class Table(internal val columnNames: Array<String>) {
             if (size == null) {
                 size = row.size
             } else {
-                if (size != row.size) {
-                    throw IllegalArgumentException(
-                        "all rows must have the same size. expected:$size but got:${row.size}"
-                    )
+                require(size == row.size) {
+                    "all rows must have the same size. expected:$size but got:${row.size}"
                 }
             }
         }
@@ -209,7 +206,8 @@ fun tableOf(name1: String, name2: String): Table2Builder = Table2Builder(arrayOf
 /**
  * Builds a table with the given column names.
  */
-fun tableOf(name1: String, name2: String, name3: String): Table3Builder = Table3Builder(arrayOf(name1, name2, name3))
+fun tableOf(name1: String, name2: String, name3: String): Table3Builder =
+    Table3Builder(arrayOf(name1, name2, name3))
 
 /**
  * Builds a table with the given column names.
