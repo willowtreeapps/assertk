@@ -39,9 +39,10 @@ fun <T> Assert<List<T>>.index(index: Int): Assert<T> =
  * @see [containsAll]
  */
 fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
-    if (actual == elements.asList()) return
+    val expected = elements.toList()
+    if (actual == expected) return
 
-    expected(listDifferExpected(elements.toList(), actual))
+    expected(listDifferExpected(expected, actual), expected, actual)
 }
 
 internal fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
@@ -53,7 +54,7 @@ internal fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): Strin
             else -> throw IllegalStateException()
         } }
 
-    return diff.joinToString(prefix = "to contain exactly:\n", separator = "\n") { edit ->
+    return diff.joinToString(prefix = "to contain exactly:\n", separator = "\n", postfix = "\n expected:${show(elements)} but was:${show(actual)}") { edit ->
         when (edit) {
             is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
             is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"

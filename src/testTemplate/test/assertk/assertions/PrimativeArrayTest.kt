@@ -170,6 +170,7 @@ class $TTest {
             """expected to contain exactly:
                 | at index:0 expected:<${show(2.to$E(), "")}>
                 | at index:1 unexpected:<${show(2.to$E(), "")}>
+                | expected:<${show(listOf(2.to$E(), 1.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
@@ -183,6 +184,7 @@ class $TTest {
                 | at index:0 expected:<${show(3.to$E(), "")}>
                 | at index:0 unexpected:<${show(1.to$E(), "")}>
                 | at index:1 unexpected:<${show(2.to$E(), "")}>
+                | expected:<${show(listOf(3.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
@@ -197,6 +199,7 @@ class $TTest {
                 | at index:0 unexpected:<${show(1.to$E(), "")}>
                 | at index:1 expected:<${show(2.to$E(), "")}>
                 | at index:1 unexpected:<${show(1.to$E(), "")}>
+                | expected:<${show(listOf(2.to$E(), 2.to$E()), "")}> but was:<${show(listOf(1.to$E(), 1.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
@@ -208,6 +211,7 @@ class $TTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:2 expected:<${show(3.to$E(), "")}>
+                | expected:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
@@ -219,6 +223,7 @@ class $TTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 expected:<${show(2.to$E(), "")}>
+                | expected:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}> but was:<${show(listOf(1.to$E(), 3.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
@@ -230,6 +235,7 @@ class $TTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 unexpected:<${show(2.to$E(), "")}>
+                | expected:<${show(listOf(1.to$E(), 3.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}>
             """.trimMargin(), error.message
         )
     }
