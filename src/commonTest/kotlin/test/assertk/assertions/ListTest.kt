@@ -22,6 +22,7 @@ class ListTest {
             """expected to contain exactly:
                 | at index:0 expected:<2>
                 | at index:1 unexpected:<2>
+                | expected:<[2, 1]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -35,6 +36,7 @@ class ListTest {
             """expected to contain exactly:
                 | at index:0 unexpected:<"1">
                 | at index:2 expected:<"1">
+                | expected:<["2", "3", "1"]> but was:<["1", "2", "3"]>
             """.trimMargin(), error.message
         )
     }
@@ -49,6 +51,7 @@ class ListTest {
                 | at index:0 unexpected:<1>
                 | at index:1 expected:<2>
                 | at index:1 unexpected:<1>
+                | expected:<[2, 2]> but was:<[1, 1]>
             """.trimMargin(), error.message
         )
     }
@@ -62,6 +65,7 @@ class ListTest {
                 | at index:0 expected:<3>
                 | at index:0 unexpected:<1>
                 | at index:1 unexpected:<2>
+                | expected:<[3]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -73,6 +77,7 @@ class ListTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:2 expected:<3>
+                | expected:<[1, 2, 3]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -84,6 +89,7 @@ class ListTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 expected:<2>
+                | expected:<[1, 2, 3]> but was:<[1, 3]>
             """.trimMargin(), error.message
         )
     }
@@ -95,6 +101,7 @@ class ListTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 unexpected:<2>
+                | expected:<[1, 3]> but was:<[1, 2, 3]>
             """.trimMargin(), error.message
         )
     }

@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
+import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -171,6 +172,7 @@ class ArrayTest {
             """expected to contain exactly:
                 | at index:0 expected:<2>
                 | at index:1 unexpected:<2>
+                | expected:<[2, 1]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -184,6 +186,7 @@ class ArrayTest {
                 | at index:0 expected:<3>
                 | at index:0 unexpected:<1>
                 | at index:1 unexpected:<2>
+                | expected:<[3]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -198,6 +201,7 @@ class ArrayTest {
                 | at index:0 unexpected:<1>
                 | at index:1 expected:<2>
                 | at index:1 unexpected:<1>
+                | expected:<[2, 2]> but was:<[1, 1]>
             """.trimMargin(), error.message
         )
     }
@@ -209,6 +213,7 @@ class ArrayTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:2 expected:<3>
+                | expected:<[1, 2, 3]> but was:<[1, 2]>
             """.trimMargin(), error.message
         )
     }
@@ -220,6 +225,7 @@ class ArrayTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 expected:<2>
+                | expected:<[1, 2, 3]> but was:<[1, 3]>
             """.trimMargin(), error.message
         )
     }
@@ -231,6 +237,7 @@ class ArrayTest {
         assertEquals(
             """expected to contain exactly:
                 | at index:1 unexpected:<2>
+                | expected:<[1, 3]> but was:<[1, 2, 3]>
             """.trimMargin(), error.message
         )
     }
@@ -291,11 +298,12 @@ class ArrayTest {
             assertThat(arrayOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
         }
         assertEquals(
-            "expected to contain exactly:\n" +
-                    " at index:0 expected:<2>\n" +
-                    " at index:0 unexpected:<3>\n" +
-                    " at index:1 expected:<2>\n" +
-                    " at index:1 unexpected:<3> ([\"one\", \"two\"])", error.message
+            """expected to contain exactly:
+            | at index:0 expected:<2>
+            | at index:0 unexpected:<3>
+            | at index:1 expected:<2>
+            | at index:1 unexpected:<3>
+            | expected:<[2, 2]> but was:<[3, 3]> (["one", "two"])""".trimMargin(), error.message
         )
     }
 
@@ -316,7 +324,8 @@ class ArrayTest {
             | at index:0 expected:<("one", 2)>
             | at index:0 unexpected:<("one", 1)>
             | at index:1 expected:<("two", 1)>
-            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            | at index:1 unexpected:<("two", 2)>
+            | expected:<[("one", 2), ("two", 1)]> but was:<[("one", 1), ("two", 2)]> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
             error.message
         )
     }
@@ -338,7 +347,8 @@ class ArrayTest {
             | at index:0 expected:<("one", 1, '2')>
             | at index:0 unexpected:<("one", 1, '1')>
             | at index:1 expected:<("two", 2, '3')>
-            | at index:1 unexpected:<("two", 2, '2')> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            | at index:1 unexpected:<("two", 2, '2')>
+            | expected:<[("one", 1, '2'), ("two", 2, '3')]> but was:<[("one", 1, '1'), ("two", 2, '2')]> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
             error.message
         )
     }
