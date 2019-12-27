@@ -114,7 +114,7 @@ assertThat {
 
 This method also allows you to assert on successfully returned values.
 ```kotlin
-assertThat { 1 + 1 }.isSucess().isNegative()
+assertThat { 1 + 1 }.isSuccess().isNegative()
 // -> expected to be negative but was:<2>
 ```
 
