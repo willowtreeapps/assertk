@@ -5,5 +5,5 @@ task iosTest(type: Exec) {
     def test = kotlin.targets.iosX64.binaries.getTest("DEBUG")
     dependsOn(test.linkTask)
     inputs.file(test.outputFile)
-    commandLine("xcrun", "simctl", "spawn", "iPhone 8", test.outputFile)
+    commandLine("xcrun", "simctl", "spawn", "--standalone", "iPhone 8", test.outputFile)
 }
