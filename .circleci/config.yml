@@ -13,7 +13,7 @@ _gradle_checksum: &gradle_checksum
 jobs:
   build-linux:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:8-jdk-browsers
     <<: *defaults
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
             ".circleci/config.yml" }}-linux
   build-macos:
     macos:
-      xcode: "10.3.0"
+      xcode: "11.3.1"
     <<: *defaults
     steps:
       - checkout
