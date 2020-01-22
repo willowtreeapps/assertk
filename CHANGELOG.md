@@ -6,9 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Add `any` to iterable assertions. It will pass when any of the provided assertions pass.
+
 ### Changed
+- Minimum supported kotlin version is 1.3.60
 - Changed the signatures of `isEqualToWithGivenProperties` and `isEqualToIgnoringGivenProperties` to 
 be able to take nullable properties.
+- Improved the output of `containsExactly` to show the entire list.
+- Render tabs and newlines in diffs to make clear what's different.
+
+### Fixed
+- Fixed issues with nested soft assertions. (https://github.com/willowtreeapps/assertk/issues/253)
 
 ## [0.20] 2019-09-13
 
