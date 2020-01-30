@@ -167,6 +167,48 @@ class ArrayTest {
     }
     //endregion
 
+    //region containsOnly
+    @Test fun containsOnly_only_elements_passes() {
+        assertThat(arrayOf(1, 2)).containsOnly(2, 1)
+    }
+
+    @Test fun containsOnly_more_elements_fails() {
+        val error = assertFails {
+            assertThat(arrayOf(1, 2, 3)).containsOnly(2, 1)
+        }
+        assertEquals(
+            """expected to contain only:<[2, 1]> but was:<[1, 2, 3]>
+                | extra elements found:<[3]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsOnly_less_elements_fails() {
+        val error = assertFails {
+            assertThat(arrayOf(1, 2, 3)).containsOnly(2, 1, 3, 4)
+        }
+        assertEquals(
+            """expected to contain only:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
+                | elements not found:<[4]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun containsOnly_different_elements_fails() {
+        val error = assertFails {
+            assertThat(arrayOf(1)).containsOnly(2)
+        }
+        assertEquals(
+            """expected to contain only:<[2]> but was:<[1]>
+                | elements not found:<[2]>
+                | extra elements found:<[1]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+    //endregion
+
     //region containsExactly
     @Test fun containsExactly_all_elements_in_same_order_passes() {
         assertThat(arrayOf(1, 2)).containsExactly(1, 2)
