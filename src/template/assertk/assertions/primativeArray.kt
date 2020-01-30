@@ -120,7 +120,7 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
     }
 
     val notExpected = elements.filter { it in actual }
-    expected("to contain none of:${show(elements)} some elements were not expected:${show(notExpected)}")
+    expected("to contain none of:${show(elements)} but was:${show(actual)}\n elements not expected:${show(notExpected)}")
 }
 
 /**
@@ -132,7 +132,7 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
 fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
-    expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
+    expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
 }
 
 /**
