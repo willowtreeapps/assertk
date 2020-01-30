@@ -91,7 +91,7 @@ fun Assert<Collection<*>>.containsAll(vararg elements: Any?) = given { actual ->
  */
 fun Assert<Collection<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
-    val notInExpected = actual.filterNot { elements.contains(it) }
+    val notInExpected = actual.filterNot { it in elements }
     if (notInExpected.isEmpty() && notInActual.isEmpty()) {
         return
     }

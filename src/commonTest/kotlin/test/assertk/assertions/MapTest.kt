@@ -43,7 +43,9 @@ class MapTest {
             assertThat(mapOf("one" to 1, "two" to 2)).containsNone("two" to 2, "three" to 3)
         }
         assertEquals(
-            "expected to contain none of:<{\"two\"=2, \"three\"=3}> some elements were not expected:<{\"two\"=2}>",
+            """expected to contain none of:<{"two"=2, "three"=3}> but was:<{"one"=1, "two"=2}>
+                | elements not expected:<{"two"=2}>
+            """.trimMargin(),
             error.message
         )
     }
@@ -62,7 +64,11 @@ class MapTest {
         val error = assertFails {
             assertThat(mapOf("one" to 1)).containsAll("one" to 1, "two" to 2)
         }
-        assertEquals("expected to contain all:<{\"one\"=1, \"two\"=2}> but was:<{\"one\"=1}>. Missing elements: <{\"two\"=2}>", error.message
+        assertEquals(
+            """expected to contain all:<{"one"=1, "two"=2}> but was:<{"one"=1}>
+                | elements not found:<{"two"=2}>
+            """.trimMargin(),
+            error.message
         )
     }
     //endregion
@@ -76,14 +82,23 @@ class MapTest {
         val error = assertFails {
             assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("three" to 3)
         }
-        assertEquals("expected to contain only:<{\"three\"=3}> but was:<{\"one\"=1, \"two\"=2}>", error.message)
+        assertEquals(
+            """expected to contain only:<{"three"=3}> but was:<{"one"=1, "two"=2}>
+                | elements not found:<{"three"=3}>
+                | extra elements found:<{"one"=1, "two"=2}>
+            """.trimMargin(), error.message
+        )
     }
 
     @Test fun containsOnly_extra_element_fails() {
         val error = assertFails {
             assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("one" to 1)
         }
-        assertEquals("expected to contain only:<{\"one\"=1}> but was:<{\"one\"=1, \"two\"=2}>", error.message)
+        assertEquals(
+            """expected to contain only:<{"one"=1}> but was:<{"one"=1, "two"=2}>
+                | extra elements found:<{"two"=2}>
+            """.trimMargin(), error.message
+        )
     }
     //endregion
 
