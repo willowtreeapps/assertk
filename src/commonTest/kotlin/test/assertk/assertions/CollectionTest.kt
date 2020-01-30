@@ -85,7 +85,11 @@ class CollectionTest {
         val error = assertFails {
             assertThat(listOf(1, 2)).containsNone(2, 3)
         }
-        assertEquals("expected to contain none of:<[2, 3]> some elements were not expected:<[2]>", error.message)
+        assertEquals(
+            """expected to contain none of:<[2, 3]> but was:<[1, 2]>
+                | elements not expected:<[2]>
+            """.trimMargin(), error.message
+        )
     }
     //region
 
@@ -98,7 +102,11 @@ class CollectionTest {
         val error = assertFails {
             assertThat(listOf(1)).containsAll(1, 2)
         }
-        assertEquals("expected to contain all:<[1, 2]> some elements were not found:<[2]>", error.message)
+        assertEquals(
+            """expected to contain all:<[1, 2]> but was:<[1]>
+                | elements not found:<[2]>
+            """.trimMargin(), error.message
+        )
     }
     //endregion
 
@@ -108,17 +116,39 @@ class CollectionTest {
     }
 
     @Test fun containsOnly_more_elements_fails() {
-        val error = assertFails{
+        val error = assertFails {
             assertThat(listOf(1, 2, 3)).containsOnly(2, 1)
         }
-        assertEquals("expected to contain only:<[2, 1]> but extra elements were found:<[3]>", error.message)
+        assertEquals(
+            """expected to contain only:<[2, 1]> but was:<[1, 2, 3]>
+                | extra elements found:<[3]>
+            """.trimMargin(), error.message
+        )
     }
 
     @Test fun containsOnly_less_elements_fails() {
-        val error = assertFails{
+        val error = assertFails {
             assertThat(listOf(1, 2, 3)).containsOnly(2, 1, 3, 4)
         }
-        assertEquals("expected to contain only:<[2, 1, 3, 4]> but some elements were not found:<[4]>", error.message)
+        assertEquals(
+            """expected to contain only:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
+                | elements not found:<[4]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun containsOnly_different_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1)).containsOnly(2)
+        }
+        assertEquals(
+            """expected to contain only:<[2]> but was:<[1]>
+                | elements not found:<[2]>
+                | extra elements found:<[1]>
+            """.trimMargin(),
+            error.message
+        )
     }
 
     //endregion
