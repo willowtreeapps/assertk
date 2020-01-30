@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.PlatformName
 import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
@@ -42,7 +41,6 @@ fun <T> Assert<Array<T>>.isNotEqualTo(expected: Array<T>) = given { actual ->
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
  */
-@PlatformName("arrayIsEmpty")
 fun Assert<Array<*>>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
@@ -52,7 +50,6 @@ fun Assert<Array<*>>.isEmpty() = given { actual ->
  * Asserts the array is not empty.
  * @see [isEmpty]
  */
-@PlatformName("arrayIsNotEmpty")
 fun Assert<Array<*>>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
@@ -62,7 +59,6 @@ fun Assert<Array<*>>.isNotEmpty() = given { actual ->
  * Asserts the array is null or empty.
  * @see [isEmpty]
  */
-@PlatformName("arrayIsNullOrEmpty")
 fun Assert<Array<*>?>.isNullOrEmpty() = given { actual ->
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
@@ -71,7 +67,6 @@ fun Assert<Array<*>?>.isNullOrEmpty() = given { actual ->
 /**
  * Asserts the array has the expected size.
  */
-@PlatformName("arrayHasSize")
 fun Assert<Array<*>>.hasSize(size: Int) {
     size().isEqualTo(size)
 }
@@ -79,7 +74,6 @@ fun Assert<Array<*>>.hasSize(size: Int) {
 /**
  * Asserts the array has the same size as the expected array.
  */
-@PlatformName("arrayHasSameSizeAs")
 fun Assert<Array<*>>.hasSameSizeAs(other: Array<*>) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
@@ -91,7 +85,6 @@ fun Assert<Array<*>>.hasSameSizeAs(other: Array<*>) = given { actual ->
  * Asserts the array contains the expected element, using `in`.
  * @see [doesNotContain]
  */
-@PlatformName("arrayContains")
 fun Assert<Array<*>>.contains(element: Any?) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
@@ -101,7 +94,6 @@ fun Assert<Array<*>>.contains(element: Any?) = given { actual ->
  * Asserts the array does not contain the expected element, using `!in`.
  * @see [contains]
  */
-@PlatformName("arrayDoesNotContain")
 fun Assert<Array<*>>.doesNotContain(element: Any?) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
@@ -125,7 +117,6 @@ fun Assert<Array<*>>.containsNone(vararg elements: Any?) = given { actual ->
  * additional elements.
  * @see [containsExactly]
  */
-@PlatformName("arrayContainsAll")
 fun Assert<Array<*>>.containsAll(vararg elements: Any?) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
@@ -165,7 +156,6 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
  * there must not be any extra elements.
  * @see [containsAll]
  */
-@PlatformName("arrayContainsExactly")
 fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
 
@@ -181,7 +171,6 @@ fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
  * }
  * ```
  */
-@PlatformName("arrayEach")
 fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->

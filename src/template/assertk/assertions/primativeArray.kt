@@ -1,7 +1,7 @@
 package assertk.assertions
 
+import kotlin.jvm.JvmName
 import assertk.Assert
-import assertk.PlatformName
 import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
@@ -12,7 +12,7 @@ $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArra
 /**
  * Returns an assert on the $T's size.
  */
-@PlatformName("$NSize")
+@JvmName("$NSize")
 fun Assert<$T>.size() = prop("size") { it.size }
 
 /**
@@ -45,7 +45,7 @@ fun Assert<$T>.isNotEqualTo(expected: $T) = given { actual ->
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
  */
-@PlatformName("$NIsEmpty")
+@JvmName("$NIsEmpty")
 fun Assert<$T>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
@@ -55,7 +55,7 @@ fun Assert<$T>.isEmpty() = given { actual ->
  * Asserts the $T is not empty.
  * @see [isEmpty]
  */
-@PlatformName("$NIsNotEmpty")
+@JvmName("$NIsNotEmpty")
 fun Assert<$T>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
@@ -65,7 +65,7 @@ fun Assert<$T>.isNotEmpty() = given { actual ->
  * Asserts the $T is null or empty.
  * @see [isEmpty]
  */
-@PlatformName("$NIsNullOrEmpty")
+@JvmName("$NIsNullOrEmpty")
 fun Assert<$T?>.isNullOrEmpty() = given { actual ->
     if (actual == null || actual.isEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
@@ -74,7 +74,7 @@ fun Assert<$T?>.isNullOrEmpty() = given { actual ->
 /**
  * Asserts the $T has the expected size.
  */
-@PlatformName("$NHasSize")
+@JvmName("$NHasSize")
 fun Assert<$T>.hasSize(size: Int) {
     size().isEqualTo(size)
 }
@@ -82,7 +82,7 @@ fun Assert<$T>.hasSize(size: Int) {
 /**
  * Asserts the $T has the same size as the expected array.
  */
-@PlatformName("$NHasSameSizeAs")
+@JvmName("$NHasSameSizeAs")
 fun Assert<$T>.hasSameSizeAs(other: $T) = given { actual ->
     val actualSize = actual.size
     val otherSize = other.size
@@ -94,7 +94,7 @@ fun Assert<$T>.hasSameSizeAs(other: $T) = given { actual ->
  * Asserts the $T contains the expected element, using `in`.
  * @see [doesNotContain]
  */
-@PlatformName("$NContains")
+@JvmName("$NContains")
 fun Assert<$T>.contains(element: $E) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
@@ -104,7 +104,7 @@ fun Assert<$T>.contains(element: $E) = given { actual ->
  * Asserts the $T does not contain the expected element, using `!in`.
  * @see [contains]
  */
-@PlatformName("$NDoesNotContain")
+@JvmName("$NDoesNotContain")
 fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
@@ -128,7 +128,7 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
  * additional elements.
  * @see [containsExactly]
  */
-@PlatformName("$NContainsAll")
+@JvmName("$NContainsAll")
 fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
@@ -142,7 +142,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  * assertThat($NOf(0, 1, 2)).index(1) { it.isPositive() }
  * ```
  */
-@PlatformName("$NIndexOld")
+@JvmName("$NIndexOld")
 @Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"), level = DeprecationLevel.ERROR)
 fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
     index(index).let(f)
@@ -155,7 +155,7 @@ fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
  * assertThat($NOf(0, 1, 2)).index(1).isPositive()
  * ```
  */
-@PlatformName("$NIndex")
+@JvmName("$NIndex")
 fun Assert<$T>.index(index: Int): Assert<$E> =
     transform("${name ?: ""}${show(index, "[]")}") { actual ->
         if (index in 0 until actual.size) {
@@ -170,7 +170,7 @@ fun Assert<$T>.index(index: Int): Assert<$E> =
  * there must not be any extra elements.
  * @see [containsAll]
  */
-@PlatformName("$NContainsExactly")
+@JvmName("$NContainsExactly")
 fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     if (actual.contentEquals(elements)) return
 
@@ -186,7 +186,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
  * }
  * ```
  */
-@PlatformName("$NEach")
+@JvmName("$NEach")
 fun Assert<$T>.each(f: (Assert<$E>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
