@@ -127,18 +127,6 @@ fun Assert<Array<*>>.containsAll(vararg elements: Any?) = given { actual ->
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assertThat(arrayOf(0, 1, 2)).index(1) { it.isPositive() }
- * ```
- */
-@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"), level = DeprecationLevel.ERROR)
-fun <T> Assert<Array<T>>.index(index: Int, f: (Assert<T>) -> Unit) {
-    index(index).let(f)
-}
-
-/**
- * Returns an assert that assertion on the value at the given index in the array.
- *
- * ```
  * assertThat(arrayOf(0, 1, 2)).index(1).isPositive()
  * ```
  */

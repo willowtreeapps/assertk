@@ -60,35 +60,10 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * Asserts on the given value with an optional name.
      *
      * ```
-     * assert(true, name = "true").isTrue()
-     * ```
-     */
-    @Deprecated(
-        "Renamed assertThat",
-        replaceWith = ReplaceWith("assertThat(actual, name)"),
-        level = DeprecationLevel.ERROR
-    )
-    fun <R> assert(actual: R, name: String? = this.name): Assert<R> = assertThat(actual, name)
-
-    /**
-     * Asserts on the given value with an optional name.
-     *
-     * ```
      * assertThat(true, name = "true").isTrue()
      * ```
      */
     abstract fun <R> assertThat(actual: R, name: String? = this.name): Assert<R>
-
-    @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated(
-        message = "Use `given` or `transform` to access the actual value instead",
-        level = DeprecationLevel.ERROR
-    )
-    val actual: T
-        get() = when (this) {
-            is ValueAssert -> value
-            is FailingAssert -> throw error
-        }
 }
 
 @PublishedApi
@@ -110,7 +85,8 @@ internal class FailingAssert<out T>(val error: Throwable, name: String?, context
 @Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isFailure().all(f) instead",
-    replaceWith = ReplaceWith("isFailure().all(f)", imports = ["assertk.assertions.isFailure", "assertk.all"])
+    replaceWith = ReplaceWith("isFailure().all(f)", imports = ["assertk.assertions.isFailure", "assertk.all"]),
+    level = DeprecationLevel.ERROR
 )
 fun <T> Assert<Result<T>>.thrownError(f: Assert<Throwable>.() -> Unit) {
     isFailure().all(f)
@@ -122,7 +98,8 @@ fun <T> Assert<Result<T>>.thrownError(f: Assert<Throwable>.() -> Unit) {
 @Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isSuccess().all(f) instead",
-    replaceWith = ReplaceWith("isSuccess().all(f)", imports = ["assertk.assertions.isSuccess", "assertk.all"])
+    replaceWith = ReplaceWith("isSuccess().all(f)", imports = ["assertk.assertions.isSuccess", "assertk.all"]),
+    level = DeprecationLevel.ERROR
 )
 fun <T> Assert<Result<T>>.returnedValue(f: Assert<T>.() -> Unit) {
     isSuccess().all(f)
@@ -131,14 +108,15 @@ fun <T> Assert<Result<T>>.returnedValue(f: Assert<T>.() -> Unit) {
 @Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isSuccess() instead",
-    replaceWith = ReplaceWith("isSuccess()", imports = ["assertk.assertions.isSuccess", "assertk.assertions"])
+    replaceWith = ReplaceWith("isSuccess()", imports = ["assertk.assertions.isSuccess", "assertk.assertions"]),
+    level = DeprecationLevel.ERROR
 )
 fun <T> Assert<Result<T>>.doesNotThrowAnyException() {
     isSuccess()
 }
 
 @Suppress("DEPRECATION")
-@Deprecated(message = "Use Assert<Result<T>> instead")
+@Deprecated(message = "Use Assert<Result<T>> instead", level = DeprecationLevel.ERROR)
 typealias AssertBlock<T> = Assert<Result<T>>
 
 @Suppress("DEPRECATION")
@@ -187,16 +165,6 @@ sealed class Result<out T> {
  * TODO: use @OptionalExpectation (https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-optional-expectation/index.html) here once available and call default implementation of [show] for JS
  */
 internal expect fun showError(e: Throwable): String
-
-/**
- * Asserts on the given value with an optional name.
- *
- * ```
- * assert(true, name = "true").isTrue()
- * ```
- */
-@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(actual, name)"), level = DeprecationLevel.ERROR)
-fun <T> assert(actual: T, name: String? = null): Assert<T> = assertThat(actual, name)
 
 /**
  * Asserts on the given value with an optional name.
@@ -289,21 +257,6 @@ internal fun <T> Assert<T>.all(
  * Asserts on the given block returning an `Assert<Result<T>>`. You can test that it returns a value or throws an exception.
  *
  * ```
- * assert { 1 + 1 }.isSuccess().isPositive()
- *
- * assert {
- *   throw Exception("error")
- * }.isFailure().hasMessage("error")
- * ```
- */
-@Suppress("DEPRECATION")
-@Deprecated("Renamed assertThat", replaceWith = ReplaceWith("assertThat(f)"), level = DeprecationLevel.ERROR)
-fun <T> assert(f: () -> T): Assert<Result<T>> = assertThat(f)
-
-/**
- * Asserts on the given block returning an `Assert<Result<T>>`. You can test that it returns a value or throws an exception.
- *
- * ```
  * assertThat { 1 + 1 }.isSuccess().isPositive()
  *
  * assertThat {
@@ -331,7 +284,7 @@ inline fun assertAll(f: () -> Unit) {
  * ```
  */
 @Suppress("TooGenericExceptionCaught")
-@Deprecated("Use assertThat { }.isFailure() instead")
+@Deprecated("Use assertThat { }.isFailure() instead", level = DeprecationLevel.ERROR)
 inline fun catch(f: () -> Unit): Throwable? {
     try {
         f()

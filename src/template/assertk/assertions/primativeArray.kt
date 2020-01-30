@@ -139,19 +139,6 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
- * assertThat($NOf(0, 1, 2)).index(1) { it.isPositive() }
- * ```
- */
-@JvmName("$NIndexOld")
-@Deprecated(message = "Use index(index) instead.", replaceWith = ReplaceWith("index(index).let(f)"), level = DeprecationLevel.ERROR)
-fun Assert<$T>.index(index: Int, f: (Assert<$E>) -> Unit) {
-    index(index).let(f)
-}
-
-/**
- * Returns an assert that assertion on the value at the given index in the array.
- *
- * ```
  * assertThat($NOf(0, 1, 2)).index(1).isPositive()
  * ```
  */

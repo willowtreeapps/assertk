@@ -27,16 +27,6 @@ class NativeAssertLambdaTest {
         }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
-    @Test fun catch_works_in_coroutine_test() {
-        runBlocking {
-            val error = catch {
-                asyncThrows()
-            }
-            assertThat(error).isNotNull().hasMessage("test")
-        }
-    }
-
     @Suppress("RedundantSuspendModifier")
     private suspend fun asyncReturnValue(): Int {
         return 1
