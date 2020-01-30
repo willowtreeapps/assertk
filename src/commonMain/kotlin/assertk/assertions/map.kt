@@ -119,7 +119,7 @@ fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given {
  */
 fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given { actual ->
     if (actual.size == elements.size && elements.all { (k, v) -> actual[k] == v }) return
-    expected("to contain only:${show(mapOf(*elements))} but was:${show(actual)}")
+    expected("to contain only:${show(elements.toMap())} but was:${show(actual)}")
 }
 
 /**

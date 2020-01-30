@@ -181,10 +181,9 @@ gitPublish {
 gitPublishCopy.dependsOn(dokka)
 
 task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
-    setSource(files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin))
+    setSource(files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin, kotlin.sourceSets.nativeMain.kotlin))
     config.from(files("detekt.yml"))
-    // https://github.com/arturbosch/detekt/issues/1761
-    ignoreFailures = false
+    buildUponDefaultConfig = true
     reports {
         xml.destination = file("$buildDir/reports/detektMain/detekt.xml")
         html.destination = file("$buildDir/reports/detektMain/detekt.html")
@@ -192,10 +191,9 @@ task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
 }
 
 task detektTest(type: io.gitlab.arturbosch.detekt.Detekt) {
-    setSource(files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin))
+    setSource(files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin, kotlin.sourceSets.nativeTest.kotlin))
     config.from(files("detekt-test.yml"))
-    // https://github.com/arturbosch/detekt/issues/1761
-    ignoreFailures = false
+    buildUponDefaultConfig = true
     reports {
         xml.destination = file("$buildDir/reports/detektTest/detekt.xml")
         html.destination = file("$buildDir/reports/detektTest/detekt.html")

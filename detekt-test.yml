@@ -1,2 +1,6 @@
-build:
-  maxIssues: 0
+style:
+  active: false
+exceptions:
+  # Several tests test things that handle pretty generic exceptions, doesn't make sense to throw something more specific
+  TooGenericExceptionThrown:
+    active: false

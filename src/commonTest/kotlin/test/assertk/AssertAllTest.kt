@@ -91,6 +91,7 @@ class AssertAllTest {
                     throw AssertionError()
                 }
             } catch (e: Throwable) {
+                // ignore
             }
             fail(AssertionError("Fail"))
         }
