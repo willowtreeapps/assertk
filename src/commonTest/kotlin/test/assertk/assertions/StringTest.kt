@@ -139,7 +139,7 @@ class StringTest {
     //endregion
 
 
-    //region doesNotContain
+    //region doesNotContain single
     @Test fun doesNotContain_value_not_substring_passes() {
         assertThat("test").doesNotContain("not")
     }
@@ -148,18 +148,42 @@ class StringTest {
         val error = assertFails {
             assertThat("test").doesNotContain("est")
         }
-        assertEquals("expected to not contain:<\"est\">", error.message)
+        assertEquals("expected to not contain:<[\"est\"]> but was:<\"test\">", error.message)
     }
 
     @Test fun doesNotContain_value_substring_ignore_case_fails() {
         val error = assertFails {
             assertThat("Test").doesNotContain("EST", true)
         }
-        assertEquals("expected to not contain:<\"EST\">", error.message)
+        assertEquals("expected to not contain:<[\"EST\"]> but was:<\"Test\">", error.message)
     }
 
     @Test fun doesNotContain_value_not_substring_ignore_case_passes() {
         assertThat("Test").doesNotContain("EST", false)
+    }
+    //endregion
+
+    //region doesNotContain multi
+    @Test fun doesNotContain_multivalue_not_substring_passes() {
+        assertThat("test").doesNotContain("foo", "bar")
+    }
+
+    @Test fun doesNotContain_multivalue_substring_fails() {
+        val error = assertFails {
+            assertThat("test").doesNotContain("te", "st")
+        }
+        assertEquals("expected to not contain:<[\"te\", \"st\"]> but was:<\"test\">", error.message)
+    }
+
+    @Test fun doesNotContain_multivalue_substring_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").doesNotContain("TE", "ST", ignoreCase = true)
+        }
+        assertEquals("expected to not contain:<[\"TE\", \"ST\"]> but was:<\"Test\">", error.message)
+    }
+
+    @Test fun doesNotContain_multivalue_not_substring_ignore_case_passes() {
+        assertThat("Test").doesNotContain("TE", "ST", ignoreCase = false)
     }
     //endregion
 
