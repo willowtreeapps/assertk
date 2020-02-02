@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- Add `Assert<String>.containsAll()` assertions
+- Add `Assert<String>.containsSubstrings()` assertions
 
 ## [0.21] 2020-01-22
 
