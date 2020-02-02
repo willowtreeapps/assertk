@@ -1,6 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.assertAll
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -51,15 +52,15 @@ fun Assert<String>.contains(other: CharSequence, ignoreCase: Boolean = false) = 
  * Asserts the string contains the expected strings.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.containsAll(expected: List<String>, ignoreCase: Boolean = false) {
-    containsAll(*expected.toTypedArray(), ignoreCase)
+fun Assert<String>.containsSubstrings(vararg expected: String, ignoreCase: Boolean = false) {
+    containsSubstrings(expected.toList(), ignoreCase)
 }
 
 /**
  * Asserts the string contains the expected strings.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.containsAll(vararg expected: String, ignoreCase: Boolean = false) {
+fun Assert<String>.containsSubstrings(expected: List<String>, ignoreCase: Boolean = false) {
     assertAll {
         expected.forEach {
             contains(it, ignoreCase)
