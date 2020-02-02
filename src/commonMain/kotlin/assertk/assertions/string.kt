@@ -42,8 +42,9 @@ fun Assert<String?>.isNotEqualTo(other: String?, ignoreCase: Boolean = false) = 
  * Asserts the string contains the expected substring.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.contains(expected: CharSequence, ignoreCase: Boolean = false) {
-    contains(listOf(expected), ignoreCase)
+fun Assert<String>.contains(expected: CharSequence, ignoreCase: Boolean = false)= given { actual ->
+    if (actual.contains(expected, ignoreCase)) return
+    expected("to contain:${show(expected)} but was:${show(actual)}")
 }
 
 /**
@@ -58,11 +59,9 @@ fun Assert<String>.contains(vararg expected: CharSequence, ignoreCase: Boolean =
  * Asserts the string contains the expected strings.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.contains(expected: Iterable<CharSequence>, ignoreCase: Boolean = false) {
-    given { actual ->
-        if (expected.all { actual.contains(it, ignoreCase) }) return
-        expected("to contain:${show(expected)} but was:${show(actual)}")
-    }
+fun Assert<String>.contains(expected: Iterable<CharSequence>, ignoreCase: Boolean = false) = given { actual ->
+    if (expected.all { actual.contains(it, ignoreCase) }) return
+    expected("to contain:${show(expected)} but was:${show(actual)}")
 }
 
 /**
@@ -70,7 +69,8 @@ fun Assert<String>.contains(expected: Iterable<CharSequence>, ignoreCase: Boolea
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
 fun Assert<String>.doesNotContain(expected: CharSequence, ignoreCase: Boolean = false) = given { actual ->
-    doesNotContain(listOf(expected), ignoreCase)
+    if (!actual.contains(expected, ignoreCase)) return
+    expected("to not contain:${show(expected)} but was:${show(actual)}")
 }
 
 /**

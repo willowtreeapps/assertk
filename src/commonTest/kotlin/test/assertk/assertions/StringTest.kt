@@ -87,7 +87,7 @@ class StringTest {
         val error = assertFails {
             assertThat("test").contains("not")
         }
-        assertEquals("expected to contain:<[\"not\"]> but was:<\"test\">", error.message)
+        assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
     }
 
     @Test fun contains_value_substring_ignore_case_passes() {
@@ -98,7 +98,7 @@ class StringTest {
         val error = assertFails {
             assertThat("Test").contains("EST", false)
         }
-        assertEquals("expected to contain:<[\"EST\"]> but was:<\"Test\">", error.message)
+        assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
     }
     //endregion
 
@@ -148,14 +148,14 @@ class StringTest {
         val error = assertFails {
             assertThat("test").doesNotContain("est")
         }
-        assertEquals("expected to not contain:<[\"est\"]> but was:<\"test\">", error.message)
+        assertEquals("expected to not contain:<\"est\"> but was:<\"test\">", error.message)
     }
 
     @Test fun doesNotContain_value_substring_ignore_case_fails() {
         val error = assertFails {
             assertThat("Test").doesNotContain("EST", true)
         }
-        assertEquals("expected to not contain:<[\"EST\"]> but was:<\"Test\">", error.message)
+        assertEquals("expected to not contain:<\"EST\"> but was:<\"Test\">", error.message)
     }
 
     @Test fun doesNotContain_value_not_substring_ignore_case_passes() {
