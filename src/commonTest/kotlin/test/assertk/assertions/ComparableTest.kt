@@ -1,7 +1,14 @@
 package test.assertk.assertions
 
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.isBetween
+import assertk.assertions.isCloseTo
+import assertk.assertions.isEqualByComparingTo
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isGreaterThanOrEqualTo
+import assertk.assertions.isLessThan
+import assertk.assertions.isLessThanOrEqualTo
+import assertk.assertions.isStrictlyBetween
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -165,6 +172,28 @@ class ComparableTest {
             assertThat(10.1).isCloseTo(15.0, 3.0)
         }
         assertEquals("expected ${show(10.1)} to be close to ${show(15.0)} with delta of ${show(3.0)}, but was not", error.message)
+    }
+
+    @Test
+    fun isEqualByComparingTo_fails() {
+        val error = assertFails {
+            assertThat(Info("aaa")).isEqualByComparingTo(Info("bbbb"))
+        }
+        assertEquals("expected:<[bbbb]> but was:<[aaa]>", error.message)
+    }
+
+    @Test
+    fun isEqualByComparingTo_succeeds() {
+        assertThat(Info("aaa")).isEqualByComparingTo(Info("bbb"))
+    }
+
+    private class Info(private val data: String): Comparable<Info> {
+        override fun compareTo(other: Info): Int {
+            return data.length - other.data.length
+        }
+        override fun toString(): String {
+            return data
+        }
     }
 
     //endregion

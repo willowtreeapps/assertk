@@ -39,21 +39,55 @@ fun Assert<String?>.isNotEqualTo(other: String?, ignoreCase: Boolean = false) = 
 }
 
 /**
- * Asserts the string contains the expected string.
+ * Asserts the string contains the expected substring.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.contains(other: CharSequence, ignoreCase: Boolean = false) = given { actual ->
-    if (actual.contains(other, ignoreCase)) return
-    expected("to contain:${show(other)} but was:${show(actual)}")
+fun Assert<String>.contains(expected: CharSequence, ignoreCase: Boolean = false)= given { actual ->
+    if (actual.contains(expected, ignoreCase)) return
+    expected("to contain:${show(expected)} but was:${show(actual)}")
+}
+
+/**
+ * Asserts the string contains the expected substring(s).
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.contains(vararg expected: CharSequence, ignoreCase: Boolean = false) {
+    contains(expected.toList(), ignoreCase)
+}
+
+/**
+ * Asserts the string contains the expected strings.
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.contains(expected: Iterable<CharSequence>, ignoreCase: Boolean = false) = given { actual ->
+    if (expected.all { actual.contains(it, ignoreCase) }) return
+    expected("to contain:${show(expected)} but was:${show(actual)}")
 }
 
 /**
  * Asserts the string does not contain the specified string.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.doesNotContain(other: CharSequence, ignoreCase: Boolean = false) = given { actual ->
-    if (!actual.contains(other, ignoreCase)) return
-    expected("to not contain:${show(other)}")
+fun Assert<String>.doesNotContain(expected: CharSequence, ignoreCase: Boolean = false) = given { actual ->
+    if (!actual.contains(expected, ignoreCase)) return
+    expected("to not contain:${show(expected)} but was:${show(actual)}")
+}
+
+/**
+ * Asserts the string does not contain the specified string(s).
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.doesNotContain(vararg expected: CharSequence, ignoreCase: Boolean = false) = given { actual ->
+    doesNotContain(expected.toList(), ignoreCase)
+}
+
+/**
+ * Asserts the string does not contain the specified strings.
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.doesNotContain(expected: Iterable<CharSequence>, ignoreCase: Boolean = false) = given { actual ->
+    if (expected.none { actual.contains(it, ignoreCase) }) return
+    expected("to not contain:${show(expected)} but was:${show(actual)}")
 }
 
 /**
