@@ -102,6 +102,34 @@ class StringTest {
     }
     //endregion
 
+    //region containsAll
+    @Test fun containsAll_value_contains_passes() {
+        assertThat("test").containsAll("es", "st")
+    }
+
+    @Test fun containsAll_list_contains_passes() {
+        assertThat("test").containsAll(listOf("es", "st"))
+    }
+
+    @Test fun containsAll_value_not_contains_fails() {
+        val error = assertFails {
+            assertThat("test").containsAll("not")
+        }
+        assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
+    }
+
+    @Test fun containsAll_value_contains_ignore_case_passes() {
+        assertThat("Test").containsAll("EST", true)
+    }
+
+    @Test fun containsAll_value_not_contains_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").containsAll("EST", false)
+        }
+        assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
+    }
+    //endregion
+
     //region doesNotContain
     @Test fun doesNotContain_value_not_substring_passes() {
         assertThat("test").doesNotContain("not")

@@ -48,6 +48,26 @@ fun Assert<String>.contains(other: CharSequence, ignoreCase: Boolean = false) = 
 }
 
 /**
+ * Asserts the string contains the expected strings.
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.containsAll(expected: List<String>, ignoreCase: Boolean = false) {
+    containsAll(*expected.toTypedArray(), ignoreCase)
+}
+
+/**
+ * Asserts the string contains the expected strings.
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.containsAll(vararg expected: String, ignoreCase: Boolean = false) {
+    assertAll {
+        expected.forEach {
+            contains(it, ignoreCase)
+        }
+    }
+}
+
+/**
  * Asserts the string does not contain the specified string.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
