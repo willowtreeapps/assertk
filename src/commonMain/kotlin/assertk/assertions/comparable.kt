@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
+import assertk.assertions.support.fail
 import assertk.assertions.support.show
 
 /**
@@ -76,4 +77,12 @@ fun Assert<Float>.isCloseTo(value: Float, delta: Float) = given { actual ->
 fun Assert<Double>.isCloseTo(value: Double, delta: Double) = given { actual ->
     if (actual >= value.minus(delta) && actual <= value.plus(delta)) return
     expected("${show(actual)} to be close to ${show(value)} with delta of ${show(delta)}, but was not")
+}
+
+/**
+ * Asserts that value is equal when comparing using <code>{@link Comparable#compareTo(Object)}</code>.
+ */
+fun <T : Comparable<T>> Assert<T>.isEqualByComparingTo(expected: T) = given { actual ->
+    if (actual.compareTo(expected) == 0) return
+    fail(expected, actual)
 }
