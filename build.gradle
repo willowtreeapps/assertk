@@ -359,6 +359,8 @@ publishing {
     }
 }
 
-signing {
-    publishing.publications.all { sign it }
+if (isReleaseVersion) {
+  signing {
+      publishing.publications.all { sign it }
+  }
 }
