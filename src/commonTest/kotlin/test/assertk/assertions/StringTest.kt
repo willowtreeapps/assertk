@@ -78,7 +78,7 @@ class StringTest {
     }
     //endregion
 
-    //region contains
+    //region contains single
     @Test fun contains_value_substring_passes() {
         assertThat("test").contains("est")
     }
@@ -87,7 +87,7 @@ class StringTest {
         val error = assertFails {
             assertThat("test").contains("not")
         }
-        assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
+        assertEquals("expected to contain:<[\"not\"]> but was:<\"test\">", error.message)
     }
 
     @Test fun contains_value_substring_ignore_case_passes() {
@@ -98,35 +98,43 @@ class StringTest {
         val error = assertFails {
             assertThat("Test").contains("EST", false)
         }
-        assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
+        assertEquals("expected to contain:<[\"EST\"]> but was:<\"Test\">", error.message)
     }
     //endregion
 
-    //region containsSubstrings
-    @Test fun containsSubstrings_value_contains_passes() {
-        assertThat("test").containsSubstrings("es", "st")
+    //region contains multi
+    @Test fun contains_empty_arg_passes() {
+        assertThat("test").contains()
     }
 
-    @Test fun containsSubstrings_list_contains_passes() {
-        assertThat("test").containsSubstrings(listOf("es", "st"))
+    @Test fun contains_value_contains_passes() {
+        assertThat("test").contains("te", "st")
     }
 
-    @Test fun containsSubstrings_value_not_contains_fails() {
+    @Test fun contains_list_contains_passes() {
+        assertThat("test").contains(listOf("te", "st"))
+    }
+
+    @Test fun contains_contains_unordered_passes() {
+        assertThat("test").contains("st", "te")
+    }
+
+    @Test fun contains_value_not_contains_fails() {
         val error = assertFails {
-            assertThat("test").containsSubstrings("not")
+            assertThat("test").contains("foo", "bar")
         }
-        assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
+        assertEquals("expected to contain:<[\"foo\", \"bar\"]> but was:<\"test\">", error.message)
     }
 
-    @Test fun containsSubstrings_value_contains_ignore_case_passes() {
-        assertThat("Test").containsSubstrings("EST", ignoreCase = true)
+    @Test fun contains_value_contains_ignore_case_passes() {
+        assertThat("Test").contains("te", "ST", ignoreCase = true)
     }
 
-    @Test fun containsSubstrings_value_not_contains_ignore_case_fails() {
+    @Test fun contains_value_not_contains_ignore_case_fails() {
         val error = assertFails {
-            assertThat("Test").containsSubstrings("EST", ignoreCase = false)
+            assertThat("Test").contains("te", "ST", ignoreCase = false)
         }
-        assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
+        assertEquals("expected to contain:<[\"te\", \"ST\"]> but was:<\"Test\">", error.message)
     }
     //endregion
 

@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assertAll
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -40,31 +39,29 @@ fun Assert<String?>.isNotEqualTo(other: String?, ignoreCase: Boolean = false) = 
 }
 
 /**
- * Asserts the string contains the expected string.
+ * Asserts the string contains the expected substring(s).
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.contains(other: CharSequence, ignoreCase: Boolean = false) = given { actual ->
-    if (actual.contains(other, ignoreCase)) return
-    expected("to contain:${show(other)} but was:${show(actual)}")
+fun Assert<String>.contains(expected: CharSequence, ignoreCase: Boolean = false) {
+    contains(listOf(expected), ignoreCase)
+}
+
+/**
+ * Asserts the string contains the expected substring(s).
+ * @param ignoreCase true to compare ignoring case, the default if false.
+ */
+fun Assert<String>.contains(vararg expected: CharSequence, ignoreCase: Boolean = false) {
+    contains(expected.toList(), ignoreCase)
 }
 
 /**
  * Asserts the string contains the expected strings.
  * @param ignoreCase true to compare ignoring case, the default if false.
  */
-fun Assert<String>.containsSubstrings(vararg expected: String, ignoreCase: Boolean = false) {
-    containsSubstrings(expected.toList(), ignoreCase)
-}
-
-/**
- * Asserts the string contains the expected strings.
- * @param ignoreCase true to compare ignoring case, the default if false.
- */
-fun Assert<String>.containsSubstrings(expected: List<String>, ignoreCase: Boolean = false) {
-    assertAll {
-        expected.forEach {
-            contains(it, ignoreCase)
-        }
+fun Assert<String>.contains(expected: Iterable<CharSequence>, ignoreCase: Boolean = false) {
+    given { actual ->
+        if (expected.all { actual.contains(it, ignoreCase) }) return
+        expected("to contain:${show(expected)} but was:${show(actual)}")
     }
 }
 
