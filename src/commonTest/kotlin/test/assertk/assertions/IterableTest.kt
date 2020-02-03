@@ -207,12 +207,11 @@ class IterableTest {
             assertThat(listOf("one", "two") as Iterable<String>).extracting { it.length }.containsExactly(2, 2)
         }
         assertEquals(
-            """expected to contain exactly:
+            """expected to contain exactly:<[2, 2]> but was:<[3, 3]>
             | at index:0 expected:<2>
             | at index:0 unexpected:<3>
             | at index:1 expected:<2>
-            | at index:1 unexpected:<3>
-            | expected:<[2, 2]> but was:<[3, 3]> (["one", "two"])""".trimMargin(), error.message
+            | at index:1 unexpected:<3> (["one", "two"])""".trimMargin(), error.message
         )
     }
 
@@ -229,12 +228,11 @@ class IterableTest {
                 .containsExactly("one" to 2, "two" to 1)
         }
         assertEquals(
-            """expected to contain exactly:
+            """expected to contain exactly:<[("one", 2), ("two", 1)]> but was:<[("one", 1), ("two", 2)]>
             | at index:0 expected:<("one", 2)>
             | at index:0 unexpected:<("one", 1)>
             | at index:1 expected:<("two", 1)>
-            | at index:1 unexpected:<("two", 2)>
-            | expected:<[("one", 2), ("two", 1)]> but was:<[("one", 1), ("two", 2)]> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
             error.message
         )
     }
@@ -252,12 +250,11 @@ class IterableTest {
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
         }
         assertEquals(
-            """expected to contain exactly:
+            """expected to contain exactly:<[("one", 1, '2'), ("two", 2, '3')]> but was:<[("one", 1, '1'), ("two", 2, '2')]>
             | at index:0 expected:<("one", 1, '2')>
             | at index:0 unexpected:<("one", 1, '1')>
             | at index:1 expected:<("two", 2, '3')>
-            | at index:1 unexpected:<("two", 2, '2')>
-            | expected:<[("one", 1, '2'), ("two", 2, '3')]> but was:<[("one", 1, '1'), ("two", 2, '2')]> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            | at index:1 unexpected:<("two", 2, '2')> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
             error.message
         )
     }

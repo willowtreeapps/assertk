@@ -64,7 +64,7 @@ fun Assert<Collection<*>>.containsNone(vararg elements: Any?) = given { actual -
     }
 
     val notExpected = elements.filter { it in actual }
-    expected("to contain none of:${show(elements)} some elements were not expected:${show(notExpected)}")
+    expected("to contain none of:${show(elements)} but was:${show(actual)}\n elements not expected:${show(notExpected)}")
 }
 
 /**
@@ -80,23 +80,27 @@ fun Assert<Collection<*>>.containsAll(vararg elements: Any?) = given { actual ->
     }
 
     val notFound = elements.filterNot { it in actual }
-    expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
+    expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
 }
 
 /**
- * Asserts the collection contains only the expected elements
+ * Asserts the collection contains only the expected elements, in any order.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsAll]
  */
 fun Assert<Collection<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
-    val notInExpected = actual.filterNot { elements.contains(it) }
-    if (notInExpected.isEmpty() && notInActual.isEmpty())
+    val notInExpected = actual.filterNot { it in elements }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
         return
-    if (notInActual.isNotEmpty()) {
-        expected("to contain only:${show(elements)} but some elements were not found:${show(notInActual)}")
-    } else if (notInExpected.isNotEmpty()) {
-        expected("to contain only:${show(elements)} but extra elements were found:${show(notInExpected)}")
     }
+    expected(StringBuilder("to contain only:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
 }

@@ -120,7 +120,7 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
     }
 
     val notExpected = elements.filter { it in actual }
-    expected("to contain none of:${show(elements)} some elements were not expected:${show(notExpected)}")
+    expected("to contain none of:${show(elements)} but was:${show(actual)}\n elements not expected:${show(notExpected)}")
 }
 
 /**
@@ -132,7 +132,29 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
 fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
-    expected("to contain all:${show(elements)} some elements were not found:${show(notFound)}")
+    expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
+}
+
+/**
+ * Asserts the $T contains only the expected elements, in any order.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsAll]
+ */
+fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
+    val notInActual = elements.filterNot { it in actual }
+    val notInExpected = actual.filterNot { it in elements }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain only:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
 }
 
 /**
