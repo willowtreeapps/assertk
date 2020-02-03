@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add multi-value support for `Assert<String>.contains()` and `doesNotContain()`
 
+### Changed
+- Moved `containsAll`, `containsNone`, and `containsOnly` from `Collection` to `Iterable` to make
+them a bit more flexible.
+
 ## [0.21] 2020-01-22
 
 ### Added
