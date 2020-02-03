@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package test.assertk.assertions
 
 import assertk.Result

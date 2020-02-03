@@ -1,2 +1,6 @@
-build:
-  maxIssues: 0
+style:
+  active: false
+complexity:
+  # Since they are all top-level functions grouped by type there's not really an issue with having 'too many' in a file.
+  TooManyFunctions:
+    active: false

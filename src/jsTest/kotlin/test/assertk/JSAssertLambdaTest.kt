@@ -21,13 +21,6 @@ class JSAssertLambdaTest {
         }.isFailure().hasMessage("test")
     }
 
-    @Test fun catch_works_in_corountine_test() = GlobalScope.promise {
-        val error = catch {
-            asyncThrows()
-        }
-        assertThat(error).isNotNull().hasMessage("test")
-    }
-
     @Suppress("RedundantSuspendModifier")
     private suspend fun asyncReturnValue(): Int {
         return 1

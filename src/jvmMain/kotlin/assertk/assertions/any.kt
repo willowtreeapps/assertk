@@ -55,17 +55,6 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = trans
 }
 
 /**
- * Asserts the value is an instance of the expected java class. Both `assertThat("test").isInstanceOf(String::class.java)`
- * and `assertThat("test").isInstanceOf(Any::class.java)` is successful.
- * @see [isNotInstanceOf]
- * @see [hasClass]
- */
-@Deprecated(message = "Use isInstanceOf(jclass) instead.", replaceWith = ReplaceWith("isInstanceOf(jclass).let(f)"), level = DeprecationLevel.ERROR)
-fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>, f: (Assert<S>) -> Unit) {
-    isInstanceOf(jclass).let(f)
-}
-
-/**
  * Asserts the value is not an instance of the expected java class. Both `assertThat("test").isNotInstanceOf(String::class)`
  * and `assertThat("test").isNotInstanceOf(Any::class)` fails.
  * @see [isInstanceOf]

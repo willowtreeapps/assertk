@@ -1,12 +1,7 @@
 package test.assertk
 
-import assertk.assertThat
-import assertk.assertions.hasMessage
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
-import assertk.catch
-import assertk.returnedValue
-import assertk.thrownError
+import assertk.*
+import assertk.assertions.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runBlockingTest
@@ -19,7 +14,7 @@ class JVMAssertLambdaTest {
         runBlockingTest {
             assertThat {
                 asyncReturnValue()
-            }.returnedValue { isEqualTo(1) }
+            }.isSuccess().isEqualTo(1)
         }
     }
 
@@ -28,17 +23,7 @@ class JVMAssertLambdaTest {
         runBlockingTest {
             assertThat {
                 asyncThrows()
-            }.thrownError { hasMessage("test") }
-        }
-    }
-
-    @UseExperimental(ExperimentalCoroutinesApi::class)
-    @Test fun catch_works_in_coroutine_test() {
-        runBlockingTest {
-            val error = catch {
-                asyncThrows()
-            }
-            assertThat(error).isNotNull().hasMessage("test")
+            }.isFailure().hasMessage("test")
         }
     }
 

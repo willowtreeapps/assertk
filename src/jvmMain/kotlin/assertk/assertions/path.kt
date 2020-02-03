@@ -24,6 +24,7 @@ fun Assert<Path>.bytes(): Assert<ByteArray> =
  *
  * @param options indicating how symbolic links are handled
  */
+@Suppress("SpreadOperator") // https://github.com/arturbosch/detekt/issues/391
 fun Assert<Path>.isRegularFile(vararg options: LinkOption) = given { actual ->
     if (!Files.isRegularFile(actual, *options)) {
         expected("${show(actual)} to be a regular file, but it is not")
@@ -34,6 +35,7 @@ fun Assert<Path>.isRegularFile(vararg options: LinkOption) = given { actual ->
  *
  * @param options indicating how symbolic links are handled
  */
+@Suppress("SpreadOperator") // https://github.com/arturbosch/detekt/issues/391
 fun Assert<Path>.isDirectory(vararg options: LinkOption) = given { actual ->
     if (!Files.isDirectory(actual, *options)) {
         expected("${show(actual)} to be a directory, but it is not")

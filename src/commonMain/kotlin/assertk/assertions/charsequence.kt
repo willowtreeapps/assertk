@@ -1,7 +1,6 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.PlatformName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -15,7 +14,6 @@ fun Assert<CharSequence>.length() = prop("length", CharSequence::length)
  * @see [isNotEmpty]
  * @see [isNullOrEmpty]
  */
-@PlatformName("isCharSequenceEmpty")
 fun Assert<CharSequence>.isEmpty() = given { actual ->
     if (actual.isEmpty()) return
     expected("to be empty but was:${show(actual)}")
@@ -25,7 +23,6 @@ fun Assert<CharSequence>.isEmpty() = given { actual ->
  * Asserts the char sequence is not empty.
  * @see [isEmpty]
  */
-@PlatformName("isCharSequenceNotEmpty")
 fun Assert<CharSequence>.isNotEmpty() = given { actual ->
     if (actual.isNotEmpty()) return
     expected("to not be empty")
@@ -35,7 +32,6 @@ fun Assert<CharSequence>.isNotEmpty() = given { actual ->
  * Asserts the char sequence is null or empty.
  * @see [isEmpty]
  */
-@PlatformName("isCharSequenceNullOrEmpty")
 fun Assert<CharSequence?>.isNullOrEmpty() = given { actual ->
     if (actual.isNullOrEmpty()) return
     expected("to be null or empty but was:${show(actual)}")
@@ -44,7 +40,6 @@ fun Assert<CharSequence?>.isNullOrEmpty() = given { actual ->
 /**
  * Asserts the char sequence has the expected length.
  */
-@PlatformName("charSequenceHasLength")
 fun Assert<CharSequence>.hasLength(length: Int) {
     length().isEqualTo(length)
 }

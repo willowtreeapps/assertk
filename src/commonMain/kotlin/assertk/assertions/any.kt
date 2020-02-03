@@ -115,25 +115,6 @@ fun Assert<Any?>.isNull() = given { actual ->
  *
  * ```
  * val name: String? = ...
- * assertThat(name).isNotNull() {
- *   it.hasLength(4)
- * }
- * ```
- */
-@Deprecated(
-    message = "Use isNotNull() instead",
-    replaceWith = ReplaceWith("isNotNull().let(f)"),
-    level = DeprecationLevel.ERROR
-)
-fun <T : Any> Assert<T?>.isNotNull(f: (Assert<T>) -> Unit) {
-    isNotNull().let(f)
-}
-
-/**
- * Asserts the value is not null. You can pass in an optional lambda to run additional assertions on the non-null value.
- *
- * ```
- * val name: String? = ...
  * assertThat(name).isNotNull().hasLength(4)
  * ```
  */
@@ -185,21 +166,6 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual
 fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual ->
     if (!kclass.isInstance(actual)) return
     expected("to not be instance of:${show(kclass)}")
-}
-
-/**
- * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf(String::class)` and
- * `assertThat("test").isInstanceOf(Any::class)` is successful.
- * @see [isNotInstanceOf]
- * @see [hasClass]
- */
-@Deprecated(
-    message = "Use isInstanceOf(kclass) instead.",
-    replaceWith = ReplaceWith("isInstanceOf(kclass).let(f)"),
-    level = DeprecationLevel.ERROR
-)
-fun <T : Any, S : T> Assert<T>.isInstanceOf(kclass: KClass<S>, f: (Assert<S>) -> Unit) {
-    isInstanceOf(kclass).let(f)
 }
 
 /**
