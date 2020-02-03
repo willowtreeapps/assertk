@@ -1,5 +1,6 @@
-rootProject.name = 'assertk'
+rootProject.name = 'assertk-project'
 
+include 'assertk'
 include 'java-interop'
 
 enableFeaturePreview('GRADLE_METADATA')
