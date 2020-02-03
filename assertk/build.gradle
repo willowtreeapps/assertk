@@ -101,7 +101,7 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation project('java-interop')
+                implementation project(':java-interop')
                 implementation kotlin('test-junit')
                 implementation kotlin('reflect')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
@@ -159,7 +159,7 @@ kotlin {
 [compileKotlinMetadata, compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
 [compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
 
-apply from: 'gradle/ios-test.gradle'
+apply from: "$rootProject.projectDir/gradle/ios-test.gradle"
 
 task nativeTest {
     dependsOn(linuxTest, macosTest, iosTest)
@@ -182,7 +182,7 @@ gitPublishCopy.dependsOn(dokka)
 
 task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
     setSource(files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin, kotlin.sourceSets.nativeMain.kotlin))
-    config.from(files("detekt.yml"))
+    config.from(files("$rootProject.projectDir/detekt.yml"))
     buildUponDefaultConfig = true
     reports {
         xml.destination = file("$buildDir/reports/detektMain/detekt.xml")
@@ -192,7 +192,7 @@ task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
 
 task detektTest(type: io.gitlab.arturbosch.detekt.Detekt) {
     setSource(files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin, kotlin.sourceSets.nativeTest.kotlin))
-    config.from(files("detekt-test.yml"))
+    config.from(files("$rootProject.projectDir/detekt-test.yml"))
     buildUponDefaultConfig = true
     reports {
         xml.destination = file("$buildDir/reports/detektTest/detekt.xml")
