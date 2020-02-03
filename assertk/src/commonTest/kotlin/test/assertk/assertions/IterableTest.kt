@@ -34,6 +34,82 @@ class IterableTest {
     }
     //endregion
 
+    //region containsNone
+    @Test fun containsNone_missing_elements_passes() {
+        assertThat(emptyList<Any?>() as Iterable<Any?>).containsNone(1)
+    }
+
+    @Test fun containsNone_present_element_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2) as Iterable<Int>).containsNone(2, 3)
+        }
+        assertEquals(
+            """expected to contain none of:<[2, 3]> but was:<[1, 2]>
+                | elements not expected:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+    //region
+
+    //region containsAll
+    @Test fun containsAll_all_elements_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).containsAll(2, 1)
+    }
+
+    @Test fun containsAll_some_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1) as Iterable<Int>).containsAll(1, 2)
+        }
+        assertEquals(
+            """expected to contain all:<[1, 2]> but was:<[1]>
+                | elements not found:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+    //endregion
+
+    //region containsOnly
+    @Test fun containsOnly_only_elements_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).containsOnly(2, 1)
+    }
+
+    @Test fun containsOnly_more_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsOnly(2, 1)
+        }
+        assertEquals(
+            """expected to contain only:<[2, 1]> but was:<[1, 2, 3]>
+                | extra elements found:<[3]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsOnly_less_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsOnly(2, 1, 3, 4)
+        }
+        assertEquals(
+            """expected to contain only:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
+                | elements not found:<[4]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun containsOnly_different_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1) as Iterable<Int>).containsOnly(2)
+        }
+        assertEquals(
+            """expected to contain only:<[2]> but was:<[1]>
+                | elements not found:<[2]>
+                | extra elements found:<[1]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+    //endregion
+
     //region each
     @Test fun each_empty_list_passes() {
         assertThat(emptyList<Int>() as Iterable<Int>).each { it.isEqualTo(1) }

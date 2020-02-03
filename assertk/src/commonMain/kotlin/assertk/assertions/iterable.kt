@@ -24,6 +24,55 @@ fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
 }
 
 /**
+ * Asserts the collection does not contain any of the expected elements.
+ * @see [containsAll]
+ */
+fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
+    val notExpected = elements.filter { it in actual }
+    if (notExpected.isEmpty()) {
+        return
+    }
+    expected("to contain none of:${show(elements)} but was:${show(actual)}\n elements not expected:${show(notExpected)}")
+}
+
+/**
+ * Asserts the collection contains all the expected elements, in any order. The collection may also
+ * contain additional elements.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsOnly]
+ */
+fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
+    val notFound = elements.filterNot { it in actual }
+    if (notFound.isEmpty()) {
+        return
+    }
+    expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
+}
+
+/**
+ * Asserts the collection contains only the expected elements, in any order.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsAll]
+ */
+fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
+    val notInActual = elements.filterNot { it in actual }
+    val notInExpected = actual.filterNot { it in elements }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain only:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
+}
+
+/**
  * Asserts on each item in the iterable. The given lambda will be run for each item.
  *
  * ```
