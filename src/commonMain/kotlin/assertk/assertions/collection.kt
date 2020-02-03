@@ -84,7 +84,7 @@ fun Assert<Collection<*>>.containsAll(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the collection contains only the expected elements
+ * Asserts the collection contains only the expected elements, in any order.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsAll]

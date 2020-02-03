@@ -165,6 +165,48 @@ class $TTest {
     }
     //endregion
 
+    //region containsOnly
+    @Test fun containsOnly_only_elements_passes() {
+        assertThat($NOf(1.to$E(), 2.to$E())).containsOnly(2.to$E(), 1.to$E())
+    }
+
+    @Test fun containsOnly_more_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsOnly(2.to$E(), 1.to$E())
+        }
+        assertEquals(
+            """expected to contain only:<[${show(2.to$E(), "")}, ${show(1.to$E(), "")}]> but was:<[${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}]>
+                | extra elements found:<[${show(3.to$E(), "")}]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsOnly_less_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsOnly(2.to$E(), 1.to$E(), 3.to$E(), 4.to$E())
+        }
+        assertEquals(
+            """expected to contain only:<[${show(2.to$E(), "")}, ${show(1.to$E(), "")}, ${show(3.to$E(), "")}, ${show(4.to$E(), "")}]> but was:<[${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}]>
+                | elements not found:<[${show(4.to$E(), "")}]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun containsOnly_different_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E())).containsOnly(2.to$E())
+        }
+        assertEquals(
+            """expected to contain only:<[${show(2.to$E(), "")}]> but was:<[${show(1.to$E(), "")}]>
+                | elements not found:<[${show(2.to$E(), "")}]>
+                | extra elements found:<[${show(1.to$E(), "")}]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+    //endregion
+
     //region containsExactly
     @Test fun containsExactly_all_elements_in_same_order_passes() {
         assertThat($NOf(1.to$E(), 2.to$E())).containsExactly(1.to$E(), 2.to$E())

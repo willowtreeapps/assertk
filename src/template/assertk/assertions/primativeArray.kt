@@ -136,6 +136,28 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
 }
 
 /**
+ * Asserts the $T contains only the expected elements, in any order.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsAll]
+ */
+fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
+    val notInActual = elements.filterNot { it in actual }
+    val notInExpected = actual.filterNot { it in elements }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain only:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
+}
+
+/**
  * Returns an assert that assertion on the value at the given index in the array.
  *
  * ```
