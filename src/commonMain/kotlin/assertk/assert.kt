@@ -23,6 +23,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * be failing, otherwise the mapping function is called. An optional name can be provided, otherwise this
      * assertion's name will be used.
      */
+    @Suppress("TooGenericExceptionCaught")
     fun <R> transform(name: String? = this.name, transform: (T) -> R): Assert<R> {
         return when (this) {
             is ValueAssert -> {
@@ -46,6 +47,7 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * }
      * ```
      */
+    @Suppress("TooGenericExceptionCaught")
     inline fun given(assertion: (T) -> Unit) {
         if (this is ValueAssert) {
             try {
@@ -126,6 +128,7 @@ sealed class Result<out T> {
         fun <T> success(value: T): Result<T> = Success(value)
         fun <T> failure(error: Throwable): Result<T> = Failure(error)
 
+        @Suppress("TooGenericExceptionCaught")
         inline fun <R> runCatching(block: () -> R): Result<R> {
             return try {
                 success(block())
