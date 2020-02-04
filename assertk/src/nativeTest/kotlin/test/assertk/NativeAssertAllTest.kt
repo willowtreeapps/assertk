@@ -43,7 +43,7 @@ class NativeAssertAllTest {
                 futures.add(f(w))
             }
         }
-        for (f in futures) { f.result }
+        for (future in futures) { future.result }
 
         for (w in workers) {
             w.requestTermination().result
