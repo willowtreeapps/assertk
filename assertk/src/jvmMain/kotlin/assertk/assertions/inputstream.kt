@@ -130,6 +130,7 @@ private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputSt
     // the following throw should be unnecessary, as the only way to leave the while loop is either
     // - somewhere in the while loop an exception is thrown
     // - somewhere in the while loop the method is left by a return statement
+    @Suppress("UNREACHABLE_CODE") // if this is removed the code fails to compile
     throw IllegalStateException("unreachable code")
 }
 

@@ -69,7 +69,11 @@ kotlin {
 
     targets.all {
         if (name != 'metadata') {
+            compilations.main.kotlinOptions {
+                allWarningsAsErrors = true
+            }
             compilations.test.kotlinOptions {
+                allWarningsAsErrors = true
                 freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
             }
         }
