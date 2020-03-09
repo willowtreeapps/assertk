@@ -13,7 +13,7 @@ _gradle_checksum: &gradle_checksum
 jobs:
   build-linux:
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/openjdk:8-jdk-browsers@sha256:f8ba25ac44a36d6c31e2de62aaae8773a794f82d03e94e8454f5b988b6de9fad
     <<: *defaults
     steps:
       - checkout
@@ -24,6 +24,10 @@ jobs:
           key: >-
             gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
             ".circleci/config.yml" }}-linux
+      # Work-around kotlin native using an old version of libtinfo https://github.com/circleci/circleci-images/issues/430
+      - run:
+          name: Install libtinfo5
+          command: sudo apt update && sudo apt install -y libtinfo5
       - run:
           name: Run Tests
           command: ./gradlew check
