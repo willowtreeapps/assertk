@@ -6,6 +6,7 @@ import assertk.Assert
 import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -74,7 +75,14 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
  * assertThat(person).prop(Person::name).isEqualTo("Sue")
  * ```
  */
-fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) { callable.call(it) }
+fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
+    try {
+        callable.call(it)
+    } catch (e: InvocationTargetException) {
+        // unwrap cause for a more helpful error message.
+        throw e.cause!!
+    }
+}
 
 /**
  * Like [isEqualTo] but reports exactly which properties differ. Only supports data classes. Note: you should

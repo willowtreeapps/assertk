@@ -117,7 +117,9 @@ internal class SoftFailure(
         return if (errors.size == 1) {
             errors.first()
         } else {
-            MultipleFailuresError(message, errors)
+            MultipleFailuresError(message, errors).apply {
+                errors.forEach(this::addSuppressed)
+            }
         }
     }
 
@@ -151,7 +153,10 @@ fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
 }
 
 fun notifyFailure(e: Throwable) {
-    FailureContext.fail(if (e is AssertionError) e else AssertionError(e))
+    FailureContext.fail(e)
 }
+
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+internal expect inline fun Throwable.addSuppressed(error: Throwable)
 
 internal expect inline fun failWithNotInStacktrace(error: Throwable): Nothing

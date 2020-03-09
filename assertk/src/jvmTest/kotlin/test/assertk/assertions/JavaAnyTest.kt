@@ -3,6 +3,7 @@ package test.assertk.assertions
 import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
+import java.lang.Exception
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -90,6 +91,13 @@ class JavaAnyTest {
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
+
+    @Test fun prop_callable_includes_error_message_when_fails() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::failing).isEmpty()
+        }
+        assertEquals("sorry!", error.message)
+    }
     //endregion
 
     //region isDataClassEqualTo
@@ -132,6 +140,8 @@ class JavaAnyTest {
         val double: Double = 3.14,
         val other: BasicObject? = null
     ) : TestObject() {
+        val failing: String get() = throw Exception("sorry!")
+
         override fun toString(): String = str
 
         override fun equals(other: Any?): Boolean =

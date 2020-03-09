@@ -3,9 +3,7 @@ package test.assertk
 import assertk.all
 import assertk.assertAll
 import assertk.assertThat
-import assertk.assertions.contains
-import assertk.assertions.doesNotContain
-import assertk.assertions.isEqualTo
+import assertk.assertions.*
 import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
