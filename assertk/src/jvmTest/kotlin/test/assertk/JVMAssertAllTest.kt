@@ -7,6 +7,8 @@ import assertk.assertions.*
 import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 class JVMAssertAllTest {
     @Test fun assert_all_is_thread_safe() {
@@ -25,6 +27,18 @@ class JVMAssertAllTest {
                 doesNotContain("f")
             }
         }
+    }
+
+    @Test fun assert_all_includes_exceptions_as_suppressed() {
+        val error = assertFails {
+            assertAll {
+                assertThat(1).isEqualTo(2)
+                assertThat(2).isEqualTo(1)
+            }
+        }
+        assertEquals(2, error.suppressed.size)
+        assertEquals("expected:<[2]> but was:<[1]>", error.suppressed[0].message)
+        assertEquals("expected:<[1]> but was:<[2]>", error.suppressed[1].message)
     }
 }
 

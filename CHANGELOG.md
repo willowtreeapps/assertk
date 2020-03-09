@@ -14,6 +14,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated opentest4j to 1.2.0. This changes the multiple assertion message to include each exception class name.
 - Moved `containsAll`, `containsNone`, and `containsOnly` from `Collection` to `Iterable` to make
 them a bit more flexible.
+- Unwrap exceptions thrown by `prop(callable: KCallable<*>)` to make them more clear.
+- Add all exception stacktraces to a `MultipleFailuresError` with `Throwable.addSurpressed` on the jvm (used when 
+collecting multiple exceptions with `assertAll`). Unfortunately, if you are using gradle you won't see this due to a 
+known [gradle issue](https://github.com/gradle/gradle/issues/9487).
+- No longer wrap exceptions in `AssertionError`s when using `given` and `transform`. Warning: this is techinicaly a 
+  breaking change as code like:
+  ```kotlin
+  try {
+      assertThat(foo).given { throw MyException("error") }
+  } catch (e: AssertionError) {
+      // assume caught
+  }
+  ```
+  will no longer be caught. But you shouldn't be writing code like that anyway ;)
 
 ## [0.21] 2020-01-22
 
