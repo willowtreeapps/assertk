@@ -20,6 +20,7 @@ internal object FailureContext {
     }
 
     fun fail(error: Throwable) {
+        if (error.isOutOfMemory()) throw error
         failureRef.value.last().fail(error)
     }
 }
@@ -159,4 +160,7 @@ fun notifyFailure(e: Throwable) {
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")
 internal expect inline fun Throwable.addSuppressed(error: Throwable)
 
+internal expect inline fun Throwable.isOutOfMemory(): Boolean
+
 internal expect inline fun failWithNotInStacktrace(error: Throwable): Nothing
+
