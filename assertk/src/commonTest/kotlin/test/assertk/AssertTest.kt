@@ -32,6 +32,30 @@ class AssertTest {
         assertEquals("error", error.message)
         assertFalse(run)
     }
+
+    @Test fun transform_rethrows_thrown_exception() {
+        val error = assertFails {
+            assertAll {
+                assertThat(0).transform { throw MyException("error") }.isEqualTo(0)
+            }
+        }
+
+        assertEquals(MyException::class, error::class)
+        assertEquals("error", error.message)
+    }
+    //endregion
+
+    //region given
+    @Test fun given_rethrows_thrown_exception() {
+        val error = assertFails {
+            assertAll {
+                assertThat(0).given { throw MyException("error") }
+            }
+        }
+
+        assertEquals(MyException::class, error::class)
+        assertEquals("error", error.message)
+    }
     //endregion
 
     //region assertThat
@@ -53,4 +77,6 @@ class AssertTest {
         assertEquals("error", error.message)
     }
     //endregion
+
+    private class MyException(message: String) : Exception(message)
 }

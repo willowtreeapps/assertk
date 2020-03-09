@@ -3,6 +3,7 @@ package test.assertk.assertions
 import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
+import java.lang.Exception
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -90,6 +91,13 @@ class JavaAnyTest {
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
+
+    @Test fun prop_callable_includes_error_message_when_fails() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::failing).isEmpty()
+        }
+        assertEquals("sorry!", error.message)
+    }
     //endregion
 
     //region isDataClassEqualTo
@@ -114,12 +122,12 @@ class JavaAnyTest {
 
     //region isEqualToIgnoringGivenProperties
     @Test fun isEqualToIgnoringGivenProperties_passes() {
-        assertThat(BasicObject("Rarity")).isEqualToIgnoringGivenProperties(BasicObject("notRarity"), BasicObject::str, BasicObject::other)
+        assertThat(BasicObject("Rarity")).isEqualToIgnoringGivenProperties(BasicObject("notRarity"), BasicObject::str, BasicObject::other, BasicObject::failing)
     }
 
     @Test fun isEqualToIgnoringGivenProperties_fails() {
         assertFails {
-            assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str)
+            assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str, BasicObject::failing)
         }
     }
     //endregion
@@ -132,6 +140,8 @@ class JavaAnyTest {
         val double: Double = 3.14,
         val other: BasicObject? = null
     ) : TestObject() {
+        val failing: String get() = throw Exception("sorry!")
+
         override fun toString(): String = str
 
         override fun equals(other: Any?): Boolean =
