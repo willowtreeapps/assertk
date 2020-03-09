@@ -39,8 +39,8 @@ class AssertAllTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected [test] to start with:<"w"> but was:<"test">
-              |${"\t"}expected [test] to end with:<"g"> but was:<"test">
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [test] to start with:<"w"> but was:<"test">
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [test] to end with:<"g"> but was:<"test">
             """.trimMargin(),
             error.message
         )
@@ -77,8 +77,8 @@ class AssertAllTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected [test1]:<"[wrong]1"> but was:<"[test]1">
-              |${"\t"}expected [test2]:<"[wrong]2"> but was:<"[test]2">
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [test1]:<"[wrong]1"> but was:<"[test]1">
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [test2]:<"[wrong]2"> but was:<"[test]2">
             """.trimMargin(),
             error.message
         )
@@ -107,8 +107,8 @@ class AssertAllTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected failure but was success:<2>
-              |${"\t"}expected failure but was success:<5>
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected failure but was success:<2>
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected failure but was success:<5>
             """.trimMargin(),
             error.message
         )
@@ -125,8 +125,8 @@ class AssertAllTest {
             "The following assertions failed (2 failures)",
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error2"))}"))
+        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error2"))}"))
     }
 
     @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
@@ -140,8 +140,8 @@ class AssertAllTest {
             "The following assertions failed (2 failures)".trimMargin(),
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\texpected success but was failure:${show(Exception("error2"))}"))
+        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error1"))}"))
+        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error2"))}"))
     }
     //endregion
 

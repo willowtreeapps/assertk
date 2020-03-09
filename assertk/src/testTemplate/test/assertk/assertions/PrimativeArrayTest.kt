@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
+import test.assertk.opentestPackageName
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -300,8 +301,8 @@ class $TTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-                |	expected [[1]] to be less than:<${show(2.to$E(), "")}> but was:<${show(2.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
-                |	expected [[2]] to be less than:<${show(2.to$E(), "")}> but was:<${show(3.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
+                |	${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<${show(2.to$E(), "")}> but was:<${show(2.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
+                |	${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<${show(2.to$E(), "")}> but was:<${show(3.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
             """.trimMargin(), error.message
         )
     }

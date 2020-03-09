@@ -3,6 +3,7 @@ package test.assertk.assertions
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
+import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -125,8 +126,8 @@ class IterableTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
-              |${"\t"}expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
             """.trimMargin(), error.message
         )
     }
@@ -158,8 +159,8 @@ class IterableTest {
         }
         assertEquals(
             """expected to pass at least 2 times (2 failures)
-            |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
-            |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
         """.trimMargin(), error.message
         )
     }
@@ -205,8 +206,8 @@ class IterableTest {
         }
         assertEquals(
             """expected to pass exactly 2 times (2 failures)
-            |${"\t"}expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
-            |${"\t"}expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
             """.trimMargin(), error.message
         )
     }
@@ -236,8 +237,8 @@ class IterableTest {
         }
         assertEquals(
             """expected any item to pass (2 failures)
-	        |${"\t"}expected [[0]] to be greater than:<3> but was:<1> ([1, 2])
-	        |${"\t"}expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<3> but was:<1> ([1, 2])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
             """.trimMargin(), error.message
         )
     }

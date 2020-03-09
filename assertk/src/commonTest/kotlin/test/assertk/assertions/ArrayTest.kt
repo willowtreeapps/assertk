@@ -3,6 +3,7 @@ package test.assertk.assertions
 import assertk.assertThat
 import assertk.assertions.*
 import assertk.assertions.support.show
+import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -302,8 +303,8 @@ class ArrayTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-              |${"\t"}expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
-              |${"\t"}expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
+              |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
             """.trimMargin(), error.message
         )
     }

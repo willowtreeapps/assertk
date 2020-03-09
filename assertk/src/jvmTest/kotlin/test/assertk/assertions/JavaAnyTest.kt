@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
+import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -104,8 +105,8 @@ class JavaAnyTest {
         }
         assertEquals(
             """The following assertions failed (2 failures)
-            |${"\t"}expected [one.inner]:<"[wrong]"> but was:<"[test]"> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
-            |${"\t"}expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [one.inner]:<"[wrong]"> but was:<"[test]"> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
         """.trimMargin(), error.message
         )
     }
