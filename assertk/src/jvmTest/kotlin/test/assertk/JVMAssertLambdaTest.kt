@@ -9,7 +9,7 @@ import org.junit.Test
 
 class JVMAssertLambdaTest {
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_works_in_coroutine_test() {
         runBlockingTest {
             assertThat {
@@ -18,7 +18,7 @@ class JVMAssertLambdaTest {
         }
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_exception_works_in_coroutine_test() {
         runBlockingTest {
             assertThat {

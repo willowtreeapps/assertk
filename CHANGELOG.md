@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add multi-value support for `Assert<String>.contains()` and `doesNotContain()`
 
 ### Changed
+- Minimum supported kotlin version is 1.3.70
 - Moved `containsAll`, `containsNone`, and `containsOnly` from `Collection` to `Iterable` to make
 them a bit more flexible.
 
