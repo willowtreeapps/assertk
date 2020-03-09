@@ -173,7 +173,7 @@ Contributions are more than welcome! Please see the [Contributing Guidelines](ht
     I've filed a [bug](https://youtrack.jetbrains.com/issue/IDEA-214533) about this, it works correctly when running on the cmdline with gradle. To workaround, you can explicilty add `opentest4j` as a dependency.
 
    ```groovy
-   testComple 'org.opentest4j:opentest4j:1.1.1'
+   testComple 'org.opentest4j:opentest4j:1.2.0'
    ```
 
 2. Gradle fails to find the correct variant if the `kapt` plugin is applied:

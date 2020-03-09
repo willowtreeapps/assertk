@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Minimum supported kotlin version is 1.3.70
+- Updated opentest4j to 1.2.0. This changes the multiple assertion message to include each exception class name.
 - Moved `containsAll`, `containsNone`, and `containsOnly` from `Collection` to `Iterable` to make
 them a bit more flexible.
 
