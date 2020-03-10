@@ -77,7 +77,7 @@ jobs:
             touch gradle.properties && echo "org.gradle.jvmargs=-Xmx2g" >> gradle.properties
       - run:
           name: Run Tests
-          command: ./gradlew macosTest iosTest
+          command: ./gradlew macosTest iosX64Test
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then

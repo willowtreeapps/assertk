@@ -1,9 +1,0 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
-task iosTest(type: Exec) {
-    onlyIf { Os.isFamily(Os.FAMILY_MAC) }
-    def test = kotlin.targets.iosX64.binaries.getTest("DEBUG")
-    dependsOn(test.linkTask)
-    inputs.file(test.outputFile)
-    commandLine("xcrun", "simctl", "spawn", "--standalone", "iPhone 8", test.outputFile)
-}
