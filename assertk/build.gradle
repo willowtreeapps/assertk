@@ -162,10 +162,8 @@ kotlin {
 [compileKotlinMetadata, compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
 [compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
 
-apply from: "$rootProject.projectDir/gradle/ios-test.gradle"
-
 task nativeTest {
-    dependsOn(linuxTest, macosTest, iosTest)
+    dependsOn(linuxTest, macosTest, iosX64Test)
 }
 
 task test {
