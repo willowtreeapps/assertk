@@ -4,16 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.22] 2020-03-11
 
 ### Added
 - Add multi-value support for `Assert<String>.contains()` and `doesNotContain()`
+- Add `isEqualByComparingTo` to compare objects by `compareTo` instead of `equals` this is useful for cases like
+`BigDecimal` where `equals` would fail because of differing precision.
+- Add `containsOnly` for arrays.
 
 ### Changed
 - Minimum supported kotlin version is 1.3.70
 - Updated opentest4j to 1.2.0. This changes the multiple assertion message to include each exception class name.
 - Moved `containsAll`, `containsNone`, and `containsOnly` from `Collection` to `Iterable` to make
 them a bit more flexible.
+- `containsAll`, `containsNone`, and `containsOnly` error messages now include the expected and actual lists.
 - Unwrap exceptions thrown by `prop(callable: KCallable<*>)` to make them more clear.
 - Add all exception stacktraces to a `MultipleFailuresError` with `Throwable.addSurpressed` on the jvm (used when 
 collecting multiple exceptions with `assertAll`). Unfortunately, if you are using gradle you won't see this due to a 
@@ -28,6 +32,12 @@ known [gradle issue](https://github.com/gradle/gradle/issues/9487).
   }
   ```
   will no longer be caught. But you shouldn't be writing code like that anyway ;)
+
+### Fixed
+- Don't let `assertAll` capture `OutOfMemory` errors.
+
+### Breaking Changes
+- Previously deprecated methods (as of 0.18) are now errors.
 
 ## [0.21] 2020-01-22
 
