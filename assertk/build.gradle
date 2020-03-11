@@ -78,7 +78,7 @@ kotlin {
         }
     }
 
-    def opentest4k_version = '1.2.0-SNAPSHOT'
+    def opentest4k_version = '1.2.0'
     def kotlin_coroutines_version = '1.3.4'
 
     sourceSets {
