@@ -186,7 +186,9 @@ Contributions are more than welcome! Please see the [Contributing Guidelines](ht
               - jvm-runtime
               - metadata-api
     ```
-    This is a [known issue](https://youtrack.jetbrains.com/issue/KT-31641) with the kapt plugin, you can add the below to your gradle file to work around it
+    This was a [known issue](https://youtrack.jetbrains.com/issue/KT-31641) with the kapt plugin that was fixed in kotlin 1.3.60 so your best option is to update kotlin.
+    
+    If you can't do that, you can add the below to your gradle file to work around it
     ```groovy
     configurations.all { configuration ->
         // Workaround for kapt bug with MPP dependencies
