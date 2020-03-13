@@ -207,9 +207,18 @@ dokka {
     outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc/"
     multiplatform {
+        global {
+            sourceLink {
+                path = "."
+                url = "https://github.com/willowtreeapps/assertk/tree/v${version}"
+                lineSuffix = "#L"
+            }
+        }
         common {}
         js {}
-        jvm {}
+        jvm {
+            jdkVersion = 8
+        }
         linux {}
         iosArm64 {}
         iosX64 {}
