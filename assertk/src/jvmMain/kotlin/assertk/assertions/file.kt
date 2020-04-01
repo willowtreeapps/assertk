@@ -93,7 +93,7 @@ fun Assert<File>.hasName(expected: String) {
  * Asserts the file has the expected path.
  */
 fun Assert<File>.hasPath(expected: String) {
-    path().isEqualTo(expected)
+    path().isEqualTo(File(expected).path)
 }
 
 /**
