@@ -20,7 +20,7 @@ class JVMResultTest {
         }
 
         assertNotNull(error.message)
-        val errorLines = error.message!!.split("\n")
+        val errorLines = error.message!!.lines()
         assertTrue(errorLines.size > 1)
         assertEquals("expected success but was failure:<${exceptionPackageName}Exception: test>", errorLines[0])
         assertEquals("${exceptionPackageName}Exception: test", errorLines[1])

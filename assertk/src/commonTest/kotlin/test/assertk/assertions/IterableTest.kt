@@ -128,7 +128,7 @@ class IterableTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion
@@ -161,7 +161,7 @@ class IterableTest {
             """expected to pass at least 2 times (2 failures)
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
-        """.trimMargin(), error.message
+        """.trimMargin().lines(), error.message!!.lines()
         )
     }
 
@@ -208,7 +208,7 @@ class IterableTest {
             """expected to pass exactly 2 times (2 failures)
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
 
@@ -239,7 +239,7 @@ class IterableTest {
             """expected any item to pass (2 failures)
 	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<3> but was:<1> ([1, 2])
 	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion

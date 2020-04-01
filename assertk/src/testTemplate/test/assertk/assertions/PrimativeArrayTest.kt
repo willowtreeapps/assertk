@@ -303,7 +303,7 @@ class $TTest {
             """The following assertions failed (2 failures)
                 |	${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<${show(2.to$E(), "")}> but was:<${show(2.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
                 |	${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<${show(2.to$E(), "")}> but was:<${show(3.to$E(), "")}> ([${show(1.to$E(), "")}, ${show(2.to$E(), "")}, ${show(3.to$E(), "")}])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion

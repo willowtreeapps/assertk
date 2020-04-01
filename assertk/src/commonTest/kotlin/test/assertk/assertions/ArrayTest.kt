@@ -305,7 +305,7 @@ class ArrayTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion
