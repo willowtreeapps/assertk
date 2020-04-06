@@ -41,8 +41,8 @@ class AssertAllTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [test] to start with:<"w"> but was:<"test">
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [test] to end with:<"g"> but was:<"test">
-            """.trimMargin(),
-            error.message
+            """.trimMargin().lines(),
+            error.message!!.lines()
         )
     }
     //endregion
@@ -79,8 +79,8 @@ class AssertAllTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [test1]:<"[wrong]1"> but was:<"[test]1">
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [test2]:<"[wrong]2"> but was:<"[test]2">
-            """.trimMargin(),
-            error.message
+            """.trimMargin().lines(),
+            error.message!!.lines()
         )
     }
 
@@ -109,8 +109,8 @@ class AssertAllTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected failure but was success:<2>
               |${"\t"}${opentestPackageName}AssertionFailedError: expected failure but was success:<5>
-            """.trimMargin(),
-            error.message
+            """.trimMargin().lines(),
+            error.message!!.lines()
         )
     }
 

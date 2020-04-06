@@ -115,7 +115,7 @@ class JavaAnyTest {
             """The following assertions failed (2 failures)
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [one.inner]:<"[wrong]"> but was:<"[test]"> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
-        """.trimMargin(), error.message
+        """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion
