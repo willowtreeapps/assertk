@@ -100,7 +100,7 @@ fun Assert<File>.hasPath(expected: String) {
  * Asserts the file has the expected parent path.
  */
 fun Assert<File>.hasParent(expected: String) {
-    parent().isEqualTo(expected)
+    parent().isEqualTo(File(expected).path)
 }
 
 /**

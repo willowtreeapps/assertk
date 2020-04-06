@@ -116,18 +116,21 @@ class FileTest {
     //endregion
 
     //region hasParent
-    val fileWithParent = File("assertKt/file.txt")
+    val fileWithParent = File("assertKt/directory/file.txt")
 
     @Test fun hasParent_correct_parent_passes() {
-        assertThat(fileWithParent).hasParent("assertKt")
+        assertThat(fileWithParent).hasParent("assertKt/directory")
     }
 
     @Test fun hasParent_wrong_parent_passes() {
         val error = assertFails {
             assertThat(fileWithParent).hasParent("directory")
         }
+        val expected = "expected [parent]:<\"[]directory\"> but was:<\"[assertKt${File.separator}]directory\"> (assertKt${File.separator}directory${File.separator}file.txt)"
+        println(expected)
+        println(error.message)
         assertEquals(
-            "expected [parent]:<\"[directory]\"> but was:<\"[${fileWithParent.parent}]\"> (assertKt${File.separator}file.txt)",
+            expected,
             error.message
         )
     }
