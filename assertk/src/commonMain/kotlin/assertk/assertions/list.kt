@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.ListDiffer
+import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -13,8 +14,8 @@ import assertk.assertions.support.show
  * ```
  */
 fun <T> Assert<List<T>>.index(index: Int): Assert<T> =
-    transform("${name ?: ""}${show(index, "[]")}") { actual ->
-        if (index in 0 until actual.size) {
+    transform(appendName(show(index, "[]"))) { actual ->
+        if (index in actual.indices) {
             actual[index]
         } else {
             expected("index to be in range:[0-${actual.size}) but was:${show(index)}")

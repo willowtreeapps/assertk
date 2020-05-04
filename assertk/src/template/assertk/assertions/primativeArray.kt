@@ -6,6 +6,7 @@ import assertk.all
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import assertk.assertions.support.fail
+import assertk.assertions.support.appendName
 
 $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
 
@@ -166,7 +167,7 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
  */
 @JvmName("$NIndex")
 fun Assert<$T>.index(index: Int): Assert<$E> =
-    transform("${name ?: ""}${show(index, "[]")}") { actual ->
+    transform(appendName(show(index, "[]"))) { actual ->
         if (index in 0 until actual.size) {
             actual[index]
         } else {
@@ -199,7 +200,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
 fun Assert<$T>.each(f: (Assert<$E>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = appendName(show(index, "[]"))))
         }
     }
 }
