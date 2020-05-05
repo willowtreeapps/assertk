@@ -68,7 +68,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
 
 /**
  * Returns an assert that asserts on the given property.
- * @param callable The function to get the property value out of the value of the current assert. The same of this
+ * @param callable The function to get the property value out of the value of the current assert. The name of this
  * callable will be shown in failure messages.
  *
  * ```
