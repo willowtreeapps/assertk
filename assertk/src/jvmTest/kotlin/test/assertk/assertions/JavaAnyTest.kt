@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
 import java.lang.Exception
+import kotlin.reflect.KCallable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -82,17 +83,38 @@ class JavaAnyTest {
 
     //region prop
     @Test fun prop_callable_extract_prop_passes() {
-        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
+        @Suppress("DEPRECATION")
+        assertThat(subject).prop(BasicObject::str as KCallable<String>).isEqualTo("test")
     }
 
     @Test fun prop_callable_extract_prop_includes_name_in_failure_message() {
+        val error = assertFails {
+            @Suppress("DEPRECATION")
+            assertThat(subject).prop(BasicObject::str  as KCallable<String>).isEmpty()
+        }
+        assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
+    }
+
+    @Test fun prop_callable_includes_error_message_when_fails() {
+        val error = assertFails {
+            @Suppress("DEPRECATION")
+            assertThat(subject).prop(BasicObject::failing as KCallable<String>).isEmpty()
+        }
+        assertEquals("sorry!", error.message)
+    }
+    
+    @Test fun prop_property1_extract_prop_passes() {
+        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
+    }
+
+    @Test fun prop_property1_extract_prop_includes_name_in_failure_message() {
         val error = assertFails {
             assertThat(subject).prop(BasicObject::str).isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
 
-    @Test fun prop_callable_includes_error_message_when_fails() {
+    @Test fun prop_property1_includes_error_message_when_fails() {
         val error = assertFails {
             assertThat(subject).prop(BasicObject::failing).isEmpty()
         }

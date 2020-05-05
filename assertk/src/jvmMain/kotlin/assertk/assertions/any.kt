@@ -75,9 +75,30 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
  * assertThat(person).prop(Person::name).isEqualTo("Sue")
  * ```
  */
+@Deprecated("Use an overload with KProperty1 instead")
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
     try {
         callable.call(it)
+    } catch (e: InvocationTargetException) {
+        // unwrap cause for a more helpful error message.
+        throw e.cause!!
+    }
+}
+
+/**
+ * Returns an assert that asserts on the given property.
+ *
+ * Example:
+ * ```
+ * assertThat(person).prop(Person::name).isEqualTo("Sue")
+ * ```
+ *
+ * @param property Property on which to assert. The name of this
+ * property will be shown in failure messages.
+ */
+fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> = prop(property.name) {
+    try {
+        property.get(it)
     } catch (e: InvocationTargetException) {
         // unwrap cause for a more helpful error message.
         throw e.cause!!
@@ -100,8 +121,10 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) = given { actual ->
 private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?): Unit = given { actual ->
     if (actual == expected) return
     if (kclass != null && kclass.isData) {
-        for (prop in kclass.memberProperties) {
-            prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
+        for (memberProp in kclass.memberProperties) {
+            @Suppress("UNCHECKED_CAST")
+            val force = memberProp as KProperty1<T, Any?>
+            prop(force).isDataClassEqualToImpl(force.get(expected), force.returnType.classifier as? KClass<*>)
         }
     } else {
         isEqualTo(expected)
