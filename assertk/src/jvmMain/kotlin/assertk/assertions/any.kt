@@ -5,6 +5,7 @@ package assertk.assertions
 import assertk.Assert
 import assertk.all
 import assertk.assertions.support.expected
+import assertk.assertions.support.appendName
 import assertk.assertions.support.show
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KCallable
@@ -131,7 +132,7 @@ fun <T : Any> Assert<T>.isEqualToIgnoringGivenProperties(other: T, vararg proper
             if (prop is KProperty1<*, *> && !properties.contains(prop)) {
                 @Suppress("UNCHECKED_CAST")
                 val force = prop as KProperty1<T, Any?>
-                transform("${if (this.name != null) this.name + "." else ""}${prop.name}", force::get)
+                transform(appendName(prop.name, separator = "."), force::get)
                     .isEqualTo(prop.get(other))
             }
         }

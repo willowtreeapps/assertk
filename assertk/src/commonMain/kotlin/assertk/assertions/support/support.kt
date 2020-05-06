@@ -82,6 +82,14 @@ fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? 
     )
 }
 
+/**
+ * Constructs a new name appending to the existing name if available using the given separator.
+ * @param name The new name to append to the current name, or the new name if there is no current one.
+ * @param separator The separator between the current name and the suffix if the current name exists.
+ */
+fun Assert<*>.appendName(name: String, separator: String = "") =
+    if (this.name != null) this.name + separator + name else name
+
 private fun formatName(name: String?): String {
     return if (name.isNullOrEmpty()) {
         ""

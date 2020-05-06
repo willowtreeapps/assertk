@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
+import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -84,7 +85,7 @@ fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
 fun <E> Assert<Iterable<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = appendName(show(index, "[]"))))
         }
     }
 }

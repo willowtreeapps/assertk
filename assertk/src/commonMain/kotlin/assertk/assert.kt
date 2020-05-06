@@ -24,17 +24,17 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
      * assertion's name will be used.
      */
     @Suppress("TooGenericExceptionCaught")
-    fun <R> transform(name: String? = this.name, transform: (T) -> R): Assert<R> {
+    inline fun <R> transform(name: String? = this.name, transform: (T) -> R): Assert<R> {
         return when (this) {
             is ValueAssert -> {
                 try {
                     assertThat(transform(value), name)
                 } catch (e: Throwable) {
                     notifyFailure(e)
-                    FailingAssert<R>(e, name, context)
+                    failing<R>(e, name)
                 }
             }
-            is FailingAssert -> FailingAssert(error, name, context)
+            is FailingAssert -> failing(error, name)
         }
     }
 
@@ -58,6 +58,11 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
         }
     }
 
+    @PublishedApi
+    internal fun <R> failing(error: Throwable, name: String? = this.name): Assert<R> {
+        return FailingAssert(error, name, context)
+    }
+
     /**
      * Asserts on the given value with an optional name.
      *
@@ -76,6 +81,7 @@ internal class ValueAssert<out T>(val value: T, name: String?, context: Any?) :
         ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
 }
 
+@PublishedApi
 internal class FailingAssert<out T>(val error: Throwable, name: String?, context: Any?) :
     Assert<T>(name, context) {
     override fun <R> assertThat(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
