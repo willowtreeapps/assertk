@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `prop` function with `KProperty1` argument.
 
 ### Deprecated
-- Deprecated `prop` function with `KCallable` argument.
+- Deprecated `prop` function with `KCallable` argument. Use the new overload
+with type-safe `KProperty1` argument or another overload with explicit name and lambda.
 
 ## [0.22] 2020-03-11
 
