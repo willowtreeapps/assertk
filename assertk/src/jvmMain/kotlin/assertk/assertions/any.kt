@@ -74,7 +74,13 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
  * ```
  * assertThat(person).prop(Person::name).isEqualTo("Sue")
  * ```
+ *
+ * @see prop
  */
+@Deprecated(
+    "Use an overload with explicit name and extract",
+    ReplaceWith("this.prop(\"NAME\") { callable.call(it) }", "assertk.assertions.prop")
+)
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
     try {
         callable.call(it)
@@ -100,8 +106,10 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) = given { actual ->
 private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?): Unit = given { actual ->
     if (actual == expected) return
     if (kclass != null && kclass.isData) {
-        for (prop in kclass.memberProperties) {
-            prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
+        for (memberProp in kclass.memberProperties) {
+            @Suppress("UNCHECKED_CAST")
+            val force = memberProp as KProperty1<T, Any?>
+            prop(force).isDataClassEqualToImpl(force.get(expected), force.returnType.classifier as? KClass<*>)
         }
     } else {
         isEqualTo(expected)

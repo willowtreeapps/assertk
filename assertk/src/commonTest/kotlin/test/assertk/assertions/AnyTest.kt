@@ -190,6 +190,7 @@ class AnyTest {
         assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
     }
 
+    //region prop
     @Test fun prop_passes() {
         assertThat(subject).prop("str") { it.str }.isEqualTo("test")
     }
@@ -207,6 +208,25 @@ class AnyTest {
         }
         assertEquals("expected [other.str] to not be null (test)", error.message)
     }
+
+    @Test fun prop_property1_extract_prop_passes() {
+        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
+    }
+
+    @Test fun prop_property1_extract_prop_includes_name_in_failure_message() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::str).isEmpty()
+        }
+        assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
+    }
+
+    @Test fun prop_property1_includes_error_message_when_fails() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::failing).isEmpty()
+        }
+        assertEquals("sorry!", error.message)
+    }
+    //endregion
 
     @Test fun isNull_null_passes() {
         assertThat(null as String?).isNull()
@@ -359,6 +379,8 @@ class AnyTest {
             val double: Double = 3.14,
             val other: BasicObject? = null
         ) : TestObject() {
+            val failing: String get() = throw Exception("sorry!")
+
             override fun toString(): String = str
 
             override fun equals(other: Any?): Boolean =
