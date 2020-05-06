@@ -1,125 +1,31 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 plugins {
     id 'maven-publish'
     id 'signing'
-    id 'org.jetbrains.kotlin.multiplatform' version '1.3.70'
-    id 'org.jetbrains.dokka' version '0.10.0'
-    id 'io.gitlab.arturbosch.detekt' version '1.5.0'
-    id 'org.ajoberstar.git-publish' version '2.1.1'
+    id 'org.jetbrains.kotlin.multiplatform'
+    id 'org.jetbrains.dokka'
+    id 'io.gitlab.arturbosch.detekt'
+    id 'org.ajoberstar.git-publish'
 }
 
-allprojects {
-    group 'com.willowtreeapps.assertk'
-    version '0.1-SNAPSHOT'
-}
-
-ext {
-    isReleaseVersion = !(project.version =~ /-SNAPSHOT$/)
-}
-
-configurations.all {
-    // Don't cache SNAPSHOT deps
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    if (!isReleaseVersion) {
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
-    }
-}
+apply from: "$rootProject.projectDir/multiplatform.gradle"
 
 kotlin {
-    jvm {
-        compilations.main.kotlinOptions {
-            jvmTarget = "1.8"
-        }
-        compilations.test.kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-    js {
-        nodejs()
-        browser()
-        compilations.main.kotlinOptions {
-            sourceMap = true
-            moduleKind = "umd"
-        }
-        compilations.test.kotlinOptions {
-            moduleKind = "umd"
-        }
-    }
-    linuxX64('linux')
-    iosArm64()
-    iosX64()
-    macosX64('macos')
-
-    targets.all {
-        if (name != 'metadata') {
-            compilations.main.kotlinOptions {
-                allWarningsAsErrors = true
-            }
-            compilations.test.kotlinOptions {
-                allWarningsAsErrors = true
-                freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
-            }
-        }
-    }
-
-    def kotlin_coroutines_version = '1.3.4'
-
     sourceSets {
         commonMain {
             dependencies {
-                implementation kotlin('stdlib-common')
                 implementation project(':assertk')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlin_coroutines_version"
             }
         }
-        commonTest {
-            dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('test-annotations-common')
-            }
-        }
         jvmMain {
             dependencies {
-                implementation kotlin('stdlib-jdk8')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
-            }
-        }
-        jvmTest {
-            dependencies {
-                implementation project(':java-interop')
-                implementation kotlin('test-junit')
-                implementation kotlin('reflect')
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
             }
         }
         jsMain {
             dependencies {
-                implementation kotlin('stdlib-js')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlin_coroutines_version"
             }
-        }
-        jsTest {
-            dependencies {
-                implementation kotlin('test-js')
-            }
-        }
-        nativeMain {
-            dependsOn(commonMain)
-        }
-        nativeTest {
-            dependsOn(commonTest)
-        }
-        [linuxMain, iosArm64Main, iosX64Main, macosMain].each {
-            it.dependsOn(nativeMain)
-        }
-        [linuxTest, iosArm64Test, iosX64Test, macosTest].each {
-            it.dependsOn(nativeTest)
         }
         linuxMain {
             dependencies {
@@ -142,195 +48,4 @@ kotlin {
             }
         }
     }
-}
-
-task nativeTest {
-    dependsOn(linuxTest, macosTest, iosX64Test)
-}
-
-task test {
-    dependsOn(jvmTest, jsTest, nativeTest)
-}
-
-task detektMain(type: io.gitlab.arturbosch.detekt.Detekt) {
-    setSource(files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin, kotlin.sourceSets.nativeMain.kotlin))
-    config.from(files("$rootProject.projectDir/detekt.yml"))
-    buildUponDefaultConfig = true
-    reports {
-        xml.destination = file("$buildDir/reports/detektMain/detekt.xml")
-        html.destination = file("$buildDir/reports/detektMain/detekt.html")
-    }
-}
-
-task detektTest(type: io.gitlab.arturbosch.detekt.Detekt) {
-    setSource(files(kotlin.sourceSets.commonTest.kotlin, kotlin.sourceSets.jsTest.kotlin, kotlin.sourceSets.jvmTest.kotlin, kotlin.sourceSets.nativeTest.kotlin))
-    config.from(files("$rootProject.projectDir/detekt-test.yml"))
-    buildUponDefaultConfig = true
-    reports {
-        xml.destination = file("$buildDir/reports/detektTest/detekt.xml")
-        html.destination = file("$buildDir/reports/detektTest/detekt.html")
-    }
-}
-
-tasks.detekt.dependsOn(detektMain, detektTest)
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/"
-    multiplatform {
-        common {}
-        js {}
-        jvm {}
-        linux {}
-        iosArm64 {}
-        iosX64 {}
-        macos {}
-    }
-}
-
-task dokkaCommon(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Common"]
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/common"
-    multiplatform {
-        common {}
-    }
-}
-
-task dokkaJs(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["JS", "Common"]
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/js"
-    multiplatform {
-        common {}
-        js {}
-    }
-}
-
-task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["JVM", "Common"]
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/jvm"
-    multiplatform {
-        common {}
-        jvm {}
-    }
-}
-
-task dokkaNative(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Native", "Common"]
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/native"
-    multiplatform {
-        common {}
-        linux {}
-        iosArm64 {}
-        iosX64 {}
-        macos {}
-    }
-}
-
-task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/common"
-}
-
-task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/js"
-}
-
-task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/jvm"
-}
-
-task dokkaJavadocNativeJar(type: Jar, dependsOn: dokkaNative) {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/native"
-}
-
-task emptySourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-}
-
-publishing {
-    repositories {
-        maven {
-            if (project.ext.isReleaseVersion) {
-                url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-            } else {
-                url 'https://oss.sonatype.org/content/repositories/snapshots/'
-            }
-
-            credentials {
-                username = project.findProperty('sonatype.username')
-                password = project.findProperty('sonatype.password')
-            }
-        }
-    }
-
-    publications {
-        js {
-            artifact dokkaJavadocJsJar
-        }
-        jvm {
-            artifact dokkaJavadocJvmJar
-        }
-        linux {
-            artifact dokkaJavadocNativeJar
-        }
-        // These aren't available if you aren't on macos
-        if (Os.isFamily(Os.FAMILY_MAC)) {
-            [iosArm64, iosX64, macos].each {
-                it.artifact dokkaJavadocNativeJar
-            }
-        }
-        metadata {
-            artifact dokkaJavadocCommonJar
-        }
-        kotlinMultiplatform {
-            // Source jars are only created for platforms, not the common artifact.
-            artifact emptySourcesJar
-            artifact dokkaJavadocCommonJar
-        }
-
-        all {
-            def siteUrl = 'https://github.com/willowtreeapps/assertk'
-            def gitUrl = 'https://github.com/willowtreeapps/assertk.git'
-
-            pom {
-                name = project.name
-                description = 'Assertions for Kotlin inspired by assertj - coroutine assertions'
-                url = siteUrl
-
-                scm {
-                    url = siteUrl
-                    connection = gitUrl
-                    developerConnection = gitUrl
-                }
-
-                licenses {
-                    license {
-                        name = 'The Apache Software License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution = 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id = 'evant'
-                        name = 'Evan Tatarka'
-                    }
-                }
-            }
-        }
-    }
-}
-
-if (isReleaseVersion) {
-  signing {
-      publishing.publications.all { sign it }
-  }
 }
