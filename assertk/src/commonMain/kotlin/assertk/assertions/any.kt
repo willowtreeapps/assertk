@@ -135,6 +135,20 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
     transform("${if (this.name != null) this.name + "." else ""}$name", extract)
 
 /**
+ * Returns an assert that asserts on the given property.
+ *
+ * Example:
+ * ```
+ * assertThat(person).prop(Person::name).isEqualTo("Sue")
+ * ```
+ *
+ * @param property Property on which to assert. The name of this
+ * property will be shown in failure messages.
+ */
+fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
+    prop(property.name) { property.get(it) }
+
+/**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass(String::class)`
  * is successful but `assertThat("test").hasClass(Any::class)` fails.
  * @see [doesNotHaveClass]

@@ -91,26 +91,6 @@ fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
 }
 
 /**
- * Returns an assert that asserts on the given property.
- *
- * Example:
- * ```
- * assertThat(person).prop(Person::name).isEqualTo("Sue")
- * ```
- *
- * @param property Property on which to assert. The name of this
- * property will be shown in failure messages.
- */
-fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> = prop(property.name) {
-    try {
-        property.get(it)
-    } catch (e: InvocationTargetException) {
-        // unwrap cause for a more helpful error message.
-        throw e.cause!!
-    }
-}
-
-/**
  * Like [isEqualTo] but reports exactly which properties differ. Only supports data classes. Note: you should
  * _not_ use this if your data class has a custom [Any.equals] since it can be misleading.
  */

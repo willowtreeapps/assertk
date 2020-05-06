@@ -102,24 +102,6 @@ class JavaAnyTest {
         }
         assertEquals("sorry!", error.message)
     }
-    
-    @Test fun prop_property1_extract_prop_passes() {
-        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
-    }
-
-    @Test fun prop_property1_extract_prop_includes_name_in_failure_message() {
-        val error = assertFails {
-            assertThat(subject).prop(BasicObject::str).isEmpty()
-        }
-        assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
-    }
-
-    @Test fun prop_property1_includes_error_message_when_fails() {
-        val error = assertFails {
-            assertThat(subject).prop(BasicObject::failing).isEmpty()
-        }
-        assertEquals("sorry!", error.message)
-    }
     //endregion
 
     //region isDataClassEqualTo
