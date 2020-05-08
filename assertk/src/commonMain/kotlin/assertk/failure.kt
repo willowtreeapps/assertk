@@ -30,8 +30,7 @@ internal object FailureContext {
  * implementation throws an exception immediately. The [soft] implementation will collect failures and throw an
  * exception when [invoke] is called.
  */
-@PublishedApi
-internal interface Failure {
+interface Failure {
     /**
      * Record a failure. Depending on the implementation this may throw an exception or collect the failure for later.
      */
@@ -92,7 +91,7 @@ internal object SimpleFailure : Failure {
 /**
  * Failure that collects all failures and displays them at once.
  */
-internal class SoftFailure(
+class SoftFailure(
     val message: String = defaultMessage,
     val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() }
 ) :
