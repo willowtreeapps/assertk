@@ -24,7 +24,7 @@ Want to contribute, but not sure how? Here are some ideas to get you started.
 ## Creating the Pull Request
 
 To contribute, fork our project on GitHub, then submit a pull request to our
-`master` branch.
+`main` branch.
 
 ## Before Submitting
 
