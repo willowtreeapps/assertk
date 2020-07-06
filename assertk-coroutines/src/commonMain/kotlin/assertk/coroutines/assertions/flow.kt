@@ -195,7 +195,10 @@ suspend fun <T> Assert<Flow<T>>.index(index: Int): Assert<T> =
             if (index < 0) {
                 expected("index to be positive but was:${show(index)}")
             }
-            val subList = actual.take(index + 1).toList()
+            val subList = mutableListOf<T>()
+            actual.take(index + 1)
+                    .toList(subList)
+
             if (index in subList.indices) {
                 subList[index]
             } else {
