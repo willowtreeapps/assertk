@@ -62,4 +62,4 @@ gitPublish {
     }
 }
 
-gitPublishCopy.dependsOn(dokka)
+gitPublishCopy.dependsOn(dokkaHtml)

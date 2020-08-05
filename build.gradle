@@ -4,7 +4,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.3.70' apply false
-    id 'org.jetbrains.dokka' version '0.10.0' apply false
+    id 'org.jetbrains.dokka' version '1.4.0-rc' apply false
     id 'io.gitlab.arturbosch.detekt' version '1.5.0' apply false
     id 'org.ajoberstar.git-publish' version '2.1.1' apply false
 }
@@ -58,59 +58,60 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
 
         tasks.detekt.dependsOn(detektMain, detektTest)
 
-        dokka {
-            outputFormat = 'html'
+        dokkaHtml {
             outputDirectory = "$buildDir/javadoc/"
-            multiplatform {
-                common {}
-                js {}
-                jvm {}
-                linux {}
-                iosArm64 {}
-                iosX64 {}
-                macos {}
+            dokkaSourceSets {
+                commonMain {}
+                jsMain {}
+                jvmMain {
+                    jdkVersion = 8
+                }
+                linuxMain {}
+                iosArm64Main {}
+                iosX64Main {}
+                macosMain {}
+
+                configureEach {
+                    sourceLink {
+                        path = "src"
+                        url = "https://github.com/willowtreeapps/assertk/tree/v${version}/${project.name}/src"
+                        lineSuffix = "#L"
+                    }
+                }
             }
         }
 
         task dokkaCommon(type: DokkaTask) {
-            impliedPlatforms = ["Common"]
-            outputFormat = 'html'
             outputDirectory = "$buildDir/javadoc/common"
-            multiplatform {
-                common {}
+            dokkaSourceSets {
+                commonMain {}
             }
         }
 
         task dokkaJs(type: DokkaTask) {
-            impliedPlatforms = ["JS", "Common"]
-            outputFormat = 'html'
             outputDirectory = "$buildDir/javadoc/js"
-            multiplatform {
-                common {}
-                js {}
+            dokkaSourceSets {
+                commonMain {}
+                jsMain {}
             }
         }
 
         task dokkaJvm(type: DokkaTask) {
-            impliedPlatforms = ["JVM", "Common"]
-            outputFormat = 'html'
             outputDirectory = "$buildDir/javadoc/jvm"
-            multiplatform {
-                common {}
-                jvm {}
+            dokkaSourceSets {
+                commonMain {}
+                jvmMain {}
             }
         }
 
         task dokkaNative(type: DokkaTask) {
-            impliedPlatforms = ["Native", "Common"]
-            outputFormat = 'html'
             outputDirectory = "$buildDir/javadoc/native"
-            multiplatform {
-                common {}
-                linux {}
-                iosArm64 {}
-                iosX64 {}
-                macos {}
+            dokkaSourceSets {
+                commonMain {}
+                linuxMain {}
+                iosArm64Main {}
+                iosX64Main {}
+                macosMain {}
             }
         }
 
@@ -132,6 +133,10 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
         task dokkaJavadocNativeJar(type: Jar, dependsOn: dokkaNative) {
             archiveClassifier.set('javadoc')
             from "$buildDir/javadoc/native"
+        }
+
+        task emptyJavadocJar(type: Jar) {
+            archiveClassifier.set('javadoc')
         }
 
         task emptySourcesJar(type: Jar) {
