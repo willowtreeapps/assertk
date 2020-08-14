@@ -72,10 +72,6 @@ jobs:
             gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
             ".circleci/config.yml" }}-macos
       - run:
-          name: Set Gradle props
-          command: |
-            touch gradle.properties && echo "org.gradle.jvmargs=-Xmx2g" >> gradle.properties
-      - run:
           name: Run Tests
           command: ./gradlew macosTest iosX64Test
       - deploy:
