@@ -2,6 +2,7 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
+import assertk.assertions.support.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -79,6 +80,194 @@ class CharSequenceTest {
             assertThat("test").hasSameLengthAs("")
         }
         assertEquals("expected to have same length as:<\"\"> (0) but was:<\"test\"> (4)", error.message)
+    }
+    //endregion
+
+    //region contains single
+    @Test fun contains_value_substring_passes() {
+        assertThat("test").contains("est")
+    }
+
+    @Test fun contains_value_not_substring_fails() {
+        val error = assertFails {
+            assertThat("test").contains("not")
+        }
+        assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
+    }
+
+    @Test fun contains_value_substring_ignore_case_passes() {
+        assertThat("Test").contains("EST", true)
+    }
+
+    @Test fun contains_value_not_substring_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").contains("EST", false)
+        }
+        assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
+    }
+    //endregion
+
+    //region contains multi
+    @Test fun contains_empty_arg_passes() {
+        assertThat("test").contains()
+    }
+
+    @Test fun contains_value_contains_passes() {
+        assertThat("test").contains("te", "st")
+    }
+
+    @Test fun contains_list_contains_passes() {
+        assertThat("test").contains(listOf("te", "st"))
+    }
+
+    @Test fun contains_contains_unordered_passes() {
+        assertThat("test").contains("st", "te")
+    }
+
+    @Test fun contains_value_not_contains_fails() {
+        val error = assertFails {
+            assertThat("test").contains("foo", "bar")
+        }
+        assertEquals("expected to contain:<[\"foo\", \"bar\"]> but was:<\"test\">", error.message)
+    }
+
+    @Test fun contains_value_contains_ignore_case_passes() {
+        assertThat("Test").contains("te", "ST", ignoreCase = true)
+    }
+
+    @Test fun contains_value_not_contains_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").contains("te", "ST", ignoreCase = false)
+        }
+        assertEquals("expected to contain:<[\"te\", \"ST\"]> but was:<\"Test\">", error.message)
+    }
+    //endregion
+
+
+    //region doesNotContain single
+    @Test fun doesNotContain_value_not_substring_passes() {
+        assertThat("test").doesNotContain("not")
+    }
+
+    @Test fun doesNotContain_value_substring_fails() {
+        val error = assertFails {
+            assertThat("test").doesNotContain("est")
+        }
+        assertEquals("expected to not contain:<\"est\"> but was:<\"test\">", error.message)
+    }
+
+    @Test fun doesNotContain_value_substring_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").doesNotContain("EST", true)
+        }
+        assertEquals("expected to not contain:<\"EST\"> but was:<\"Test\">", error.message)
+    }
+
+    @Test fun doesNotContain_value_not_substring_ignore_case_passes() {
+        assertThat("Test").doesNotContain("EST", false)
+    }
+    //endregion
+
+    //region doesNotContain multi
+    @Test fun doesNotContain_multivalue_not_substring_passes() {
+        assertThat("test").doesNotContain("foo", "bar")
+    }
+
+    @Test fun doesNotContain_multivalue_substring_fails() {
+        val error = assertFails {
+            assertThat("test").doesNotContain("te", "st")
+        }
+        assertEquals("expected to not contain:<[\"te\", \"st\"]> but was:<\"test\">", error.message)
+    }
+
+    @Test fun doesNotContain_multivalue_substring_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("Test").doesNotContain("TE", "ST", ignoreCase = true)
+        }
+        assertEquals("expected to not contain:<[\"TE\", \"ST\"]> but was:<\"Test\">", error.message)
+    }
+
+    @Test fun doesNotContain_multivalue_not_substring_ignore_case_passes() {
+        assertThat("Test").doesNotContain("TE", "ST", ignoreCase = false)
+    }
+    //endregion
+
+    //region startsWith
+    @Test fun startsWith_value_prefix_passes() {
+        assertThat("test").startsWith("te")
+    }
+
+    @Test fun startsWith_value_not_prefix_fails() {
+        val error = assertFails {
+            assertThat("test").startsWith("st")
+        }
+        assertEquals("expected to start with:<\"st\"> but was:<\"test\">", error.message)
+    }
+
+    @Test fun startsWith_value_prefix_ignore_case_passes() {
+        assertThat("test").startsWith("TE", true)
+    }
+
+    @Test fun startsWith_value_not_prefix_ignore_case_fails() {
+        val error = assertFails {
+            assertThat("test").startsWith("TE", false)
+        }
+        assertEquals("expected to start with:<\"TE\"> but was:<\"test\">", error.message)
+    }
+    //endregion
+
+    //region endsWith
+    @Test fun endsWith_value_suffix_passes() {
+        assertThat("test").endsWith("st")
+    }
+
+    @Test fun endsWith_value_not_suffix_fails() {
+        val error = assertFails {
+            assertThat("test").endsWith("te")
+        }
+        assertEquals("expected to end with:<\"te\"> but was:<\"test\">", error.message)
+    }
+
+    @Test fun endsWith_value_suffix_ignore_case_passes() {
+        assertThat("test").endsWith("ST", true)
+    }
+
+    @Test fun endsWith_value_not_suffix_ignore_case_passes() {
+        val error = assertFails {
+            assertThat("test").endsWith("ST", false)
+        }
+        assertEquals("expected to end with:<\"ST\"> but was:<\"test\">", error.message)
+    }
+    //endregion
+
+    //region hasLineCount
+    @Test fun hasLineCount_correct_value_passes() {
+        assertThat("").hasLineCount(1)
+        assertThat("test test").hasLineCount(1)
+        assertThat("test test\ntest test").hasLineCount(2)
+        assertThat("test test\r\ntest test").hasLineCount(2)
+        assertThat("test test\rtest test").hasLineCount(2)
+    }
+
+    @Test fun hasLineCount_wrong_value_fails() {
+        val error = assertFails {
+            assertThat("test test").hasLineCount(2)
+        }
+        assertEquals("expected to have line count:<2> but was:<1>", error.message)
+    }
+    //endregion
+
+    //region matches
+    @Test fun matches_matching_value_passes() {
+        assertThat("1234").matches(Regex("\\d\\d\\d\\d"))
+    }
+
+    @Test fun matches_not_matching_value_fails() {
+        val regex = Regex("\\d\\d\\d\\d")
+        val error = assertFails {
+            assertThat("12345").matches(regex)
+        }
+        assertEquals("expected to match:${show(regex)} but was:<\"12345\">", error.message)
     }
     //endregion
 }
