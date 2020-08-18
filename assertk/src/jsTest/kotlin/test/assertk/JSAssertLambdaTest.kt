@@ -2,7 +2,6 @@ package test.assertk
 
 import assertk.assertThat
 import assertk.assertions.*
-import assertk.catch
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.promise
 import kotlin.test.Test

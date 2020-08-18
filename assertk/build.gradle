@@ -40,18 +40,11 @@ kotlin {
                 implementation project(':java-interop')
             }
         }
-        jsMain {
-            dependencies {
-		// kotlin-js doesn't handle this as a transitive dep correctly
-		// when it's scoped as runtime.
-                api "com.willowtreeapps.opentest4k:opentest4k-js:$opentest4k_version"
-            }
-        }
     }
 }
 
-[compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
-[compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
+[compileKotlinJvm, compileKotlinJsLegacy, compileKotlinJsIr].each { it.dependsOn(compileTemplates) }
+[compileTestKotlinJvm, compileTestKotlinJsLegacy, compileTestKotlinJsIr].each { it.dependsOn(compileTestTemplates) }
 
 gitPublish {
     repoUri = 'git@github.com:willowtreeapps/assertk.git'
