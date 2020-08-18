@@ -25,10 +25,10 @@ kotlin {
     targets.all {
         if (name != 'metadata') {
             compilations.main.kotlinOptions {
-//                allWarningsAsErrors = true
+                allWarningsAsErrors = true
             }
             compilations.test.kotlinOptions {
-//                allWarningsAsErrors = true
+                allWarningsAsErrors = true
                 freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
             }
         }
