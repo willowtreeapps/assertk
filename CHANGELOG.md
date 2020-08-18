@@ -6,12 +6,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Minimum supported kotlin version is 1.4.0
+- Multiplatform artifacts are published as a single artifact. You can now just write
+  ```groovy
+  sourceSets {
+    commonTest {
+      dependencies {
+         implementation "com.willowtreeapps.assertk:assertk:..."
+      }
+    }
+  }
+  ```
+instead of defining one for each platform.
+- Added support for the Kotlin/JS [IR compiler](https://kotlinlang.org/docs/reference/js-ir-compiler.html)
+
 ### Added
 - Add `prop` function with `KProperty1` argument.
 
 ### Deprecated
 - Deprecated `prop` function with `KCallable` argument. Use the new overload
 with type-safe `KProperty1` argument or another overload with explicit name and lambda.
+
+### Fixed
+- Primitive array 'contains' methods now work with NaN. ex:
+  ```kotlin
+  assertThat(floatArrayOf(Float.Nan)).contains(Float.NaN)
+  ```
+  will pass when it failed before.
 
 ## [0.22] 2020-03-11
 
