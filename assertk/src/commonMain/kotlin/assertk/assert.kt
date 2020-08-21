@@ -2,8 +2,8 @@ package assertk
 
 import assertk.assertions.isFailure
 import assertk.assertions.isSuccess
+import assertk.assertions.support.display
 import assertk.assertions.support.show
-import kotlin.contracts.contract
 import kotlin.reflect.KProperty0
 
 /**
@@ -17,7 +17,7 @@ annotation class AssertkDsl
  * @see [assertThat]
  */
 @AssertkDsl
-sealed class Assert<out T>(val name: String?, internal val context: Any?) {
+sealed class Assert<out T>(val name: String?, internal val context: AssertingContext) {
     /**
      * Transforms an assertion from one type to another. If the assertion is failing the resulting assertion will still
      * be failing, otherwise the mapping function is called. An optional name can be provided, otherwise this
@@ -74,18 +74,29 @@ sealed class Assert<out T>(val name: String?, internal val context: Any?) {
 }
 
 @PublishedApi
-internal class ValueAssert<out T>(val value: T, name: String?, context: Any?) :
+internal class ValueAssert<out T>(val value: T, name: String?, context: AssertingContext) :
     Assert<T>(name, context) {
 
-    override fun <R> assertThat(actual: R, name: String?): Assert<R> =
-        ValueAssert(actual, name, if (context != null || this.value === actual) context else this.value)
+    override fun <R> assertThat(actual: R, name: String?): Assert<R> {
+        val newContext = if (context.originatingSubject != null || this.value == actual) {
+            context
+        } else {
+            context.copy(originatingSubject = this.value)
+        }
+        return ValueAssert(actual, name, newContext)
+    }
 }
 
 @PublishedApi
-internal class FailingAssert<out T>(val error: Throwable, name: String?, context: Any?) :
+internal class FailingAssert<out T>(val error: Throwable, name: String?, context: AssertingContext) :
     Assert<T>(name, context) {
     override fun <R> assertThat(actual: R, name: String?): Assert<R> = FailingAssert(error, name, context)
 }
+
+internal data class AssertingContext(
+    val originatingSubject: Any? = null,
+    val displayOriginatingSubject: () -> String
+)
 
 /**
  * Runs the given lambda if the block throws an error, otherwise fails.
@@ -182,7 +193,15 @@ internal expect fun showError(e: Throwable): String
  * assertThat(true, name = "true").isTrue()
  * ```
  */
-fun <T> assertThat(actual: T, name: String? = null): Assert<T> = ValueAssert(actual, name, null)
+fun <T> assertThat(
+    actual: T,
+    name: String? = null,
+    displayActual: (T) -> String = { display(it) }
+): Assert<T> = ValueAssert(
+    value = actual,
+    name = name,
+    context = AssertingContext { displayActual(actual) }
+)
 
 /**
  * Asserts on the given property reference using its name, if no explicit name is specified. This method

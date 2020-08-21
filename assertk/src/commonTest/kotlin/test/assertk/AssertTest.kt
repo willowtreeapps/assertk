@@ -67,6 +67,15 @@ class AssertTest {
         assertEquals("expected [test]:<[2]> but was:<[1]> (0)", error.message)
     }
 
+    @Test fun assertThat_failing_transformed_assert_shows_original_by_displayActual_lambda() {
+        val error = assertFails {
+            assertThat(0, name = "test", displayActual = { "Number:${it}" })
+                .assertThat(1).isEqualTo(2)
+        }
+
+        assertEquals("expected [test]:<[2]> but was:<[1]> (Number:0)", error.message)
+    }
+
     @Test fun assertThat_on_failing_assert_is_ignored() {
         val error = assertFails {
             assertAll {
