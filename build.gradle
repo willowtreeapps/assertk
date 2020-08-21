@@ -20,6 +20,7 @@ ext {
 
 subprojects {
     group 'com.willowtreeapps.assertk'
+    version rootProject.version
 
     configurations.all {
         // Don't cache SNAPSHOT deps
