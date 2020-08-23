@@ -221,6 +221,17 @@ class IterableTest {
         )
     }
 
+    @Test fun exactly_too_few_inside_all_fails() {
+        val error = assertFails {
+            assertThat(listOf(5, 4, 3) as Iterable<Int>).all {
+                exactly(2) { it.isGreaterThan(2) }
+            }
+        }
+        assertEquals(
+                """expected to pass exactly 2 times""".trimMargin(), error.message
+        )
+    }
+
     @Test fun exactly_times_passed_passes() {
         assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) { it.isGreaterThan(0) }
     }
