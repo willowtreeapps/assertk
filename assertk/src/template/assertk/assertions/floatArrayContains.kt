@@ -59,10 +59,17 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
 }
 
 /**
- * Asserts the $T contains only the expected elements, in any order.
+ * Asserts the $T contains only the expected elements, in any order. Duplicate values
+ * in the expected and actual are ignored.
+ *
+ * [1, 2] containsOnly [2, 1] passes
+ * [1, 2, 2] containsOnly [2, 1] passes
+ * [1, 2] containsOnly [2, 2, 1] passes
+ *
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsAll]
+ * @see [containsExactlyInAnyOrder]
  */
 fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
     val actualList = actual.asList()
@@ -85,6 +92,11 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
 /**
  * Asserts the $T contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
+ *
+ * [1, 2] containsOnly [2, 1] fails
+ * [1, 2, 2] containsOnly [2, 1] fails
+ * [1, 2] containsOnly [2, 2, 1] fails
+ *
  * @see [containsAll]
  */
 @JvmName("$NContainsExactly")
@@ -96,3 +108,40 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     expected(listDifferExpected(elementsList, actualList))
 }
 
+/**
+ * Asserts the $T contains exactly the expected elements, in any order. Each value in expected
+ * must correspond to a matching value in actual, and visa-versa.
+ *
+ * [1, 2] containsExactlyInAnyOrder [2, 1] passes
+ * [1, 2, 2] containsExactlyInAnyOrder [2, 1] fails
+ * [1, 2] containsExactlyInAnyOrder [2, 2, 1] fails
+ *
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsAll]
+ * @see [containsOnly]
+ */
+@JvmName("$NContainsExactlyInAnyOrder")
+fun Assert<$T>.containsExactlyInAnyOrder(vararg elements: $E) = given { actual ->
+    val actualList = actual.asList()
+    val elementsList = elements.asList()
+    val notInActual = elementsList.toMutableList()
+    val notInExpected = actualList.toMutableList()
+    elements.forEach {
+        if (notInExpected.contains(it)) {
+            notInExpected.removeFirst(it)
+            notInActual.removeFirst(it)
+        }
+    }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain exactly in any order:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
+}
