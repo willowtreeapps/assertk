@@ -25,7 +25,7 @@ fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
 }
 
 /**
- * Asserts the collection does not contain any of the expected elements.
+ * Asserts the iterable does not contain any of the expected elements.
  * @see [containsAll]
  */
 fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
@@ -37,7 +37,7 @@ fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the collection contains all the expected elements, in any order. The collection may also
+ * Asserts the iterable contains all the expected elements, in any order. The collection may also
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
@@ -52,10 +52,17 @@ fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the collection contains only the expected elements, in any order.
+ * Asserts the iterable contains only the expected elements, in any order. Duplicate values
+ * in the expected and actual are ignored.
+ *
+ * [1, 2] containsOnly [2, 1] passes
+ * [1, 2, 2] containsOnly [2, 1] passes
+ * [1, 2] containsOnly [2, 2, 1] passes
+ *
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsAll]
+ * @see [containsExactlyInAnyOrder]
  */
 fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
@@ -71,6 +78,46 @@ fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
             append("\n extra elements found:${show(notInExpected)}")
         }
     }.toString())
+}
+
+/**
+ * Asserts the iterable contains exactly the expected elements, in any order. Each value in expected
+ * must correspond to a matching value in actual, and visa-versa.
+ *
+ * [1, 2] containsExactlyInAnyOrder [2, 1] passes
+ * [1, 2, 2] containsExactlyInAnyOrder [2, 1] fails
+ * [1, 2] containsExactlyInAnyOrder [2, 2, 1] fails
+ *
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsAll]
+ * @see [containsOnly]
+ */
+fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given { actual ->
+    val notInActual = elements.toMutableList()
+    val notInExpected = actual.toMutableList()
+    elements.forEach {
+        if (notInExpected.contains(it)) {
+            notInExpected.removeFirst(it)
+            notInActual.removeFirst(it)
+        }
+    }
+    if (notInExpected.isEmpty() && notInActual.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain exactly in any order:${show(elements)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
+}
+
+internal fun MutableList<*>.removeFirst(value: Any?) {
+    val index = indexOf(value)
+    if (index > -1) removeAt(index)
 }
 
 /**

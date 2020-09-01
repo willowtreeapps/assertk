@@ -76,6 +76,14 @@ class $TContainsTest {
         assertThat($NOf(1.to$E(), 2.to$E())).containsOnly(2.to$E(), 1.to$E())
     }
 
+    @Test fun containsOnly_duplicate_elements_passes() {
+        assertThat($NOf(1.to$E(), 2.to$E(), 2.to$E())).containsOnly(2.to$E(), 1.to$E())
+    }
+
+    @Test fun containsOnly_duplicate_elements_passes2() {
+        assertThat($NOf(1.to$E(), 2.to$E())).containsOnly(2.to$E(), 2.to$E(), 1.to$E())
+    }
+
     @Test fun containsOnly_more_elements_fails() {
         val error = assertFails {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsOnly(2.to$E(), 1.to$E())
@@ -187,6 +195,74 @@ class $TContainsTest {
             """expected to contain exactly:<${show(listOf(1.to$E(), 3.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}>
                 | at index:1 unexpected:<${show(2.to$E(), "")}>
             """.trimMargin(), error.message
+        )
+    }
+    //endregion
+
+    //region containsExactlyInAnyOrder
+    @Test fun containsExactlyInAnyOrder_only_elements_passes() {
+        assertThat($NOf(1.to$E(), 2.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E())
+    }
+
+    @Test fun containsExactlyInAnyOrder_only_elements_passes2() {
+        assertThat($NOf(1.to$E(), 2.to$E(), 1.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E(), 1.to$E())
+    }
+
+    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E(), 2.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E())
+        }
+        assertEquals(
+                """expected to contain exactly in any order:<${show(listOf(2.to$E(), 1.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E(), 2.to$E()), "")}>
+                | extra elements found:<[${show(2.to$E(), "")}]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E())).containsExactlyInAnyOrder(2.to$E(), 2.to$E(), 1.to$E())
+        }
+        assertEquals(
+                """expected to contain exactly in any order:<${show(listOf(2.to$E(), 2.to$E(), 1.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E()), "")}>
+                | elements not found:<[${show(2.to$E(), "")}]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_more_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E())
+        }
+        assertEquals(
+                """expected to contain exactly in any order:<${show(listOf(2.to$E(), 1.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}>
+                | extra elements found:<[${show(3.to$E(), "")}]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_less_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E(), 3.to$E(), 4.to$E())
+        }
+        assertEquals(
+                """expected to contain exactly in any order:<${show(listOf(2.to$E(), 1.to$E(), 3.to$E(), 4.to$E()), "")}> but was:<${show(listOf(1.to$E(), 2.to$E(), 3.to$E()), "")}>
+                | elements not found:<[${show(4.to$E(), "")}]>
+            """.trimMargin(),
+                error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_different_elements_fails() {
+        val error = assertFails {
+            assertThat($NOf(1.to$E())).containsExactlyInAnyOrder(2.to$E())
+        }
+        assertEquals(
+                """expected to contain exactly in any order:<[${show(2.to$E(), "")}]> but was:<[${show(1.to$E(), "")}]>
+                | elements not found:<[${show(2.to$E(), "")}]>
+                | extra elements found:<[${show(1.to$E(), "")}]>
+            """.trimMargin(),
+                error.message
         )
     }
     //endregion
