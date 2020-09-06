@@ -1,12 +1,13 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.4.0' apply false
-    id 'org.jetbrains.dokka' version '1.4.0-rc' apply false
+    id 'org.jetbrains.dokka' version '1.4.0'
     id 'io.gitlab.arturbosch.detekt' version '1.12.0' apply false
-    id 'org.ajoberstar.git-publish' version '2.1.1' apply false
+    id 'org.ajoberstar.git-publish' version '2.1.1'
 }
 
 version = '0.23'
@@ -31,12 +32,41 @@ subprojects {
         mavenCentral()
         jcenter()
         if (!isReleaseVersion) {
-            maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+            maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         }
     }
 }
 
+gitPublish {
+    repoUri = 'git@github.com:willowtreeapps/assertk.git'
+    branch = 'gh-pages'
+    contents {
+        from 'build/dokka/htmlMultiModule'
+        into 'javadoc'
+    }
+}
+
+gitPublishCopy.dependsOn(dokkaHtmlMultiModule)
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
 configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
+
+    dokkaHtml {
+        dokkaSourceSets {
+            configureEach {
+                sourceLink {
+                    path = "src"
+                    url = "https://github.com/willowtreeapps/assertk/tree/v${version}/${project.name}/src"
+                    lineSuffix = "#L"
+                }
+            }
+        }
+    }
+
     afterEvaluate {
         task detektMain(type: Detekt) {
             setSource(files(kotlin.sourceSets.commonMain.kotlin, kotlin.sourceSets.jsMain.kotlin, kotlin.sourceSets.jvmMain.kotlin, kotlin.sourceSets.nativeMain.kotlin))
@@ -60,38 +90,15 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
 
         tasks.detekt.dependsOn(detektMain, detektTest)
 
-        dokkaHtml {
-            outputDirectory = "$buildDir/javadoc/"
-            dokkaSourceSets {
-                commonMain {}
-                jsMain {}
-                jvmMain {
-                    jdkVersion = 8
-                }
-                linuxMain {}
-                iosArm64Main {}
-                iosX64Main {}
-                macosMain {}
-
-                configureEach {
-                    sourceLink {
-                        path = "src"
-                        url = "https://github.com/willowtreeapps/assertk/tree/v${version}/${project.name}/src"
-                        lineSuffix = "#L"
-                    }
-                }
-            }
-        }
-
         task dokkaCommon(type: DokkaTask) {
-            outputDirectory = "$buildDir/javadoc/common"
+            outputDirectory = file("$buildDir/javadoc/common")
             dokkaSourceSets {
                 commonMain {}
             }
         }
 
         task dokkaJs(type: DokkaTask) {
-            outputDirectory = "$buildDir/javadoc/js"
+            outputDirectory = file("$buildDir/javadoc/js")
             dokkaSourceSets {
                 commonMain {}
                 jsMain {}
@@ -99,7 +106,7 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
         }
 
         task dokkaJvm(type: DokkaTask) {
-            outputDirectory = "$buildDir/javadoc/jvm"
+            outputDirectory = file("$buildDir/javadoc/jvm")
             dokkaSourceSets {
                 commonMain {}
                 jvmMain {}
@@ -107,7 +114,7 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
         }
 
         task dokkaNative(type: DokkaTask) {
-            outputDirectory = "$buildDir/javadoc/native"
+            outputDirectory = file("$buildDir/javadoc/native")
             dokkaSourceSets {
                 commonMain {}
                 linuxMain {}

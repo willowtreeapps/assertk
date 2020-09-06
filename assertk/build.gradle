@@ -4,7 +4,6 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
-    id 'org.ajoberstar.git-publish'
 }
 
 apply from: "$rootProject.projectDir/multiplatform.gradle"
@@ -46,13 +45,3 @@ kotlin {
 [compileKotlinJvm, compileKotlinJsLegacy, compileKotlinJsIr].each { it.dependsOn(compileTemplates) }
 [compileTestKotlinJvm, compileTestKotlinJsLegacy, compileTestKotlinJsIr].each { it.dependsOn(compileTestTemplates) }
 
-gitPublish {
-    repoUri = 'git@github.com:willowtreeapps/assertk.git'
-    branch = 'gh-pages'
-    contents {
-        from 'build/javadoc'
-        into 'javadoc'
-    }
-}
-
-gitPublishCopy.dependsOn(dokkaHtml)
