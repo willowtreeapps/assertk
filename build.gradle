@@ -10,7 +10,7 @@ plugins {
     id 'org.ajoberstar.git-publish' version '2.1.1'
 }
 
-version = '0.23'
+version = '0.24-SNAPSHOT'
 
 ext {
     isReleaseVersion = !(version =~ /-SNAPSHOT$/)
