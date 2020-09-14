@@ -101,6 +101,43 @@ assertAll {
 //    - expected to be false
 ```
 
+### Extracting data
+
+There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the 
+assertion, these methods will add the extra context to the failure message which can be helpful.
+
+The simplest way is with `prop()`. It will take a property (or a name and a lambda) and return an assertion on that
+property.
+
+```kotlin
+val person = Person(age = 22)
+assertThat(person).prop(Person::age).isEqualTo(20)
+
+// -> expected [age]:<2[0]> but was:<2[2]> (Person(age=22))
+```
+
+For collections, you can use `index()` to pull a specific index from a list, and `key()` to pull a specific value from
+a map.
+
+```kotlin
+assertThat(listOf(1, 2, 3)).index(1).isEqualTo(1)
+
+// -> expected: [[1]]:<1> but was:<2> ([1, 2, 3])
+
+assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).key("two").isEqualTo(1)
+
+// -> expected: [["two"]]:<1> but was:<2> ({"one"=1, "two"=2, "three"=3})
+```
+
+You can also extract a property from a collection using `extracting()`.
+
+```kotlin
+val people = listOf(Person(name = "Sue"), Person(name = "Bob"))
+assertThat(people)
+    .extracting(Person::name)
+    .containsExactly("Sue", "Bob")
+```
+
 ### Exceptions
 
 If you expect an exception to be thrown, you can use the version of `assertThat` that takes a lambda.
@@ -144,14 +181,15 @@ One of the goals of this library is to make custom assertions easy to make. All 
 
 ```kotlin
 fun Assert<Person>.hasAge(expected: Int) {
-    prop("age", Person::age).isEqualTo(expected)
+    prop(Person::age).isEqualTo(expected)
 }
 
-assertThat(person).hasAge(10)
-// -> expected [age]:<1[0]> but was:<1[8]> (Person(age=18))
+assertThat(person).hasAge(20)
+// -> expected [age]:<2[0]> but was:<2[2]> (Person(age=22))
 ```
 
-For completely custom assertions, you can access the actual value with `given` and fail with `expected()` and `show()`.
+For completely custom assertions, you have a few building blocks. `given` will give you the actual value to assert on,
+and `expected()` and `show()` will help you format your failure message.
 
 ```kotlin
 fun Assert<Person>.hasAge(expected: Int) = given { actual ->
@@ -159,42 +197,35 @@ fun Assert<Person>.hasAge(expected: Int) = given { actual ->
     expected("age:${show(expected)} but was age:${show(actual.age)}")
 }
 
-assertThat(person).hasAge(10)
-// -> expected age:<10> but was age:<18>
+assertThat(person).hasAge(20)
+// -> expected age:<20> but was age:<22>
 ```
+
+You can also build assertions that chain by using `transform`. This allows you to both assert on the actual value, and
+return something more specific that additional assertions can be chained on.
+
+```kotlin
+fun Assert<Person>.hasMiddleName(): Assert<String> = transform(appendName("middleName", seperator = ".")) { actual ->
+   if (actual.middleName != null) {
+       actual.middleName
+   } else {
+       expected("to not be null")
+   }
+}
+
+assertThat(person).hasMiddleName().isEqualTo("Lorie")
+
+// -> expected [middleName]:to not be null
+```
+
+Note: this is a bit of a contrived example as you'd probably want to build this out of existing assertions instead.
+
+```kotlin
+fun Assert<Person>.hasMiddleName(): Assert<String> = prop(Person::middleName).isNotNull()
+```
+
+The general rule of thumb is to prefer building out of the existing assertions unless you can give a more meaningful
+error message.
 
 ## Contributing to assertk
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/master/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/master/code-of-conduct.md).
-
-## Known Issues
-
-1. You get `java.lang.AssertionError: java.lang.NoClassDefFoundError: org/opentest4j/AssertionFailedError` when running a failing test from intellij.
-
-    I've filed a [bug](https://youtrack.jetbrains.com/issue/IDEA-214533) about this, it works correctly when running on the cmdline with gradle. To workaround, you can explicilty add `opentest4j` as a dependency.
-
-   ```groovy
-   testComple 'org.opentest4j:opentest4j:1.2.0'
-   ```
-
-2. Gradle fails to find the correct variant if the `kapt` plugin is applied:
-    ```
-       > Could not resolve com.willowtreeapps.assertk:assertk-jvm:0.19.
-         Required by:
-             project :core-test
-          > Cannot choose between the following variants of com.willowtreeapps.assertk:assertk-jvm:0.19:
-              - jvm-api
-              - jvm-runtime
-              - metadata-api
-    ```
-    This was a [known issue](https://youtrack.jetbrains.com/issue/KT-31641) with the kapt plugin that was fixed in kotlin 1.3.60 so your best option is to update kotlin.
-    
-    If you can't do that, you can add the below to your gradle file to work around it
-    ```groovy
-    configurations.all { configuration ->
-        // Workaround for kapt bug with MPP dependencies
-        // https://youtrack.jetbrains.com/issue/KT-31641
-        if (name.contains('kapt')) {
-            attributes.attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.class, Usage.JAVA_RUNTIME))
-        }
-    }
-    ```
