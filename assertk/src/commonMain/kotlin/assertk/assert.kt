@@ -155,10 +155,11 @@ sealed class Result<out T> {
         }
     }
 
-    val isSuccess: Boolean get() = when (this) {
-        is Success -> true
-        is Failure -> false
-    }
+    val isSuccess: Boolean
+        get() = when (this) {
+            is Success -> true
+            is Failure -> false
+        }
 
     fun getOrNull(): T? = when (this) {
         is Success -> value

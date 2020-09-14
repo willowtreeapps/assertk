@@ -16,7 +16,11 @@ internal object FailureContext {
     }
 
     fun popFailure() {
-        failureRef.value.apply { if (size > 1) { removeAt(size - 1) } }
+        failureRef.value.apply {
+            if (size > 1) {
+                removeAt(size - 1)
+            }
+        }
     }
 
     fun fail(error: Throwable) {
@@ -30,7 +34,8 @@ internal object FailureContext {
  * implementation throws an exception immediately. The [soft] implementation will collect failures and throw an
  * exception when [invoke] is called.
  */
-interface Failure {
+@PublishedApi
+internal interface Failure {
     /**
      * Record a failure. Depending on the implementation this may throw an exception or collect the failure for later.
      */
@@ -77,7 +82,8 @@ internal inline fun <T> Failure.run(f: () -> T): T {
     } finally {
         popFailure()
         invoke()
-    } }
+    }
+}
 
 /**
  * Failure that immediately thrown an exception.
@@ -91,7 +97,7 @@ internal object SimpleFailure : Failure {
 /**
  * Failure that collects all failures and displays them at once.
  */
-class SoftFailure(
+internal class SoftFailure(
     val message: String = defaultMessage,
     val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() }
 ) :
@@ -114,7 +120,7 @@ class SoftFailure(
     }
 
     private fun compositeErrorMessage(errors: List<Throwable>): Throwable {
-        return when(errors.size) {
+        return when (errors.size) {
             0 -> AssertionFailedError(message)
             1 -> errors.first()
             else -> MultipleFailuresError(message, errors).apply {

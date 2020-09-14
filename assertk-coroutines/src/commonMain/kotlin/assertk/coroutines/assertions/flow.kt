@@ -3,6 +3,7 @@ package assertk.coroutines.assertions
 import assertk.Assert
 import assertk.assertions.*
 import assertk.assertions.support.expected
+import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -167,9 +168,6 @@ suspend fun Assert<Flow<*>>.containsOnly(vararg elements: Any?) = given { actual
     }.toString())
 }
 
-private class AbortFlowException :
-    CancellationException("Flow was aborted, no more elements needed")
-
 /**
  * Asserts the flow contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
@@ -179,29 +177,8 @@ suspend fun Assert<Flow<*>>.containsExactly(vararg elements: Any?) = given { act
     val expected = elements.toList()
     val asList = actual.toList()
     if (asList == expected) return
-    expected(listDifferExpected(expected, asList), expected, asList)
+    expectedListDiff(expected, asList)
 }
 
-/**
- * Returns an assert that assertion on the value at the given index in the flow.
- *
- * ```
- * assertThat(flowOf(0, 1, 2)).index(1).isPositive()
- * ```
- */
-@ExperimentalCoroutinesApi
-suspend fun <T> Assert<Flow<T>>.index(index: Int): Assert<T> =
-        transform("${name ?: ""}${show(index, "[]")}") { actual ->
-            if (index < 0) {
-                expected("index to be positive but was:${show(index)}")
-            }
-            val subList = mutableListOf<T>()
-            actual.take(index + 1)
-                    .toList(subList)
-
-            if (index in subList.indices) {
-                subList[index]
-            } else {
-                expected("index to be in range:[0-${subList.size}) but was:${show(index)}")
-            }
-        }
+private class AbortFlowException :
+    CancellationException("Flow was aborted, no more elements needed")
