@@ -4,7 +4,6 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
-    id 'org.ajoberstar.git-publish'
 }
 
 apply from: "$rootProject.projectDir/multiplatform.gradle"
@@ -40,26 +39,9 @@ kotlin {
                 implementation project(':java-interop')
             }
         }
-        jsMain {
-            dependencies {
-		// kotlin-js doesn't handle this as a transitive dep correctly
-		// when it's scoped as runtime.
-                api "com.willowtreeapps.opentest4k:opentest4k-js:$opentest4k_version"
-            }
-        }
     }
 }
 
-[compileKotlinJvm, compileKotlinJs].each { it.dependsOn(compileTemplates) }
-[compileTestKotlinJvm, compileTestKotlinJs].each { it.dependsOn(compileTestTemplates) }
+[compileKotlinJvm, compileKotlinJsLegacy, compileKotlinJsIr].each { it.dependsOn(compileTemplates) }
+[compileTestKotlinJvm, compileTestKotlinJsLegacy, compileTestKotlinJsIr].each { it.dependsOn(compileTestTemplates) }
 
-gitPublish {
-    repoUri = 'git@github.com:willowtreeapps/assertk.git'
-    branch = 'gh-pages'
-    contents {
-        from 'build/javadoc'
-        into 'javadoc'
-    }
-}
-
-gitPublishCopy.dependsOn(dokka)

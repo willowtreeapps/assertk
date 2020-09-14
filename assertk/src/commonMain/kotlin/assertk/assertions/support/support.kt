@@ -74,7 +74,7 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  */
 fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
     val maybeSpace = if (message.startsWith(":")) "" else " "
-    val maybeInstance = if (context != null) " ${show(context, "()")}" else ""
+    val maybeInstance = if (context.originatingSubject != null) " (${context.displayOriginatingSubject()})" else ""
     fail(
         message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
         expected = expected,

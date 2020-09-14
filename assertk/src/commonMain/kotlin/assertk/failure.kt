@@ -114,10 +114,10 @@ class SoftFailure(
     }
 
     private fun compositeErrorMessage(errors: List<Throwable>): Throwable {
-        return if (errors.size == 1) {
-            errors.first()
-        } else {
-            MultipleFailuresError(message, errors).apply {
+        return when(errors.size) {
+            0 -> AssertionFailedError(message)
+            1 -> errors.first()
+            else -> MultipleFailuresError(message, errors).apply {
                 errors.forEach(this::addSuppressed)
             }
         }

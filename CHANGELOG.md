@@ -4,14 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.23] 2020-09-01
+
+### Changed
+- Minimum supported kotlin version is 1.4.0
+- Multiplatform artifacts are published as a single artifact. You can now just write
+  ```groovy
+  sourceSets {
+    commonTest {
+      dependencies {
+         implementation "com.willowtreeapps.assertk:assertk:..."
+      }
+    }
+  }
+  ```
+instead of defining one for each platform.
+- Added support for the Kotlin/JS [IR compiler](https://kotlinlang.org/docs/reference/js-ir-compiler.html)
+- Added optional `displayActual` function to `assertThat` as an alternative to `.toString()` for external types
+- Moved most `String` assertions to `CharSequence`
 
 ### Added
-- Add `prop` function with `KProperty1` argument.
+- Added `prop` function with `KProperty1` argument.
+- Added `containsExactlyInAnyOrder` assertion for `Iterable` and primitive arrays
+- Added initial Coroutines artifact (additional support planned for the future)
 
 ### Deprecated
 - Deprecated `prop` function with `KCallable` argument. Use the new overload
 with type-safe `KProperty1` argument or another overload with explicit name and lambda.
+
+### Fixed
+- Primitive array 'contains' methods now work with NaN. ex:
+  ```kotlin
+  assertThat(floatArrayOf(Float.Nan)).contains(Float.NaN)
+  ```
+  will pass when it failed before.
+- Fixes a [bug](https://github.com/willowtreeapps/assertk/issues/314) causing failures to sometimes be dropped in a nested assertion context
 
 ## [0.22] 2020-03-11
 

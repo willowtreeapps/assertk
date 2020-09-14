@@ -7,7 +7,7 @@ kotlin {
             jvmTarget = "1.8"
         }
     }
-    js {
+    js(BOTH) {
         nodejs()
         browser()
         compilations.main.kotlinOptions {
@@ -19,8 +19,7 @@ kotlin {
         }
     }
     linuxX64('linux')
-    iosArm64()
-    iosX64()
+    ios()
     macosX64('macos')
 
     targets.all {
@@ -37,37 +36,27 @@ kotlin {
 
     sourceSets {
         commonMain {
-            dependencies {
-                implementation kotlin('stdlib-common')
-            }
         }
         commonTest {
             dependencies {
                 implementation kotlin('test-common')
                 implementation kotlin('test-annotations-common')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
             }
         }
         jvmMain {
-            dependencies {
-                implementation kotlin('stdlib-jdk8')
-            }
         }
         jvmTest {
             dependencies {
                 implementation kotlin('test-junit')
                 implementation kotlin('reflect')
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlin_coroutines_version"
             }
         }
         jsMain {
-            dependencies {
-                implementation kotlin('stdlib-js')
-            }
         }
         jsTest {
             dependencies {
                 implementation kotlin('test-js')
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlin_coroutines_version"
             }
         }
         nativeMain {
@@ -76,31 +65,19 @@ kotlin {
         nativeTest {
             dependsOn(commonTest)
         }
-        [linuxMain, iosArm64Main, iosX64Main, macosMain].each {
+        [linuxMain, iosMain, macosMain].each {
             it.dependsOn(nativeMain)
         }
-        [linuxTest, iosArm64Test, iosX64Test, macosTest].each {
+        [linuxTest, iosTest, macosTest].each {
             it.dependsOn(nativeTest)
         }
         linuxTest {
-            dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-linuxx64:$kotlin_coroutines_version"
-            }
         }
         iosArm64Test {
-            dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosarm64:$kotlin_coroutines_version"
-            }
         }
         iosX64Test {
-            dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosx64:$kotlin_coroutines_version"
-            }
         }
         macosTest {
-            dependencies {
-                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-macosx64:$kotlin_coroutines_version"
-            }
         }
     }
 }
@@ -110,6 +87,6 @@ task nativeTest {
 }
 
 task test {
-    dependsOn(jvmTest, jsTest, nativeTest)
+    dependsOn(allTests)
 }
 

@@ -4,14 +4,14 @@ import assertk.*
 import assertk.assertions.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class JVMAssertLambdaTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_works_in_coroutine_test() {
-        runBlockingTest {
+        runBlocking {
             assertThat {
                 asyncReturnValue()
             }.isSuccess().isEqualTo(1)
@@ -20,7 +20,7 @@ class JVMAssertLambdaTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_exception_works_in_coroutine_test() {
-        runBlockingTest {
+        runBlocking {
             assertThat {
                 asyncThrows()
             }.isFailure().hasMessage("test")

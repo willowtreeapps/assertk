@@ -1,7 +1,7 @@
 # assertk
 
 [![CircleCI](https://circleci.com/gh/willowtreeapps/assertk.svg?style=svg)](https://circleci.com/gh/willowtreeapps/assertk)[![Maven Central](https://img.shields.io/maven-central/v/com.willowtreeapps.assertk/assertk.svg)](https://search.maven.org/search?q=g:com.willowtreeapps.assertk)
-[![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.willowtreeapps.assertk/assertk.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/willowtreeapps/assertk)
+[![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.willowtreeapps.assertk/assertk.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/willowtreeapps/assertk/)
 
 assertions for kotlin inspired by assertj
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.22'
+  testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.23'
 }
 ```
 
@@ -55,7 +55,7 @@ class PersonTest {
 }
 ```
 
-You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk/assertk.assertions/index.html).
+You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk/assertk/assertk.assertions/index.html).
 
 ### Nullability
 Since null is a first-class concept in kotlin's type system, you need to be explicit in your assertions.
