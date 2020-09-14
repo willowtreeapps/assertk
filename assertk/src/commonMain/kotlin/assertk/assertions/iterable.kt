@@ -115,6 +115,31 @@ fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given
     }.toString())
 }
 
+/**
+ * Asserts the iterable contains the given sublist. This is useful if you want a version of [containsExactly] where you
+ * can ignore items before or after it.
+ */
+fun Assert<Iterable<*>>.containsSublist(vararg elements: Any?) = given { actual ->
+    // An empty sublist always matches
+    if (elements.isEmpty()) return@given
+    val actualItr = actual.iterator()
+    var missing: Any? = elements[0]
+    loop@while (actualItr.hasNext()) {
+        val value = actualItr.next()
+        if (value == elements[0]) {
+            for (i in 1 until elements.size) {
+                missing = elements[i]
+                if (!actualItr.hasNext() || actualItr.next() != missing) {
+                    continue@loop
+                }
+            }
+            // all elements match
+            return@given
+        }
+    }
+    expected("to contain sublist:${show(elements)} but was:${show(actual)}\n first missing element:${show(missing)}")
+}
+
 internal fun MutableList<*>.removeFirst(value: Any?) {
     val index = indexOf(value)
     if (index > -1) removeAt(index)

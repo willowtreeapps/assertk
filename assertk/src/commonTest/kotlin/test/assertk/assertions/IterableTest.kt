@@ -169,7 +169,7 @@ class IterableTest {
             """expected to contain exactly in any order:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
                 | elements not found:<[4]>
             """.trimMargin(),
-                error.message
+            error.message
         )
     }
 
@@ -182,7 +182,43 @@ class IterableTest {
                 | elements not found:<[2]>
                 | extra elements found:<[1]>
             """.trimMargin(),
-                error.message
+            error.message
+        )
+    }
+    //endregion
+
+    //region containsSublist
+    @Test fun containsSublist_equal_lists_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).containsSublist(1, 2, 3)
+    }
+
+    @Test fun containsSublist_extra_items_in_front_passes() {
+        assertThat(listOf(2, 1, 2, 3) as Iterable<Int>).containsSublist(2, 3)
+    }
+
+    @Test fun containsSublist_extra_items_behind_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).containsSublist(1, 2)
+    }
+
+    @Test fun containsSublist_missing_element_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsSublist(4, 5)
+        }
+        assertEquals(
+            """expected to contain sublist:<[4, 5]> but was:<[1, 2, 3]>
+              | first missing element:<4>
+            """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
+    @Test fun containsSublist_extra_element_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsSublist(3, 4)
+        }
+        assertEquals(
+            """expected to contain sublist:<[3, 4]> but was:<[1, 2, 3]>
+              | first missing element:<4>
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion
@@ -250,7 +286,7 @@ class IterableTest {
     }
 
     @Test fun atLeast_works_in_a_soft_assert_context() {
-        assertThat(listOf(1, 2,3) as Iterable<Int>).all { atLeast(2) { it.isGreaterThan(1) } }
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).all { atLeast(2) { it.isGreaterThan(1) } }
     }
     //endregion
 
@@ -304,7 +340,7 @@ class IterableTest {
             }
         }
         assertEquals(
-                """expected to pass exactly 2 times""".trimMargin(), error.message
+            """expected to pass exactly 2 times""".trimMargin(), error.message
         )
     }
 
