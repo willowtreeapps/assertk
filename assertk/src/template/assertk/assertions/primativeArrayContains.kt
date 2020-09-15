@@ -4,6 +4,7 @@ import kotlin.jvm.JvmName
 import assertk.Assert
 import assertk.all
 import assertk.assertions.support.expected
+import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 import assertk.assertions.support.fail
 import assertk.assertions.support.appendName
@@ -97,7 +98,7 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
 fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     if (actual.contentEquals(elements)) return
 
-    expected(listDifferExpected(elements.toList(), actual.toList()))
+    expectedListDiff(elements.toList(), actual.toList())
 }
 
 /**
