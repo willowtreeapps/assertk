@@ -4,6 +4,7 @@ import kotlin.jvm.JvmName
 import assertk.Assert
 import assertk.all
 import assertk.assertions.support.expected
+import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 import assertk.assertions.support.fail
 import assertk.assertions.support.appendName
@@ -105,7 +106,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     val elementsList = elements.asList()
     if (actualList == elementsList) return
 
-    expected(listDifferExpected(elementsList, actualList))
+    expectedListDiff(elementsList, actualList)
 }
 
 /**

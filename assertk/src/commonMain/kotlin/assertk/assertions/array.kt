@@ -2,10 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import assertk.assertions.support.appendName
-import assertk.assertions.support.expected
-import assertk.assertions.support.fail
-import assertk.assertions.support.show
+import assertk.assertions.support.*
 
 /**
  * Returns an assert on the Arrays's size.
@@ -170,7 +167,7 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
 fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
 
-    expected(listDifferExpected(elements.asList(), actual.asList()))
+    expectedListDiff(elements.asList(), actual.asList())
 }
 
 /**

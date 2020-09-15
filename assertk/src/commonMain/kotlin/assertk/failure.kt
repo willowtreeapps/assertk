@@ -16,7 +16,11 @@ internal object FailureContext {
     }
 
     fun popFailure() {
-        failureRef.value.apply { if (size > 1) { removeAt(size - 1) } }
+        failureRef.value.apply {
+            if (size > 1) {
+                removeAt(size - 1)
+            }
+        }
     }
 
     fun fail(error: Throwable) {
@@ -78,7 +82,8 @@ internal inline fun <T> Failure.run(f: () -> T): T {
     } finally {
         popFailure()
         invoke()
-    } }
+    }
+}
 
 /**
  * Failure that immediately thrown an exception.
@@ -115,7 +120,7 @@ internal class SoftFailure(
     }
 
     private fun compositeErrorMessage(errors: List<Throwable>): Throwable {
-        return when(errors.size) {
+        return when (errors.size) {
             0 -> AssertionFailedError(message)
             1 -> errors.first()
             else -> MultipleFailuresError(message, errors).apply {

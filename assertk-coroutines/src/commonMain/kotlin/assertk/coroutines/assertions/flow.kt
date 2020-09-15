@@ -3,6 +3,7 @@ package assertk.coroutines.assertions
 import assertk.Assert
 import assertk.assertions.*
 import assertk.assertions.support.expected
+import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -165,6 +166,18 @@ suspend fun Assert<Flow<*>>.containsOnly(vararg elements: Any?) = given { actual
             append("\n extra elements found:${show(notInExpected)}")
         }
     }.toString())
+}
+
+/**
+ * Asserts the flow contains exactly the expected elements. They must be in the same order and
+ * there must not be any extra elements.
+ * @see [containsAll]
+ */
+suspend fun Assert<Flow<*>>.containsExactly(vararg elements: Any?) = given { actual ->
+    val expected = elements.toList()
+    val asList = actual.toList()
+    if (asList == expected) return
+    expectedListDiff(expected, asList)
 }
 
 private class AbortFlowException :
