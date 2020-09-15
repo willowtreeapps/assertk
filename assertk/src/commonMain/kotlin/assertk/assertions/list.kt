@@ -1,10 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assertions.support.ListDiffer
-import assertk.assertions.support.appendName
-import assertk.assertions.support.expected
-import assertk.assertions.support.show
+import assertk.assertions.support.*
 
 /**
  * Returns an assert that assertion on the value at the given index in the list.
@@ -38,23 +35,6 @@ fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     val expected = elements.toList()
     if (actual == expected) return
 
-    expected(listDifferExpected(expected, actual), expected, actual)
+    expectedListDiff(expected, actual)
 }
 
-internal fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
-    val diff = ListDiffer.diff(elements, actual)
-        .filterNot { it is ListDiffer.Edit.Eq }
-        .sortedBy { when(it) {
-            is ListDiffer.Edit.Ins -> it.newIndex
-            is ListDiffer.Edit.Del -> it.oldIndex
-            else -> throw IllegalStateException()
-        } }
-
-    return diff.joinToString(prefix = "to contain exactly:${show(elements)} but was:${show(actual)}\n", separator = "\n") { edit ->
-        when (edit) {
-            is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
-            is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"
-            else -> throw IllegalStateException()
-        }
-    }
-}
