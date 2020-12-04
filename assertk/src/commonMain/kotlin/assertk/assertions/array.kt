@@ -2,9 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import assertk.assertions.support.expected
-import assertk.assertions.support.fail
-import assertk.assertions.support.show
+import assertk.assertions.support.*
 
 /**
  * Returns an assert on the Arrays's size.
@@ -153,8 +151,8 @@ fun Assert<Array<*>>.containsOnly(vararg elements: Any?) = given { actual ->
  * ```
  */
 fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
-    transform("${name ?: ""}${show(index, "[]")}") { actual ->
-        if (index in 0 until actual.size) {
+    transform(appendName(show(index, "[]"))) { actual ->
+        if (index in actual.indices) {
             actual[index]
         } else {
             expected("index to be in range:[0-${actual.size}) but was:${show(index)}")
@@ -169,7 +167,7 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
 fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
 
-    expected(listDifferExpected(elements.asList(), actual.asList()))
+    expectedListDiff(elements.asList(), actual.asList())
 }
 
 /**
@@ -184,7 +182,7 @@ fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
 fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
     all {
         actual.forEachIndexed { index, item ->
-            f(assertThat(item, name = "${name ?: ""}${show(index, "[]")}"))
+            f(assertThat(item, name = appendName(show(index, "[]"))))
         }
     }
 }

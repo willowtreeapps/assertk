@@ -5,6 +5,7 @@ package assertk.assertions
 import assertk.Assert
 import assertk.all
 import assertk.assertions.support.expected
+import assertk.assertions.support.appendName
 import assertk.assertions.support.show
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KCallable
@@ -68,13 +69,19 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
 
 /**
  * Returns an assert that asserts on the given property.
- * @param callable The function to get the property value out of the value of the current assert. The same of this
+ * @param callable The function to get the property value out of the value of the current assert. The name of this
  * callable will be shown in failure messages.
  *
  * ```
  * assertThat(person).prop(Person::name).isEqualTo("Sue")
  * ```
+ *
+ * @see prop
  */
+@Deprecated(
+    "Use an overload with explicit name and extract",
+    ReplaceWith("this.prop(\"NAME\") { callable.call(it) }", "assertk.assertions.prop")
+)
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
     try {
         callable.call(it)
@@ -100,8 +107,10 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) = given { actual ->
 private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?): Unit = given { actual ->
     if (actual == expected) return
     if (kclass != null && kclass.isData) {
-        for (prop in kclass.memberProperties) {
-            prop(prop).isDataClassEqualToImpl(prop.call(expected), prop.returnType.classifier as? KClass<*>)
+        for (memberProp in kclass.memberProperties) {
+            @Suppress("UNCHECKED_CAST")
+            val force = memberProp as KProperty1<T, Any?>
+            prop(force).isDataClassEqualToImpl(force.get(expected), force.returnType.classifier as? KClass<*>)
         }
     } else {
         isEqualTo(expected)
@@ -123,7 +132,7 @@ fun <T : Any> Assert<T>.isEqualToIgnoringGivenProperties(other: T, vararg proper
             if (prop is KProperty1<*, *> && !properties.contains(prop)) {
                 @Suppress("UNCHECKED_CAST")
                 val force = prop as KProperty1<T, Any?>
-                transform("${if (this.name != null) this.name + "." else ""}${prop.name}", force::get)
+                transform(appendName(prop.name, separator = "."), force::get)
                     .isEqualTo(prop.get(other))
             }
         }

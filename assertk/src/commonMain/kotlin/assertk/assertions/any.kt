@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
+import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -132,7 +133,21 @@ fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
  * ```
  */
 fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
-    transform("${if (this.name != null) this.name + "." else ""}$name", extract)
+    transform(appendName(name, separator = "."), extract)
+
+/**
+ * Returns an assert that asserts on the given property.
+ *
+ * Example:
+ * ```
+ * assertThat(person).prop(Person::name).isEqualTo("Sue")
+ * ```
+ *
+ * @param property Property on which to assert. The name of this
+ * property will be shown in failure messages.
+ */
+fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
+    prop(property.name) { property.get(it) }
 
 /**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass(String::class)`
@@ -226,7 +241,7 @@ fun <T, E> Assert<T>.doesNotCorrespond(expected: E, correspondence: (T, E) -> Bo
 fun <T> Assert<T>.isEqualToWithGivenProperties(other: T, vararg properties: KProperty1<T, Any?>) {
     all {
         for (prop in properties) {
-            transform("${if (this.name != null) this.name + "." else ""}${prop.name}", prop::get)
+            transform(appendName(prop.name, separator = "."), prop::get)
                 .isEqualTo(prop.get(other))
         }
     }

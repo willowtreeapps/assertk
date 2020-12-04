@@ -83,7 +83,7 @@ class FileTest {
         val error = assertFails {
             assertThat(namedFile).hasName("file")
         }
-        assertEquals("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt/file.txt)", error.message)
+        assertEquals("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt${File.separator}file.txt)", error.message)
     }
 
     @Test fun hasName_wront_value_directory_fails() {
@@ -91,7 +91,7 @@ class FileTest {
             assertThat(namedDirectory).hasName("assertKt")
         }
         assertEquals(
-            "expected [name]:<\"[assertKt]\"> but was:<\"[${namedDirectory.name}]\"> (assertKt/directory)",
+            "expected [name]:<\"[assertKt]\"> but was:<\"[${namedDirectory.name}]\"> (assertKt${File.separator}directory)",
             error.message
         )
     }
@@ -109,25 +109,28 @@ class FileTest {
             assertThat(fileWithPath).hasPath("/directory")
         }
         assertEquals(
-            "expected [path]:<\"[/directory]\"> but was:<\"[${fileWithPath.path}]\"> (assertKt/file.txt)",
+            "expected [path]:<\"[${File.separator}directory]\"> but was:<\"[${fileWithPath.path}]\"> (assertKt${File.separator}file.txt)",
             error.message
         )
     }
     //endregion
 
     //region hasParent
-    val fileWithParent = File("assertKt/file.txt")
+    val fileWithParent = File("assertKt/directory/file.txt")
 
     @Test fun hasParent_correct_parent_passes() {
-        assertThat(fileWithParent).hasParent("assertKt")
+        assertThat(fileWithParent).hasParent("assertKt/directory")
     }
 
     @Test fun hasParent_wrong_parent_passes() {
         val error = assertFails {
             assertThat(fileWithParent).hasParent("directory")
         }
+        val expected = "expected [parent]:<\"[]directory\"> but was:<\"[assertKt${File.separator}]directory\"> (assertKt${File.separator}directory${File.separator}file.txt)"
+        println(expected)
+        println(error.message)
         assertEquals(
-            "expected [parent]:<\"[directory]\"> but was:<\"[${fileWithParent.parent}]\"> (assertKt/file.txt)",
+            expected,
             error.message
         )
     }

@@ -1,0 +1,20 @@
+plugins {
+    id 'maven-publish'
+    id 'signing'
+    id 'org.jetbrains.kotlin.multiplatform'
+    id 'org.jetbrains.dokka'
+    id 'io.gitlab.arturbosch.detekt'
+}
+
+apply from: "$rootProject.projectDir/multiplatform.gradle"
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(':assertk')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+            }
+        }
+    }
+}

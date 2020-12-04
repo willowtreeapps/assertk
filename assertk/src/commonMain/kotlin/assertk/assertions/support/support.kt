@@ -74,13 +74,28 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
  */
 fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
     val maybeSpace = if (message.startsWith(":")) "" else " "
-    val maybeInstance = if (context != null) " ${show(context, "()")}" else ""
+    val maybeInstance = if (context.originatingSubject != null) " (${context.displayOriginatingSubject()})" else ""
     fail(
         message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
         expected = expected,
         actual = actual
     )
 }
+
+/**
+ * Fails an assert with an error message diffing the two given lists.
+ */
+fun <T> Assert<T>.expectedListDiff(expected: List<Any?>, actual: List<Any?>) {
+    expected(listDifferExpected(expected, actual), expected, actual)
+}
+
+/**
+ * Constructs a new name appending to the existing name if available using the given separator.
+ * @param name The new name to append to the current name, or the new name if there is no current one.
+ * @param separator The separator between the current name and the suffix if the current name exists.
+ */
+fun Assert<*>.appendName(name: String, separator: String = "") =
+    if (this.name != null) this.name + separator + name else name
 
 private fun formatName(name: String?): String {
     return if (name.isNullOrEmpty()) {
@@ -98,5 +113,28 @@ private fun String.renderSpecialWhitespace(): String = replace(specialWhitespace
         "\n" -> "\\n"
         "\t" -> "\\t"
         else -> v
+    }
+}
+
+private fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
+    val diff = ListDiffer.diff(elements, actual)
+        .filterNot { it is ListDiffer.Edit.Eq }
+        .sortedBy {
+            when (it) {
+                is ListDiffer.Edit.Ins -> it.newIndex
+                is ListDiffer.Edit.Del -> it.oldIndex
+                else -> throw IllegalStateException()
+            }
+        }
+
+    return diff.joinToString(
+        prefix = "to contain exactly:${show(elements)} but was:${show(actual)}\n",
+        separator = "\n"
+    ) { edit ->
+        when (edit) {
+            is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
+            is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"
+            else -> throw IllegalStateException()
+        }
     }
 }

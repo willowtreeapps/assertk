@@ -74,6 +74,14 @@ class IterableTest {
         assertThat(listOf(1, 2) as Iterable<Int>).containsOnly(2, 1)
     }
 
+    @Test fun containsOnly_duplicate_elements_passes() {
+        assertThat(listOf(1, 2, 2) as Iterable<Int>).containsOnly(2, 1)
+    }
+
+    @Test fun containsOnly_duplicate_elements_passes2() {
+        assertThat(listOf(1, 2) as Iterable<Int>).containsOnly(2, 2, 1)
+    }
+
     @Test fun containsOnly_more_elements_fails() {
         val error = assertFails {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).containsOnly(2, 1)
@@ -111,6 +119,74 @@ class IterableTest {
     }
     //endregion
 
+    //region containsExactlyInAnyOrder
+    @Test fun containsExactlyInAnyOrder_only_elements_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).containsExactlyInAnyOrder(2, 1)
+    }
+
+    @Test fun containsExactlyInAnyOrder_only_elements_passes2() {
+        assertThat(listOf(1, 2, 1) as Iterable<Int>).containsExactlyInAnyOrder(2, 1, 1)
+    }
+
+    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 2) as Iterable<Int>).containsExactlyInAnyOrder(2, 1)
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1]> but was:<[1, 2, 2]>
+                | extra elements found:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
+        val error = assertFails {
+            assertThat(listOf(1, 2) as Iterable<Int>).containsExactlyInAnyOrder(2, 2, 1)
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 2, 1]> but was:<[1, 2]>
+                | elements not found:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_more_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsExactlyInAnyOrder(2, 1)
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1]> but was:<[1, 2, 3]>
+                | extra elements found:<[3]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_less_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).containsExactlyInAnyOrder(2, 1, 3, 4)
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
+                | elements not found:<[4]>
+            """.trimMargin(),
+                error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_different_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1) as Iterable<Int>).containsExactlyInAnyOrder(2)
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2]> but was:<[1]>
+                | elements not found:<[2]>
+                | extra elements found:<[1]>
+            """.trimMargin(),
+                error.message
+        )
+    }
+    //endregion
+
     //region each
     @Test fun each_empty_list_passes() {
         assertThat(emptyList<Int>() as Iterable<Int>).each { it.isEqualTo(1) }
@@ -128,7 +204,7 @@ class IterableTest {
             """The following assertions failed (2 failures)
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
               |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion
@@ -161,7 +237,7 @@ class IterableTest {
             """expected to pass at least 2 times (2 failures)
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
-        """.trimMargin(), error.message
+        """.trimMargin().lines(), error.message!!.lines()
         )
     }
 
@@ -208,7 +284,7 @@ class IterableTest {
             """expected to pass exactly 2 times (2 failures)
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<2> but was:<1> ([1, 2, 3])
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<2> but was:<2> ([1, 2, 3])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
 
@@ -218,6 +294,17 @@ class IterableTest {
         }
         assertEquals(
             """expected to pass exactly 2 times""".trimMargin(), error.message
+        )
+    }
+
+    @Test fun exactly_too_few_inside_all_fails() {
+        val error = assertFails {
+            assertThat(listOf(5, 4, 3) as Iterable<Int>).all {
+                exactly(2) { it.isGreaterThan(2) }
+            }
+        }
+        assertEquals(
+                """expected to pass exactly 2 times""".trimMargin(), error.message
         )
     }
 
@@ -239,7 +326,7 @@ class IterableTest {
             """expected any item to pass (2 failures)
 	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be greater than:<3> but was:<1> ([1, 2])
 	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
-            """.trimMargin(), error.message
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
     //endregion

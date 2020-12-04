@@ -1,0 +1,92 @@
+kotlin {
+    jvm {
+        compilations.main.kotlinOptions {
+            jvmTarget = "1.8"
+        }
+        compilations.test.kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+    js(BOTH) {
+        nodejs()
+        browser()
+        compilations.main.kotlinOptions {
+            sourceMap = true
+            moduleKind = "umd"
+        }
+        compilations.test.kotlinOptions {
+            moduleKind = "umd"
+        }
+    }
+    linuxX64('linux')
+    ios()
+    macosX64('macos')
+
+    targets.all {
+        if (name != 'metadata') {
+            compilations.main.kotlinOptions {
+                allWarningsAsErrors = true
+            }
+            compilations.test.kotlinOptions {
+                allWarningsAsErrors = true
+                freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+            }
+        }
+    }
+
+    sourceSets {
+        commonMain {
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+            }
+        }
+        jvmMain {
+        }
+        jvmTest {
+            dependencies {
+                implementation kotlin('test-junit')
+                implementation kotlin('reflect')
+            }
+        }
+        jsMain {
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
+        }
+        nativeMain {
+            dependsOn(commonMain)
+        }
+        nativeTest {
+            dependsOn(commonTest)
+        }
+        [linuxMain, iosMain, macosMain].each {
+            it.dependsOn(nativeMain)
+        }
+        [linuxTest, iosTest, macosTest].each {
+            it.dependsOn(nativeTest)
+        }
+        linuxTest {
+        }
+        iosArm64Test {
+        }
+        iosX64Test {
+        }
+        macosTest {
+        }
+    }
+}
+
+task nativeTest {
+    dependsOn(linuxTest, macosTest, iosX64Test)
+}
+
+task test {
+    dependsOn(allTests)
+}
+

@@ -1,6 +1,7 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 
@@ -113,7 +114,11 @@ fun <K, V> Assert<Map<K, V>>.doesNotContain(element: Pair<K, V>) {
 fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given { actual ->
     if (elements.all { (k, v) -> actual[k] != v }) return
     val notExpected = elements.filter { (k, v) -> actual[k] == v }
-    expected("to contain none of:${show(elements.toMap())} but was:${show(actual)}\n elements not expected:${show(notExpected.toMap())}")
+    expected(
+        "to contain none of:${show(elements.toMap())} but was:${show(actual)}\n elements not expected:${show(
+            notExpected.toMap()
+        )}"
+    )
 }
 
 /**
@@ -145,7 +150,7 @@ fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given {
  * assertThat(mapOf("key" to "value")).key("key").isEqualTo("value")
  * ```
  */
-fun <K, V> Assert<Map<K, V>>.key(key: K): Assert<V> = transform("${name ?: ""}${show(key, "[]")}") { actual ->
+fun <K, V> Assert<Map<K, V>>.key(key: K): Assert<V> = transform(appendName(show(key, "[]"))) { actual ->
     if (key in actual) {
         actual.getValue(key)
     } else {
