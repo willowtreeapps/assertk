@@ -424,5 +424,38 @@ class IterableTest {
     }
     //region extracting
 
+    //region first
+    @Test fun first_element_present_passes() {
+        assertThat(listOf(1, 2)).first().isEqualTo(1)
+    }
+
+    @Test fun first_element_missing_fails() {
+        val error = assertFails {
+            assertThat(emptyList<Any?>()).first().isEqualTo(1)
+        }
+        assertEquals("expected to not be empty", error.message)
+    }
+    //endregion
+
+    //region first
+    @Test fun single_single_element_passes() {
+        assertThat(listOf(1)).single().isEqualTo(1)
+    }
+
+    @Test fun single_no_element_fails() {
+        val error = assertFails {
+            assertThat(emptyList<Any?>()).single().isEqualTo(1)
+        }
+        assertEquals("expected to have single element but was empty", error.message)
+    }
+
+    @Test fun single_multiple_fails() {
+        val error = assertFails {
+        assertThat(listOf(1, 2)).single().isEqualTo(1)
+        }
+        assertEquals("expected to have single element but has 2: <[1, 2]>", error.message)
+    }
+    //endregion
+
     data class Thing(val one: String, val two: Int, val three: Char)
 }
