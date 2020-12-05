@@ -425,8 +425,15 @@ class IterableTest {
     //region extracting
 
     //region first
-    @Test fun first_element_present_passes() {
+    @Test fun first_element_present_match_passes() {
         assertThat(listOf(1, 2)).first().isEqualTo(1)
+    }
+
+    @Test fun first_element_present_mismatch_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2)).first().isEqualTo(2)
+        }
+        assertEquals("expected:<[2]> but was:<[1]> ([1, 2])", error.message)
     }
 
     @Test fun first_element_missing_fails() {
@@ -438,8 +445,15 @@ class IterableTest {
     //endregion
 
     //region first
-    @Test fun single_single_element_passes() {
+    @Test fun single_single_element_match_passes() {
         assertThat(listOf(1)).single().isEqualTo(1)
+    }
+
+    @Test fun single_single_element_mismatch_fails() {
+        val error = assertFails {
+            assertThat(listOf(1)).single().isEqualTo(2)
+        }
+        assertEquals("expected:<[2]> but was:<[1]> ([1])", error.message)
     }
 
     @Test fun single_no_element_fails() {
