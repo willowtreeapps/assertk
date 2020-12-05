@@ -283,7 +283,13 @@ fun Assert<Iterable<*>>.isNotEmpty() = given { actual ->
  */
 fun <E, T : Iterable<E>> Assert<T>.first(): Assert<E> {
     return transform { iterable ->
-        iterable.iterator().takeIf { it.hasNext() }?.next() ?: expected("to not be empty")
+        iterable.iterator().let { iterator ->
+            if (iterator.hasNext()) {
+                iterator.next()
+            } else {
+                expected("to not be empty")
+            }
+        }
     }
 }
 
