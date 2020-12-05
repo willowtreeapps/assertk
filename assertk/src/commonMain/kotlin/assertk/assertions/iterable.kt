@@ -282,13 +282,12 @@ fun Assert<Iterable<*>>.isNotEmpty() = given { actual ->
  * Asserts the iterable is not empty, and returns an assert on the first element.
  */
 fun <E, T : Iterable<E>> Assert<T>.first(): Assert<E> {
-    return transform { iterable ->
-        iterable.iterator().let { iterator ->
-            if (iterator.hasNext()) {
-                iterator.next()
-            } else {
-                expected("to not be empty")
-            }
+    return transform(appendName("first", ".")) { iterable ->
+        val iterator = iterable.iterator()
+        if (iterator.hasNext()) {
+            iterator.next()
+        } else {
+            expected("to not be empty")
         }
     }
 }
@@ -297,7 +296,7 @@ fun <E, T : Iterable<E>> Assert<T>.first(): Assert<E> {
  * Asserts the iterable contains exactly one element, and returns an assert on that element.
  */
 fun <E, T : Iterable<E>> Assert<T>.single(): Assert<E> {
-    return transform { iterable ->
+    return transform(appendName("single", ".")) { iterable ->
         val iterator = iterable.iterator()
         if (iterator.hasNext()) {
             val single = iterator.next()

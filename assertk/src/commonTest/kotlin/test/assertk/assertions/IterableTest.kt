@@ -433,7 +433,7 @@ class IterableTest {
         val error = assertFails {
             assertThat(listOf(1, 2)).first().isEqualTo(2)
         }
-        assertEquals("expected:<[2]> but was:<[1]> ([1, 2])", error.message)
+        assertEquals("expected [first]:<[2]> but was:<[1]> ([1, 2])", error.message)
     }
 
     @Test fun first_element_missing_fails() {
@@ -453,7 +453,7 @@ class IterableTest {
         val error = assertFails {
             assertThat(listOf(1)).single().isEqualTo(2)
         }
-        assertEquals("expected:<[2]> but was:<[1]> ([1])", error.message)
+        assertEquals("expected [single]:<[2]> but was:<[1]> ([1])", error.message)
     }
 
     @Test fun single_no_element_fails() {
