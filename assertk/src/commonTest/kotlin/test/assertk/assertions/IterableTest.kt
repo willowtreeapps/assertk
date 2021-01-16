@@ -3,6 +3,7 @@ package test.assertk.assertions
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
+import assertk.assertions.support.fail
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -169,7 +170,7 @@ class IterableTest {
             """expected to contain exactly in any order:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
                 | elements not found:<[4]>
             """.trimMargin(),
-                error.message
+            error.message
         )
     }
 
@@ -182,7 +183,7 @@ class IterableTest {
                 | elements not found:<[2]>
                 | extra elements found:<[1]>
             """.trimMargin(),
-                error.message
+            error.message
         )
     }
     //endregion
@@ -250,7 +251,7 @@ class IterableTest {
     }
 
     @Test fun atLeast_works_in_a_soft_assert_context() {
-        assertThat(listOf(1, 2,3) as Iterable<Int>).all { atLeast(2) { it.isGreaterThan(1) } }
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).all { atLeast(2) { it.isGreaterThan(1) } }
     }
     //endregion
 
@@ -304,7 +305,7 @@ class IterableTest {
             }
         }
         assertEquals(
-                """expected to pass exactly 2 times""".trimMargin(), error.message
+            """expected to pass exactly 2 times""".trimMargin(), error.message
         )
     }
 
@@ -328,6 +329,25 @@ class IterableTest {
 	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be greater than:<3> but was:<2> ([1, 2])
             """.trimMargin().lines(), error.message!!.lines()
         )
+    }
+
+    @Test fun any_multiple_assertions_fail() {
+        assertFails {
+            assertThat(listOf("one")).any {
+                it.isEqualTo("two")
+                it.isEqualTo("two")
+            }
+        }
+    }
+
+    @Test fun any_with_exception_still_passes() {
+        var count = 0
+        assertThat(listOf("one", "two")).any {
+            if (count == 1) {
+                throw Exception()
+            }
+            count++
+        }
     }
     //endregion
 

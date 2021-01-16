@@ -253,10 +253,23 @@ fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) {
-    var count = 0
+    var lastFailureCount = 0
+    var itemPassed = false
     all(message = "expected any item to pass",
-        body = { each { item -> count++; f(item) } },
-        failIf = { count == 0 || it.size == count })
+        body = { failure ->
+            given { actual ->
+                actual.forEachIndexed { index, item ->
+                    f(assertThat(item, name = appendName(show(index, "[]"))))
+                    if (lastFailureCount == failure.count) {
+                        itemPassed = true
+                    }
+                    lastFailureCount += failure.count
+                }
+            }
+        },
+        failIf = {
+            !itemPassed
+        })
 }
 
 /**
