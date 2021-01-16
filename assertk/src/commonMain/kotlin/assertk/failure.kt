@@ -75,7 +75,7 @@ internal interface Failure {
  * Run the given block of assertions with its Failure.
  */
 @PublishedApi
-internal inline fun <T> Failure.run(f: () -> T): T {
+internal inline fun <F: Failure, T> F.run(f: F.() -> T): T {
     pushFailure()
     try {
         return f()
@@ -112,6 +112,9 @@ internal class SoftFailure(
             failures.add(error)
         }
     }
+
+    val count: Int
+        get() = failures.size
 
     override fun invoke() {
         if (failIf(failures)) {

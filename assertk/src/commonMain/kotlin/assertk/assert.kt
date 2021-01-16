@@ -233,7 +233,7 @@ fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
  * @param body The body to execute.
  */
 fun <T> Assert<T>.all(message: String, body: Assert<T>.() -> Unit) {
-    all(message, body, { it.isNotEmpty() })
+    all(message, { body() }, { it.isNotEmpty() })
 }
 
 /**
@@ -248,7 +248,7 @@ fun <T> Assert<T>.all(message: String, body: Assert<T>.() -> Unit) {
  * @param body The body to execute.
  */
 fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
-    all(SoftFailure.defaultMessage, body, { it.isNotEmpty() })
+    all(SoftFailure.defaultMessage, { body() }, { it.isNotEmpty() })
 }
 
 /**
@@ -274,11 +274,11 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
 // Hide for now, not sure if happy with api.
 internal fun <T> Assert<T>.all(
     message: String,
-    body: Assert<T>.() -> Unit,
+    body: Assert<T>.(failure: SoftFailure) -> Unit,
     failIf: (List<Throwable>) -> Boolean
 ) {
     SoftFailure(message, failIf).run {
-        body()
+        body(this)
     }
 }
 
@@ -300,7 +300,7 @@ inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.run
  * Runs all assertions in the given lambda and reports any failures.
  */
 inline fun assertAll(f: () -> Unit) {
-    Failure.soft().run(f)
+    Failure.soft().run { f() }
 }
 
 /**
