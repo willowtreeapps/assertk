@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+- Added `first` and `single` assertion for `Iterable`
+
+### Fixed
 - Fixed `containsExactly` failing on custom list types.
 
 ## [0.23] 2020-09-01
