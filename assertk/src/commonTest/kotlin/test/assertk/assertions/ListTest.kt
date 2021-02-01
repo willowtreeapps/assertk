@@ -98,6 +98,10 @@ class ListTest {
             """.trimMargin(), error.message
         )
     }
+
+    @Test fun containsExactly_custom_list_impl_passes() {
+        assertThat(MyList("one", "two")).containsExactly("one", "two")
+    }
     //endregion
 
     //region index
@@ -122,4 +126,16 @@ class ListTest {
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }
     //endregion
+}
+
+class MyList<E>(private vararg val elements: E) : AbstractList<E>() {
+    override val size: Int get() = elements.size
+
+    override fun get(index: Int): E = elements[index]
+
+    override fun equals(other: Any?): Boolean {
+        return other is MyList<*> && super.equals(other)
+    }
+
+    override fun hashCode(): Int = elements.hashCode()
 }

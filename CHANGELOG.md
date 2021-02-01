@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added `first` and `single` assertion for `Iterable`
 
+### Fixed
+- Fixed `containsExactly` failing on custom list types.
+
 ## [0.23] 2020-09-01
 
 ### Changed
