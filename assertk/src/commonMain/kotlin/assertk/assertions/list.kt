@@ -32,9 +32,18 @@ fun <T> Assert<List<T>>.index(index: Int): Assert<T> =
  * @see [containsExactlyInAnyOrder]
  */
 fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
-    val expected = elements.toList()
-    if (actual == expected) return
+    if (actual.contentEquals(elements)) return
 
-    expectedListDiff(expected, actual)
+    expectedListDiff(elements.toList(), actual)
 }
 
+/**
+ * Checks if the contents of the list is the same as the given array.
+ */
+private fun List<*>.contentEquals(other: Array<*>): Boolean {
+    if (size != other.size) return false
+    for (i in 0 until size) {
+        if (get(i) != other[i]) return false
+    }
+    return true
+}

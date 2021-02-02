@@ -122,6 +122,32 @@ class JavaAnyTest {
         """.trimMargin().lines(), error.message!!.lines()
         )
     }
+
+    @Test fun isDataClassEqualTo_fails_on_null_property_in_actual() {
+        val error = assertFails {
+            assertThat(DataClass(null, 1, 'a'))
+                .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
+        }
+        assertEquals(
+            """The following assertions failed (2 failures)
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [one]:<InnerDataClass(inner=wrong)> but was:<null> (DataClass(one=null, two=1, three=a))
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=null, two=1, three=a))
+        """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
+    @Test fun isDataClassEqualTo_fails_on_null_property_in_expected() {
+        val error = assertFails {
+            assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
+                .isDataClassEqualTo(DataClass(null, 1, 'b'))
+        }
+        assertEquals(
+            """The following assertions failed (2 failures)
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [one]:<null> but was:<InnerDataClass(inner=test)> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+            |${"\t"}${opentestPackageName}AssertionFailedError: expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
+        """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
     //endregion
 
     //region isEqualToIgnoringGivenProperties
@@ -156,7 +182,7 @@ class JavaAnyTest {
 
     class DifferentObject : TestObject()
 
-    data class DataClass(val one: InnerDataClass, val two: Int, val three: Char)
+    data class DataClass(val one: InnerDataClass?, val two: Int, val three: Char)
 
     data class InnerDataClass(val inner: String)
 }
