@@ -60,7 +60,7 @@ fun Assert<Map<*, *>>.hasSameSizeAs(other: Map<*, *>) = given { actual ->
  * @see [doesNotContain]
  */
 fun <K, V> Assert<Map<K, V>>.contains(key: K, value: V) = given { actual ->
-    if (actual[key] == value) {
+    if (actual.containsKey(key) && actual[key] == value) {
         return
     }
     expected("to contain:${show(mapOf(key to value))} but was:${show(actual)}")
@@ -80,11 +80,11 @@ fun <K, V> Assert<Map<K, V>>.contains(element: Pair<K, V>) {
  * @see [containsExactly]
  */
 fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) = given { actual ->
-    if (elements.all { (k, v) -> actual[k] == v }) {
+    if (elements.all { (k, v) -> actual.containsKey(k) && actual[k] == v }) {
         return
     }
 
-    val notFound = elements.filterNot { (k, v) -> actual[k] == v }
+    val notFound = elements.filterNot { (k, v) -> actual.containsKey(k) && actual[k] == v }
     expected("to contain all:${show(elements.toMap())} but was:${show(actual)}\n elements not found:${show(notFound.toMap())}")
 }
 
@@ -93,7 +93,7 @@ fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) = given { 
  * @see [contains]
  */
 fun <K, V> Assert<Map<K, V>>.doesNotContain(key: K, value: V) = given { actual ->
-    if (actual[key] != value) {
+    if (!actual.containsKey(key) || actual[key] != value) {
         return
     }
     expected("to not contain:${show(mapOf(key to value))} but was:${show(actual)}")
@@ -112,7 +112,7 @@ fun <K, V> Assert<Map<K, V>>.doesNotContain(element: Pair<K, V>) {
  * @see [containsAll]
  */
 fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given { actual ->
-    if (elements.all { (k, v) -> actual[k] != v }) return
+    if (elements.all { (k, v) -> !actual.containsKey(k) || actual[k] != v }) return
     val notExpected = elements.filter { (k, v) -> actual[k] == v }
     expected(
         "to contain none of:${show(elements.toMap())} but was:${show(actual)}\n elements not expected:${show(
@@ -127,9 +127,9 @@ fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given {
  */
 fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given { actual ->
     val elementMap = elements.toMap()
-    val notInActual = elementMap.filterNot { (key, value) -> actual.containsKey(key) && actual.containsValue(value) }
+    val notInActual = elementMap.filterNot { (key, value) -> actual.containsKey(key) && actual[key] == value }
     val notInExpected =
-        actual.filterNot { (key, value) -> elementMap.containsKey(key) && elementMap.containsValue(value) }
+        actual.filterNot { (key, value) -> elementMap.containsKey(key) && elementMap[key] == value}
     if (notInActual.isEmpty() && notInExpected.isEmpty()) {
         return
     }

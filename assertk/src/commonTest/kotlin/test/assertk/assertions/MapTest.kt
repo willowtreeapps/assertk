@@ -18,11 +18,22 @@ class MapTest {
         }
         assertEquals("expected to contain:<{\"one\"=1}> but was:<{}>", error.message)
     }
+
+    @Test fun contains_element_with_nullable_value_missing_fails() {
+        val error = assertFails {
+            assertThat(emptyMap<String, Int?>()).contains("one" to null)
+        }
+        assertEquals("expected to contain:<{\"one\"=null}> but was:<{}>", error.message)
+    }
     //endregion
 
     //region doesNotContain
     @Test fun doesNotContain_element_missing_passes() {
         assertThat(emptyMap<String, Int>()).doesNotContain("one" to 1)
+    }
+
+    @Test fun doesNotContain_element_with_missing_nullable_value_passes() {
+        assertThat(emptyMap<String, Int?>()).doesNotContain("one" to null)
     }
 
     @Test fun doesNotContain_element_present_fails() {
@@ -36,6 +47,10 @@ class MapTest {
     //region containsNone
     @Test fun containsNone_missing_elements_passes() {
         assertThat(emptyMap<String, Int>()).containsNone("one" to 1)
+    }
+
+    @Test fun containsNone_missing_elements_with_nullable_value_passes() {
+        assertThat(emptyMap<String, Int?>()).containsNone("one" to null)
     }
 
     @Test fun containsNone_present_element_fails() {
@@ -60,6 +75,29 @@ class MapTest {
         assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).containsAll("one" to 1, "two" to 2)
     }
 
+    @Test fun containsAll_swapped_keys_and_values_fails() {
+        val error = assertFails {
+            assertThat(mapOf("one" to 2, "two" to 1)).containsAll("two" to 2, "one" to 1)
+        }
+
+        assertEquals(
+                """expected to contain all:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
+                | elements not found:<{"two"=2, "one"=1}>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsAll_nullable_values_fails() {
+        val error = assertFails {
+            assertThat(mapOf<String, Any?>()).containsAll("key" to null)
+        }
+        assertEquals(
+                """expected to contain all:<{"key"=null}> but was:<{}>
+                | elements not found:<{"key"=null}>
+            """.trimMargin(), error.message
+        )
+    }
+
     @Test fun containsAll_some_elements_fails() {
         val error = assertFails {
             assertThat(mapOf("one" to 1)).containsAll("one" to 1, "two" to 2)
@@ -76,6 +114,19 @@ class MapTest {
     //region containsOnly
     @Test fun containsOnly_all_elements_passes() {
         assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("two" to 2, "one" to 1)
+    }
+
+    @Test fun containsOnly_swapped_keys_and_values_fails() {
+        val error = assertFails {
+            assertThat(mapOf("one" to 2, "two" to 1)).containsOnly("two" to 2, "one" to 1)
+        }
+
+        assertEquals(
+                """expected to contain only:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
+                | elements not found:<{"two"=2, "one"=1}>
+                | extra elements found:<{"one"=2, "two"=1}>
+            """.trimMargin(), error.message
+        )
     }
 
     @Test fun containsOnly_missing_element_fails() {
