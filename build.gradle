@@ -8,6 +8,7 @@ plugins {
     id 'org.jetbrains.dokka' version '1.4.10.2'
     id 'io.gitlab.arturbosch.detekt' version '1.12.0' apply false
     id 'org.ajoberstar.git-publish' version '2.1.1'
+    id "de.marcphilipp.nexus-publish" version "0.4.0" apply false
 }
 
 version = '0.23.1'
@@ -152,22 +153,13 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
             archiveClassifier.set('sources')
         }
 
-        publishing {
+        nexusPublishing {
             repositories {
-                maven {
-                    if (rootProject.ext.isReleaseVersion) {
-                        url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-                    } else {
-                        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-                    }
-
-                    credentials {
-                        username = project.findProperty('sonatype.username')
-                        password = project.findProperty('sonatype.password')
-                    }
-                }
+                sonatype()
             }
+        }
 
+        publishing {
             publications {
                 js {
                     artifact dokkaJavadocJsJar

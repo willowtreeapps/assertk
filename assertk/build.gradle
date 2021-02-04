@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.multiplatform'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
+    id 'de.marcphilipp.nexus-publish'
 }
 
 apply from: "$rootProject.projectDir/multiplatform.gradle"
@@ -44,4 +45,3 @@ kotlin {
 
 [compileKotlinJvm, compileKotlinJsLegacy, compileKotlinJsIr].each { it.dependsOn(compileTemplates) }
 [compileTestKotlinJvm, compileTestKotlinJsLegacy, compileTestKotlinJsIr].each { it.dependsOn(compileTestTemplates) }
-
