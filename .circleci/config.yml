@@ -70,7 +70,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -D -o $HOME/secring.gpg
               ./gradlew dokkaJavadocNativeJar
-              ./gradlew publishIosArm64PublicationToMavenRepository publishIosX64PublicationToMavenRepository publishIosX64PublicationToMavenRepository publishMacosPublicationToMavenRepository -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
+              ./gradlew publishIosArm64PublicationToSonatypeRepository publishIosX64PublicationToSonatypeRepository publishIosX64PublicationToSonatypeRepository publishMacosPublicationToSonatype:wRepository -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
             fi
       - save_cache:
           paths:
