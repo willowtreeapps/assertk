@@ -157,6 +157,8 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
             repositories {
                 sonatype()
             }
+	    clientTimeout.set(Duration.ofMinutes(5))
+  	    connectTimeout.set(Duration.ofMinutes(5))
         }
 
         publishing {
