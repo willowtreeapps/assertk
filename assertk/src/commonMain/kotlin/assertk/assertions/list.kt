@@ -57,17 +57,26 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
 fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<*> ->
 
     if (sublist.isEmpty() && actual.isEmpty()) return@given
-    val actualSublistStartIndex = if (sublist.isEmpty()) -1 else actual.indexOf(sublist.first())
-    val actualSubList = when {
-        actualSublistStartIndex == -1 -> actual
-        actualSublistStartIndex + sublist.size > actual.size -> actual.slice(actualSublistStartIndex..actual.size)
-        else -> actual.slice(actualSublistStartIndex..(actualSublistStartIndex + sublist.size))
-    }
 
-    if (actualSubList.size == sublist.size) {
-        val firstNonMatching = actualSubList.asSequence().zip(sublist.asSequence()).indexOfFirst { (x, y) -> x != y }
-        if (firstNonMatching == -1) return@given
-    }
+    val sublistMatchCount =
+        when (val firstMatchOfSublist = if (sublist.isEmpty()) -1 else actual.indexOf(sublist.first())) {
+            -1 -> 0
+            else -> {
+                var n = 1
+                if (n < sublist.size) do {
+                    val a = actual[firstMatchOfSublist + n]
+                    val b = sublist[n]
+                    n += 1
+                } while (a == b && n < sublist.size && n < actual.size)
+                n
+            }
+        }
 
-    expected("to contain the exact sublist as: $${show(sublist)}, but found not matching ${show(actualSubList)}")
+    if (sublist.isEmpty() || sublistMatchCount < sublist.size) expected(
+        "to contain the exact sublist (in the same order) as:${
+            show(sublist)
+        }, but found none matching in:${
+            show(actual)
+        }"
+    )
 }

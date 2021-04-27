@@ -1,10 +1,7 @@
 package test.assertk.assertions
 
 import assertk.assertThat
-import assertk.assertions.containsAllInOrder
-import assertk.assertions.containsExactly
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
+import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -130,11 +127,10 @@ class ListTest {
 
     //region containsAllInOrder
     @Test
-    fun containsAllInOrder_fails_if_subset_is_empty_and_actual_is_not_empty() {
-        val sublist: List<String> = emptyList()
+    fun containsAllInOrder_fails_if_sublist_is_empty_and_actual_is_not_empty() {
+        val emptySubList: List<String> = emptyList()
         val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
-        val error = assertFails { assertThat(given).containsAllInOrder(sublist) }
-        println(error.message)
+        assertFails { assertThat(given).containsAllInOrder(emptySubList) }
     }
 
     @Test
@@ -148,7 +144,7 @@ class ListTest {
     fun containsAllInOrder_fails_if_sublist_is_contained_in_actual_but_not_in_exact_order() {
         val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne")
         val sublist: List<String> = listOf("John", "Lee-Anne", "Victoria")
-        assertThat(actualList).containsAllInOrder(sublist)
+        assertFails { assertThat(actualList).containsAllInOrder(sublist) }
     }
 
     @Test
