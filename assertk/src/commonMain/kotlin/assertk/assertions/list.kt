@@ -1,7 +1,10 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.assertions.support.*
+import assertk.assertions.support.appendName
+import assertk.assertions.support.expected
+import assertk.assertions.support.expectedListDiff
+import assertk.assertions.support.show
 
 /**
  * Returns an assert that assertion on the value at the given index in the list.
@@ -46,4 +49,25 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
         if (get(i) != other[i]) return false
     }
     return true
+}
+
+/**
+ * Asserts that a collection contains a subset of items in order, but may have other items in the list.
+ */
+fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<*> ->
+
+    if (sublist.isEmpty() && actual.isEmpty()) return@given
+    val actualSublistStartIndex = if (sublist.isEmpty()) -1 else actual.indexOf(sublist.first())
+    val actualSubList = when {
+        actualSublistStartIndex == -1 -> actual
+        actualSublistStartIndex + sublist.size > actual.size -> actual.slice(actualSublistStartIndex..actual.size)
+        else -> actual.slice(actualSublistStartIndex..(actualSublistStartIndex + sublist.size))
+    }
+
+    if (actualSubList.size == sublist.size) {
+        val firstNonMatching = actualSubList.asSequence().zip(sublist.asSequence()).indexOfFirst { (x, y) -> x != y }
+        if (firstNonMatching == -1) return@given
+    }
+
+    expected("to contain the exact sublist as: $${show(sublist)}, but found not matching ${show(actualSubList)}")
 }

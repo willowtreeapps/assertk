@@ -1,6 +1,7 @@
 package test.assertk.assertions
 
 import assertk.assertThat
+import assertk.assertions.containsAllInOrder
 import assertk.assertions.containsExactly
 import assertk.assertions.index
 import assertk.assertions.isEqualTo
@@ -126,6 +127,38 @@ class ListTest {
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }
     //endregion
+
+    //region containsAllInOrder
+    @Test
+    fun containsAllInOrder_fails_if_subset_is_empty_and_actual_is_not_empty() {
+        val sublist: List<String> = emptyList()
+        val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
+        val error = assertFails { assertThat(given).containsAllInOrder(sublist) }
+        println(error.message)
+    }
+
+    @Test
+    fun containsAllInOrder_passes_when_sublist_and_actual_list_is_empty() {
+        val sublist: List<String> = emptyList()
+        val actualList: List<String> = emptyList()
+        assertThat(actualList).containsAllInOrder(sublist)
+    }
+
+    @Test
+    fun containsAllInOrder_fails_if_sublist_is_contained_in_actual_but_not_in_exact_order() {
+        val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne")
+        val sublist: List<String> = listOf("John", "Lee-Anne", "Victoria")
+        assertThat(actualList).containsAllInOrder(sublist)
+    }
+
+    @Test
+    fun containsAllInOrder_passes_if_actual_contains_sublist_in_exact_order() {
+        val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne", "Darius", "Victor")
+        val sublist: List<String> = listOf("Victoria", "Lee-Anne", "Darius")
+        assertThat(actualList).containsAllInOrder(sublist)
+    }
+    //endregion
+
 }
 
 class MyList<E>(private vararg val elements: E) : AbstractList<E>() {
