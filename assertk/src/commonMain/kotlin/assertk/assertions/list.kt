@@ -52,7 +52,9 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
 }
 
 /**
- * Asserts that a collection contains a subset of items in order, but may have other items in the list.
+ * Asserts that a collection contains a subset of items the same order, but may have other items in the list.
+ *
+ * @param sublist The list of items it the actual list should contain in the same order.
  */
 fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<*> ->
 
