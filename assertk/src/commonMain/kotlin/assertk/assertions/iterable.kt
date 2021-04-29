@@ -263,7 +263,7 @@ fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) {
                     if (lastFailureCount == failure.count) {
                         itemPassed = true
                     }
-                    lastFailureCount += failure.count
+                    lastFailureCount = failure.count
                 }
             }
         },

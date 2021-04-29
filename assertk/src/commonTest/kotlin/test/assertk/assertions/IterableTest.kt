@@ -319,6 +319,11 @@ class IterableTest {
         assertThat(listOf(1, 2) as Iterable<Int>).any { it.isGreaterThan(1) }
     }
 
+    @Test
+    fun example_from_docs() {
+        assertThat(listOf(-1, -2, 1)).any { it.isPositive() }
+    }
+
     @Test fun any_fails_if_all_fail() {
         val error = assertFails {
             assertThat(listOf(1, 2)).any { it.isGreaterThan(3) }
