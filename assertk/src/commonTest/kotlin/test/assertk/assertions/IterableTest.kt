@@ -340,6 +340,22 @@ class IterableTest {
         }
     }
 
+    @Test fun any_multiple_items_fail() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3)).any {
+                it.isEqualTo(4)
+            }
+        }
+
+        assertEquals(
+            """expected any item to pass (3 failures)
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]]:<[4]> but was:<[1]> ([1, 2, 3])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]]:<[4]> but was:<[2]> ([1, 2, 3])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]]:<[4]> but was:<[3]> ([1, 2, 3])
+            """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
     @Test fun any_with_exception_still_passes() {
         var count = 0
         assertThat(listOf("one", "two")).any {
