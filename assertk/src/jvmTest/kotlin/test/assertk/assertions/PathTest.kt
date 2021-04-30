@@ -4,11 +4,13 @@ import assertk.assertThat
 import assertk.assertions.*
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.test.*
 
 private var regularFile: Path? = null
 private var directory: Path? = null
 private var regularFileWithText: Path? = null
+private var doesNotExist: Path? = null
 
 class PathTest {
 
@@ -17,6 +19,7 @@ class PathTest {
         regularFile = createTempFile()
         directory = createTempDir()
         regularFileWithText = createTempFileWithText()
+        doesNotExist = Paths.get("/tmp/does_not_exist")
     }
 
     @AfterTest
@@ -119,6 +122,23 @@ class PathTest {
 
     @Test fun isSameFileAs_value_same_directory_different_path_passes() {
         assertThat(directory!!).isSameFileAs(directory!!.toAbsolutePath())
+    }
+    //endregion
+
+    //region exists
+    @Test fun exists_value_regularFile_passes() {
+        assertThat(regularFile!!).exists()
+    }
+
+    @Test fun exists_value_directory_passes() {
+        assertThat(directory!!).exists()
+    }
+
+    @Test fun exists_value_not_exists_fails() {
+        val error = assertFails {
+            assertThat(doesNotExist!!).exists()
+        }
+        assertEquals("expected <$doesNotExist> to exist, but it does not", error.message)
     }
     //endregion
 
