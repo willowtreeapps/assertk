@@ -73,11 +73,12 @@ fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<
             -1 -> 0
             else -> {
                 var n = 1
-                if (n < sublist.size) do {
+                while (n < sublist.size && n < actual.size) {
                     val a = actual[firstMatchOfSublist + n]
                     val b = sublist[n]
+                    if (a != b) break
                     n += 1
-                } while (a == b && n < sublist.size && n < actual.size)
+                }
                 n
             }
         }
