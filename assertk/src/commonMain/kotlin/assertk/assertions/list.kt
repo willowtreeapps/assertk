@@ -67,9 +67,9 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
 fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<*> ->
 
     var sublistMatched = actual.isEmpty() && sublist.isEmpty()
-    var target: List<*>? = actual
+    var target: List<*> = actual
 
-    while (target != null && target.isNotEmpty() && sublist.isNotEmpty() && !sublistMatched) {
+    while (!sublistMatched) {
         val matchOfFirstInTarget = target.indexOf(sublist.first())
         if (matchOfFirstInTarget == -1) break
         var n = 1
