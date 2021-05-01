@@ -171,7 +171,12 @@ class ListTest {
         assertThat(actualList).containsAllInOrder(sublist)
     }
 
-    //endregion
+    @Test fun containsAllInOrder_passes_if_actual_list_contain_fully_matched_sublist_after_partial_match() {
+        val sublist: List<String> = listOf("Gordan","Jayce","Ann-Lee")
+        val partialList: List<String> = listOf("Gordan", "Jayce")
+        val actualList: List<String> = listOf("Andy", "John") + partialList + listOf("Elly") + sublist
+        assertThat(actualList).containsAllInOrder(sublist)
+    }
 
 }
 

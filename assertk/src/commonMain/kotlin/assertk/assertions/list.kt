@@ -66,24 +66,28 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
  */
 fun Assert<List<*>>.containsAllInOrder(sublist: List<*>) = given { actual: List<*> ->
 
-    if (sublist.isEmpty() && actual.isEmpty()) return@given
+    var sublistMatched = actual.isEmpty() && sublist.isEmpty()
+    var target: List<*>? = actual
 
-    val sublistMatchCount =
-        when (val firstMatchOfSublist = if (sublist.isEmpty()) -1 else actual.indexOf(sublist.first())) {
-            -1 -> 0
-            else -> {
-                var n = 1
-                while (n < sublist.size && n < actual.size) {
-                    val a = actual[firstMatchOfSublist + n]
-                    val b = sublist[n]
-                    if (a != b) break
-                    n += 1
-                }
-                n
-            }
+    while (target != null && target.isNotEmpty() && sublist.isNotEmpty() && !sublistMatched) {
+        val matchOfFirstInTarget = target.indexOf(sublist.first())
+        if (matchOfFirstInTarget == -1) break
+        var n = 1
+        while (n < sublist.size && n < target.size) {
+            val a = target[matchOfFirstInTarget + n]
+            val b = sublist[n]
+            if (a != b) break
+            n += 1
         }
+        sublistMatched = (n == sublist.size)
+        if (sublistMatched) break
+        if (matchOfFirstInTarget + n == target.size) break
+        target = target.subList(matchOfFirstInTarget + 1, target.size)
+    }
 
-    if (sublist.isEmpty() || sublistMatchCount < sublist.size) expected(
+    if (sublistMatched) return@given
+
+    expected(
         "to contain the exact sublist (in the same order) as:${
             show(sublist)
         }, but found none matching in:${
