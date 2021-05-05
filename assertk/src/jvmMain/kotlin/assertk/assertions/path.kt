@@ -87,3 +87,15 @@ fun Assert<Path>.isSameFileAs(expected: Path) = given { actual ->
         expected("${show(actual)} to be the same file as ${show(actual)} but is not")
     }
 }
+
+/**
+ * Assert that the path exists.
+ *
+ * @param options indicating how symbolic links are handled
+ */
+@Suppress("SpreadOperator") // https://github.com/arturbosch/detekt/issues/391
+fun Assert<Path>.exists(vararg options: LinkOption) = given { actual ->
+    if (!Files.exists(actual, *options)) {
+        expected("${show(actual)} to exist, but it does not")
+    }
+}
