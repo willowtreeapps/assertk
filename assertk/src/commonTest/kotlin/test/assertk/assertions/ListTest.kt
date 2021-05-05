@@ -1,6 +1,7 @@
 package test.assertk.assertions
 
 import assertk.assertThat
+import assertk.assertions.containsSubList
 import assertk.assertions.containsExactly
 import assertk.assertions.index
 import assertk.assertions.isEqualTo
@@ -126,6 +127,57 @@ class ListTest {
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
     }
     //endregion
+
+    //region containsSubList
+    @Test fun containsSubList_fails_if_sublist_is_empty_and_actual_is_not_empty() {
+        val emptySubList: List<String> = emptyList()
+        val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
+        assertFails { assertThat(given).containsSubList(emptySubList) }
+    }
+
+    @Test fun containsSubList_passes_when_sublist_and_actual_list_is_empty() {
+        val sublist: List<String> = emptyList()
+        val actualList: List<String> = emptyList()
+        assertThat(actualList).containsSubList(sublist)
+    }
+
+    @Test fun containsSubList_fails_if_sublist_is_contained_in_actual_but_not_in_exact_order() {
+        val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne")
+        val sublist: List<String> = listOf("John", "Lee-Anne", "Victoria")
+        assertFails { assertThat(actualList).containsSubList(sublist) }
+    }
+
+    @Test fun containsSubList_passes_if_actual_contains_sublist_in_exact_order() {
+        val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne", "Darius", "Victor")
+        val sublist: List<String> = listOf("Victoria", "Lee-Anne", "Darius")
+        assertThat(actualList).containsSubList(sublist)
+    }
+
+    @Test fun containsSubList_passes_if_sublist_is_the_head_of_the_list() {
+        val actualList: List<String?> = listOf("1", "2", null, "4")
+        val sublist: List<String?> = listOf("1", "2", null, "4")
+        assertThat(actualList).containsSubList(sublist)
+    }
+
+    @Test fun containsSubList_passes_if_sublist_is_the_tail_of_the_list() {
+        val actualList: List<String?> = listOf("1", "2", null, "4")
+        val sublist: List<String?> = listOf(null, "4")
+        assertThat(actualList).containsSubList(sublist)
+    }
+
+    @Test fun containsSubList_passes_if_sublist_is_exactly_the_same_size_and_order() {
+        val actualList: List<Int> = listOf(1, 2, 3)
+        val sublist:List<Int> = listOf(1, 2, 3)
+        assertThat(actualList).containsSubList(sublist)
+    }
+
+    @Test fun containsSubList_passes_if_actual_list_contain_fully_matched_sublist_after_partial_match() {
+        val sublist: List<String> = listOf("Gordan","Jayce","Ann-Lee")
+        val partialList: List<String> = listOf("Gordan", "Jayce")
+        val actualList: List<String> = listOf("Andy", "John") + partialList + listOf("Elly") + sublist
+        assertThat(actualList).containsSubList(sublist)
+    }
+
 }
 
 class MyList<E>(private vararg val elements: E) : AbstractList<E>() {
