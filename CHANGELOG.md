@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.24] 2021-05-05
+
+### Fixed
+- Fixed `any` breaking when the list had several items.
+
+### Added
+- Added `containsSubList` for `List`.
+- Added `exists` for `Path`.
+
 ## [0.23.1] 2021-02-03
 
 ### Fixed
