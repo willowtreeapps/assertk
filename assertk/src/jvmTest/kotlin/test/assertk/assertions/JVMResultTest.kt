@@ -1,8 +1,5 @@
-@file:Suppress("DEPRECATION")
-
 package test.assertk.assertions
 
-import assertk.Result
 import assertk.assertThat
 import assertk.assertions.isSuccess
 import org.junit.Test
