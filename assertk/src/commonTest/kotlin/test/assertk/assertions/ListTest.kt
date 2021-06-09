@@ -188,7 +188,10 @@ class ListTest {
             assertThat(given).startsWith(2, 4)
         }
 
-        assertEquals("expected to start with:<[2, 4]>, but was:<[1, 2]>", error.message)
+        assertEquals(
+            "expected to start with:<[2, 4]>, but was:<[1, 2]> in:<[1, 2, 3, 4, 5]>",
+            error.message
+        )
     }
 
     @Test fun startsWith_fails_if_there_is_not_enough_elements_in_the_list() {
@@ -197,7 +200,10 @@ class ListTest {
             assertThat(given).startsWith(1, 2, 3)
         }
 
-        assertEquals("expected to start with:<[1, 2, 3]>, but was:<[1, 2]>", error.message)
+        assertEquals(
+            "expected to start with:<[1, 2, 3]>, but was:<[1, 2]> in:<[1, 2]>",
+            error.message
+        )
     }
 
     @Test fun startsWith_fails_if_elements_order_do_not_match() {
@@ -223,7 +229,10 @@ class ListTest {
             assertThat(given).endsWith(4, 2)
         }
 
-        assertEquals("expected to end with:<[4, 2]>, but was:<[4, 5]>", error.message)
+        assertEquals(
+            "expected to end with:<[4, 2]>, but was:<[4, 5]> in:<[1, 2, 3, 4, 5]>",
+            error.message
+        )
     }
 
     @Test fun endsWith_fails_if_there_is_not_enough_elements_in_the_list() {
@@ -232,7 +241,10 @@ class ListTest {
             assertThat(given).endsWith(1, 2, 3)
         }
 
-        assertEquals("expected to end with:<[1, 2, 3]>, but was:<[2, 3]>", error.message)
+        assertEquals(
+            "expected to end with:<[1, 2, 3]>, but was:<[2, 3]> in:<[2, 3]>",
+            error.message
+        )
     }
 
     @Test fun endsWith_fails_if_elements_order_do_not_match() {

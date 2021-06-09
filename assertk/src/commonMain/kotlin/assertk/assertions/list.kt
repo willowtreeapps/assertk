@@ -122,6 +122,8 @@ fun Assert<List<*>>.startsWith(vararg elements: Any?) = given { actual ->
             show(elements)
         }, but was:${
             show(sublist)
+        } in:${
+            show(actual)
         }"
     )
 }
@@ -152,6 +154,8 @@ fun Assert<List<*>>.endsWith(vararg elements: Any?) = given { actual ->
             show(elements)
         }, but was:${
             show(sublist)
+        } in:${
+            show(actual)
         }"
     )
 }
