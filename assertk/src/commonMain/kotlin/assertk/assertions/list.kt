@@ -95,3 +95,67 @@ fun Assert<List<*>>.containsSubList(sublist: List<*>) = given { actual: List<*> 
         }"
     )
 }
+
+/**
+ * Asserts the list starts with the expected elements, in the same order.
+ *
+ * [1, 2, 3] startsWith [1, 2] pass
+ * [1, 2, 3] startsWith [2, 1] fails
+ * [1, 2, 3] startsWith [1, 2, 3] pass
+ * [] startsWith [1, 2] fails
+ * [1, 2] startsWith [] pass
+ * [] startsWith [] pass
+ *
+ * @see[endsWith]
+ */
+fun Assert<List<*>>.startsWith(vararg elements: Any?) = given { actual ->
+    val sublist = if (actual.size >= elements.size) {
+        actual.subList(0, elements.size)
+    } else {
+        actual
+    }
+
+    if (sublist.contentEquals(elements)) return
+
+    expected(
+        "to start with:${
+            show(elements)
+        }, but was:${
+            show(sublist)
+        } in:${
+            show(actual)
+        }"
+    )
+}
+
+/**
+ * Asserts the list ends with the expected elements, in the same order.
+ *
+ * [1, 2, 3] endsWith [2, 3] pass
+ * [1, 2, 3] endsWith [3, 2] fails
+ * [1, 2, 3] endsWith [1, 2, 3] pass
+ * [] endsWith [1, 2] fails
+ * [1, 2] endsWith [] pass
+ * [] endsWith [] pass
+ *
+ * @see[startsWith]
+ */
+fun Assert<List<*>>.endsWith(vararg elements: Any?) = given { actual ->
+    val sublist = if (actual.size >= elements.size) {
+        actual.subList(actual.size - elements.size, actual.size)
+    } else {
+        actual
+    }
+
+    if (sublist.contentEquals(elements)) return
+
+    expected(
+        "to end with:${
+            show(elements)
+        }, but was:${
+            show(sublist)
+        } in:${
+            show(actual)
+        }"
+    )
+}
