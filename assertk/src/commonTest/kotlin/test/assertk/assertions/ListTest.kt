@@ -1,10 +1,7 @@
 package test.assertk.assertions
 
 import assertk.assertThat
-import assertk.assertions.containsSubList
-import assertk.assertions.containsExactly
-import assertk.assertions.index
-import assertk.assertions.isEqualTo
+import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -177,7 +174,89 @@ class ListTest {
         val actualList: List<String> = listOf("Andy", "John") + partialList + listOf("Elly") + sublist
         assertThat(actualList).containsSubList(sublist)
     }
+    //endregion
 
+    //region startsWith
+    @Test fun startsWith_passes_if_values_are_at_the_head_of_the_list() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
+        assertThat(given).startsWith("Jason", "Jane")
+    }
+
+    @Test fun startsWith_fails_if_values_are_not_at_the_head_of_the_list() {
+        val given: List<Int> = listOf(1, 2, 3, 4, 5)
+        val error = assertFails {
+            assertThat(given).startsWith(2, 4)
+        }
+
+        assertEquals(
+            "expected to start with:<[2, 4]>, but was:<[1, 2]> in:<[1, 2, 3, 4, 5]>",
+            error.message
+        )
+    }
+
+    @Test fun startsWith_fails_if_there_is_not_enough_elements_in_the_list() {
+        val given: List<Int> = listOf(1, 2)
+        val error = assertFails {
+            assertThat(given).startsWith(1, 2, 3)
+        }
+
+        assertEquals(
+            "expected to start with:<[1, 2, 3]>, but was:<[1, 2]> in:<[1, 2]>",
+            error.message
+        )
+    }
+
+    @Test fun startsWith_fails_if_elements_order_do_not_match() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne")
+        assertFails { assertThat(given).startsWith("Jane", "Jason") }
+    }
+
+    @Test fun startsWith_pass_if_values_are_equal_to_the_list() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne")
+        assertThat(given).startsWith("Jason", "Jane", "Anne")
+    }
+    //endregion
+
+    //region endsWith
+    @Test fun endsWith_passes_if_values_are_at_the_tail_of_the_list() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
+        assertThat(given).endsWith("Darius", "Lee")
+    }
+
+    @Test fun endsWith_fails_if_values_are_not_at_the_tail_of_the_list() {
+        val given: List<Int> = listOf(1, 2, 3, 4, 5)
+        val error = assertFails {
+            assertThat(given).endsWith(4, 2)
+        }
+
+        assertEquals(
+            "expected to end with:<[4, 2]>, but was:<[4, 5]> in:<[1, 2, 3, 4, 5]>",
+            error.message
+        )
+    }
+
+    @Test fun endsWith_fails_if_there_is_not_enough_elements_in_the_list() {
+        val given: List<Int> = listOf(2, 3)
+        val error = assertFails {
+            assertThat(given).endsWith(1, 2, 3)
+        }
+
+        assertEquals(
+            "expected to end with:<[1, 2, 3]>, but was:<[2, 3]> in:<[2, 3]>",
+            error.message
+        )
+    }
+
+    @Test fun endsWith_fails_if_elements_order_do_not_match() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne")
+        assertFails { assertThat(given).endsWith("Anne", "Jane") }
+    }
+
+    @Test fun endsWith_pass_if_values_are_equal_to_the_list() {
+        val given: List<String> = listOf("Jason", "Jane", "Anne")
+        assertThat(given).endsWith("Jason", "Jane", "Anne")
+    }
+    //endregion
 }
 
 class MyList<E>(private vararg val elements: E) : AbstractList<E>() {
