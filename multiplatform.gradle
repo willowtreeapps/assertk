@@ -39,8 +39,7 @@ kotlin {
         }
         commonTest {
             dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('test-annotations-common')
+                implementation kotlin('test')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
             }
         }
@@ -48,16 +47,12 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation kotlin('test-junit')
                 implementation kotlin('reflect')
             }
         }
         jsMain {
         }
         jsTest {
-            dependencies {
-                implementation kotlin('test-js')
-            }
         }
         nativeMain {
             dependsOn(commonMain)
@@ -89,4 +84,3 @@ task nativeTest {
 task test {
     dependsOn(allTests)
 }
-

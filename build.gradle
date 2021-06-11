@@ -1,10 +1,9 @@
-import org.apache.tools.ant.taskdefs.condition.Os
 import io.gitlab.arturbosch.detekt.Detekt
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
-    id 'org.jetbrains.kotlin.multiplatform' version '1.4.0' apply false
+    id 'org.jetbrains.kotlin.multiplatform' version '1.5.0' apply false
     id 'org.jetbrains.dokka' version '1.4.32'
     id 'io.gitlab.arturbosch.detekt' version '1.12.0' apply false
     id 'org.ajoberstar.git-publish' version '2.1.1'
@@ -145,20 +144,12 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
             from "$buildDir/javadoc/native"
         }
 
-        task emptyJavadocJar(type: Jar) {
-            archiveClassifier.set('javadoc')
-        }
-
-        task emptySourcesJar(type: Jar) {
-            archiveClassifier.set('sources')
-        }
-
         nexusPublishing {
             repositories {
                 sonatype()
             }
-	    clientTimeout.set(Duration.ofMinutes(5))
-  	    connectTimeout.set(Duration.ofMinutes(5))
+            clientTimeout.set(Duration.ofMinutes(5))
+            connectTimeout.set(Duration.ofMinutes(5))
         }
 
         publishing {
@@ -178,12 +169,7 @@ configure(subprojects.findAll({ it.name.startsWith('assertk') })) {
                         it.artifact dokkaJavadocNativeJar
                     }
                 }
-                metadata {
-                    artifact dokkaJavadocCommonJar
-                }
                 kotlinMultiplatform {
-                    // Source jars are only created for platforms, not the common artifact.
-                    artifact emptySourcesJar
                     artifact dokkaJavadocCommonJar
                 }
 
