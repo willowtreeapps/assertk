@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
+- Added `prop` which can take a member function. This restores much of the functionality deprecated
+  in 0.23, while preserving the useful type-safety of the new overloads.
 
 ## [0.24] 2021-05-05
 

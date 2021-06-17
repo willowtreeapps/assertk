@@ -6,6 +6,7 @@ import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 
@@ -148,6 +149,20 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
  */
 fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
     prop(property.name) { property.get(it) }
+
+/**
+ * Returns an assert that asserts on the result of calling the given function.
+ *
+ * Example:
+ * ```
+ * assertThat(person).prop(Person::nameAsLowerCase).isEqualTo("sue")
+ * ```
+ *
+ * @param callable Callable on which to assert. The name of this
+ * callable will be shown in the failure messages.
+ */
+fun <T, R, F> Assert<T>.prop(callable: F): Assert<R> where F : (T) -> R, F : KCallable<R> =
+    prop(callable.name, callable)
 
 /**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass(String::class)`
