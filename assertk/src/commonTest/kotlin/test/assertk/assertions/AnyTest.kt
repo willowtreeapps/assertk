@@ -226,6 +226,24 @@ class AnyTest {
         }
         assertEquals("sorry!", error.message)
     }
+
+    @Test fun prop_callable_function_passes() {
+        assertThat(subject).prop(BasicObject::funcA).isEqualTo("A")
+    }
+
+    @Test fun prop_callable_function_includes_name_in_failure_message() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::funcA).isEqualTo(14)
+        }
+        assertEquals("expected [funcA]:<[14]> but was:<[\"A\"]> (test)", error.message)
+    }
+
+    @Test fun nested_prop_callable_function_include_names_in_failure_message() {
+        val error = assertFails {
+            assertThat(subject).prop(BasicObject::funcB).prop(BasicObject::funcA).isNull()
+        }
+        assertEquals("expected [funcB.funcA] to be null but was:<\"A\"> (test)", error.message)
+    }
     //endregion
 
     @Test fun isNull_null_passes() {
@@ -380,6 +398,9 @@ class AnyTest {
             val other: BasicObject? = null
         ) : TestObject() {
             val failing: String get() = throw Exception("sorry!")
+
+            fun funcA(): String = "A"
+            fun funcB(): BasicObject = this
 
             override fun toString(): String = str
 
