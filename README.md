@@ -188,6 +188,39 @@ tableOf("a", "b", "result")
 
 Up to 4 columns are supported.
 
+### Asserting against Java's `Optional` type
+
+Java offers the `Optional<T>` which is intended as a return type of a method indicating that values is present, or not (in Java parlance an _empty_ value). AssertK offers the following assertions. It is common to find this type being used in when implementing a _Data Access Object_, for example:
+
+```kotlin
+interface PersonDao {
+  
+    data class Person(id: Long, val name: String, val created:LocalDateTime)
+  
+    fun findById(id: Long): Optional<Person>
+}
+
+// Finding person with id: 
+val r = dao.findById(1L)
+```
+
+The following table summarize basic usages:
+
+| Usage | Assertion                 | Description                                                  |
+| :---: | ------------------------- | ------------------------------------------------------------ |
+| **1** | `assertThat(r).value()`   | Extracts a value to do further assertions on. Fails eagerly when the value is not present. |
+| **2** | `assertThat(r).haValue()` | Assert that `r` has a person value.                          |
+| **3** | `assertThat(r).isEmpty()` | Assert that `r` has no person value                          |
+
+Of all the above, usage **#1** offers more mileage:
+
+```kotlin
+assertThat(r).value().all {              // Will fail here if there is no result.
+  prop(Person::id).isEqualTo(1L)         // Continue will rest of business assertions logic..
+  prop(Person::name).isEqualTo("John")  
+}
+```
+
 ## Custom Assertions
 
 One of the goals of this library is to make custom assertions easy to make. All assertions are just extension methods.
