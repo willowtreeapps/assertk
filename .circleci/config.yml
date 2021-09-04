@@ -38,7 +38,7 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -d > $HOME/secring.gpg
-              ./gradlew dokkaJavadocNativeJar dokkaJavadocJsJar dokkaJavadocJvmJar dokkaJavadocCommonJar
+              ./gradlew dokkaJavadocCommonJar
               ./gradlew publish -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
             fi
       - save_cache:
@@ -64,13 +64,13 @@ jobs:
             ".circleci/config.yml" }}-macos
       - run:
           name: Run Tests
-          command: ./gradlew macosTest iosX64Test
+          command: ./gradlew detekt nativeTest
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -D -o $HOME/secring.gpg
-              ./gradlew dokkaJavadocNativeJar
-              ./gradlew publishIosArm64PublicationToSonatypeRepository publishIosX64PublicationToSonatypeRepository publishIosX64PublicationToSonatypeRepository publishMacosPublicationToSonatypeRepository -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
+              ./gradlew dokkaJavadocCommonJar
+              ./gradlew publishApple -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId=0E7A8B89 -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
             fi
       - save_cache:
           paths:
