@@ -101,6 +101,19 @@ assertAll {
 //    - expected to be false
 ```
 
+### Iterable/List Assertions
+You can assert on the contents of an `Iterable/List` with the various `contains*` functions. They have different
+semantics as follows:
+
+|Assertion|Description|
+|---|---|
+|containsAll|Asserts the iterable contains all the expected elements, in **any order**. The collection may also contain **additional elements**.|
+|containsSubList|Asserts that a collection contains a **subset** of items the **same order**, but may have **additional elements** in the list.|
+|containsOnly|Asserts the iterable contains **only the expected elements**, in **any order**. **Duplicate values** in the expected and actual are ignored.|
+|containsExactlyInAnyOrder|Asserts the iterable contains **exactly the expected elements**, in **any order**. Each value in expected must correspond to a matching value in actual, and visa-versa.|
+|containsExactly|Asserts the list contains **exactly the expected elements**. They must be in the **same order** and there must not be any extra elements.|
+|containsNone|Asserts the iterable **does not contain any** of the expected elements|
+
 ### Extracting data
 
 There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the 
