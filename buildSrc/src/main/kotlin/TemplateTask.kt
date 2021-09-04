@@ -1,4 +1,5 @@
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -53,17 +54,20 @@ import java.io.File
  * }
  * ```
  */
-open class TemplateTask : DefaultTask() {
-    @InputDirectory
-    lateinit var inputDir: File
-    @OutputDirectory
-    lateinit var outputDir: File
+abstract class TemplateTask : DefaultTask() {
+    @get:InputDirectory
+    abstract val inputDir: DirectoryProperty
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
 
     @TaskAction
     fun run() {
-        outputDir.deleteRecursively()
-        inputDir.walkTopDown().filter { it.isFile && it.extension == "kt" }.forEach { template ->
-            val outputFile = outputDir.resolve(template.relativeTo(inputDir))
+        val inDir = inputDir.get().asFile
+        val outDir = outputDir.get().asFile
+
+        outDir.deleteRecursively()
+        inDir.walkTopDown().filter { it.isFile && it.extension == "kt" }.forEach { template ->
+            val outputFile = outDir.resolve(template.relativeTo(inDir))
             outputFile.parentFile.mkdirs()
             val lines = template.readLines()
             val tokenLineIndex = lines.indexOfFirst { it.startsWith("$") }
@@ -80,15 +84,15 @@ open class TemplateTask : DefaultTask() {
                     out.write("\n")
                 }
 
-                for (replacementIndex in 0 until replacements.size) {
+                for (element in replacements) {
                     for (lineIndex in tokenLineIndex + 1 until lines.size) {
                         var line = lines[lineIndex]
                         if (lineIndex == tokenLineIndex + 1 && line.isBlank()) {
                             continue
                         }
-                        for (tokenIndex in 0 until tokens.size) {
+                        for (tokenIndex in tokens.indices) {
                             val token = tokens[tokenIndex]
-                            val replacement = replacements[replacementIndex][tokenIndex]
+                            val replacement = element[tokenIndex]
                             line = line.replace(token, replacement)
                         }
                         out.write(line)

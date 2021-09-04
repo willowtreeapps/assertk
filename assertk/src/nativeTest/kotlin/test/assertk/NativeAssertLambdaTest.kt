@@ -2,13 +2,11 @@ package test.assertk
 
 import assertk.assertThat
 import assertk.assertions.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 
 class NativeAssertLambdaTest {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_works_in_coroutine_test() {
         runBlocking {
             assertThat {
@@ -17,7 +15,6 @@ class NativeAssertLambdaTest {
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test fun returnedValue_exception_works_in_coroutine_test() {
         runBlocking {
             assertThat {
