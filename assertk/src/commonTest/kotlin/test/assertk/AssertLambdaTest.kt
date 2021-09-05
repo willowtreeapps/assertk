@@ -1,8 +1,5 @@
-@file:Suppress("DEPRECATION")
-
 package test.assertk
 
-import assertk.Result
 import assertk.assertThat
 import test.assertk.assertions.valueOrFail
 import kotlin.test.Test

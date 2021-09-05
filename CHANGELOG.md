@@ -6,12 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Minimum supported kotlin version is 1.5.30
+- Minimum supported coroutines version is 1.5.2
+
 ### Added
 
 - Added `Optional<>.hasValue()`, `Optional<>.isEmpty()`, `Optional<>.value()`
 
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
+- Added expanded set up apple targets for kotlin native.
 
 ## [0.24] 2021-05-05
 

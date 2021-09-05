@@ -5,6 +5,7 @@ import assertk.assertions.isSuccess
 import assertk.assertions.support.display
 import assertk.assertions.support.show
 import kotlin.reflect.KProperty0
+import kotlin.runCatching
 
 /**
  * Marks the assertion DSL.
@@ -101,7 +102,6 @@ internal data class AssertingContext(
 /**
  * Runs the given lambda if the block throws an error, otherwise fails.
  */
-@Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isFailure().all(f) instead",
     replaceWith = ReplaceWith("isFailure().all(f)", imports = ["assertk.assertions.isFailure", "assertk.all"]),
@@ -114,7 +114,6 @@ fun <T> Assert<Result<T>>.thrownError(f: Assert<Throwable>.() -> Unit) {
 /**
  * Runs the given lambda if the block returns a value, otherwise fails.
  */
-@Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isSuccess().all(f) instead",
     replaceWith = ReplaceWith("isSuccess().all(f)", imports = ["assertk.assertions.isSuccess", "assertk.all"]),
@@ -124,7 +123,6 @@ fun <T> Assert<Result<T>>.returnedValue(f: Assert<T>.() -> Unit) {
     isSuccess().all(f)
 }
 
-@Suppress("DEPRECATION")
 @Deprecated(
     message = "Use isSuccess() instead",
     replaceWith = ReplaceWith("isSuccess()", imports = ["assertk.assertions.isSuccess", "assertk.assertions"]),
@@ -134,51 +132,8 @@ fun <T> Assert<Result<T>>.doesNotThrowAnyException() {
     isSuccess()
 }
 
-@Suppress("DEPRECATION")
 @Deprecated(message = "Use Assert<Result<T>> instead", level = DeprecationLevel.ERROR)
 typealias AssertBlock<T> = Assert<Result<T>>
-
-@Suppress("DEPRECATION")
-@Deprecated(message = "Temporary replacement for kotlin.Result until https://youtrack.jetbrains.com/issue/KT-32450 is fixed.")
-sealed class Result<out T> {
-    companion object {
-        fun <T> success(value: T): Result<T> = Success(value)
-        fun <T> failure(error: Throwable): Result<T> = Failure(error)
-
-        @Suppress("TooGenericExceptionCaught")
-        inline fun <R> runCatching(block: () -> R): Result<R> {
-            return try {
-                success(block())
-            } catch (e: Throwable) {
-                failure(e)
-            }
-        }
-    }
-
-    val isSuccess: Boolean
-        get() = when (this) {
-            is Success -> true
-            is Failure -> false
-        }
-
-    fun getOrNull(): T? = when (this) {
-        is Success -> value
-        is Failure -> null
-    }
-
-    fun exceptionOrNull(): Throwable? = when (this) {
-        is Success -> null
-        is Failure -> error
-    }
-
-    private data class Success<T>(val value: T) : Result<T>() {
-        override fun toString(): String = "Success($value)"
-    }
-
-    private data class Failure<T>(val error: Throwable) : Result<T>() {
-        override fun toString(): String = "Failure($error)"
-    }
-}
 
 /**
  * Calls platform specific function so that it is possible to show stacktrace if able
@@ -293,8 +248,7 @@ internal fun <T> Assert<T>.all(
  * }.isFailure().hasMessage("error")
  * ```
  */
-@Suppress("DEPRECATION")
-inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.runCatching(f))
+inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.runCatching { f() })
 
 /**
  * Runs all assertions in the given lambda and reports any failures.
