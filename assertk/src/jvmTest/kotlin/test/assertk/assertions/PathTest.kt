@@ -150,7 +150,7 @@ class PathTest {
 
     //region bytes
     @Test fun bytes_value_correct_byte_array_passes() {
-        assertThat(regularFile!!).bytes().isEqualTo(ByteArray(10))
+        assertThat(regularFile!!).bytes().containsExactly(*ByteArray(10))
     }
     //endregion
 }
