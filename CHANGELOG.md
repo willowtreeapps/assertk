@@ -6,10 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Minimum supported kotlin version is 1.5.30
+- Minimum supported coroutines version is 1.5.2
+
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
 - Added `prop` which can take a member function. This restores much of the functionality deprecated
   in 0.23, while preserving the useful type-safety of the new overloads.
+- Added expanded set up apple targets for kotlin native.
 
 ## [0.24] 2021-05-05
 

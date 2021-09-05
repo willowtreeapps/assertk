@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package assertk.assertions
 
 import assertk.Assert
@@ -14,12 +12,9 @@ import assertk.showError
  * assertThat { 1 + 1 }.isSuccess().isEqualTo(2)
  * ```
  */
-fun <T> Assert<assertk.Result<T>>.isSuccess(): Assert<T> = transform { actual ->
-    if (actual.isSuccess) {
-        @Suppress("UNCHECKED_CAST")
-        actual.getOrNull() as T
-    } else {
-        expected("success but was failure:${showError(actual.exceptionOrNull()!!)}")
+fun <T> Assert<Result<T>>.isSuccess(): Assert<T> = transform { actual ->
+    actual.getOrElse { error ->
+        expected("success but was failure:${showError(error)}")
     }
 }
 
@@ -30,6 +25,6 @@ fun <T> Assert<assertk.Result<T>>.isSuccess(): Assert<T> = transform { actual ->
  * assertThat { throw Exception("error") }.isFailure().hasMessage("error")
  * ```
  */
-fun <T> Assert<assertk.Result<T>>.isFailure(): Assert<Throwable> = transform { actual ->
+fun <T> Assert<Result<T>>.isFailure(): Assert<Throwable> = transform { actual ->
     actual.exceptionOrNull() ?: expected("failure but was success:${show(actual.getOrNull())}")
 }
