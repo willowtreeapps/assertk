@@ -85,6 +85,20 @@ workflows:
   build:
     jobs:
       - build-linux:
+          filters:
+            branches:
+              ignore: main
+      - build-macos:
+          filters:
+            branches:
+              ignore: main
+      - build-linux:
           context: opensource-maven
+          filters:
+            branches:
+              only: main
       - build-macos:
           context: opensource-maven
+          filters:
+            branches:
+              only: main
