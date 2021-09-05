@@ -86,6 +86,7 @@ class AssertAllTest {
 
     @Test fun leaves_soft_assert_scope_properly_on_exception() {
         val error = assertFails {
+            @Suppress("SwallowedException")
             try {
                 assertThat("This").all {
                     throw AssertionError()

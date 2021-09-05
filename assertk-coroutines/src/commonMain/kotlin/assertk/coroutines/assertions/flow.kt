@@ -1,3 +1,4 @@
+@file:Suppress("SwallowedException")
 package assertk.coroutines.assertions
 
 import assertk.Assert
@@ -9,7 +10,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
-@ExperimentalCoroutinesApi
 suspend fun Assert<Flow<*>>.count(): Assert<Int> = suspendCall("count()", Flow<*>::count)
 
 /**
@@ -46,7 +46,6 @@ suspend fun Assert<Flow<*>>.isNotEmpty() = given { actual ->
     expected("to not be empty")
 }
 
-@ExperimentalCoroutinesApi
 suspend fun Assert<Flow<*>>.hasCount(count: Int) {
     count().isEqualTo(count)
 }

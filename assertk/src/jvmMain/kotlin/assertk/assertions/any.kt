@@ -12,6 +12,7 @@ import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * Returns an assert on the java class of the value.
@@ -82,6 +83,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
     "Use an overload with explicit name and extract",
     ReplaceWith("this.prop(\"NAME\") { callable.call(it) }", "assertk.assertions.prop")
 )
+@Suppress("SwallowedException")
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {
     try {
         callable.call(it)

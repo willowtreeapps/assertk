@@ -1,14 +1,10 @@
-@file:Suppress("DEPRECATION")
-
 package test.assertk.assertions
 
-import assertk.Result
 import assertk.assertThat
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isSuccess
-import assertk.returnedValue
 import test.assertk.exceptionPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals

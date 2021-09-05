@@ -20,8 +20,9 @@ internal object ListDiffer {
     }
 
     sealed class Edit {
-        data class Ins(val newIndex: Int, val newValue: Any?) : Edit()
-        data class Del(val oldIndex: Int, val oldValue: Any?) : Edit()
+        sealed class Mod : Edit()
+        data class Ins(val newIndex: Int, val newValue: Any?) : Mod()
+        data class Del(val oldIndex: Int, val oldValue: Any?) : Mod()
         data class Eq(val oldIndex: Int, val oldValue: Any?, val newIndex: Int, val newValue: Any?) : Edit()
     }
 
