@@ -160,6 +160,10 @@ class JavaAnyTest {
             assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str, BasicObject::failing)
         }
     }
+
+    @Test fun isEqualToIgnoringGivenProperties_passes_even_when_private_property_differs() {
+        assertThat(BasicObject(str = "Rarity", private = 1)).isEqualToIgnoringGivenProperties(BasicObject(str = "notRarity", private = 2), BasicObject::str, BasicObject::other, BasicObject::failing)
+    }
     //endregion
 
     open class TestObject
@@ -168,7 +172,8 @@ class JavaAnyTest {
         val str: String,
         val int: Int = 42,
         val double: Double = 3.14,
-        val other: BasicObject? = null
+        val other: BasicObject? = null,
+        private val private: Int = 0,
     ) : TestObject() {
         val failing: String get() = throw Exception("sorry!")
 
