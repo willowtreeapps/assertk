@@ -1,5 +1,0 @@
-rootProject.name = 'assertk-project'
-
-include 'assertk'
-include 'assertk-coroutines'
-include 'java-interop'

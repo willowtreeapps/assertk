@@ -4,6 +4,7 @@ import assertk.Assert
 import assertk.assertions.support.expected
 import java.io.Closeable
 import java.io.InputStream
+import java.util.Locale
 
 /** Asserts that the actual stream has the same content as the expected stream.
  * Both [InputStream]s will be closed by the assertion.
@@ -32,7 +33,7 @@ fun Assert<InputStream>.hasNotSameContentAs(expected: InputStream) = given { act
 
 private const val BUFFER_SIZE = 4096
 
-private fun Byte.toHexString() = String.format("%02X", this)
+private fun Byte.toHexString() = String.format(Locale.ROOT, "%02X", this)
 
 private fun consume(stream: InputStream): Int {
     val buffer = ByteArray(BUFFER_SIZE)
@@ -137,4 +138,3 @@ private fun doTheStreamHaveTheSameContent(actual: InputStream, expected: InputSt
 private inline fun <R> use(a: Closeable, b: Closeable, f: () -> R): R {
     return a.use { b.use { f() } }
 }
-
