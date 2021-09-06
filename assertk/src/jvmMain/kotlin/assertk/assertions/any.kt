@@ -4,15 +4,15 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import assertk.assertions.support.expected
 import assertk.assertions.support.appendName
+import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
+import kotlin.reflect.full.IllegalCallableAccessException
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 /**
  * Returns an assert on the java class of the value.
@@ -121,7 +121,7 @@ private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?
 }
 
 /**
- * Returns an assert that compares for all properties except the given properties on the calling class and private fields
+ * Returns an assert that compares all accessible properties except the given properties on the calling class.
  * @param other Other value to compare to
  * @param properties properties of the type with which been ignored
  *
@@ -131,12 +131,19 @@ private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?
  */
 fun <T : Any> Assert<T>.isEqualToIgnoringGivenProperties(other: T, vararg properties: KProperty1<T, Any?>) {
     all {
-        for (prop in other::class.members) {
-            if (prop is KProperty1<*, *> && !properties.contains(prop) && prop.isAccessible) {
+        for (prop in other::class.memberProperties) {
+            if (!properties.contains(prop)) {
                 @Suppress("UNCHECKED_CAST")
                 val force = prop as KProperty1<T, Any?>
+                @Suppress("SwallowedException")
+                val otherValue = try {
+                    prop.get(other)
+                } catch (e: IllegalCallableAccessException) {
+                    // ignore in-accessible properties
+                    continue
+                }
                 transform(appendName(prop.name, separator = "."), force::get)
-                    .isEqualTo(prop.get(other))
+                    .isEqualTo(otherValue)
             }
         }
     }
