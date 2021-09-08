@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
 - Added expanded set up apple targets for kotlin native.
+- Added `Assert<Any>.propsEqualTo` assert helper.
 
 ### Fixed
 - Fixed behavior of `isEqualToIgnoringGivenProperties` to only check accessible properties.
