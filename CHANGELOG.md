@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `Optional<>.hasValue()`, `Optional<>.isEmpty()`, `Optional<>.value()`
+- Added `Optional<>.isPresent()`, `Optional<>.isNotPresent()`, `Optional<>.hasValue()`
 
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
