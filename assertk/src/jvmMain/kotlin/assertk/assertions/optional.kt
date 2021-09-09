@@ -2,65 +2,33 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
-import assertk.assertions.support.show
-import com.willowtreeapps.opentest4k.AssertionFailedError
 import java.util.*
 
 /**
- * Extracts an assertion against an guaranteed present value. If no value is present than
- * an the assertion fail.
+ * Asserts that optionals value is present
  *
- * Examples:
- *
- * ```
- * val optional = Optional.of(12)
- * assertThat(optional).value().isGreaterThan(11) // Passes
- * assertThat(optional).value().isEqualTo(12)     // Passes
- *
- * val empty = Optional.empty<Int>()
- * assertThat(empty).value().isInstanceOf(Int::class) // Fails
- * assertThat(empty).value().isEqualTo(0) // Fails
- *
- * ```
+ * @receiver Assert<Optional<T>>
+ * @return Assert<T>
  */
-fun <T> Assert<Optional<T>>.value(): Assert<T> {
-    return transform { actual ->
-        actual.orElseThrow {
-            AssertionFailedError(
-                "Value should be present."
-            )
+fun <T> Assert<Optional<T>>.isPresent(): Assert<T> {
+    return transform { optional ->
+        if (!optional.isEmpty) {
+            return assertThat(optional.get())
         }
+        expected("optional to not be empty")
     }
 }
 
 /**
- * Asserts that an optional has a value.
+ * Asserts optionals value is not present.
  *
- * ```
- * var optional: Optional<Int> = Optional.of(12)
- * assertThat(optional).hasValue() // Passes
- *
- * optional = Optional.empty<Int>()
- * assertThat(optional).hasValue() // Fails
- *
- * ```
+ * @receiver Assert<Optional<*>>
  */
-fun Assert<Optional<*>>.hasValue() = given { actual ->
-    if (actual.isPresent) return@given
-    expected("value to be present.")
+fun Assert<Optional<*>>.isNotPresent() {
+    given { actual ->
+        if (actual.isEmpty) return
+        expected("optional to empty", actual = actual.get())
+    }
 }
 
-/**
- * Asserts that an optional is empty.
- *
- * ```
- * val empty = Optional.empty<Int>()
- * val nonEmpty = Optional.of(12)
- * assertThat(empty).isEmpty()    // Passes
- * assertThat(nonEmpty).isEmpty() // Fails
- * ```
- */
-fun Assert<Optional<*>>.isEmpty() = given { actual ->
-    if (actual.isEmpty) return@given
-    expected("to be empty, but found ${show(actual.get())}")
-}
+fun <T> Assert<Optional<T>>.hasValue(expected: T) = isPresent().isEqualTo(expected)

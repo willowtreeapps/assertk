@@ -16,22 +16,22 @@ internal class OptionalTest {
     @Test
     fun hasValue_assertion_should_succeed_on_non_empty_optional() {
         val nonEmpty = Optional.of(UUID.randomUUID().toString())
-        assertThat(nonEmpty).hasValue()
+        assertThat(nonEmpty).isPresent()
     }
 
     @Test
     fun hasValue_assertion_should_fail_on_empty_optional() {
         val empty = Optional.empty<String>()
-        assertThat { assertThat(empty).hasValue() }
+        assertThat { assertThat(empty).isPresent() }
             .isFailure()
-            .messageContains("value to be present")
+            .messageContains("optional to not be empty")
     }
 
     @Test
     fun test_extracted_value_isEqual_to_expected_succeeds() {
         val expected = Random.nextBytes(12)
         val optional = Optional.of(expected)
-        assertThat(optional).value().isEqualTo(expected)
+        assertThat(optional).hasValue(expected)
     }
 
     @Test
@@ -39,19 +39,19 @@ internal class OptionalTest {
         val expected = Random.nextInt()
         val unexpected = expected + 1
         val optional = Optional.of(expected)
-        assertThat { assertThat(optional).value().isEqualTo(unexpected) }.isFailure()
+        assertThat { assertThat(optional).isPresent().isEqualTo(unexpected) }.isFailure()
     }
 
     @Test
     fun test_isEmpty_assertion_on_empty_succeeds() {
         val empty = Optional.empty<Int>()
-        assertThat(empty).isEmpty()
+        assertThat(empty).isNotPresent()
     }
 
     @Test
     fun test_isEmpty_assertion_on_non_empty_fails() {
         val nonEmpty = Optional.of(Random.nextLong())
-        assertThat { assertThat(nonEmpty).isEmpty() }
+        assertThat { assertThat(nonEmpty).isNotPresent() }
             .isFailure()
             .isInstanceOf(AssertionFailedError::class)
     }
@@ -59,11 +59,7 @@ internal class OptionalTest {
     @Test
     fun test_using_value_extractor() {
         val optional = Optional.of(12)
-        assertThat(optional).value().all {
-            isInstanceOf(Int::class)
-            isGreaterThan(11)
-            isNotZero()
-        }
+        assertThat(optional).hasValue(12)
     }
 
     @Test
@@ -88,8 +84,8 @@ internal class OptionalTest {
 
         // Asserting against findPersonById in data access logic:
         assertAll {
-            assertThat(findPersonById(0)).isEmpty()
-            assertThat(findPersonById(personId)).value().all {
+            assertThat(findPersonById(0)).isNotPresent()
+            assertThat(findPersonById(personId)).isPresent().all {
                 prop(Person::id).isEqualTo(personId)
                 prop(Person::name).isEqualTo(personName)
                 prop(Person::dateCreated).all {
