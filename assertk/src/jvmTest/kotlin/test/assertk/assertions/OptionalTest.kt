@@ -10,56 +10,62 @@ import java.time.LocalDate
 import java.time.Month
 import java.util.*
 import kotlin.random.Random
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 internal class OptionalTest {
 
-    @Test
-    fun hasValue_assertion_should_succeed_on_non_empty_optional() {
-        val nonEmpty = Optional.of(UUID.randomUUID().toString())
-        assertThat(nonEmpty).isPresent()
+    @Test fun isPresent_passes() {
+        assertThat(Optional.of("test")).isPresent()
     }
 
     @Test
-    fun hasValue_assertion_should_fail_on_empty_optional() {
-        val empty = Optional.empty<String>()
-        assertThat { assertThat(empty).isPresent() }
-            .isFailure()
-            .messageContains("optional to not be empty")
+    fun isPresent_fails() {
+        val error = assertFails {
+            assertThat(Optional.empty<Any>()).isPresent()
+        }
+        assertEquals(
+            "expected optional to not be empty",
+            error.message
+        )
     }
 
-    @Test
-    fun test_extracted_value_isEqual_to_expected_succeeds() {
-        val expected = Random.nextBytes(12)
-        val optional = Optional.of(expected)
-        assertThat(optional).hasValue(expected)
+    @Test fun isNotPresent_passes() {
+        assertThat(Optional.empty<Any>()).isNotPresent()
     }
 
-    @Test
-    fun test_extracted_value_isEqual_to_unexpected_fails() {
-        val expected = Random.nextInt()
-        val unexpected = expected + 1
-        val optional = Optional.of(expected)
-        assertThat { assertThat(optional).isPresent().isEqualTo(unexpected) }.isFailure()
+    @Test fun isNotPresent_fails() {
+        val error = assertFails {
+            assertThat(Optional.of("test")).isNotPresent()
+        }
+        assertEquals(
+            "expected optional to be empty but was:<\"test\">",
+            error.message
+        )
     }
 
-    @Test
-    fun test_isEmpty_assertion_on_empty_succeeds() {
-        val empty = Optional.empty<Int>()
-        assertThat(empty).isNotPresent()
+    @Test fun hasValue_passes() {
+        assertThat(Optional.of("test")).hasValue("test")
     }
 
-    @Test
-    fun test_isEmpty_assertion_on_non_empty_fails() {
-        val nonEmpty = Optional.of(Random.nextLong())
-        assertThat { assertThat(nonEmpty).isNotPresent() }
-            .isFailure()
-            .isInstanceOf(AssertionFailedError::class)
+    @Test fun hasValue_empty_fails() {
+        val error = assertFails {
+            assertThat(Optional.empty<String>()).hasValue("test")
+        }
+        assertEquals(
+            "expected optional to not be empty",
+            error.message
+        )
     }
 
-    @Test
-    fun test_using_value_extractor() {
-        val optional = Optional.of(12)
-        assertThat(optional).hasValue(12)
+    @Test fun hasValue_wrong_value_fails() {
+        val error = assertFails {
+            assertThat(Optional.of("test")).hasValue("wrong")
+        }
+        assertEquals(
+            "expected:<\"[wrong]\"> but was:<\"[test]\"> (Optional[test])",
+            error.message
+        )
     }
 
     @Test

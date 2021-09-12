@@ -2,17 +2,16 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
+import assertk.assertions.support.show
 import java.util.*
 
 /**
- * Asserts that optionals value is present
- *
- * @receiver Assert<Optional<T>>
- * @return Assert<T>
+ * Asserts that optional's value is present
+ * @see isNotPresent
  */
 fun <T> Assert<Optional<T>>.isPresent(): Assert<T> {
     return transform { optional ->
-        if (!optional.isEmpty) {
+        if (optional.isPresent) {
             return assertThat(optional.get())
         }
         expected("optional to not be empty")
@@ -20,15 +19,17 @@ fun <T> Assert<Optional<T>>.isPresent(): Assert<T> {
 }
 
 /**
- * Asserts optionals value is not present.
- *
- * @receiver Assert<Optional<*>>
+ * Asserts optional's value is not present.
+ * @see isPresent
  */
 fun Assert<Optional<*>>.isNotPresent() {
     given { actual ->
-        if (actual.isEmpty) return
-        expected("optional to empty", actual = actual.get())
+        if (!actual.isPresent) return
+        expected("optional to be empty but was:${show(actual.get())}")
     }
 }
 
+/**
+ * Asserts the optional has the expected value.
+ */
 fun <T> Assert<Optional<T>>.hasValue(expected: T) = isPresent().isEqualTo(expected)
