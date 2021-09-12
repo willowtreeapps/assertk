@@ -119,8 +119,8 @@ semantics as follows:
 There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the 
 assertion, these methods will add the extra context to the failure message which can be helpful.
 
-The simplest way is with `prop()`. It will take a property (or a name and a lambda) and return an assertion on that
-property.
+The simplest way is with `prop()`. It will take a property (or function, or a name and a lambda) and return an
+assertion on that property.
 
 ```kotlin
 val person = Person(age = 22)

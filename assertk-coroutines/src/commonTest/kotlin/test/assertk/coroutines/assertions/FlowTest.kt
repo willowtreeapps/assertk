@@ -12,7 +12,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class FlowTest {
     //region isEmpty
     @Test fun isEmpty_empty_passes() = runTest {
@@ -280,7 +279,7 @@ class FlowTest {
     //endregion
 }
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 private fun <T> nonCompletingFlowOf(vararg elements: T) = callbackFlow {
     for (element in elements) {
         send(element)

@@ -118,12 +118,11 @@ private fun String.renderSpecialWhitespace(): String = replace(specialWhitespace
 
 private fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String {
     val diff = ListDiffer.diff(elements, actual)
-        .filterNot { it is ListDiffer.Edit.Eq }
+        .filterIsInstance<ListDiffer.Edit.Mod>()
         .sortedBy {
             when (it) {
                 is ListDiffer.Edit.Ins -> it.newIndex
                 is ListDiffer.Edit.Del -> it.oldIndex
-                else -> throw IllegalStateException()
             }
         }
 
@@ -134,7 +133,6 @@ private fun listDifferExpected(elements: List<Any?>, actual: List<Any?>): String
         when (edit) {
             is ListDiffer.Edit.Del -> " at index:${edit.oldIndex} expected:${show(edit.oldValue)}"
             is ListDiffer.Edit.Ins -> " at index:${edit.newIndex} unexpected:${show(edit.newValue)}"
-            else -> throw IllegalStateException()
         }
     }
 }
