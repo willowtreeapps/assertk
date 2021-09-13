@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `startsWith` and `endsWith` for `List`.
-- Added `Optional<>.isPresent()`, `Optional<>.isNotPresent()`, `Optional<>.hasValue()`
+- Added `Optional<>.isPresent()`, `Optional<>.isEmpty()`, `Optional<>.hasValue()`
 - Added expanded set up apple targets for kotlin native.
 
 ### Fixed
