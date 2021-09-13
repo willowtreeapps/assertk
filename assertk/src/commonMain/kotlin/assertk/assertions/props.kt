@@ -18,7 +18,7 @@ import assertk.Assert
  *
  * @see[Pair.to]
  */
-fun <T> Assert<T>.propsEqualTo(vararg propEqualities: Pair<(T) -> Any, Any>) =
+fun <T> Assert<T>.propsEqualTo(vararg propEqualities: Pair<(T) -> Any?, Any?>) =
     given { actual ->
         assertThat(propEqualities.map { it.first(actual) })
             .isEqualTo(

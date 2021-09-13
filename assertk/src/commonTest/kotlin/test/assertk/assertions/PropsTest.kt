@@ -12,10 +12,11 @@ class PropsTest {
     data class MyObject(
         val name: String,
         val amount: Number,
-        val flag: Boolean
+        val flag: Boolean,
+        val maybe: String?
     )
 
-    private val anObject = MyObject("a", 1, true)
+    private val anObject = MyObject("a", 1, true, null)
 
     @Test
     fun propsEqualTo_equalValues_passes() {
@@ -24,7 +25,8 @@ class PropsTest {
             .propsEqualTo(
                 MyObject::name to "a",
                 MyObject::amount to 1,
-                MyObject::flag to true
+                MyObject::flag to true,
+                MyObject::maybe to null
             )
     }
 
