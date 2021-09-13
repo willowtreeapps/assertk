@@ -9,4 +9,3 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 opentest4k = { module = "com.willowtreeapps.opentest4k:opentest4k", version = "1.2.2" }
 [plugins]
 nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
-git-publish = { id = "org.ajoberstar.git-publish", version = "3.0.0" }
