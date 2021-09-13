@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Minimum supported kotlin version is 1.5.30
 - Minimum supported coroutines version is 1.5.2
+- Replaced custom result type returned from `assertThat {}` with `kotlin.Result`. This is a binary-incompatible change,
+  but it should be source-compatible in most cases as referencing the custom result type directly was discouraged.
 
 ### Added
-- Added `startsWith` and `endsWith` for `List`.
+- Added `startsWith()` and `endsWith()` for `List`.
 - Added `Optional<>.isPresent()`, `Optional<>.isEmpty()`, `Optional<>.hasValue()`
 - Added expanded set up apple targets for kotlin native.
 
