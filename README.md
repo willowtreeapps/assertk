@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.24'
+  testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
 }
 ```
 
@@ -55,7 +55,7 @@ class PersonTest {
 }
 ```
 
-You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/javadoc/assertk/assertk/assertk.assertions/index.html).
+You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/assertk/assertk.assertions/index.html).
 
 ### Nullability
 Since null is a first-class concept in kotlin's type system, you need to be explicit in your assertions.
@@ -119,8 +119,8 @@ semantics as follows:
 There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the 
 assertion, these methods will add the extra context to the failure message which can be helpful.
 
-The simplest way is with `prop()`. It will take a property (or a name and a lambda) and return an assertion on that
-property.
+The simplest way is with `prop()`. It will take a property (or function, or a name and a lambda) and return an
+assertion on that property.
 
 ```kotlin
 val person = Person(age = 22)
