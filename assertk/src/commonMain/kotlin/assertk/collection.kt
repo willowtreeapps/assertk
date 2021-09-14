@@ -4,6 +4,7 @@ import assertk.assertions.support.appendName
 import assertk.assertions.support.show
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import com.willowtreeapps.opentest4k.MultipleFailuresError
+import kotlin.jvm.JvmName
 
 private class CollectionFailure<T>(
     private val check: CollectionCheck<T>.() -> Unit
@@ -75,9 +76,24 @@ internal class CollectionCheck<T>(
  * A custom check on a collection. Used to implement any/none/exactly etc.
  */
 @Suppress("TooGenericExceptionCaught")
-internal fun <T> Assert<Iterable<T>>.collection(check: CollectionCheck<T>.() -> Unit, f: (Assert<T>) -> Unit) = given { actual ->
+@JvmName("collectionIterable")
+internal fun <T> Assert<Iterable<T>>.collection(check: CollectionCheck<T>.() -> Unit, f: (Assert<T>) -> Unit) =
+    transform { it.iterator() }.collection(check, f)
+
+/**
+ * A custom check on a collection. Used to implement any/none/exactly etc.
+ */
+@Suppress("TooGenericExceptionCaught")
+@JvmName("collectionSequence")
+internal fun <T> Assert<Sequence<T>>.collection(check: CollectionCheck<T>.() -> Unit, f: (Assert<T>) -> Unit) =
+    transform { it.iterator() }.collection(check, f)
+
+@Suppress("TooGenericExceptionCaught")
+@JvmName("collectionIterator")
+private fun <T> Assert<Iterator<T>>.collection(check: CollectionCheck<T>.() -> Unit, f: (Assert<T>) -> Unit) = given { actual ->
     CollectionFailure(check).run {
-        actual.forEachIndexed { i, item ->
+        var i = 0
+        actual.forEach { item ->
             index = i
             collectedItems.add(item)
             try {
@@ -85,6 +101,7 @@ internal fun <T> Assert<Iterable<T>>.collection(check: CollectionCheck<T>.() -> 
             } catch (e: Throwable) {
                 fail(e)
             }
+            i++
         }
     }
 }
