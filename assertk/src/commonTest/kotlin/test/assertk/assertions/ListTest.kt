@@ -141,7 +141,19 @@ class ListTest {
     @Test fun containsSubList_fails_if_sublist_is_contained_in_actual_but_not_in_exact_order() {
         val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne")
         val sublist: List<String> = listOf("John", "Lee-Anne", "Victoria")
-        assertFails { assertThat(actualList).containsSubList(sublist) }
+        val error = assertFails { assertThat(actualList).containsSubList(sublist) }
+        assertEquals(
+                """expected to contain the exact sublist (in the same order) as:<["John", "Lee-Anne", "Victoria"]>, but found none matching in:<["John", "Victoria", "Lee-Anne"]>""", error.message
+        )
+    }
+
+    @Test fun containsSubList_fails_if_sublist_is_contained_in_actual_but_in_reverse_order() {
+        val actualList: List<String> = listOf("John", "Victoria", "Lee-Anne")
+        val sublist: List<String> = listOf("Lee-Anne", "Victoria", "John")
+        val error = assertFails { assertThat(actualList).containsSubList(sublist) }
+        assertEquals(
+                """expected to contain the exact sublist (in the same order) as:<["Lee-Anne", "Victoria", "John"]>, but found none matching in:<["John", "Victoria", "Lee-Anne"]>""", error.message
+        )
     }
 
     @Test fun containsSubList_passes_if_actual_contains_sublist_in_exact_order() {
