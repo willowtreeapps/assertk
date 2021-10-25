@@ -2,6 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.kotlin.dsl.maven
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 
 plugins {
     kotlin("multiplatform")
@@ -101,4 +102,10 @@ val detektTest by tasks.registering(Detekt::class) {
 
 val detekt by tasks.getting {
     dependsOn(detektMain, detektTest)
+}
+
+// Don't run npm install scripts, protects against
+// https://blog.jetbrains.com/kotlin/2021/10/important-ua-parser-js-exploit-and-kotlin-js/ etc.
+tasks.withType<KotlinNpmInstallTask> {
+    args += "--ignore-scripts"
 }
