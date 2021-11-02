@@ -4,12 +4,10 @@ import assertk.all
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.*
-import com.willowtreeapps.opentest4k.AssertionFailedError
 import org.junit.Test
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
-import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
@@ -30,13 +28,13 @@ internal class OptionalTest {
         )
     }
 
-    @Test fun isNotPresent_passes() {
-        assertThat(Optional.empty<Any>()).isNotPresent()
+    @Test fun isEmpty_passes() {
+        assertThat(Optional.empty<Any>()).isEmpty()
     }
 
-    @Test fun isNotPresent_fails() {
+    @Test fun isEmpty_fails() {
         val error = assertFails {
-            assertThat(Optional.of("test")).isNotPresent()
+            assertThat(Optional.of("test")).isEmpty()
         }
         assertEquals(
             "expected optional to be empty but was:<\"test\">",
@@ -90,7 +88,7 @@ internal class OptionalTest {
 
         // Asserting against findPersonById in data access logic:
         assertAll {
-            assertThat(findPersonById(0)).isNotPresent()
+            assertThat(findPersonById(0)).isEmpty()
             assertThat(findPersonById(personId)).isPresent().all {
                 prop(Person::id).isEqualTo(personId)
                 prop(Person::name).isEqualTo(personName)

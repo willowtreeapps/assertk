@@ -1,6 +1,7 @@
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+
 plugins {
     id("org.jetbrains.dokka")
-    alias(libs.plugins.git.publish)
     alias(libs.plugins.nexus.publish)
 }
 
@@ -17,13 +18,9 @@ nexusPublishing {
     }
 }
 
-val dokkaHtmlMultiModule by tasks.getting
+val dokkaHtmlMultiModule by tasks.getting(DokkaMultiModuleTask::class)
 
-gitPublish {
-    repoUri.set("git@github.com:willowtreeapps/assertk.git")
-    branch.set("gh-pages")
-    contents {
-        from(dokkaHtmlMultiModule)
-        into("javadoc")
-    }
+val generateDocs by tasks.creating(Copy::class) {
+    from(dokkaHtmlMultiModule.outputDirectory)
+    into("docs")
 }

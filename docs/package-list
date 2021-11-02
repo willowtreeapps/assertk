@@ -1,0 +1,9 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:assertk
+assertk
+assertk.assertions
+assertk.assertions.support
+module:assertk-coroutines
+assertk.coroutines.assertions

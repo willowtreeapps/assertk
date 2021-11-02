@@ -57,7 +57,7 @@ fun Assert<List<*>>.containsSubList(sublist: List<*>) = given { actual: List<*> 
         val matchOfFirstInTarget = target.indexOf(sublist.first())
         if (matchOfFirstInTarget == -1) break
         var n = 1
-        while (n < sublist.size && n < target.size) {
+        while (n < sublist.size && matchOfFirstInTarget + n < target.size) {
             val a = target[matchOfFirstInTarget + n]
             val b = sublist[n]
             if (a != b) break

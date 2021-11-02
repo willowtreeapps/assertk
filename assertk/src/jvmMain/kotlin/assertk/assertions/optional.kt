@@ -7,7 +7,7 @@ import java.util.*
 
 /**
  * Asserts that optional's value is present
- * @see isNotPresent
+ * @see isEmpty
  */
 fun <T> Assert<Optional<T>>.isPresent(): Assert<T> {
     return transform { optional ->
@@ -22,7 +22,7 @@ fun <T> Assert<Optional<T>>.isPresent(): Assert<T> {
  * Asserts optional's value is not present.
  * @see isPresent
  */
-fun Assert<Optional<*>>.isNotPresent() {
+fun Assert<Optional<*>>.isEmpty() {
     given { actual ->
         if (!actual.isPresent) return
         expected("optional to be empty but was:${show(actual.get())}")
