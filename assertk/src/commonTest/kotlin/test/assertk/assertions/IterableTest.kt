@@ -3,7 +3,6 @@ package test.assertk.assertions
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import assertk.assertions.support.fail
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -224,8 +223,20 @@ class IterableTest {
         )
     }
 
+    @Test fun partial_matching_content_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isLessThan(2) }
+        }
+        assertEquals(
+            """expected none to pass (2 failures)
+                |${"\t"}${opentestPackageName}AssertionFailedError: expected [[1]] to be less than:<2> but was:<2> ([1, 2, 3])
+                |${"\t"}${opentestPackageName}AssertionFailedError: expected [[2]] to be less than:<2> but was:<3> ([1, 2, 3])
+               """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
     @Test fun each_non_matching_content_passes() {
-        assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isLessThan(2) }
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isLessThan(1) }
     }
     //endregion
 

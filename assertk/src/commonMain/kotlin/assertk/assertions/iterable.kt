@@ -195,7 +195,7 @@ fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) = given { actual ->
     if (actual.count() > 0) {
         all(message = "expected none to pass",
             body = { each { item -> f(item) } },
-            failIf = { it.isEmpty() })
+            failIf = { it.size != actual.count() })
     }
 }
 
