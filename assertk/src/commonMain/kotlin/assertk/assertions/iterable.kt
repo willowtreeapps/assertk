@@ -290,3 +290,37 @@ fun Assert<Iterable<*>>.isNotEmpty() = given { actual ->
     if (actual.any()) return
     expected("to not be empty")
 }
+
+/**
+ * Asserts the iterable is not empty, and returns an assert on the first element.
+ */
+fun <E, T : Iterable<E>> Assert<T>.first(): Assert<E> {
+    return transform(appendName("first", ".")) { iterable ->
+        val iterator = iterable.iterator()
+        if (iterator.hasNext()) {
+            iterator.next()
+        } else {
+            expected("to not be empty")
+        }
+    }
+}
+
+/**
+ * Asserts the iterable contains exactly one element, and returns an assert on that element.
+ */
+fun <E, T : Iterable<E>> Assert<T>.single(): Assert<E> {
+    return transform(appendName("single", ".")) { iterable ->
+        val iterator = iterable.iterator()
+        if (iterator.hasNext()) {
+            val single = iterator.next()
+            if (iterator.hasNext()) {
+                val size = if (iterable is Collection<*>) iterable.size.toString() else "multiple"
+                expected("to have single element but has $size: ${show(iterable)}")
+            } else {
+                single
+            }
+        } else {
+            expected("to have single element but was empty")
+        }
+    }
+}

@@ -1,5 +1,5 @@
 [versions]
-assertk = "0.25"
+assertk = "0.26-SNAPSHOT"
 kotlin = "1.5.30"
 [libraries]
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
