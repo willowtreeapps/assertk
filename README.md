@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/willowtreeapps/assertk.svg?style=svg)](https://circleci.com/gh/willowtreeapps/assertk)[![Maven Central](https://img.shields.io/maven-central/v/com.willowtreeapps.assertk/assertk.svg)](https://search.maven.org/search?q=g:com.willowtreeapps.assertk)
 [![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.willowtreeapps.assertk/assertk.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/willowtreeapps/assertk/)
 
-assertions for kotlin inspired by assertj
+Assertions for Kotlin inspired by [assertj](https://github.com/assertj/assertj-core)
 
 ## Setup
 
@@ -17,6 +17,21 @@ repositories {
 dependencies {
   testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
 }
+```
+
+```kotlin
+  testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+```
+
+### Maven/JVM
+
+```xml
+<dependency>
+  <groupId>com.willowtreeapps.assertk</groupId>
+  <artifactId>assertk-jvm</artifactId>
+  <version>0.25</version>
+  <scope>test</scope>
+</dependency>
 ```
 
 ### Javascript/Common
