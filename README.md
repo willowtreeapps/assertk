@@ -1,9 +1,18 @@
 # assertk
 
-[![CircleCI](https://circleci.com/gh/willowtreeapps/assertk.svg?style=svg)](https://circleci.com/gh/willowtreeapps/assertk)[![Maven Central](https://img.shields.io/maven-central/v/com.willowtreeapps.assertk/assertk.svg)](https://search.maven.org/search?q=g:com.willowtreeapps.assertk)
+[![CircleCI](https://circleci.com/gh/willowtreeapps/assertk.svg?style=svg)](https://circleci.com/gh/willowtreeapps/assertk)
+[![Maven Central](https://img.shields.io/maven-central/v/com.willowtreeapps.assertk/assertk.svg)](https://search.maven.org/search?q=g:com.willowtreeapps.assertk)
 [![Sonatype Snapshot](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.willowtreeapps.assertk/assertk.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/willowtreeapps/assertk/)
 
-assertions for kotlin inspired by assertj
+assertk is a fluent assertion library for Kotlin inspired by [AssertJ](https://github.com/assertj/assertj-core).
+
+- [Documentation](https://willowtreeapps.github.io/assertk/assertk/assertk.assertions/index.html)
+
+## Why another assertion library?
+
+You might be asking, "If AssertJ already exists, why create another library?". It's true, assertk is very similar to AssertJ. But assertk is written in Kotlin so it has one major advantage: extension methods. This makes adding your own assertion methods far simpler.
+
+See [Custom Assertions](#custom-assertions) below to find out how to do this.
 
 ## Setup
 
@@ -64,6 +73,7 @@ Since null is a first-class concept in kotlin's type system, you need to be expl
 val nullString: String? = null
 assertThat(nullString).hasLength(4)
 ```
+
 will not compile, since `hasLength()` only makes sense on non-null values. You can chain `isNotNull()` to handle this.
 
 ```kotlin
@@ -71,6 +81,7 @@ val nullString: String? = null
 assertThat(nullString).isNotNull().hasLength(4)
 // -> expected to not be null
 ```
+
 This will first ensure the string is not null before running any other checks.
 
 ### Multiple assertions
@@ -102,6 +113,7 @@ assertAll {
 ```
 
 ### Iterable/List Assertions
+
 You can assert on the contents of an `Iterable/List` with the various `contains*` functions. They have different
 semantics as follows:
 
@@ -116,7 +128,7 @@ semantics as follows:
 
 ### Extracting data
 
-There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the 
+There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the
 assertion, these methods will add the extra context to the failure message which can be helpful.
 
 The simplest way is with `prop()`. It will take a property (or function, or a name and a lambda) and return an
@@ -163,6 +175,7 @@ assertThat {
 ```
 
 This method also allows you to assert on successfully returned values.
+
 ```kotlin
 assertThat { 1 + 1 }.isSuccess().isNegative()
 // -> expected to be negative but was:<2>
@@ -241,4 +254,5 @@ The general rule of thumb is to prefer building out of the existing assertions u
 error message.
 
 ## Contributing to assertk
-Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/master/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/master/code-of-conduct.md).
+
+Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/main/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/main/code-of-conduct.md).
