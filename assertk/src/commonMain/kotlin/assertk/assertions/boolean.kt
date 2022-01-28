@@ -7,16 +7,16 @@ import assertk.assertions.support.expected
  * Asserts the boolean is true.
  * @see [isFalse]
  */
-fun Assert<Boolean>.isTrue() = given { actual ->
+fun Assert<Boolean>.isTrue(message: String = "to be true") = given { actual ->
     if (actual) return
-    expected("to be true")
+    expected(message)
 }
 
 /**
  * Asserts the boolean is false.
  * @see [isTrue]
  */
-fun Assert<Boolean>.isFalse() = given { actual ->
+fun Assert<Boolean>.isFalse(message: String = "to be false") = given { actual ->
     if (!actual) return
-    expected("to be false")
+    expected(message)
 }
