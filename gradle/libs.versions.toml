@@ -1,11 +1,11 @@
 [versions]
 assertk = "0.26-SNAPSHOT"
-kotlin = "1.5.30"
+kotlin = "1.6.10"
 [libraries]
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.5.0" }
+dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.6.10" }
 detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.19.0" }
-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.5.2" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.0" }
 opentest4k = { module = "com.willowtreeapps.opentest4k:opentest4k", version = "1.2.2" }
 [plugins]
 nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
