@@ -126,10 +126,10 @@ class ListTest {
     //endregion
 
     //region containsSubList
-    @Test fun containsSubList_fails_if_sublist_is_empty_and_actual_is_not_empty() {
+    @Test fun containsSubList_passes_if_sublist_is_empty_and_actual_is_not_empty() {
         val emptySubList: List<String> = emptyList()
-        val given: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
-        assertFails { assertThat(given).containsSubList(emptySubList) }
+        val actualList: List<String> = listOf("Jason", "Jane", "Anne", "Darius", "Lee")
+        assertThat(actualList).containsSubList(emptySubList)
     }
 
     @Test fun containsSubList_passes_when_sublist_and_actual_list_is_empty() {

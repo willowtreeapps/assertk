@@ -58,15 +58,16 @@ private fun List<*>.contentEquals(other: Array<*>): Boolean {
  *
  * - `[]` containsSubList `[1,2,3]` fails
  * - `[1,2,3]` containsSubList `[4,5,6]` fails
+ * - `[1,2,3]` containsSubList `[]` pass
  * - `[]` containsSubList `[]` pass
  * - `[1,2]` containsSubList `[1,2,3]` pass
  * - `[2,3,4]` containsSubList `[1,2,3,4,5]` pass
  *
- * @param sublist The list of items it the actual list should contain in the same order.
+ * @param sublist The list of items the actual list should contain in the same order.
  */
 fun Assert<List<*>>.containsSubList(sublist: List<*>) = given { actual: List<*> ->
 
-    var sublistMatched = actual.isEmpty() && sublist.isEmpty()
+    var sublistMatched = sublist.isEmpty()
     var target: List<*> = actual
 
     while (!sublistMatched) {
