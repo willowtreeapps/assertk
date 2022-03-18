@@ -5,12 +5,12 @@ import assertk.assertions.isEqualByComparingTo
 import java.math.BigDecimal
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class BigDecimalTest {
     @Test
     fun isEqualByComparingTo_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal(20)).isEqualByComparingTo(BigDecimal(21))
         }
         assertEquals("expected:<2[1]> but was:<2[0]>", error.message)

@@ -6,7 +6,7 @@ import test.assertk.opentestPackageName
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
 
@@ -17,7 +17,7 @@ class $TTest {
     }
 
 //    @Test fun isEqualTo_different_contents_fails() {
-//        val error = assertFails {
+//        val error = assertFailsWith<AssertionError> {
 //            assertThat($NOf(97.to$E())).isEqualTo($NOf(98.to$E()))
 //        }
 //        assertEquals("expected:<[[${show(98.to$E(), "")}]]> but was:<[[${show(97.to$E(), "")}]]>", error.message)
@@ -30,7 +30,7 @@ class $TTest {
     }
 
     @Test fun isNotEqualTo_same_contents_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(0.to$E())).isNotEqualTo($NOf(0.to$E()))
         }
         assertEquals("expected to not be equal to:<[${show(0.to$E(), "")}]>", error.message)
@@ -43,7 +43,7 @@ class $TTest {
     }
 
     @Test fun isEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(0.to$E())).isEmpty()
         }
         assertEquals("expected to be empty but was:<[${show(0.to$E(), "")}]>", error.message)
@@ -56,7 +56,7 @@ class $TTest {
     }
 
     @Test fun isNotEmpty_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf()).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -73,7 +73,7 @@ class $TTest {
     }
 
     @Test fun isNullOrEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(0.to$E())).isNullOrEmpty()
         }
         assertEquals("expected to be null or empty but was:<[${show(0.to$E(), "")}]>", error.message)
@@ -86,7 +86,7 @@ class $TTest {
     }
 
     @Test fun hasSize_wrong_size_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf()).hasSize(1)
         }
         assertEquals("expected [size]:<[1]> but was:<[0]> ([])", error.message)
@@ -99,7 +99,7 @@ class $TTest {
     }
 
     @Test fun hasSameSizeAs_non_equal_sizes_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf()).hasSameSizeAs($NOf(0.to$E()))
         }
         assertEquals("expected to have same size as:<[${show(0.to$E(), "")}]> (1) but was size:(0)", error.message)
@@ -116,7 +116,7 @@ class $TTest {
     }
 
     @Test fun each_non_matching_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).each { it.isLessThan(2.to$E()) }
         }
         assertEquals(
@@ -134,7 +134,7 @@ class $TTest {
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E()), name = "subject").index(0).isGreaterThan(2.to$E())
         }
         assertEquals(
@@ -144,7 +144,7 @@ class $TTest {
     }
 
     @Test fun index_out_of_range_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E()), name = "subject").index(-1).isEqualTo(listOf(1.to$E()))
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)

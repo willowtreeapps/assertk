@@ -8,6 +8,7 @@ import kotlin.reflect.KCallable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class JavaAnyTest {
     val p: String = JavaAnyTest::class.java.name
@@ -29,7 +30,7 @@ class JavaAnyTest {
     }
 
     @Test fun isInstanceOf_jclass_different_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isInstanceOf(DifferentObject::class.java)
         }
         assertEquals(
@@ -39,7 +40,7 @@ class JavaAnyTest {
     }
 
     @Test fun isInstanceOf_jclass_run_block_when_passes() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(BasicObject::class.java)
                 .prop("str", BasicObject::str)
@@ -49,7 +50,7 @@ class JavaAnyTest {
     }
 
     @Test fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(DifferentObject::class.java)
                 .isNull()
@@ -67,14 +68,14 @@ class JavaAnyTest {
     }
 
     @Test fun isNotInstanceOf_jclass_same_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(BasicObject::class.java)
         }
         assertEquals("expected to not be instance of:<$p\$BasicObject>", error.message)
     }
 
     @Test fun isNotInstanceOf_jclass_parent_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(TestObject::class.java)
         }
         assertEquals("expected to not be instance of:<$p\$TestObject>", error.message)
@@ -88,7 +89,7 @@ class JavaAnyTest {
     }
 
     @Test fun prop_callable_extract_prop_includes_name_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             @Suppress("DEPRECATION")
             assertThat(subject).prop(BasicObject::str  as KCallable<String>).isEmpty()
         }
@@ -111,7 +112,7 @@ class JavaAnyTest {
     }
 
     @Test fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
                 .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
         }
@@ -124,7 +125,7 @@ class JavaAnyTest {
     }
 
     @Test fun isDataClassEqualTo_fails_on_null_property_in_actual() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(null, 1, 'a'))
                 .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
         }
@@ -137,7 +138,7 @@ class JavaAnyTest {
     }
 
     @Test fun isDataClassEqualTo_fails_on_null_property_in_expected() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
                 .isDataClassEqualTo(DataClass(null, 1, 'b'))
         }
@@ -156,7 +157,7 @@ class JavaAnyTest {
     }
 
     @Test fun isEqualToIgnoringGivenProperties_fails() {
-        assertFails {
+        assertFailsWith<AssertionError> {
             assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str, BasicObject::failing)
         }
     }

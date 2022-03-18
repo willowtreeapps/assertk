@@ -5,6 +5,7 @@ import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class AnyTest {
     val subject = BasicObject("test")
@@ -29,7 +30,7 @@ class AnyTest {
 
     @Test fun isEqualTo_non_equal_objects_fails() {
         val nonEqual = BasicObject("not test")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isEqualTo(nonEqual)
         }
         assertEquals("expected:<[not ]test> but was:<[]test>", error.message)
@@ -43,7 +44,7 @@ class AnyTest {
         assertThat(obj).isEqualTo(obj)
         assertThat(obj as TestObject).isEqualTo(obj)
         assertThat(obj).isEqualTo(obj as TestObject)
-        assertFails {
+        assertFailsWith<AssertionError> {
             assertThat(1).isEqualTo("string")
         }
     }
@@ -55,7 +56,7 @@ class AnyTest {
 
     @Test fun isNotEqualTo_equal_objects_fails() {
         val equal = BasicObject("test")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotEqualTo(equal)
         }
         assertEquals("expected to not be equal to:<test>", error.message)
@@ -79,7 +80,7 @@ class AnyTest {
     }
 
     @Test fun isNotSameAs_same_objects_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotSameAs(subject)
         }
         assertEquals("expected:<test> to not refer to the same object", error.message)
@@ -92,7 +93,7 @@ class AnyTest {
 
     @Test fun isIn_one_non_equal_item_fails() {
         val isOut1 = BasicObject("not test1")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isIn(isOut1)
         }
         assertEquals("expected:<[not test1]> to contain:<test>", error.message)
@@ -108,7 +109,7 @@ class AnyTest {
     @Test fun isIn_no_equal_items_in_may_fails() {
         val isOut1 = BasicObject("not test1")
         val isOut2 = BasicObject("not test2")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isIn(isOut1, isOut2)
         }
         assertEquals("expected:<[not test1, not test2]> to contain:<test>", error.message)
@@ -121,7 +122,7 @@ class AnyTest {
 
     @Test fun isNotIn_one_equal_item_fails() {
         val isIn = BasicObject("test")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotIn(isIn)
         }
         assertEquals("expected:<[test]> to not contain:<test>", error.message)
@@ -137,7 +138,7 @@ class AnyTest {
         val isOut1 = BasicObject("not test1")
         val isIn = BasicObject("test")
         val isOut2 = BasicObject("not test2")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotIn(isOut1, isIn, isOut2)
         }
         assertEquals("expected:<[not test1, test, not test2]> to not contain:<test>", error.message)
@@ -148,7 +149,7 @@ class AnyTest {
     }
 
     @Test fun hasToString_not_equal_string_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasToString("not test")
         }
         assertEquals("expected [toString]:<\"[not ]test\"> but was:<\"[]test\"> (test)", error.message)
@@ -159,7 +160,7 @@ class AnyTest {
     }
 
     @Test fun hasHashCode_not_equal_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasHashCode(1337)
         }
         assertEquals("expected [hashCode]:<[1337]> but was:<[42]> (test)", error.message)
@@ -169,7 +170,7 @@ class AnyTest {
     private val testObject = BasicObject("test", 99, 3.14)
 
     @Test fun isEqualToWithGivenProperties_regular_equals_fail() {
-        assertFails {
+        assertFailsWith<AssertionError> {
             assertThat(subject).isEqualTo(testObject)
         }
     }
@@ -184,7 +185,7 @@ class AnyTest {
     }
 
     @Test fun isEqualToWithGivenProperties_extract_prop_includes_name_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isEqualToWithGivenProperties(testObject, BasicObject::int)
         }
         assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
@@ -196,14 +197,14 @@ class AnyTest {
     }
 
     @Test fun prop_includes_name_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).prop("str") { it.str }.isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
 
     @Test fun nested_prop_include_names_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).prop("other") { it.other }.prop("str") { it?.str }.isNotNull()
         }
         assertEquals("expected [other.str] to not be null (test)", error.message)
@@ -214,7 +215,7 @@ class AnyTest {
     }
 
     @Test fun prop_property1_extract_prop_includes_name_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).prop(BasicObject::str).isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
@@ -232,14 +233,14 @@ class AnyTest {
     }
 
     @Test fun prop_callable_function_includes_name_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).prop(BasicObject::funcA).isEqualTo(14)
         }
         assertEquals("expected [funcA]:<[14]> but was:<[\"A\"]> (test)", error.message)
     }
 
     @Test fun nested_prop_callable_function_include_names_in_failure_message() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).prop(BasicObject::funcB).prop(BasicObject::funcA).isNull()
         }
         assertEquals("expected [funcB.funcA] to be null but was:<\"A\"> (test)", error.message)
@@ -251,7 +252,7 @@ class AnyTest {
     }
 
     @Test fun isNull_non_null_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nullableSubject).isNull()
         }
         assertEquals("expected to be null but was:<test>", error.message)
@@ -262,7 +263,7 @@ class AnyTest {
     }
 
     @Test fun isNotNull_null_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(null as String?).isNotNull()
         }
         assertEquals("expected to not be null", error.message)
@@ -274,14 +275,14 @@ class AnyTest {
 
     @Test fun isNotNull_non_null_and_non_equal_object_fails() {
         val unequal = BasicObject("not test")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nullableSubject).isNotNull().isEqualTo(unequal)
         }
         assertEquals("expected:<[not ]test> but was:<[]test>", error.message)
     }
 
     @Test fun isNotNull_null_and_equal_object_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(null as String?).isNotNull().isEqualTo(null)
         }
         assertEquals("expected to not be null", error.message)
@@ -292,7 +293,7 @@ class AnyTest {
     }
 
     @Test fun hasClass_parent_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasClass(TestObject::class)
         }
         assertEquals(
@@ -306,7 +307,7 @@ class AnyTest {
     }
 
     @Test fun doesNotHaveClass_same_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).doesNotHaveClass(BasicObject::class)
         }
         assertEquals("expected to not have class:<${BasicObject::class}>", error.message)
@@ -321,7 +322,7 @@ class AnyTest {
     }
 
     @Test fun isInstanceOf_kclass_different_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isInstanceOf(DifferentObject::class)
         }
         assertEquals(
@@ -331,7 +332,7 @@ class AnyTest {
     }
 
     @Test fun isInstanceOf_kclass_run_block_when_passes() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject).isInstanceOf(BasicObject::class).prop("str", BasicObject::str)
                 .isEqualTo("wrong")
         }
@@ -339,7 +340,7 @@ class AnyTest {
     }
 
     @Test fun isInstanceOf_kclass_doesnt_run_block_when_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject).isInstanceOf(DifferentObject::class).isNull()
         }
         assertEquals(
@@ -353,14 +354,14 @@ class AnyTest {
     }
 
     @Test fun isNotInstanceOf_kclass_same_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(BasicObject::class)
         }
         assertEquals("expected to not be instance of:<${BasicObject::class}>", error.message)
     }
 
     @Test fun isNotInstanceOf_kclass_parent_class_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(TestObject::class)
         }
         assertEquals("expected to not be instance of:<${TestObject::class}>", error.message)
@@ -371,7 +372,7 @@ class AnyTest {
     }
 
     @Test fun corresponds_not_equivalent_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).corresponds(BasicObject("test")) { _, _ -> false }
         }
         assertEquals("expected:<test> but was:<test>", error.message)
@@ -382,7 +383,7 @@ class AnyTest {
     }
 
     @Test fun doesNotCorrespond_not_equivalent_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).doesNotCorrespond(BasicObject("different")) { _, _ -> true }
         }
         assertEquals("expected:<different> not to be equal to:<test>", error.message)

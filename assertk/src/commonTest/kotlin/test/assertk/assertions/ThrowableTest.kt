@@ -5,7 +5,7 @@ import assertk.assertions.*
 import test.assertk.exceptionPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class ThrowableTest {
     val rootCause = Exception("rootCause")
@@ -30,7 +30,7 @@ class ThrowableTest {
     }
 
     @Test fun hasMessage_different_message_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasMessage("not test")
         }
         assertEquals("expected [message]:<\"[not ]test\"> but was:<\"[]test\"> ($subject)", error.message)
@@ -43,7 +43,7 @@ class ThrowableTest {
     }
 
     @Test fun messageContains_different_message_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).messageContains("not")
         }
         assertEquals("expected [message] to contain:<\"not\"> but was:<\"test\"> ($subject)", error.message)
@@ -58,7 +58,7 @@ class ThrowableTest {
 
     @Test fun hasCause_no_cause_fails() {
         val causeless = Exception("test")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(causeless).hasCause(cause)
         }
         assertEquals(
@@ -69,7 +69,7 @@ class ThrowableTest {
 
     @Test fun hasCause_different_message_fails() {
         val wrongCause = Exception("wrong")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasCause(wrongCause)
         }
         assertEquals(
@@ -80,7 +80,7 @@ class ThrowableTest {
 
     @Test fun hasCause_different_type_fails() {
         val wrongCause = IllegalArgumentException("cause")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasCause(wrongCause)
         }
         assertEquals(
@@ -97,7 +97,7 @@ class ThrowableTest {
     }
 
     @Test fun hasNoCause_cause_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasNoCause()
         }
         assertEquals("expected [cause] to be null but was:<$cause> ($subject)", error.message)
@@ -111,7 +111,7 @@ class ThrowableTest {
 
     @Test fun hasRootCause_wrong_cause_type_fails() {
         val wrongCause = IllegalArgumentException("rootCause")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasRootCause(wrongCause)
         }
         assertEquals(
@@ -122,7 +122,7 @@ class ThrowableTest {
 
     @Test fun hasRootCause_wrong_cause_message_fails() {
         val wrongCause = Exception("wrong")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasRootCause(wrongCause)
         }
         assertEquals(
