@@ -5,7 +5,7 @@ import assertk.assertions.*
 import assertk.assertions.support.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class CharSequenceTest {
     //region props
@@ -20,7 +20,7 @@ class CharSequenceTest {
     }
 
     @Test fun isEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").isEmpty()
         }
         assertEquals("expected to be empty but was:<\"test\">", error.message)
@@ -33,7 +33,7 @@ class CharSequenceTest {
     }
 
     @Test fun isNotEmpty_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("").isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -50,7 +50,7 @@ class CharSequenceTest {
     }
 
     @Test fun isNullOrEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").isNullOrEmpty()
         }
         assertEquals("expected to be null or empty but was:<\"test\">", error.message)
@@ -63,7 +63,7 @@ class CharSequenceTest {
     }
 
     @Test fun hasLength_wrong_length_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").hasLength(0)
         }
         assertEquals("expected [length]:<[0]> but was:<[4]> (\"test\")", error.message)
@@ -76,7 +76,7 @@ class CharSequenceTest {
     }
 
     @Test fun hasSameLengthAs_different_length_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").hasSameLengthAs("")
         }
         assertEquals("expected to have same length as:<\"\"> (0) but was:<\"test\"> (4)", error.message)
@@ -89,7 +89,7 @@ class CharSequenceTest {
     }
 
     @Test fun contains_value_not_substring_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").contains("not")
         }
         assertEquals("expected to contain:<\"not\"> but was:<\"test\">", error.message)
@@ -100,7 +100,7 @@ class CharSequenceTest {
     }
 
     @Test fun contains_value_not_substring_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").contains("EST", false)
         }
         assertEquals("expected to contain:<\"EST\"> but was:<\"Test\">", error.message)
@@ -125,7 +125,7 @@ class CharSequenceTest {
     }
 
     @Test fun contains_value_not_contains_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").contains("foo", "bar")
         }
         assertEquals("expected to contain:<[\"foo\", \"bar\"]> but was:<\"test\">", error.message)
@@ -136,7 +136,7 @@ class CharSequenceTest {
     }
 
     @Test fun contains_value_not_contains_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").contains("te", "ST", ignoreCase = false)
         }
         assertEquals("expected to contain:<[\"te\", \"ST\"]> but was:<\"Test\">", error.message)
@@ -150,14 +150,14 @@ class CharSequenceTest {
     }
 
     @Test fun doesNotContain_value_substring_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").doesNotContain("est")
         }
         assertEquals("expected to not contain:<\"est\"> but was:<\"test\">", error.message)
     }
 
     @Test fun doesNotContain_value_substring_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").doesNotContain("EST", true)
         }
         assertEquals("expected to not contain:<\"EST\"> but was:<\"Test\">", error.message)
@@ -174,14 +174,14 @@ class CharSequenceTest {
     }
 
     @Test fun doesNotContain_multivalue_substring_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").doesNotContain("te", "st")
         }
         assertEquals("expected to not contain:<[\"te\", \"st\"]> but was:<\"test\">", error.message)
     }
 
     @Test fun doesNotContain_multivalue_substring_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").doesNotContain("TE", "ST", ignoreCase = true)
         }
         assertEquals("expected to not contain:<[\"TE\", \"ST\"]> but was:<\"Test\">", error.message)
@@ -198,7 +198,7 @@ class CharSequenceTest {
     }
 
     @Test fun startsWith_value_not_prefix_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").startsWith("st")
         }
         assertEquals("expected to start with:<\"st\"> but was:<\"test\">", error.message)
@@ -209,7 +209,7 @@ class CharSequenceTest {
     }
 
     @Test fun startsWith_value_not_prefix_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").startsWith("TE", false)
         }
         assertEquals("expected to start with:<\"TE\"> but was:<\"test\">", error.message)
@@ -222,7 +222,7 @@ class CharSequenceTest {
     }
 
     @Test fun endsWith_value_not_suffix_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").endsWith("te")
         }
         assertEquals("expected to end with:<\"te\"> but was:<\"test\">", error.message)
@@ -233,7 +233,7 @@ class CharSequenceTest {
     }
 
     @Test fun endsWith_value_not_suffix_ignore_case_passes() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").endsWith("ST", false)
         }
         assertEquals("expected to end with:<\"ST\"> but was:<\"test\">", error.message)
@@ -250,7 +250,7 @@ class CharSequenceTest {
     }
 
     @Test fun hasLineCount_wrong_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test test").hasLineCount(2)
         }
         assertEquals("expected to have line count:<2> but was:<1>", error.message)
@@ -264,7 +264,7 @@ class CharSequenceTest {
 
     @Test fun matches_not_matching_value_fails() {
         val regex = Regex("\\d\\d\\d\\d")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("12345").matches(regex)
         }
         assertEquals("expected to match:${show(regex)} but was:<\"12345\">", error.message)

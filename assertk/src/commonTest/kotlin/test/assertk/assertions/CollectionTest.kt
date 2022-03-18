@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class CollectionTest {
     //region isEmpty
@@ -13,7 +13,7 @@ class CollectionTest {
     }
 
     @Test fun isEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf<Any?>(null)).isEmpty()
         }
         assertEquals("expected to be empty but was:<[null]>", error.message)
@@ -26,7 +26,7 @@ class CollectionTest {
     }
 
     @Test fun isNotEmpty_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -43,7 +43,7 @@ class CollectionTest {
     }
 
     @Test fun isNullOrEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf<Any?>(null)).isNullOrEmpty()
         }
         assertEquals("expected to be null or empty but was:<[null]>", error.message)
@@ -56,7 +56,7 @@ class CollectionTest {
     }
 
     @Test fun hasSize_wrong_size_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).hasSize(1)
         }
         assertEquals("expected [size]:<[1]> but was:<[0]> ([])", error.message)
@@ -69,7 +69,7 @@ class CollectionTest {
     }
 
     @Test fun hasSameSizeAs_non_equal_sizes_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).hasSameSizeAs(listOf<Any?>(null))
         }
         assertEquals("expected to have same size as:<[null]> (1) but was size:(0)", error.message)
