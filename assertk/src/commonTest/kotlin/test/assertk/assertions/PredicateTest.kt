@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.matchesPredicate
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class PredicateTest {
 
@@ -16,7 +16,7 @@ class PredicateTest {
 
     @Test fun matchesPredicate_false_predicate_fails() {
         val divisibleBy5: (Int) -> Boolean = { it % 5 == 0 }
-        val error = assertFails { assertThat(6).matchesPredicate(divisibleBy5) }
+        val error = assertFailsWith<AssertionError> { assertThat(6).matchesPredicate(divisibleBy5) }
 
         assertEquals("expected 6 to satisfy the predicate", error.message)
     }

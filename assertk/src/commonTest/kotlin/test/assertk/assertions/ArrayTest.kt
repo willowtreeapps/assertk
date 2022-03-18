@@ -2,11 +2,10 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.*
-import assertk.assertions.support.show
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class ArrayTest {
     //region isEqualTo
@@ -15,7 +14,7 @@ class ArrayTest {
     }
 
     @Test fun isEqualTo_different_contents_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf("one")).isEqualTo(arrayOf("two"))
         }
         assertEquals("expected:<[\"[two]\"]> but was:<[\"[one]\"]>", error.message)
@@ -28,7 +27,7 @@ class ArrayTest {
     }
 
     @Test fun isNotEqualTo_same_contents_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf("one")).isNotEqualTo(arrayOf("one"))
         }
         assertEquals("expected to not be equal to:<[\"one\"]>", error.message)
@@ -41,7 +40,7 @@ class ArrayTest {
     }
 
     @Test fun isEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf<Any?>(null)).isEmpty()
         }
         assertEquals("expected to be empty but was:<[null]>", error.message)
@@ -54,7 +53,7 @@ class ArrayTest {
     }
 
     @Test fun isNotEmpty_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf<Any?>()).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -71,7 +70,7 @@ class ArrayTest {
     }
 
     @Test fun isNullOrEmpty_non_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf<Any?>(null)).isNullOrEmpty()
         }
         assertEquals("expected to be null or empty but was:<[null]>", error.message)
@@ -84,7 +83,7 @@ class ArrayTest {
     }
 
     @Test fun hasSize_wrong_size_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyArray<Any?>()).hasSize(1)
         }
         assertEquals("expected [size]:<[1]> but was:<[0]> ([])", error.message)
@@ -97,7 +96,7 @@ class ArrayTest {
     }
 
     @Test fun hasSameSizeAs_non_equal_sizes_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyArray<Any?>()).hasSameSizeAs(arrayOf<Any?>(null))
         }
         assertEquals("expected to have same size as:<[null]> (1) but was size:(0)", error.message)
@@ -110,7 +109,7 @@ class ArrayTest {
     }
 
     @Test fun contains_element_missing_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyArray<Any?>()).contains(1)
         }
         assertEquals("expected to contain:<1> but was:<[]>", error.message)
@@ -123,7 +122,7 @@ class ArrayTest {
     }
 
     @Test fun doesNotContain_element_present_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2)).doesNotContain(2)
         }
         assertEquals("expected to not contain:<2> but was:<[1, 2]>", error.message)
@@ -136,7 +135,7 @@ class ArrayTest {
     }
 
     @Test fun containsNone_present_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2)).containsNone(2, 3)
         }
         assertEquals(
@@ -157,7 +156,7 @@ class ArrayTest {
     }
 
     @Test fun containsAll_some_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1)).containsAll(1, 2)
         }
         assertEquals(
@@ -174,7 +173,7 @@ class ArrayTest {
     }
 
     @Test fun containsOnly_more_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2, 3)).containsOnly(2, 1)
         }
         assertEquals(
@@ -185,7 +184,7 @@ class ArrayTest {
     }
 
     @Test fun containsOnly_less_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2, 3)).containsOnly(2, 1, 3, 4)
         }
         assertEquals(
@@ -197,7 +196,7 @@ class ArrayTest {
     }
 
     @Test fun containsOnly_different_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1)).containsOnly(2)
         }
         assertEquals(
@@ -216,7 +215,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_all_elements_in_different_order_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2)).containsExactly(2, 1)
         }
         assertEquals(
@@ -228,7 +227,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_missing_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2)).containsExactly(3)
         }
         assertEquals(
@@ -241,7 +240,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_same_indexes_are_together() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 1)).containsExactly(2, 2)
         }
         assertEquals(
@@ -255,7 +254,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_extra_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2)).containsExactly(1, 2, 3)
         }
         assertEquals(
@@ -266,7 +265,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_missing_element_in_middle_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 3)).containsExactly(1, 2, 3)
         }
         assertEquals(
@@ -277,7 +276,7 @@ class ArrayTest {
     }
 
     @Test fun containsExactly_extra_element_in_middle_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2, 3)).containsExactly(1, 3)
         }
         assertEquals(
@@ -298,7 +297,7 @@ class ArrayTest {
     }
 
     @Test fun each_non_matching_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(1, 2, 3)).each { it.isLessThan(2) }
         }
         assertEquals(
@@ -316,7 +315,7 @@ class ArrayTest {
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf("one", "two"), name = "subject").index(0).isEqualTo("wrong")
         }
         assertEquals(
@@ -326,7 +325,7 @@ class ArrayTest {
     }
 
     @Test fun index_out_of_range_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf("one", "two"), name = "subject").index(-1).isEqualTo(listOf("one"))
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)
@@ -339,7 +338,7 @@ class ArrayTest {
     }
 
     @Test fun single_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
         }
         assertEquals(
@@ -359,7 +358,7 @@ class ArrayTest {
     }
 
     @Test fun pair_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .extracting(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
@@ -382,7 +381,7 @@ class ArrayTest {
     }
 
     @Test fun triple_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(arrayOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .extracting(Thing::one, Thing::two, Thing::three)
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))

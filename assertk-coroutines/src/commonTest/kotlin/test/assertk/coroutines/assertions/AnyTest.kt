@@ -8,7 +8,7 @@ import assertk.coroutines.assertions.suspendCall
 import test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class AnyTest {
     val subject = BasicObject("test")
@@ -18,14 +18,14 @@ class AnyTest {
     }
 
     @Test fun suspendCall_includes_name_in_failure_message() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).suspendCall("str") { it.str() }.isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
 
     @Test fun nested_suspendCall_include_names_in_failure_message() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(subject).suspendCall("other") { it.other() }.suspendCall("str") { it?.str() }.isNotNull()
         }
         assertEquals("expected [other.str] to not be null (test)", error.message)

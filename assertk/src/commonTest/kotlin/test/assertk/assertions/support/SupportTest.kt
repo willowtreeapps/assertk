@@ -99,7 +99,7 @@ class SupportTest {
 
     //region fail
     @Test fun fail_expected_and_actual_the_same_shows_simple_message_without_diff() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).fail(1, 1)
         }
 
@@ -107,7 +107,7 @@ class SupportTest {
     }
 
     @Test fun fail_expected_null_shows_simple_message_without_diff() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).fail(null, 1)
         }
 
@@ -115,7 +115,7 @@ class SupportTest {
     }
 
     @Test fun fail_actual_null_shows_simple_message_without_diff() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).fail(1, null)
         }
 
@@ -123,7 +123,7 @@ class SupportTest {
     }
 
     @Test fun fail_short_expected_and_actual_different_shows_simple_diff() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).fail("test1", "test2")
         }
 
@@ -131,7 +131,7 @@ class SupportTest {
     }
 
     @Test fun fail_long_expected_and_actual_different_shows_compact_diff() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).fail(
                 "this is a long prefix 1 this is a long suffix",
                 "this is a long prefix 2 this is a long suffix"
@@ -147,7 +147,7 @@ class SupportTest {
 
     //region expected
     @Test fun expected_throws_assertion_failed_error_with_actual_and_expected_present_and_defined() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).expected("message", "expected", "actual")
         }
 
@@ -160,7 +160,7 @@ class SupportTest {
     }
 
     @Test fun expected_throws_assertion_failed_error_with_actual_and_expected_not_defined() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).expected("message")
         }
 
