@@ -10,9 +10,9 @@ import assertk.assertions.support.show
  * Asserts the list contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
  *
- * [1, 2] containsOnly [2, 1] fails
- * [1, 2, 2] containsOnly [2, 1] fails
- * [1, 2] containsOnly [2, 2, 1] fails
+ * [1, 2] containsExactly [2, 1] fails
+ * [1, 2, 2] containsExactly [2, 1] fails
+ * [1, 2] containsExactly [2, 2, 1] fails
  *
  * @see [containsAll]
  * @see [containsOnly]

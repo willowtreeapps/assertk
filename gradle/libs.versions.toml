@@ -1,10 +1,10 @@
 [versions]
-assertk = "0.25"
+assertk = "0.26-SNAPSHOT"
 kotlin = "1.5.30"
 [libraries]
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.5.0" }
-detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.18.1" }
+detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.19.0" }
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.5.2" }
 opentest4k = { module = "com.willowtreeapps.opentest4k:opentest4k", version = "1.2.2" }
 [plugins]
