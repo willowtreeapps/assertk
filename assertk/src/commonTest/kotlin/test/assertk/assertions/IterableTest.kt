@@ -3,7 +3,6 @@ package test.assertk.assertions
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.*
-import assertk.assertions.support.fail
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -51,7 +50,33 @@ class IterableTest {
             """.trimMargin(), error.message
         )
     }
-    //region
+    //endregion
+
+    //region containsOnce
+    @Test fun containsOnce_element_present_once_passes() {
+        assertThat(listOf(1, 1, 2) as Iterable<Int>).containsOnce(2)
+    }
+
+    @Test fun containsOnce_element_not_present_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2) as Iterable<Int>).containsOnce(3)
+        }
+        assertEquals(
+            """expected to contain:<3> just once but was:<[1, 2]>
+                | occurrence count:<0>
+            """.trimMargin(), error.message)
+    }
+
+    @Test fun containsOnce_element_too_numerous_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 1) as Iterable<Int>).containsOnce(1)
+        }
+        assertEquals(
+            """expected to contain:<1> just once but was:<[1, 2, 1]>
+                | occurrence count:<2>
+            """.trimMargin(), error.message)
+    }
+    //endregion
 
     //region containsAll
     @Test fun containsAll_all_elements_passes() {
@@ -67,6 +92,44 @@ class IterableTest {
                 | elements not found:<[2]>
             """.trimMargin(), error.message
         )
+    }
+    //endregion
+
+    //region containsAllOnce
+    @Test fun containsAllOnce_all_elements_passes() {
+        assertThat(listOf(1, 2) as Iterable<Int>).containsAll(2, 1)
+    }
+
+
+    @Test fun containsAllOnce_not_found_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2) as Iterable<Int>).containsAllOnce(3, 4)
+        }
+        assertEquals(
+            """expected to contain:<[3, 4]> just once but was:<[1, 2]>
+                | elements not found:<[3, 4]>
+            """.trimMargin(), error.message)
+    }
+
+    @Test fun containsAllOnce_duplicate_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 1, 2, 3, 3) as Iterable<Int>).containsAllOnce(1, 2)
+        }
+        assertEquals(
+            """expected to contain:<[1, 2]> just once but was:<[1, 2, 1, 2, 3, 3]>
+                | elements too numerous:<[1, 2]>
+            """.trimMargin(), error.message)
+    }
+
+    @Test fun containsAllOnce_not_found_and_duplicate_elements_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 3, 3) as Iterable<Int>).containsAllOnce(2, 3)
+        }
+        assertEquals(
+            """expected to contain:<[2, 3]> just once but was:<[1, 3, 3]>
+                | elements not found:<[2]>
+                | elements too numerous:<[3]>
+            """.trimMargin(), error.message)
     }
     //endregion
 

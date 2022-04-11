@@ -9,6 +9,7 @@ import assertk.assertions.support.show
 /**
  * Asserts the iterable contains the expected element, using `in`.
  * @see [doesNotContain]
+ * @see [containsOnce]
  */
 fun Assert<Iterable<*>>.contains(element: Any?) = given { actual ->
     if (element in actual) return
@@ -37,11 +38,25 @@ fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
 }
 
 /**
+ * Asserts the iterable contains expected element exactly once.
+ * @see [contains]
+ * @see [containsAllOnce]
+ */
+fun Assert<Iterable<*>>.containsOnce(element: Any?) = given { actual ->
+    val count = actual.count { it == element }
+    if (count == 1) {
+        return
+    }
+    expected("to contain:${show(element)} just once but was:${show(actual)}\n occurrence count:${show(count)}")
+}
+
+/**
  * Asserts the iterable contains all the expected elements, in any order. The collection may also
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsOnly]
+ * @see [containsAllOnce]
  */
 fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
     val notFound = elements.filterNot { it in actual }
@@ -49,6 +64,35 @@ fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
         return
     }
     expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
+}
+
+/**
+ * Asserts the iterable contains all the expected elements exactly once, in any order. The collection
+ * may also contain additional elements. Duplicate values in expected elements are ignored.
+ * @see [containsOnce]
+ * @see [containsAll]
+ *
+ */
+fun Assert<Iterable<*>>.containsAllOnce(vararg elements: Any?) = given { actual ->
+    val toFind = elements.toSet()
+    val notFound = toFind.toMutableSet()
+    val tooNumerous = mutableListOf<Any?>()
+    actual.forEach {
+        if(toFind.contains(it) && !notFound.remove(it)) {
+            tooNumerous.add(it)
+        }
+    }
+    if (notFound.isEmpty() && tooNumerous.isEmpty()) {
+        return
+    }
+    expected(StringBuilder("to contain:${show(elements)} just once but was:${show(actual)}").apply {
+        if (notFound.isNotEmpty()) {
+            append("\n elements not found:${show(notFound)}")
+        }
+        if (tooNumerous.isNotEmpty()) {
+            append("\n elements too numerous:${show(tooNumerous)}")
+        }
+    }.toString())
 }
 
 /**
