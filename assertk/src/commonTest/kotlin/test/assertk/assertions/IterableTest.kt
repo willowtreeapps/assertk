@@ -279,9 +279,7 @@ class IterableTest {
     //region exactly
     @Test fun exactly_too_few_passes_fails() {
         val error = assertFails {
-            assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) {
-                it.isGreaterThan(2)
-            }
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
         }
         assertEquals(
             """expected to pass exactly 2 times (2 failures)
