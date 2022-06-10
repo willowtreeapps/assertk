@@ -246,7 +246,7 @@ fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
         body = {
             each { item ->
                 count++
-                SoftFailure(groupFailures = false).run { f(item) }
+                SoftFailure(groupFailures = true).run { f(item) }
             }
         },
         failIf = {count - it.size != times }
