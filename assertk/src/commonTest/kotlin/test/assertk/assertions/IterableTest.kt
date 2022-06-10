@@ -279,7 +279,9 @@ class IterableTest {
     //region exactly
     @Test fun exactly_too_few_passes_fails() {
         val error = assertFails {
-            assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) {
+                it.isGreaterThan(2)
+            }
         }
         assertEquals(
             """expected to pass exactly 2 times (2 failures)
@@ -311,6 +313,33 @@ class IterableTest {
 
     @Test fun exactly_times_passed_passes() {
         assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) { it.isGreaterThan(0) }
+    }
+
+    @Test fun exactly_multiple_assertions_pass() {
+        assertThat(listOf(1, -2, -3, -4, 5) as Iterable<Int>).exactly(3) {
+            it.isNegative()
+            it.isLessThan(0)
+        }
+    }
+
+    @Test fun exactly_multiple_assertions_fail_with_good_message() {
+        val error = assertFails {
+            assertThat(listOf(1, -2, -3, -4, 5) as Iterable<Int>).exactly(2) {
+                it.isNegative()
+                it.isLessThan(0)
+            }
+        }
+        assertEquals(
+            """expected to pass exactly 2 times (2 failures)
+	        |${"\t"}assertk.GroupedFailuresError: The following assertions failed (2 failures)
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be negative but was:<1> ([1, -2, -3, -4, 5])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[0]] to be less than:<0> but was:<1> ([1, -2, -3, -4, 5])
+	        |${"\t"}assertk.GroupedFailuresError: The following assertions failed (2 failures)
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[4]] to be negative but was:<5> ([1, -2, -3, -4, 5])
+	        |${"\t"}${opentestPackageName}AssertionFailedError: expected [[4]] to be less than:<0> but was:<5> ([1, -2, -3, -4, 5])
+            """.trimMargin().lines(),
+            error.message!!.lines()
+        )
     }
     //endregion
 

@@ -1,10 +1,12 @@
 package assertk.assertions
 
 import assertk.Assert
+import assertk.SoftFailure
 import assertk.all
 import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import assertk.run
 
 /**
  * Asserts the iterable contains the expected element, using `in`.
@@ -239,9 +241,16 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
  */
 fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
     var count = 0
-    all(message = "expected to pass exactly $times times",
-        body = { each { item -> count++; f(item) } },
-        failIf = { count - it.size != times })
+    all(
+        message = "expected to pass exactly $times times",
+        body = {
+            each { item ->
+                count++
+                SoftFailure(groupFailures = false).run { f(item) }
+            }
+        },
+        failIf = {count - it.size != times }
+    )
 }
 
 /**

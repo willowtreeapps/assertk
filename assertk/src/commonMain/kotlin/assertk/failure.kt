@@ -99,14 +99,15 @@ internal object SimpleFailure : Failure {
  */
 internal class SoftFailure(
     val message: String = defaultMessage,
-    val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() }
+    val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() },
+    private val groupFailures: Boolean = true // TODO later name
 ) :
     Failure {
     private val failures: MutableList<Throwable> = ArrayList()
 
     override fun fail(error: Throwable) {
         // flatten multiple failures into this one.
-        if (error is MultipleFailuresError) {
+        if (error is MultipleFailuresError && error !is GroupedFailuresError) {
             failures.addAll(error.failures)
         } else {
             failures.add(error)
@@ -126,7 +127,11 @@ internal class SoftFailure(
         return when (errors.size) {
             0 -> AssertionFailedError(message)
             1 -> errors.first()
-            else -> MultipleFailuresError(message, errors).apply {
+            else -> if (groupFailures) {
+                MultipleFailuresError(message, errors)
+            } else {
+                GroupedFailuresError(message, errors)
+            }.apply {
                 errors.forEach(this::addSuppressed)
             }
         }
@@ -136,6 +141,9 @@ internal class SoftFailure(
         const val defaultMessage = "The following assertions failed"
     }
 }
+
+private class GroupedFailuresError(heading: String?, failures: List<Throwable>) :
+    MultipleFailuresError(heading, failures)
 
 /**
  * Fail the test with the given {@link AssertionError}.
