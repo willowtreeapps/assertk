@@ -312,6 +312,22 @@ class IterableTest {
     @Test fun exactly_times_passed_passes() {
         assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) { it.isGreaterThan(0) }
     }
+
+    @Test fun exactly_with_multiple_assertions_function_passes() {
+        assertThat(listOf(2, -1, 4) as Iterable<Int>).exactly(2) {
+            it.isPositive()
+            it.isNotZero()
+        }
+    }
+
+    @Test fun exactly_with_multiple_assertions_function_fails() {
+        assertFails {
+            assertThat(listOf(2, -1, 4) as Iterable<Int>).exactly(1) {
+                it.isPositive()
+                it.isNotZero()
+            }
+        }
+    }
     //endregion
 
     //region any

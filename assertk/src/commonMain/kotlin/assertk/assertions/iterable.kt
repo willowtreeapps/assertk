@@ -240,7 +240,14 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
 fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
     var count = 0
     all(message = "expected to pass exactly $times times",
-        body = { each { item -> count++; f(item) } },
+        body = {
+            given {
+                each { item ->
+                    count++
+                    f(item)
+                }
+            }
+        },
         failIf = { count - it.size != times })
 }
 
