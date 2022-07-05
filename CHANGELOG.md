@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `first` and `single` assertion for `Iterable`
+- Added `flatExtracting` assertion for `Iterable`
 
 ## [0.25] 2021-09-12
 

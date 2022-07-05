@@ -460,6 +460,27 @@ class IterableTest {
     }
     //region extracting
 
+    //region flatExtracting
+    @Test fun flat_extracting_function_passes() {
+        val thing = Thing("one", 2, '3', listOf("A", "B"))
+        assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.four }.containsExactly("A", "B")
+    }
+
+    @Test fun flat_extracting_function_fails() {
+        val thing = Thing("one", 2, '3', listOf("A", "B"))
+        val error = assertFails {
+            assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.four }.containsExactly("C", "D")
+        }
+        assertEquals(
+            """expected to contain exactly:<["C", "D"]> but was:<["A", "B"]>
+            | at index:0 expected:<"C">
+            | at index:0 unexpected:<"A">
+            | at index:1 expected:<"D">
+            | at index:1 unexpected:<"B"> ([Thing(one=one, two=2, three=3, four=[A, B])])""".trimMargin(), error.message
+        )
+    }
+    //region flatExtracting
+
     //region first
     @Test fun first_element_present_match_passes() {
         assertThat(listOf(1, 2)).first().isEqualTo(1)
@@ -507,5 +528,5 @@ class IterableTest {
     }
     //endregion
 
-    data class Thing(val one: String, val two: Int, val three: Char)
+    data class Thing(val one: String, val two: Int, val three: Char, val four: List<String> = listOf())
 }
