@@ -416,14 +416,14 @@ class IterableTest {
     }
 
     @Test fun pair_extracting_function_passes() {
-        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
+        assertThat(listOf(Thing("one", 1, listOf('1')), Thing("two", 2, listOf('2'))) as Iterable<Thing>)
             .extracting(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
     @Test fun pair_extracting_function_fails() {
         val error = assertFails {
-            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
+            assertThat(listOf(Thing("one", 1, listOf('1')), Thing("two", 2, listOf('2'))) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
         }
@@ -432,29 +432,29 @@ class IterableTest {
             | at index:0 expected:<("one", 2)>
             | at index:0 unexpected:<("one", 1)>
             | at index:1 expected:<("two", 1)>
-            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            | at index:1 unexpected:<("two", 2)> ([Thing(one=one, two=1, three=[1]), Thing(one=two, two=2, three=[2])])""".trimMargin(),
             error.message
         )
     }
 
     @Test fun triple_extracting_function_passes() {
-        assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
+        assertThat(listOf(Thing("one", 1, listOf('1')), Thing("two", 2, listOf('2'))) as Iterable<Thing>)
             .extracting(Thing::one, Thing::two, Thing::three)
-            .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
+            .containsExactly(Triple("one", 1, listOf('1')), Triple("two", 2, listOf('2')))
     }
 
     @Test fun triple_extracting_function_fails() {
         val error = assertFails {
-            assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
+            assertThat(listOf(Thing("one", 1, listOf('1')), Thing("two", 2, listOf('2'))) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two, Thing::three)
-                .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
+                .containsExactly(Triple("one", 1, listOf('2')), Triple("two", 2, listOf('3')))
         }
         assertEquals(
-            """expected to contain exactly:<[("one", 1, '2'), ("two", 2, '3')]> but was:<[("one", 1, '1'), ("two", 2, '2')]>
-            | at index:0 expected:<("one", 1, '2')>
-            | at index:0 unexpected:<("one", 1, '1')>
-            | at index:1 expected:<("two", 2, '3')>
-            | at index:1 unexpected:<("two", 2, '2')> ([Thing(one=one, two=1, three=1), Thing(one=two, two=2, three=2)])""".trimMargin(),
+            """expected to contain exactly:<[("one", 1, ['2']), ("two", 2, ['3'])]> but was:<[("one", 1, ['1']), ("two", 2, ['2'])]>
+            | at index:0 expected:<("one", 1, ['2'])>
+            | at index:0 unexpected:<("one", 1, ['1'])>
+            | at index:1 expected:<("two", 2, ['3'])>
+            | at index:1 unexpected:<("two", 2, ['2'])> ([Thing(one=one, two=1, three=[1]), Thing(one=two, two=2, three=[2])])""".trimMargin(),
             error.message
         )
     }
@@ -462,21 +462,21 @@ class IterableTest {
 
     //region flatExtracting
     @Test fun flat_extracting_function_passes() {
-        val thing = Thing("one", 2, '3', listOf("A", "B"))
-        assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.four }.containsExactly("A", "B")
+        val thing = Thing("one", 2, listOf('A', 'B'))
+        assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.three }.containsExactly('A', 'B')
     }
 
     @Test fun flat_extracting_function_fails() {
-        val thing = Thing("one", 2, '3', listOf("A", "B"))
+        val thing = Thing("one", 2, listOf('A', 'B'))
         val error = assertFails {
-            assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.four }.containsExactly("C", "D")
+            assertThat(listOf(thing) as Iterable<Thing>).flatExtracting { it.three }.containsExactly('C', 'D')
         }
         assertEquals(
-            """expected to contain exactly:<["C", "D"]> but was:<["A", "B"]>
-            | at index:0 expected:<"C">
-            | at index:0 unexpected:<"A">
-            | at index:1 expected:<"D">
-            | at index:1 unexpected:<"B"> ([Thing(one=one, two=2, three=3, four=[A, B])])""".trimMargin(), error.message
+            """expected to contain exactly:<['C', 'D']> but was:<['A', 'B']>
+            | at index:0 expected:<'C'>
+            | at index:0 unexpected:<'A'>
+            | at index:1 expected:<'D'>
+            | at index:1 unexpected:<'B'> ([Thing(one=one, two=2, three=[A, B])])""".trimMargin(), error.message
         )
     }
     //region flatExtracting
@@ -528,5 +528,5 @@ class IterableTest {
     }
     //endregion
 
-    data class Thing(val one: String, val two: Int, val three: Char, val four: List<String> = listOf())
+    data class Thing(val one: String, val two: Int, val three: List<Char>)
 }
