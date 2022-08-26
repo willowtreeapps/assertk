@@ -7,7 +7,16 @@ import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 
 /**
- * Returns an assert that assertion on the value at the given index in the list.
+ * Returns an assert on the first value in the list.
+ *
+ * ```
+ * assertThat(listOf(0, 1, 2)).first().isPositive()
+ * ```
+ */
+fun <T> Assert<List<T>>.first(): Assert<T> = index(0)
+
+/**
+ * Returns an assert on the value at the given index in the list.
  *
  * ```
  * assertThat(listOf(0, 1, 2)).index(1).isPositive()

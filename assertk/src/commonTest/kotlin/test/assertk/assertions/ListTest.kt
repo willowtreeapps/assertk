@@ -102,6 +102,22 @@ class ListTest {
     }
     //endregion
 
+    //region first
+    @Test fun first_successful_assertion_passes() {
+        assertThat(listOf("one", "two"), name = "subject").first().isEqualTo("one")
+    }
+
+    @Test fun first_unsuccessful_assertion_fails() {
+        val error = assertFails {
+            assertThat(listOf("one", "two"), name = "subject").first().isEqualTo("wrong")
+        }
+        assertEquals(
+            "expected [subject[0]]:<\"[wrong]\"> but was:<\"[one]\"> ([\"one\", \"two\"])",
+            error.message
+        )
+    }
+    //endregion
+
     //region index
     @Test fun index_successful_assertion_passes() {
         assertThat(listOf("one", "two"), name = "subject").index(0).isEqualTo("one")
