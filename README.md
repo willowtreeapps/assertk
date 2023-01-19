@@ -231,7 +231,7 @@ You can also build assertions that chain by using `transform`. This allows you t
 return something more specific that additional assertions can be chained on.
 
 ```kotlin
-fun Assert<Person>.hasMiddleName(): Assert<String> = transform(appendName("middleName", seperator = ".")) { actual ->
+fun Assert<Person>.hasMiddleName(): Assert<String> = transform(appendName("middleName", separator = ".")) { actual ->
    if (actual.middleName != null) {
        actual.middleName
    } else {
