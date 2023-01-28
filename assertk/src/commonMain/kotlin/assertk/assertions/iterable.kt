@@ -182,6 +182,19 @@ fun <E, R1, R2, R3> Assert<Iterable<E>>.extracting(
 }
 
 /**
+ * Flat extracts a value from each item in the iterable, allowing you to assert on a flattened list of those values.
+ *
+ * ```
+ * assertThat(people)
+ *   .flatExtracting(Person::relatives)
+ *   .contains("Sue", "Bob")
+ * ```
+ */
+fun <E, R> Assert<Iterable<E>>.flatExtracting(f1: (E) -> Iterable<R>): Assert<List<R>> = transform { actual ->
+    actual.flatMap(f1)
+}
+
+/**
  * Asserts on each item in the iterable, passing if none of the items pass.
  * The given lambda will be run for each item.
  *
