@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Added `containsOnce` and `containsAllOnce` for `Iterable`  
 - Added `first` and `single` assertion for `Iterable`
 
 ## [0.25] 2021-09-12

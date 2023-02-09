@@ -125,6 +125,8 @@ semantics as follows:
 |containsExactlyInAnyOrder|Asserts the iterable contains **exactly the expected elements**, in **any order**. Each value in expected must correspond to a matching value in actual, and visa-versa.|
 |containsExactly|Asserts the list contains **exactly the expected elements**. They must be in the **same order** and there must not be any extra elements.|
 |containsNone|Asserts the iterable **does not contain any** of the expected elements|
+|containsOnce|Asserts the iterable contains expected element **exactly once**.|
+|containsAllOnce|Asserts the iterable contains all the expected elements **exactly once**, in any order. The collection may also contain additional elements. **Duplicate values** in expected elements are ignored.|
 
 ### Extracting data
 
