@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
+import assertk.collection
 import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
@@ -191,13 +192,22 @@ fun <E, R1, R2, R3> Assert<Iterable<E>>.extracting(
  * }
  * ```
  */
-fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) = given { actual ->
-    if (actual.count() > 0) {
-        all(message = "expected none to pass",
-            body = { each { item -> f(item) } },
-            failIf = { it.isEmpty() })
-    }
-}
+fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) =
+    collection(check = {
+        if (size != failureSize) {
+            fail(
+                "expected none to pass\n" + results().mapIndexedNotNull { index, result ->
+                    val result = result.getOrNull()
+                    if (result != null) {
+                        " at index:$index passed:${show(result)}"
+                    } else {
+                        null
+                    }
+                }.joinToString("\n"),
+                emptyList()
+            )
+        }
+    }, f)
 
 /**
  * Asserts on each item in the iterable, passing if at least `times` items pass.
@@ -207,12 +217,12 @@ fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) = given { actual ->
  * assert(listOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
-    var count = 0
-    all(message = "expected to pass at least $times times",
-        body = { each { item -> count++; f(item) } },
-        failIf = { count - it.size < times })
-}
+fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
+    collection(check = {
+        if (size - failureSize < times) {
+            fail("expected to pass at least $times times")
+        }
+    }, f)
 
 /**
  * Asserts on each item in the iterable, passing if at most `times` items pass.
@@ -223,10 +233,11 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) {
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
-    var count = 0
-    all(message = "expected to pass at most $times times",
-        body = { each { item -> count++; f(item) } },
-        failIf = { count - it.size > times })
+    collection(check = {
+        if (size - failureSize > times) {
+            fail("expected to pass at most $times times")
+        }
+    }, f)
 }
 
 /**
@@ -238,10 +249,11 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
-    var count = 0
-    all(message = "expected to pass exactly $times times",
-        body = { each { item -> count++; f(item) } },
-        failIf = { count - it.size != times })
+    collection(check = {
+        if (size - failureSize != times) {
+            fail("expected to pass exactly $times times")
+        }
+    }, f)
 }
 
 /**
@@ -252,25 +264,12 @@ fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
  * assert(listOf(-1, -2, 1)).any { it.isPositive() }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) {
-    var lastFailureCount = 0
-    var itemPassed = false
-    all(message = "expected any item to pass",
-        body = { failure ->
-            given { actual ->
-                actual.forEachIndexed { index, item ->
-                    f(assertThat(item, name = appendName(show(index, "[]"))))
-                    if (lastFailureCount == failure.count) {
-                        itemPassed = true
-                    }
-                    lastFailureCount = failure.count
-                }
-            }
-        },
-        failIf = {
-            !itemPassed
-        })
-}
+fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) =
+    collection(check = {
+        if (size == failureSize) {
+            fail("expected any item to pass", results())
+        }
+    }, f)
 
 /**
  * Asserts the iterable is empty.
