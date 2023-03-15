@@ -2,8 +2,28 @@ package test.assertk.assertions
 
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.*
-import assertk.assertions.support.fail
+import assertk.assertions.any
+import assertk.assertions.atLeast
+import assertk.assertions.atMost
+import assertk.assertions.contains
+import assertk.assertions.containsAll
+import assertk.assertions.containsExactly
+import assertk.assertions.containsExactlyInAnyOrder
+import assertk.assertions.containsNone
+import assertk.assertions.containsOnly
+import assertk.assertions.doesNotContain
+import assertk.assertions.each
+import assertk.assertions.exactly
+import assertk.assertions.extracting
+import assertk.assertions.first
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import assertk.assertions.isGreaterThan
+import assertk.assertions.isGreaterThanOrEqualTo
+import assertk.assertions.isLessThan
+import assertk.assertions.isNotEmpty
+import assertk.assertions.none
+import assertk.assertions.single
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -220,12 +240,33 @@ class IterableTest {
             assertThat(listOf(1, 2) as Iterable<Int>).none { it.isGreaterThan(0) }
         }
         assertEquals(
-            "expected none to pass", error.message
+            """expected none to pass
+            | at index:0 passed:<1>
+            | at index:1 passed:<2>
+            """.trimMargin().lines(), error.message!!.lines()
         )
     }
 
-    @Test fun each_non_matching_content_passes() {
-        assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isLessThan(2) }
+    @Test fun none_matching_some_content_fails() {
+        val error = assertFails {
+            assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isGreaterThanOrEqualTo(3) }
+        }
+        assertEquals(
+            """expected none to pass
+            | at index:2 passed:<3>
+            """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
+    @Test fun none_all_non_matching_content_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isLessThan(0) }
+    }
+
+    @Test fun none_multiple_failures_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).none {
+            it.isLessThan(2)
+            it.isGreaterThan(2)
+        }
     }
     //endregion
 
@@ -252,6 +293,13 @@ class IterableTest {
 
     @Test fun atLeast_works_in_a_soft_assert_context() {
         assertThat(listOf(1, 2, 3) as Iterable<Int>).all { atLeast(2) { it.isGreaterThan(1) } }
+    }
+
+    @Test fun atLeast_multiple_failures_passes() {
+        assertThat(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) {
+            it.isGreaterThan(1)
+            it.isGreaterThan(1)
+        }
     }
     //endregion
 
@@ -311,6 +359,13 @@ class IterableTest {
 
     @Test fun exactly_times_passed_passes() {
         assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) { it.isGreaterThan(0) }
+    }
+
+    @Test fun exactly_times_passed_passes_multiple_assertions() {
+        assertThat(listOf(0, 1, 2) as Iterable<Int>).exactly(2) {
+            it.isGreaterThan(0)
+            it.isGreaterThan(0)
+        }
     }
     //endregion
 
@@ -501,7 +556,7 @@ class IterableTest {
 
     @Test fun single_multiple_fails() {
         val error = assertFails {
-        assertThat(listOf(1, 2)).single().isEqualTo(1)
+            assertThat(listOf(1, 2)).single().isEqualTo(1)
         }
         assertEquals("expected to have single element but has 2: <[1, 2]>", error.message)
     }

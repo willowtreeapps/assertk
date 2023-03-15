@@ -97,11 +97,7 @@ internal object SimpleFailure : Failure {
 /**
  * Failure that collects all failures and displays them at once.
  */
-internal class SoftFailure(
-    val message: String = defaultMessage,
-    val failIf: (List<Throwable>) -> Boolean = { it.isNotEmpty() }
-) :
-    Failure {
+internal class SoftFailure(val message: String = defaultMessage) : Failure {
     private val failures: MutableList<Throwable> = ArrayList()
 
     override fun fail(error: Throwable) {
@@ -113,11 +109,8 @@ internal class SoftFailure(
         }
     }
 
-    val count: Int
-        get() = failures.size
-
     override fun invoke() {
-        if (failIf(failures)) {
+        if (failures.isNotEmpty()) {
             FailureContext.fail(compositeErrorMessage(failures))
         }
     }
