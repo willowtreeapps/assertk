@@ -81,7 +81,8 @@ fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual -
  */
 @Deprecated(
     "Use an overload with explicit name and extract",
-    ReplaceWith("this.prop(\"NAME\") { callable.call(it) }", "assertk.assertions.prop")
+    ReplaceWith("this.prop(\"NAME\") { callable.call(it) }", "assertk.assertions.prop"),
+    level = DeprecationLevel.ERROR
 )
 @Suppress("SwallowedException")
 fun <T, P> Assert<T>.prop(callable: KCallable<P>) = prop(callable.name) {

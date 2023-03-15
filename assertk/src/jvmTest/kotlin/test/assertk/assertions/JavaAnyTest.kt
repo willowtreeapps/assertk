@@ -81,29 +81,6 @@ class JavaAnyTest {
     }
     //endregion
 
-    //region prop
-    @Test fun prop_callable_extract_prop_passes() {
-        @Suppress("DEPRECATION")
-        assertThat(subject).prop(BasicObject::str as KCallable<String>).isEqualTo("test")
-    }
-
-    @Test fun prop_callable_extract_prop_includes_name_in_failure_message() {
-        val error = assertFails {
-            @Suppress("DEPRECATION")
-            assertThat(subject).prop(BasicObject::str  as KCallable<String>).isEmpty()
-        }
-        assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
-    }
-
-    @Test fun prop_callable_includes_error_message_when_fails() {
-        val error = assertFails {
-            @Suppress("DEPRECATION")
-            assertThat(subject).prop(BasicObject::failing as KCallable<String>).isEmpty()
-        }
-        assertEquals("sorry!", error.message)
-    }
-    //endregion
-
     //region isDataClassEqualTo
     @Test fun isDataClassEqualTo_equal_data_classes_passes() {
         assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
