@@ -6,8 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Previous deprecations are now errors
+
 ### Added
 - Added `first` and `single` assertion for `Iterable`
+
+### Fixed
+- Fixed iterable assertions that take a block that could have multiple assertions.
+  Includes: `none`,`atLeast`,`atMost`,`exactly`, and `any`
 
 ## [0.25] 2021-09-12
 
