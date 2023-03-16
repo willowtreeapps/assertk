@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Added `first` and `single` assertion for `Iterable`
 - Added sequence assertions to mirror iterable
+- Added array assertions for `UByteArray`, `UShortArray`, `UIntArray`, and `ULongArray`.
 
 ### Fixed
 - Fixed iterable assertions that take a block that could have multiple assertions.

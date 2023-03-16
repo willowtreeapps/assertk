@@ -100,4 +100,4 @@ abstract class TemplateTask : DefaultTask() {
     }
 }
 
-private fun List<String>.cleanup(): List<String> = map { it.trim() }.filter { it.isNotEmpty() }
+private fun List<String>.cleanup(): List<String> = map { it.trim() }

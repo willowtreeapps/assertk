@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
 import assertk.assertions.support.show
+import kotlin.ExperimentalUnsignedTypes
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,8 +14,13 @@ $T:$N:$E =
     IntArray:intArray:Int,
     ShortArray:shortArray:Short,
     LongArray:longArray:Long,
-    CharArray:charArray:Char
+    CharArray:charArray:Char,
+    UByteArray:ubyteArray:UByte,
+    UShortArray:ushortArray:UShort,
+    UIntArray:uintArray:UInt,
+    ULongArray:ulongArray:ULong
 
+@OptIn(ExperimentalUnsignedTypes::class)
 class $TContainsTest {
     //region contains
     @Test fun contains_element_present_passes() {
