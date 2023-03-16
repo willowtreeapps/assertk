@@ -25,6 +25,7 @@ internal fun display(value: Any?): String {
         is Long -> "${value}L"
         is Array<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Collection<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
+        is Sequence<*> -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is Map<*, *> -> value.entries.joinToString(
             prefix = "{",
             postfix = "}",
