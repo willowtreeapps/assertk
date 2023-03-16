@@ -27,6 +27,9 @@ jobs:
       - run:
           name: Build
           command: ./gradlew build
+      - run:
+          name: Run Tests
+          command: ./gradlew check
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
