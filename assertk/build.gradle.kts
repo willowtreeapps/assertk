@@ -33,7 +33,7 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(libs.kotlin.coroutines)
+                implementation(libs.kotlinx.coroutines)
             }
             kotlin.srcDir(compileTestTemplates)
         }
