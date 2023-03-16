@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
 import assertk.assertions.support.show
+import kotlin.ExperimentalUnsignedTypes
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -15,8 +16,13 @@ $T:$N:$E =
     LongArray:longArray:Long,
     FloatArray:floatArray:Float,
     DoubleArray:doubleArray:Double,
-    CharArray:charArray:Char
+    CharArray:charArray:Char,
+    UByteArray:ubyteArray:UByte,
+    UShortArray:ushortArray:UShort,
+    UIntArray:uintArray:UInt,
+    ULongArray:ulongArray:ULong
 
+@OptIn(ExperimentalUnsignedTypes::class)
 class $TTest {
     //region isEqualTo
     @Test fun isEqualTo_same_contents_passes() {

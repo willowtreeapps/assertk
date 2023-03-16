@@ -1,5 +1,6 @@
 package assertk.assertions
 
+import kotlin.ExperimentalUnsignedTypes
 import kotlin.jvm.JvmName
 import assertk.Assert
 import assertk.all
@@ -9,18 +10,23 @@ import assertk.assertions.support.show
 import assertk.assertions.support.fail
 import assertk.assertions.support.appendName
 
-$T:$N:$E =
-    ByteArray:byteArray:Byte,
-    IntArray:intArray:Int,
-    ShortArray:shortArray:Short,
-    LongArray:longArray:Long,
-    CharArray:charArray:Char
+$T:$N:$E:$A =
+    ByteArray:byteArray:Byte:,
+    IntArray:intArray:Int:,
+    ShortArray:shortArray:Short:,
+    LongArray:longArray:Long:,
+    CharArray:charArray:Char:,
+    UByteArray:ubyteArray:UByte:@ExperimentalUnsignedTypes,
+    UShortArray:ushortArray:UShort:@ExperimentalUnsignedTypes,
+    UIntArray:uintArray:UInt:@ExperimentalUnsignedTypes,
+    ULongArray:ulongArray:ULong:@ExperimentalUnsignedTypes
 
 /**
  * Asserts the $T contains the expected element, using `in`.
  * @see [doesNotContain]
  */
 @JvmName("$NContains")
+$A
 fun Assert<$T>.contains(element: $E) = given { actual ->
     if (element in actual) return
     expected("to contain:${show(element)} but was:${show(actual)}")
@@ -31,6 +37,7 @@ fun Assert<$T>.contains(element: $E) = given { actual ->
  * @see [contains]
  */
 @JvmName("$NDoesNotContain")
+$A
 fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
     if (element !in actual) return
     expected("to not contain:${show(element)} but was:${show(actual)}")
@@ -40,6 +47,7 @@ fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
  * Asserts the $T does not contain any of the expected elements.
  * @see [containsAll]
  */
+$A
 fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
     if (elements.none { it in actual }) {
         return
@@ -55,6 +63,7 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
  * @see [containsExactly]
  */
 @JvmName("$NContainsAll")
+$A
 fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
@@ -73,6 +82,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  * @see [containsExactly]
  * @see [containsAll]
  */
+$A
 fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
     val notInExpected = actual.filterNot { it in elements }
@@ -100,6 +110,7 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
  * @see [containsAll]
  */
 @JvmName("$NContainsExactly")
+$A
 fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
     if (actual.contentEquals(elements)) return
 
@@ -120,6 +131,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
  * @see [containsOnly]
  */
 @JvmName("$NContainsExactlyInAnyOrder")
+$A
 fun Assert<$T>.containsExactlyInAnyOrder(vararg elements: $E) = given { actual ->
     val notInActual = elements.toMutableList()
     val notInExpected = actual.toMutableList()
