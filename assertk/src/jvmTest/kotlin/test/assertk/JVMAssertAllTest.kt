@@ -8,7 +8,7 @@ import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
 class JVMAssertAllTest {
@@ -31,7 +31,7 @@ class JVMAssertAllTest {
     }
 
     @Test fun assert_all_includes_exceptions_as_suppressed() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat(1).isEqualTo(2)
                 assertThat(2).isEqualTo(1)
@@ -44,13 +44,12 @@ class JVMAssertAllTest {
 
     @Test fun assert_all_does_not_catch_out_of_memory_errors() {
         var runs = false
-        val error = assertFails {
+        assertFailsWith<OutOfMemoryError> {
             assertAll {
                 assertThat(1).given { throw OutOfMemoryError() }
                 runs = true
             }
         }
-        assertEquals(OutOfMemoryError::class, error::class)
         assertFalse(runs)
     }
 }

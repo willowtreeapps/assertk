@@ -8,7 +8,7 @@ import assertk.assertions.isSuccess
 import test.assertk.exceptionPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class ResultTest {
     // region success
@@ -21,7 +21,7 @@ class ResultTest {
     }
 
     @Test fun success_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("error"))).isSuccess()
         }
         assertEquals(
@@ -35,7 +35,7 @@ class ResultTest {
     }
 
     @Test fun chained_success_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Result.success(1)).isSuccess().isEqualTo(2)
         }
         assertEquals("expected:<[2]> but was:<[1]> (Success(1))", error.message)
@@ -48,7 +48,7 @@ class ResultTest {
     }
 
     @Test fun failure_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Result.success(1)).isFailure()
         }
         assertEquals("expected failure but was success:<1>", error.message)
@@ -59,7 +59,7 @@ class ResultTest {
     }
 
     @Test fun chained_failure_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("error"))).isFailure().hasMessage("wrong")
         }
         assertEquals(

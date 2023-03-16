@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class JavaNullableStringTest {
 
@@ -15,7 +15,7 @@ class JavaNullableStringTest {
     }
 
     @Test fun isEqualTo_different_string_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(JavaNullableString.string()).isEqualTo("wrong")
         }
         assertEquals("expected:<\"wrong\"> but was:<null>", error.message)
@@ -28,7 +28,7 @@ class JavaNullableStringTest {
     }
 
     @Test fun isNotEqualTo_same_nullable_string_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(JavaNullableString.string()).isNotEqualTo(JavaNullableString.string())
         }
         assertEquals("expected to not be equal to:<null>", error.message)

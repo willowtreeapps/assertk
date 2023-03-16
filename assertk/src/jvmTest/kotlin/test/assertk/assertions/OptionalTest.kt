@@ -9,7 +9,7 @@ import java.time.LocalDate
 import java.time.Month
 import java.util.*
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 internal class OptionalTest {
 
@@ -19,7 +19,7 @@ internal class OptionalTest {
 
     @Test
     fun isPresent_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Optional.empty<Any>()).isPresent()
         }
         assertEquals(
@@ -33,7 +33,7 @@ internal class OptionalTest {
     }
 
     @Test fun isEmpty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Optional.of("test")).isEmpty()
         }
         assertEquals(
@@ -47,7 +47,7 @@ internal class OptionalTest {
     }
 
     @Test fun hasValue_empty_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Optional.empty<String>()).hasValue("test")
         }
         assertEquals(
@@ -57,7 +57,7 @@ internal class OptionalTest {
     }
 
     @Test fun hasValue_wrong_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Optional.of("test")).hasValue("wrong")
         }
         assertEquals(

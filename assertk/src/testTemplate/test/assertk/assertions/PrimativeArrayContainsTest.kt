@@ -6,7 +6,7 @@ import test.assertk.opentestPackageName
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 $T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, CharArray:charArray:Char
 
@@ -17,7 +17,7 @@ class $TContainsTest {
     }
 
     @Test fun contains_element_missing_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf()).contains(1.to$E())
         }
         assertEquals("expected to contain:<${show(1.to$E(), "")}> but was:<[]>", error.message)
@@ -30,7 +30,7 @@ class $TContainsTest {
     }
 
     @Test fun doesNotContain_element_present_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).doesNotContain(2.to$E())
         }
         assertEquals("expected to not contain:<${show(2.to$E(), "")}> but was:<[${show(1.to$E(), "")}, ${show(2.to$E(), "")}]>", error.message)
@@ -43,7 +43,7 @@ class $TContainsTest {
     }
 
     @Test fun containsNone_present_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).containsNone(2.to$E(), 3.to$E())
         }
         assertEquals(
@@ -60,7 +60,7 @@ class $TContainsTest {
     }
 
     @Test fun containsAll_some_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E())).containsAll(1.to$E(), 2.to$E())
         }
         assertEquals(
@@ -85,7 +85,7 @@ class $TContainsTest {
     }
 
     @Test fun containsOnly_more_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsOnly(2.to$E(), 1.to$E())
         }
         assertEquals(
@@ -96,7 +96,7 @@ class $TContainsTest {
     }
 
     @Test fun containsOnly_less_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsOnly(2.to$E(), 1.to$E(), 3.to$E(), 4.to$E())
         }
         assertEquals(
@@ -108,7 +108,7 @@ class $TContainsTest {
     }
 
     @Test fun containsOnly_different_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E())).containsOnly(2.to$E())
         }
         assertEquals(
@@ -127,7 +127,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_all_elements_in_different_order_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).containsExactly(2.to$E(), 1.to$E())
         }
         assertEquals(
@@ -139,7 +139,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_missing_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).containsExactly(3.to$E())
         }
         assertEquals(
@@ -152,7 +152,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_same_indexes_are_together() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 1.to$E())).containsExactly(2.to$E(), 2.to$E())
         }
         assertEquals(
@@ -166,7 +166,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_extra_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).containsExactly(1.to$E(), 2.to$E(), 3.to$E())
         }
         assertEquals(
@@ -177,7 +177,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_missing_element_in_middle_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 3.to$E())).containsExactly(1.to$E(), 2.to$E(), 3.to$E())
         }
         assertEquals(
@@ -188,7 +188,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactly_extra_element_in_middle_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsExactly(1.to$E(), 3.to$E())
         }
         assertEquals(
@@ -209,7 +209,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactlyInAnyOrder_duplicate_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 2.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E())
         }
         assertEquals(
@@ -220,7 +220,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E())).containsExactlyInAnyOrder(2.to$E(), 2.to$E(), 1.to$E())
         }
         assertEquals(
@@ -231,7 +231,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactlyInAnyOrder_more_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E())
         }
         assertEquals(
@@ -242,7 +242,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactlyInAnyOrder_less_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).containsExactlyInAnyOrder(2.to$E(), 1.to$E(), 3.to$E(), 4.to$E())
         }
         assertEquals(
@@ -254,7 +254,7 @@ class $TContainsTest {
     }
 
     @Test fun containsExactlyInAnyOrder_different_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E())).containsExactlyInAnyOrder(2.to$E())
         }
         assertEquals(
@@ -277,7 +277,7 @@ class $TContainsTest {
     }
 
     @Test fun each_non_matching_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E(), 3.to$E())).each { it.isLessThan(2.to$E()) }
         }
         assertEquals(
@@ -295,7 +295,7 @@ class $TContainsTest {
     }
 
     @Test fun index_unsuccessful_assertion_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E()), name = "subject").index(0).isGreaterThan(2.to$E())
         }
         assertEquals(
@@ -305,7 +305,7 @@ class $TContainsTest {
     }
 
     @Test fun index_out_of_range_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat($NOf(1.to$E(), 2.to$E()), name = "subject").index(-1).isEqualTo(listOf(1.to$E()))
         }
         assertEquals("expected [subject] index to be in range:[0-2) but was:<-1>", error.message)

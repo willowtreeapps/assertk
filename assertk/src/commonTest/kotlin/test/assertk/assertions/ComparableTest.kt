@@ -12,7 +12,7 @@ import assertk.assertions.isStrictlyBetween
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class ComparableTest {
     //region isGreaterThan
@@ -21,7 +21,7 @@ class ComparableTest {
     }
 
     @Test fun isGreaterThan_non_greater_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).isGreaterThan(0)
         }
         assertEquals("expected to be greater than:<0> but was:<0>", error.message)
@@ -34,7 +34,7 @@ class ComparableTest {
     }
 
     @Test fun isLessThan_non_lesser_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).isLessThan(0)
         }
         assertEquals("expected to be less than:<0> but was:<0>", error.message)
@@ -51,7 +51,7 @@ class ComparableTest {
     }
 
     @Test fun isGreaterThanOrEqualTo_lesser_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).isGreaterThanOrEqualTo(2)
         }
         assertEquals("expected to be greater than or equal to:<2> but was:<0>", error.message)
@@ -68,7 +68,7 @@ class ComparableTest {
     }
 
     @Test fun isLessThanOrEqualTo_greater_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(2).isLessThanOrEqualTo(0)
         }
         assertEquals("expected to be less than or equal to:<0> but was:<2>", error.message)
@@ -89,14 +89,14 @@ class ComparableTest {
     }
 
     @Test fun isBetween_below_lower_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(-1).isBetween(0, 2)
         }
         assertEquals("expected to be between:<0> and <2> but was:<-1>", error.message)
     }
 
     @Test fun isBetween_above_upper_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(3).isBetween(0, 2)
         }
         assertEquals("expected to be between:<0> and <2> but was:<3>", error.message)
@@ -109,28 +109,28 @@ class ComparableTest {
     }
 
     @Test fun isStrictlyBetween_lower_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<0>", error.message)
     }
 
     @Test fun isStrictlyBetween_upper_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(2).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<2>", error.message)
     }
 
     @Test fun isStrictlyBetween_below_lower_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(0 - 1).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<-1>", error.message)
     }
 
     @Test fun isStrictlyBetween_above_upper_bound_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(2 + 1).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<3>", error.message)
@@ -160,7 +160,7 @@ class ComparableTest {
 
     @Test
     fun isCloseToFloat_with_delta_out_of_range_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(10.1f).isCloseTo(15.0f, 3f)
         }
         assertEquals("expected ${show(10.1f)} to be close to ${show(15.0f)} with delta of ${show(3f)}, but was not", error.message)
@@ -168,7 +168,7 @@ class ComparableTest {
 
     @Test
     fun isCloseToDouble_with_delta_out_of_range_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(10.1).isCloseTo(15.0, 3.0)
         }
         assertEquals("expected ${show(10.1)} to be close to ${show(15.0)} with delta of ${show(3.0)}, but was not", error.message)
@@ -176,7 +176,7 @@ class ComparableTest {
 
     @Test
     fun isEqualByComparingTo_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Info("aaa")).isEqualByComparingTo(Info("bbbb"))
         }
         assertEquals("expected:<[bbbb]> but was:<[aaa]>", error.message)

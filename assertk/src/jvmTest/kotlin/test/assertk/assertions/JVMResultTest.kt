@@ -5,14 +5,14 @@ import assertk.assertions.isSuccess
 import org.junit.Test
 import test.assertk.exceptionPackageName
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class JVMResultTest {
 
     @Test fun failure_result_fails_with_stacktrace() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("test"))).isSuccess()
         }
 

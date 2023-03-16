@@ -2,32 +2,16 @@ package test.assertk.assertions
 
 import assertk.all
 import assertk.assertThat
+import assertk.assertions.*
 import assertk.assertions.any
-import assertk.assertions.atLeast
-import assertk.assertions.atMost
-import assertk.assertions.contains
-import assertk.assertions.containsAll
-import assertk.assertions.containsExactly
-import assertk.assertions.containsExactlyInAnyOrder
-import assertk.assertions.containsNone
-import assertk.assertions.containsOnly
-import assertk.assertions.doesNotContain
-import assertk.assertions.each
-import assertk.assertions.exactly
-import assertk.assertions.extracting
 import assertk.assertions.first
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
-import assertk.assertions.isGreaterThanOrEqualTo
-import assertk.assertions.isLessThan
-import assertk.assertions.isNotEmpty
-import assertk.assertions.none
 import assertk.assertions.single
 import test.assertk.opentestPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class IterableTest {
     //region contains
@@ -36,7 +20,7 @@ class IterableTest {
     }
 
     @Test fun contains_element_missing_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>() as Iterable<Any?>).contains(1)
         }
         assertEquals("expected to contain:<1> but was:<[]>", error.message)
@@ -49,7 +33,7 @@ class IterableTest {
     }
 
     @Test fun doesNotContain_element_present_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2) as Iterable<Int>).doesNotContain(2)
         }
         assertEquals("expected to not contain:<2> but was:<[1, 2]>", error.message)
@@ -62,7 +46,7 @@ class IterableTest {
     }
 
     @Test fun containsNone_present_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2) as Iterable<Int>).containsNone(2, 3)
         }
         assertEquals(
@@ -79,7 +63,7 @@ class IterableTest {
     }
 
     @Test fun containsAll_some_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1) as Iterable<Int>).containsAll(1, 2)
         }
         assertEquals(
@@ -104,7 +88,7 @@ class IterableTest {
     }
 
     @Test fun containsOnly_more_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).containsOnly(2, 1)
         }
         assertEquals(
@@ -115,7 +99,7 @@ class IterableTest {
     }
 
     @Test fun containsOnly_less_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).containsOnly(2, 1, 3, 4)
         }
         assertEquals(
@@ -127,7 +111,7 @@ class IterableTest {
     }
 
     @Test fun containsOnly_different_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1) as Iterable<Int>).containsOnly(2)
         }
         assertEquals(
@@ -150,7 +134,7 @@ class IterableTest {
     }
 
     @Test fun containsExactlyInAnyOrder_duplicate_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 2) as Iterable<Int>).containsExactlyInAnyOrder(2, 1)
         }
         assertEquals(
@@ -161,7 +145,7 @@ class IterableTest {
     }
 
     @Test fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2) as Iterable<Int>).containsExactlyInAnyOrder(2, 2, 1)
         }
         assertEquals(
@@ -172,7 +156,7 @@ class IterableTest {
     }
 
     @Test fun containsExactlyInAnyOrder_more_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).containsExactlyInAnyOrder(2, 1)
         }
         assertEquals(
@@ -183,7 +167,7 @@ class IterableTest {
     }
 
     @Test fun containsExactlyInAnyOrder_less_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).containsExactlyInAnyOrder(2, 1, 3, 4)
         }
         assertEquals(
@@ -195,7 +179,7 @@ class IterableTest {
     }
 
     @Test fun containsExactlyInAnyOrder_different_elements_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1) as Iterable<Int>).containsExactlyInAnyOrder(2)
         }
         assertEquals(
@@ -218,7 +202,7 @@ class IterableTest {
     }
 
     @Test fun each_non_matching_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).each { it.isLessThan(2) }
         }
         assertEquals(
@@ -236,7 +220,7 @@ class IterableTest {
     }
 
     @Test fun none_matching_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2) as Iterable<Int>).none { it.isGreaterThan(0) }
         }
         assertEquals(
@@ -248,7 +232,7 @@ class IterableTest {
     }
 
     @Test fun none_matching_some_content_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).none { it.isGreaterThanOrEqualTo(3) }
         }
         assertEquals(
@@ -272,7 +256,7 @@ class IterableTest {
 
     //region atLeast
     @Test fun atLeast_too_many_failures_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).atLeast(2) { it.isGreaterThan(2) }
         }
         assertEquals(
@@ -305,7 +289,7 @@ class IterableTest {
 
     //region atMost
     @Test fun atMost_more_than_times_passed_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).atMost(2) { it.isGreaterThan(0) }
         }
         assertEquals(
@@ -326,7 +310,7 @@ class IterableTest {
 
     //region exactly
     @Test fun exactly_too_few_passes_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
         }
         assertEquals(
@@ -338,7 +322,7 @@ class IterableTest {
     }
 
     @Test fun exactly_too_many_passes_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(5, 4, 3) as Iterable<Int>).exactly(2) { it.isGreaterThan(2) }
         }
         assertEquals(
@@ -347,7 +331,7 @@ class IterableTest {
     }
 
     @Test fun exactly_too_few_inside_all_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(5, 4, 3) as Iterable<Int>).all {
                 exactly(2) { it.isGreaterThan(2) }
             }
@@ -375,7 +359,7 @@ class IterableTest {
     }
 
     @Test fun any_fails_if_all_fail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2)).any { it.isGreaterThan(3) }
         }
         assertEquals(
@@ -387,7 +371,7 @@ class IterableTest {
     }
 
     @Test fun any_multiple_assertions_fail() {
-        assertFails {
+        assertFailsWith<AssertionError> {
             assertThat(listOf("one")).any {
                 it.isEqualTo("two")
                 it.isEqualTo("two")
@@ -396,7 +380,7 @@ class IterableTest {
     }
 
     @Test fun any_multiple_items_fail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2, 3)).any {
                 it.isEqualTo(4)
             }
@@ -430,7 +414,7 @@ class IterableTest {
 
     @Test fun non_empty_iterable_fails_is_empty() {
         val nonEmpty: List<Int> = listOf(1)
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nonEmpty as Iterable<Int>).isEmpty()
         }
         assertEquals("expected to be empty but was:<[1]>", error.message)
@@ -445,7 +429,7 @@ class IterableTest {
 
     @Test fun empty_iterable_fails_is_not_empty() {
         val empty: List<Int> = emptyList()
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(empty as Iterable<Int>).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -458,7 +442,7 @@ class IterableTest {
     }
 
     @Test fun single_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf("one", "two") as Iterable<String>).extracting { it.length }.containsExactly(2, 2)
         }
         assertEquals(
@@ -477,7 +461,7 @@ class IterableTest {
     }
 
     @Test fun pair_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
@@ -499,7 +483,7 @@ class IterableTest {
     }
 
     @Test fun triple_extracting_function_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(Thing("one", 1, '1'), Thing("two", 2, '2')) as Iterable<Thing>)
                 .extracting(Thing::one, Thing::two, Thing::three)
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
@@ -521,14 +505,14 @@ class IterableTest {
     }
 
     @Test fun first_element_present_mismatch_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2)).first().isEqualTo(2)
         }
         assertEquals("expected [first]:<[2]> but was:<[1]> ([1, 2])", error.message)
     }
 
     @Test fun first_element_missing_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).first().isEqualTo(1)
         }
         assertEquals("expected to not be empty", error.message)
@@ -541,21 +525,21 @@ class IterableTest {
     }
 
     @Test fun single_single_element_mismatch_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1)).single().isEqualTo(2)
         }
         assertEquals("expected [single]:<[2]> but was:<[1]> ([1])", error.message)
     }
 
     @Test fun single_no_element_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).single().isEqualTo(1)
         }
         assertEquals("expected to have single element but was empty", error.message)
     }
 
     @Test fun single_multiple_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(listOf(1, 2)).single().isEqualTo(1)
         }
         assertEquals("expected to have single element but has 2: <[1, 2]>", error.message)
