@@ -8,7 +8,14 @@ import assertk.assertions.support.show
 import assertk.assertions.support.fail
 import assertk.assertions.support.appendName
 
-$T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
+$T:$N:$E =
+    ByteArray:byteArray:Byte,
+    IntArray:intArray:Int,
+    ShortArray:shortArray:Short,
+    LongArray:longArray:Long,
+    FloatArray:floatArray:Float,
+    DoubleArray:doubleArray:Double,
+    CharArray:charArray:Char
 
 /**
  * Returns an assert on the $T's size.

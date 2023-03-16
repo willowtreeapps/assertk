@@ -8,7 +8,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-$T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, FloatArray:floatArray:Float, DoubleArray:doubleArray:Double, CharArray:charArray:Char
+$T:$N:$E =
+    ByteArray:byteArray:Byte,
+    IntArray:intArray:Int,
+    ShortArray:shortArray:Short,
+    LongArray:longArray:Long,
+    FloatArray:floatArray:Float,
+    DoubleArray:doubleArray:Double,
+    CharArray:charArray:Char
 
 class $TTest {
     //region isEqualTo

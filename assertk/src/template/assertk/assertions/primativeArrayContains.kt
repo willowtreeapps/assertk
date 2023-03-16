@@ -9,7 +9,12 @@ import assertk.assertions.support.show
 import assertk.assertions.support.fail
 import assertk.assertions.support.appendName
 
-$T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, CharArray:charArray:Char
+$T:$N:$E =
+    ByteArray:byteArray:Byte,
+    IntArray:intArray:Int,
+    ShortArray:shortArray:Short,
+    LongArray:longArray:Long,
+    CharArray:charArray:Char
 
 /**
  * Asserts the $T contains the expected element, using `in`.
