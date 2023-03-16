@@ -67,7 +67,7 @@ publishing {
                 developers {
                     developer {
                         id.set("evant")
-                        name.set("Evan Tatarka")
+                        name.set("Eva Tatarka")
                     }
                 }
             }
