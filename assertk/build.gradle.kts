@@ -23,12 +23,6 @@ kotlin {
         withJava()
     }
 
-    targets.all {
-        compilations.findByName("test")?.kotlinOptions {
-            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-        }
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -38,8 +32,7 @@ kotlin {
         }
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
                 implementation(libs.kotlin.coroutines)
             }
             kotlin.srcDir(compileTestTemplates)
@@ -52,12 +45,6 @@ kotlin {
         jvmTest {
             dependencies {
                 implementation(kotlin("reflect"))
-                implementation(kotlin("test-junit"))
-            }
-        }
-        jsTest {
-            dependencies {
-                implementation(kotlin("test-js"))
             }
         }
     }
