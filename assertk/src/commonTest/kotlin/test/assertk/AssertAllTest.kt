@@ -5,7 +5,7 @@ import assertk.assertions.*
 import assertk.assertions.support.show
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class AssertAllTest {
@@ -18,7 +18,7 @@ class AssertAllTest {
     }
 
     @Test fun all_one_failure_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test", name = "test").all {
                 startsWith("t")
                 endsWith("g")
@@ -31,7 +31,7 @@ class AssertAllTest {
     }
 
     @Test fun all_both_failures_fails_with_both() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test", name = "test").all {
                 startsWith("w")
                 endsWith("g")
@@ -56,7 +56,7 @@ class AssertAllTest {
     }
 
     @Test fun assertAll_one_failure_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat("test1", name = "test1").isEqualTo("wrong1")
                 assertThat("test2", name = "test2").isEqualTo("test2")
@@ -69,7 +69,7 @@ class AssertAllTest {
     }
 
     @Test fun assertAll_both_failures_fails_with_both() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat("test1", name = "test1").isEqualTo("wrong1")
                 assertThat("test2", name = "test2").isEqualTo("wrong2")
@@ -85,7 +85,7 @@ class AssertAllTest {
     }
 
     @Test fun leaves_soft_assert_scope_properly_on_exception() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             @Suppress("SwallowedException")
             try {
                 assertThat("This").all {
@@ -100,7 +100,7 @@ class AssertAllTest {
     }
 
     @Test fun assertAll_fails_multiple_block_thrownError_assertions() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat { 1 + 1 }.isFailure()
                 assertThat { 2 + 3 }.isFailure()
@@ -116,7 +116,7 @@ class AssertAllTest {
     }
 
     @Test fun assertAll_fails_multiple_block_returnedValue_assertions() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat { throw Exception("error1") }.isSuccess()
                 assertThat { throw Exception("error2") }.isSuccess()
@@ -131,7 +131,7 @@ class AssertAllTest {
     }
 
     @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat { throw Exception("error1") }.isSuccess()
                 assertThat { throw Exception("error2") }.isSuccess()

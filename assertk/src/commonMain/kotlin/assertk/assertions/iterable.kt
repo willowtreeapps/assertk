@@ -232,13 +232,12 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
  * assert(listOf(-2, -1, 1)).atMost(2) { it.isPositive() }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
+fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) =
     collection(check = {
         if (size - failureSize > times) {
             fail("expected to pass at most $times times")
         }
     }, f)
-}
 
 /**
  * Asserts on each item in the iterable, passing if exactly `times` items pass.
@@ -248,13 +247,12 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) {
  * assert(listOf(-1, 1, 2)).exactly(2) { it.isPositive() }
  * ```
  */
-fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) {
+fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) =
     collection(check = {
         if (size - failureSize != times) {
             fail("expected to pass exactly $times times")
         }
     }, f)
-}
 
 /**
  * Asserts on each item in the iterable, passing if any of the items pass.

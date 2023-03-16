@@ -19,7 +19,7 @@ class FileTest {
     @Test fun exists_with_nonexistent_file_fails() {
         val tempFile = File.createTempFile("exists", "txt")
         tempFile.delete()
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(tempFile).exists()
         }
         assertEquals("expected to exist", error.message)
@@ -32,7 +32,7 @@ class FileTest {
     }
 
     @Test fun isDirectory_value_file_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(file).isDirectory()
         }
         assertEquals("expected to be a directory", error.message)
@@ -45,7 +45,7 @@ class FileTest {
     }
 
     @Test fun isFile_value_directory_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directory).isFile()
         }
         assertEquals("expected to be a file", error.message)
@@ -60,7 +60,7 @@ class FileTest {
 
     //region isHidden
     @Test fun isHidden_value_regular_file_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(file).isHidden()
         }
         assertEquals("expected to be hidden", error.message)
@@ -80,14 +80,14 @@ class FileTest {
     }
 
     @Test fun hasName_wrong_value_file_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(namedFile).hasName("file")
         }
         assertEquals("expected [name]:<\"file[]\"> but was:<\"file[.txt]\"> (assertKt${File.separator}file.txt)", error.message)
     }
 
     @Test fun hasName_wront_value_directory_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(namedDirectory).hasName("assertKt")
         }
         assertEquals(
@@ -105,7 +105,7 @@ class FileTest {
     }
 
     @Test fun hasPath_wrong_path_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(fileWithPath).hasPath("/directory")
         }
         assertEquals(
@@ -123,7 +123,7 @@ class FileTest {
     }
 
     @Test fun hasParent_wrong_parent_passes() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(fileWithParent).hasParent("directory")
         }
         val expected = "expected [parent]:<\"[]directory\"> but was:<\"[assertKt${File.separator}]directory\"> (assertKt${File.separator}directory${File.separator}file.txt)"
@@ -144,7 +144,7 @@ class FileTest {
     }
 
     @Test fun hasExtension_wrong_extension_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(fileWithExtension).hasExtension("png")
         }
         assertEquals("expected [extension]:<\"[png]\"> but was:<\"[${fileWithExtension.extension}]\"> (file.txt)", error.message)
@@ -166,7 +166,7 @@ class FileTest {
     }
 
     @Test fun hasText_wrong_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(fileWithText).hasText("Forty-two!")
         }
         assertTrue(error.message!!.startsWith("expected [text]:<\"[Forty-two!]\"> but was:<\"[$text]\">"))
@@ -180,7 +180,7 @@ class FileTest {
     }
 
     @Test fun contains_wrong_substring_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(fileWithText).text().contains("Forty-two!")
         }
         assertTrue(error.message!!.startsWith("expected [text] to contain:<\"Forty-two!\"> but was:<\"$text\">"))
@@ -203,7 +203,7 @@ class FileTest {
 
     @Test fun matches_wrong_regex_fails() {
         val incorrectRegexp = ".*d".toRegex()
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(matchingFile).text().matches(incorrectRegexp)
         }
         assertTrue(error.message!!.startsWith("expected [text] to match:</$incorrectRegexp/> but was:<\"$matchingText\">"))
@@ -221,7 +221,7 @@ class FileTest {
 
     @Test fun hasDirectChild_value_not_child_fails() {
         val newFile = File.createTempFile("file", ".txt")
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directoryWithChild).hasDirectChild(newFile)
         }
         assertEquals("expected to have direct child <$newFile>", error.message)
@@ -229,7 +229,7 @@ class FileTest {
 
     @Test fun hasDirectChild_empty_directory_fails() {
         directoryWithChild.listFiles().forEach { it.delete() }
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directory).hasDirectChild(file)
         }
         assertEquals("expected to have direct child <$file>", error.message)

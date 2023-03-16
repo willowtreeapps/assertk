@@ -100,42 +100,6 @@ internal data class AssertingContext(
 )
 
 /**
- * Runs the given lambda if the block throws an error, otherwise fails.
- */
-@Deprecated(
-    message = "Use isFailure().all(f) instead",
-    replaceWith = ReplaceWith("isFailure().all(f)", imports = ["assertk.assertions.isFailure", "assertk.all"]),
-    level = DeprecationLevel.ERROR
-)
-fun <T> Assert<Result<T>>.thrownError(f: Assert<Throwable>.() -> Unit) {
-    isFailure().all(f)
-}
-
-/**
- * Runs the given lambda if the block returns a value, otherwise fails.
- */
-@Deprecated(
-    message = "Use isSuccess().all(f) instead",
-    replaceWith = ReplaceWith("isSuccess().all(f)", imports = ["assertk.assertions.isSuccess", "assertk.all"]),
-    level = DeprecationLevel.ERROR
-)
-fun <T> Assert<Result<T>>.returnedValue(f: Assert<T>.() -> Unit) {
-    isSuccess().all(f)
-}
-
-@Deprecated(
-    message = "Use isSuccess() instead",
-    replaceWith = ReplaceWith("isSuccess()", imports = ["assertk.assertions.isSuccess", "assertk.assertions"]),
-    level = DeprecationLevel.ERROR
-)
-fun <T> Assert<Result<T>>.doesNotThrowAnyException() {
-    isSuccess()
-}
-
-@Deprecated(message = "Use Assert<Result<T>> instead", level = DeprecationLevel.ERROR)
-typealias AssertBlock<T> = Assert<Result<T>>
-
-/**
  * Calls platform specific function so that it is possible to show stacktrace if able
  *
  * TODO: use @OptionalExpectation (https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-optional-expectation/index.html) here once available and call default implementation of [show] for JS
@@ -228,24 +192,4 @@ inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.run
  */
 inline fun assertAll(f: () -> Unit) {
     Failure.soft().run { f() }
-}
-
-/**
- * Catches any exceptions thrown in the given lambda and returns it. This is an easy way to assert on expected thrown
- * exceptions.
- *
- * ```
- * val exception = catch { throw Exception("error") }
- * assertThat(exception).isNotNull().hasMessage("error")
- * ```
- */
-@Suppress("TooGenericExceptionCaught")
-@Deprecated("Use assertThat { }.isFailure() instead", level = DeprecationLevel.ERROR)
-inline fun catch(f: () -> Unit): Throwable? {
-    try {
-        f()
-        return null
-    } catch (e: Throwable) {
-        return e
-    }
 }

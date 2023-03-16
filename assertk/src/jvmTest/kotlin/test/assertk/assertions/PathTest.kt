@@ -35,7 +35,7 @@ class PathTest {
     }
 
     @Test fun isRegularFile_value_directory_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directory!!).isRegularFile()
         }
         assertEquals("expected <$directory> to be a regular file, but it is not", error.message)
@@ -44,7 +44,7 @@ class PathTest {
 
     //region isDirectory
     @Test fun isDirectory_value_not_directory_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(regularFile!!).isDirectory()
         }
         assertEquals("expected <$regularFile> to be a directory, but it is not", error.message)
@@ -57,14 +57,14 @@ class PathTest {
 
     //region isHidden
     @Test fun isHidden_value_regular_file_not_hidden_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(regularFile!!).isHidden()
         }
         assertEquals("expected <$regularFile> to be hidden, but it is not", error.message)
     }
 
     @Test fun isHidden_value_directory_not_hidden_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directory!!).isHidden()
         }
         assertEquals("expected <$directory> to be hidden, but it is not", error.message)
@@ -83,14 +83,14 @@ class PathTest {
 
     //region isSymbolicLink
     @Test fun isSymbolicLink_value_regular_file_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(regularFile!!).isSymbolicLink()
         }
         assertEquals("expected <$regularFile> to be a symbolic link, but it is not", error.message)
     }
 
     @Test fun isSymbolicLink_value_directory_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(directory!!).isSymbolicLink()
         }
         assertEquals("expected <$directory> to be a symbolic link, but it is not", error.message)
@@ -135,7 +135,7 @@ class PathTest {
     }
 
     @Test fun exists_value_not_exists_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(doesNotExist!!).exists()
         }
         assertEquals("expected <$doesNotExist> to exist, but it does not", error.message)

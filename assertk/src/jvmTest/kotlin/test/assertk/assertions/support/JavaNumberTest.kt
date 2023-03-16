@@ -8,8 +8,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
-
+import kotlin.test.assertFailsWith
 
 class BigDecimalSpecNumberOnIsZero {
 
@@ -20,7 +19,7 @@ class BigDecimalSpecNumberOnIsZero {
 
     @Test
     fun itGivenNoZeroTestShouldFail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal.ONE).isZero()
         }
         assertEquals("expected to be 0 but was:<1>", error.message)
@@ -36,7 +35,7 @@ class BigIntegerSpecNumberOnIsZero {
 
     @Test
     fun it_Given_a_not_zero_test_should_fail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigInteger.ONE).isZero()
         }
         assertEquals("expected to be 0 but was:<1>", error.message)
@@ -51,7 +50,7 @@ class BigDecimalSpecNumberOnIsPositive {
 
     @Test
     fun itGivenZeroNumberTestShouldFail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal.ZERO).isPositive()
         }
         assertEquals("expected to be positive but was:<0>", error.message)
@@ -59,7 +58,7 @@ class BigDecimalSpecNumberOnIsPositive {
 
     @Test
     fun itGivenNegativeNumberTestShouldFail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal.ONE.negate()).isPositive()
         }
         assertEquals("expected to be positive but was:<-1>", error.message)
@@ -69,7 +68,7 @@ class BigDecimalSpecNumberOnIsPositive {
 class NumberSpecNumberOnIsNegative {
     @Test
     fun itGivenZeroNumberTestShouldFail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal.ZERO).isNegative()
         }
         assertEquals("expected to be negative but was:<0>", error.message)
@@ -77,7 +76,7 @@ class NumberSpecNumberOnIsNegative {
 
     @Test
     fun itGivePositiveNumberTestShouldFail() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(BigDecimal.ONE).isNegative()
         }
         assertEquals("expected to be negative but was:<1>", error.message)

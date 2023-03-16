@@ -73,6 +73,25 @@ kotlin {
     }
 }
 
+// Run only the native tests
+val nativeTest by tasks.registering {
+    kotlin.targets.all {
+        if (this is KotlinNativeTargetWithTests<*>) {
+            dependsOn("${name}Test")
+        }
+    }
+}
+
+// Only build apple targets
+val buildApple by tasks.registering {
+    kotlin.targets.all {
+        if (targetName.contains(Regex("macos|ios|tvos|watchos"))) {
+            compilations.forEach {
+                dependsOn(it.compileAllTaskName)
+            }
+        }
+    }
+}
 
 // Detekt setup
 val detektMain by tasks.registering(Detekt::class) {

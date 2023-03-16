@@ -3,14 +3,13 @@ package test.assertk.coroutines.assertions
 import assertk.assertThat
 import assertk.assertions.support.show
 import assertk.coroutines.assertions.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOf
-import test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
+import kotlinx.coroutines.test.runTest
 
 class FlowTest {
     //region isEmpty
@@ -19,14 +18,14 @@ class FlowTest {
     }
 
     @Test fun isEmpty_non_empty_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf<Any?>(null)).isEmpty()
         }
         assertEquals("expected to be empty but received:<null>", error.message)
     }
 
     @Test fun isEmpty_non_empty_in_flow_that_doesnt_complete_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nonCompletingFlowOf(null)).isEmpty()
         }
         assertEquals("expected to be empty but received:<null>", error.message)
@@ -39,7 +38,7 @@ class FlowTest {
     }
 
     @Test fun isNotEmpty_empty_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf<Any?>()).isNotEmpty()
         }
         assertEquals("expected to not be empty", error.message)
@@ -53,7 +52,7 @@ class FlowTest {
 
     @Test fun hasSize_wrong_size_fails() = runTest {
         val flow = flowOf<Any?>()
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flow).hasCount(1)
         }
         assertEquals("expected [count()]:<[1]> but was:<[0]> ${show(flow, "()")}", error.message)
@@ -70,7 +69,7 @@ class FlowTest {
     }
 
     @Test fun contains_element_missing_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf<Any?>()).contains(1)
         }
         assertEquals("expected to contain:<1> but received:<[]>", error.message)
@@ -83,14 +82,14 @@ class FlowTest {
     }
 
     @Test fun doesNotContain_element_present_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2)).doesNotContain(2)
         }
         assertEquals("expected to not contain:<2> but received:<[1, 2]>", error.message)
     }
 
     @Test fun doesNotContain_element_present_in_flow_that_doesnt_complete_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nonCompletingFlowOf(1, 2)).doesNotContain(2)
         }
         assertEquals("expected to not contain:<2> but received:<[1, 2]>", error.message)
@@ -103,7 +102,7 @@ class FlowTest {
     }
 
     @Test fun containsNone_present_element_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2)).containsNone(2, 3)
         }
         assertEquals(
@@ -114,7 +113,7 @@ class FlowTest {
     }
 
     @Test fun containsNone_present_element_in_flow_that_doesnt_complete_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(nonCompletingFlowOf(1, 2)).containsNone(2, 3)
         }
         assertEquals(
@@ -135,7 +134,7 @@ class FlowTest {
     }
 
     @Test fun containsAll_some_elements_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1)).containsAll(1, 2)
         }
         assertEquals(
@@ -152,7 +151,7 @@ class FlowTest {
     }
 
     @Test fun containsOnly_more_elements_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2, 3)).containsOnly(2, 1)
         }
         assertEquals(
@@ -163,7 +162,7 @@ class FlowTest {
     }
 
     @Test fun containsOnly_less_elements_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2, 3)).containsOnly(2, 1, 3, 4)
         }
         assertEquals(
@@ -175,7 +174,7 @@ class FlowTest {
     }
 
     @Test fun containsOnly_different_elements_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1)).containsOnly(2)
         }
         assertEquals(
@@ -194,7 +193,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_all_elements_in_different_order_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2)).containsExactly(2, 1)
         }
         assertEquals(
@@ -206,7 +205,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_elements_in_different_order_fails2() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf("1", "2", "3")).containsExactly("2", "3", "1")
         }
         assertEquals(
@@ -218,7 +217,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_same_indexes_are_together() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 1)).containsExactly(2, 2)
         }
         assertEquals(
@@ -232,7 +231,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_missing_element_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2)).containsExactly(3)
         }
         assertEquals(
@@ -245,7 +244,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_extra_element_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2)).containsExactly(1, 2, 3)
         }
         assertEquals(
@@ -256,7 +255,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_missing_element_in_middle_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 3)).containsExactly(1, 2, 3)
         }
         assertEquals(
@@ -267,7 +266,7 @@ class FlowTest {
     }
 
     @Test fun containsExactly_extra_element_in_middle_fails() = runTest {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat(flowOf(1, 2, 3)).containsExactly(1, 3)
         }
         assertEquals(
@@ -279,7 +278,6 @@ class FlowTest {
     //endregion
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 private fun <T> nonCompletingFlowOf(vararg elements: T) = callbackFlow {
     for (element in elements) {
         send(element)

@@ -67,9 +67,19 @@ publishing {
                 developers {
                     developer {
                         id.set("evant")
-                        name.set("Evan Tatarka")
+                        name.set("Eva Tatarka")
                     }
                 }
+            }
+        }
+    }
+
+    // create task to publish all apple (macos, ios, tvos, watchos) artifacts
+    @Suppress("UNUSED_VARIABLE")
+    val publishApple by tasks.registering {
+        publications.all {
+            if (name.contains(Regex("macos|ios|tvos|watchos"))) {
+                dependsOn("publish${name.capitalize(Locale.ROOT)}PublicationToSonatypeRepository")
             }
         }
     }

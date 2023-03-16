@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
 class StringTest {
 
@@ -17,7 +17,7 @@ class StringTest {
 
     @Test
     fun isEqualTo_different_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("").isEqualTo("test")
         }
         assertEquals("expected:<\"[test]\"> but was:<\"[]\">", error.message)
@@ -25,7 +25,7 @@ class StringTest {
 
     @Test
     fun isEqualTo_different_null_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("null").isEqualTo(null)
         }
         assertEquals("expected:<null> but was:<\"null\">", error.message)
@@ -38,7 +38,7 @@ class StringTest {
 
     @Test
     fun isEqualTo_different_value_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").isEqualTo("tesT", false)
         }
         assertEquals("expected:<\"[tesT]\"> but was:<\"[Test]\">", error.message)
@@ -46,7 +46,7 @@ class StringTest {
 
     @Test
     fun isEqualTo_renders_different_line_endings() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test\n").isEqualTo("Test\r\n")
         }
         assertEquals("expected:<\"Test[\\r]\n\"> but was:<\"Test[]\n\">", error.message)
@@ -54,7 +54,7 @@ class StringTest {
 
     @Test
     fun isEqual_renders_tabs_vs_spaces() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("\tTest").isEqualTo("    Test")
         }
         assertEquals("expected:<\"[    ]Test\"> but was:<\"[\\t]Test\">", error.message)
@@ -62,7 +62,7 @@ class StringTest {
 
     @Test
     fun isEqual_renders_newline_vs_not() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test\n").isEqualTo("Test")
         }
         assertEquals("expected:<\"Test[]\"> but was:<\"Test[\\n]\">", error.message)
@@ -72,7 +72,7 @@ class StringTest {
     //region isNotEqualTo
     @Test
     fun isNotEqualTo_same_value_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("test").isNotEqualTo("test")
         }
         assertEquals("expected to not be equal to:<\"test\">", error.message)
@@ -90,7 +90,7 @@ class StringTest {
 
     @Test
     fun isNotEqualTo_same_value_ignore_case_fails() {
-        val error = assertFails {
+        val error = assertFailsWith<AssertionError> {
             assertThat("Test").isNotEqualTo("tesT", true)
         }
         assertEquals("expected:<\"tesT\"> not to be equal to (ignoring case):<\"Test\">", error.message)
