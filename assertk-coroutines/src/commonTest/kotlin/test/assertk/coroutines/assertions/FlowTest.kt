@@ -3,7 +3,6 @@ package test.assertk.coroutines.assertions
 import assertk.assertThat
 import assertk.assertions.support.show
 import assertk.coroutines.assertions.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOf
@@ -279,7 +278,6 @@ class FlowTest {
     //endregion
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 private fun <T> nonCompletingFlowOf(vararg elements: T) = callbackFlow {
     for (element in elements) {
         send(element)
