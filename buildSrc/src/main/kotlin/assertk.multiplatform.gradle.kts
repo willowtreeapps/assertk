@@ -28,17 +28,18 @@ if (libs.versions.assertk.get().endsWith("SNAPSHOT")) {
 }
 
 val nativeTargets = arrayOf(
-    "linuxX64",
+    "linuxX64", "linuxArm64",
     "macosX64", "macosArm64",
+    "mingwX64",
     "iosArm32", "iosArm64", "iosX64", "iosSimulatorArm64",
     "tvosArm64", "tvosX64", "tvosSimulatorArm64",
-    "watchosArm32", "watchosArm64", "watchosX86", "watchosX64", "watchosSimulatorArm64",
+    "watchosArm32", "watchosArm64", "watchosX86", "watchosX64", "watchosSimulatorArm64", "watchosDeviceArm64",
+    "androidNativeArm32", "androidNativeArm64", "androidNativeX86", "androidNativeX64",
 )
 
 kotlin {
     jvm()
-    js(BOTH) {
-        browser()
+    js(IR) {
         nodejs()
         // suppress noisy 'Reflection is not supported in JavaScript target'
         for (compilation in arrayOf("main", "test")) {
@@ -72,14 +73,6 @@ kotlin {
     }
 }
 
-// Run only the native tests
-val nativeTest by tasks.registering {
-    kotlin.targets.all {
-        if (this is KotlinNativeTargetWithTests<*>) {
-            dependsOn("${name}Test")
-        }
-    }
-}
 
 // Detekt setup
 val detektMain by tasks.registering(Detekt::class) {
@@ -102,10 +95,4 @@ val detektTest by tasks.registering(Detekt::class) {
 
 val detekt by tasks.getting {
     dependsOn(detektMain, detektTest)
-}
-
-// Don't run npm install scripts, protects against
-// https://blog.jetbrains.com/kotlin/2021/10/important-ua-parser-js-exploit-and-kotlin-js/ etc.
-tasks.withType<KotlinNpmInstallTask> {
-    args += "--ignore-scripts"
 }

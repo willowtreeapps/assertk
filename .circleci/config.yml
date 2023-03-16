@@ -11,48 +11,9 @@ _gradle_checksum: &gradle_checksum
     find . -name 'build.gradle' | sort | xargs cat | shasum | awk '{print
     $1}' > /tmp/gradle_cache_seed
 jobs:
-  build-linux:
-    docker:
-      - image: circleci/openjdk:11-jdk-browsers@sha256:7b75688697171176f4eef37ce4bcd678d0748f703195d7e45f11e0a02e126dfa
-    <<: *defaults
-    steps:
-      - checkout
-      # We can't use gradle/with_cache because it does not include the .konan dir where there kotlin native compiler lives
-      - run:
-          <<: *gradle_checksum
-      - restore_cache:
-          key: >-
-            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
-            ".circleci/config.yml" }}-linux
-      # Work-around kotlin native using an old version of libtinfo https://github.com/circleci/circleci-images/issues/430
-      - run:
-          name: Install libtinfo5
-          command: sudo apt update && sudo apt install -y libtinfo5
-      - run:
-          name: Run Tests
-          command: ./gradlew check
-      - gradle/collect_test_results:
-          test_results_path: build/test-results
-          reports_path: build/reports
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              echo "$MAVEN_CENTRAL_SEC_RING" | base64 -d > $HOME/secring.gpg
-              gpg --import --batch $HOME/secring.gpg
-              ./gradlew dokkaJavadocCommonJar
-              ./gradlew publish -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId="$MAVEN_CENTRAL_KEY_ID" -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
-            fi
-      - save_cache:
-          paths:
-            - ~/.gradle/caches
-            - ~/.gradle/wrapper
-            - ~/.konan
-          key: >-
-            gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
-            ".circleci/config.yml" }}-linux
   build-macos:
     macos:
-      xcode: "14.0.0"
+      xcode: "14.1.0"
     <<: *defaults
     steps:
       - checkout
@@ -64,14 +25,14 @@ jobs:
             gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
             ".circleci/config.yml" }}-macos
       - run:
-          name: Run Tests
-          command: ./gradlew detekt nativeTest
+          name: Build
+          command: ./gradlew build
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -D -o $HOME/secring.gpg
               ./gradlew dokkaJavadocCommonJar
-              ./gradlew publishApple -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId="$MAVEN_CENTRAL_KEY_ID" -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
+              ./gradlew publish -PsonatypeUsername="$SONATYPE_USERNAME" -PsonatypePassword="$SONATYPE_PASSWORD" -Psigning.keyId="$MAVEN_CENTRAL_KEY_ID" -Psigning.password="$MAVEN_CENTRAL_KEY_PASSPHRASE" -Psigning.secretKeyRingFile=$HOME/secring.gpg --no-parallel
             fi
       - save_cache:
           paths:
@@ -85,19 +46,10 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-linux:
-          filters:
-            branches:
-              ignore: main
       - build-macos:
           filters:
             branches:
               ignore: main
-      - build-linux:
-          context: opensource-maven
-          filters:
-            branches:
-              only: main
       - build-macos:
           context: opensource-maven
           filters:
