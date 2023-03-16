@@ -13,11 +13,6 @@ val compileTestTemplates by tasks.registering(TemplateTask::class) {
     outputDir.set(file("$buildDir/generated/testTemplate"))
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 kotlin {
     jvm {
         withJava()
