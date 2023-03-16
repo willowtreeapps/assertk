@@ -14,6 +14,7 @@ jobs:
   build-macos:
     macos:
       xcode: "14.1.0"
+    resource_class: macos.x86.medium.gen2
     <<: *defaults
     steps:
       - checkout
@@ -27,9 +28,6 @@ jobs:
       - run:
           name: Build
           command: ./gradlew build
-      - run:
-          name: Run Tests
-          command: ./gradlew check
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
