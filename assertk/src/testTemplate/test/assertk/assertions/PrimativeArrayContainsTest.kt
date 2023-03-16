@@ -8,7 +8,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-$T:$N:$E = ByteArray:byteArray:Byte, IntArray:intArray:Int, ShortArray:shortArray:Short, LongArray:longArray:Long, CharArray:charArray:Char
+$T:$N:$E =
+    ByteArray:byteArray:Byte,
+    IntArray:intArray:Int,
+    ShortArray:shortArray:Short,
+    LongArray:longArray:Long,
+    CharArray:charArray:Char
 
 class $TContainsTest {
     //region contains

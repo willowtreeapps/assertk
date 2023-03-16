@@ -3,7 +3,6 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 /**
  * Generates multiple copies of kotlin code from a template, with simple text replacement. ex:
@@ -69,38 +68,34 @@ abstract class TemplateTask : DefaultTask() {
         inDir.walkTopDown().filter { it.isFile && it.extension == "kt" }.forEach { template ->
             val outputFile = outDir.resolve(template.relativeTo(inDir))
             outputFile.parentFile.mkdirs()
-            val lines = template.readLines()
-            val tokenLineIndex = lines.indexOfFirst { it.startsWith("$") }
-            val tokenLine = lines[tokenLineIndex]
+
+            val content = template.readText()
+
+            val tokensStart = content.indexOf('$')
+            val tokensStop = content.indexOf("\n\n", startIndex = tokensStart)
+            val tokenLine = content.substring(tokensStart until tokensStop)
             val tokens = tokenLine.substringBefore('=').split(':').cleanup()
             val replacements = tokenLine.substringAfter('=')
                 .split(',')
                 .cleanup()
                 .map { it.split(':').cleanup() }
 
-            outputFile.bufferedWriter().use { out ->
-                for (lineIndex in 0 until tokenLineIndex) {
-                    out.write(lines[lineIndex])
-                    out.write("\n")
-                }
+            val body = content.substring(tokensStop)
+            val result = buildString {
+                append(content.substring(0 until tokensStart))
 
                 for (element in replacements) {
-                    for (lineIndex in tokenLineIndex + 1 until lines.size) {
-                        var line = lines[lineIndex]
-                        if (lineIndex == tokenLineIndex + 1 && line.isBlank()) {
-                            continue
-                        }
-                        for (tokenIndex in tokens.indices) {
-                            val token = tokens[tokenIndex]
-                            val replacement = element[tokenIndex]
-                            line = line.replace(token, replacement)
-                        }
-                        out.write(line)
-                        out.write("\n")
+                    var expanded = body
+                    for (tokenIndex in tokens.indices) {
+                        val token = tokens[tokenIndex]
+                        val replacement = element[tokenIndex]
+                        expanded = expanded.replace(token, replacement)
                     }
-                    out.write("\n")
+                    append(expanded)
                 }
             }
+
+            outputFile.writeText(result)
         }
     }
 }
