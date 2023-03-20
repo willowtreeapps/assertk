@@ -1,7 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 
 plugins {
@@ -73,13 +71,8 @@ kotlin {
     }
 }
 
-tasks.withType<KotlinJvmCompile> {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_1_8)
-}
-
-tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
 
 // Run only the native tests
