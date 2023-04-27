@@ -1,6 +1,11 @@
 package test.assertk.assertions.support
 
 import assertk.assertThat
+import assertk.assertions.hasMessage
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isSuccess
+import assertk.assertions.message
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -157,6 +162,7 @@ class SupportTest {
         assertEquals("actual" as Any?, error.actual?.value)
         assertTrue(error.isExpectedDefined)
         assertTrue(error.isActualDefined)
+        assertNull(error.cause)
     }
 
     @Test fun expected_throws_assertion_failed_error_with_actual_and_expected_not_defined() {
@@ -170,6 +176,56 @@ class SupportTest {
         assertNull(error.actual)
         assertFalse(error.isExpectedDefined)
         assertFalse(error.isActualDefined)
+        assertNull(error.cause)
+    }
+
+    @Test fun expected_throwable_included_as_cause() {
+        val subject = RuntimeException()
+        val error = assertFailsWith<AssertionFailedError> {
+            assertThat(subject).expected("message")
+        }
+        assertSame(subject, error.cause)
+    }
+
+    @Test fun expected_failure_result_included_as_cause() {
+        val subject = RuntimeException()
+        val error = assertFailsWith<AssertionFailedError> {
+            assertThat(Result.failure<String>(subject)).expected("message")
+        }
+        assertSame(subject, error.cause)
+    }
+
+    @Test fun expected_success_result_not_included_as_cause() {
+        val error = assertFailsWith<AssertionFailedError> {
+            assertThat(Result.success("hey")).expected("message")
+        }
+        assertNull(error.cause)
+    }
+
+    @Test fun expected_originating_throwable_included_as_cause() {
+        val subject = RuntimeException()
+        val assert = assertThat(subject).message()
+        val error = assertFailsWith<AssertionFailedError> {
+            assert.expected("message")
+        }
+        assertSame(subject, error.cause)
+    }
+
+    @Test fun expected_originating_failure_result_included_as_cause() {
+        val subject = RuntimeException()
+        val assert = assertThat(Result.failure<String>(subject)).isFailure().message()
+        val error = assertFailsWith<AssertionFailedError> {
+            assert.expected("message")
+        }
+        assertSame(subject, error.cause)
+    }
+
+    @Test fun expected_originating_success_result_not_included_as_cause() {
+        val assert = assertThat(Result.success("hey")).isSuccess()
+        val error = assertFailsWith<AssertionFailedError> {
+            assert.expected("message")
+        }
+        assertNull(error.cause)
     }
     //endregion
 }
