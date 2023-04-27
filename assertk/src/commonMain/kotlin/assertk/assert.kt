@@ -184,12 +184,22 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
  *   throw Exception("error")
  * }.isFailure().hasMessage("error")
  * ```
+ *
+ * @see assertFailure
  */
-inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(Result.runCatching { f() })
+inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(runCatching(f))
 
 /**
  * Runs all assertions in the given lambda and reports any failures.
  */
 inline fun assertAll(f: () -> Unit) {
     Failure.soft().run { f() }
+}
+
+/**
+ * Asserts that the given block will throw an exception rather than complete successfully.
+ */
+fun assertFailure(f: () -> Unit): Assert<Throwable> {
+    runCatching(f).onFailure { return assertThat(it) }
+    fail("expected failure but lambda completed successfully")
 }
