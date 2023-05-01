@@ -292,9 +292,23 @@ class AnyTest {
         assertThat(subject).hasClass(BasicObject::class)
     }
 
+    @Test fun hasClass_reified_same_class_passes() {
+        assertThat(subject).hasClass<BasicObject>()
+    }
+
     @Test fun hasClass_parent_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasClass(TestObject::class)
+        }
+        assertEquals(
+            "expected to have class:<${TestObject::class}> but was:<${BasicObject::class}>",
+            error.message
+        )
+    }
+
+    @Test fun hasClass_reified_parent_class_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).hasClass<TestObject>()
         }
         assertEquals(
             "expected to have class:<${TestObject::class}> but was:<${BasicObject::class}>",
@@ -306,9 +320,20 @@ class AnyTest {
         assertThat(subject).doesNotHaveClass(TestObject::class)
     }
 
+    @Test fun doesNotHaveClass_reified_parent_class_passes() {
+        assertThat(subject).doesNotHaveClass<TestObject>()
+    }
+
     @Test fun doesNotHaveClass_same_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).doesNotHaveClass(BasicObject::class)
+        }
+        assertEquals("expected to not have class:<${BasicObject::class}>", error.message)
+    }
+
+    @Test fun doesNotHaveClass_reified_same_class_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).doesNotHaveClass<BasicObject>()
         }
         assertEquals("expected to not have class:<${BasicObject::class}>", error.message)
     }
@@ -317,13 +342,31 @@ class AnyTest {
         assertThat(subject as TestObject).isInstanceOf(BasicObject::class)
     }
 
+    @Test fun isInstanceOf_reified_kclass_same_class_passes() {
+        assertThat(subject as TestObject).isInstanceOf<BasicObject>()
+    }
+
     @Test fun isInstanceOf_kclass_parent_class_passes() {
         assertThat(subject).isInstanceOf(TestObject::class)
+    }
+
+    @Test fun isInstanceOf_reified_kclass_parent_class_passes() {
+        assertThat(subject).isInstanceOf<TestObject>()
     }
 
     @Test fun isInstanceOf_kclass_different_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isInstanceOf(DifferentObject::class)
+        }
+        assertEquals(
+            "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
+            error.message
+        )
+    }
+
+    @Test fun isInstanceOf_reified_kclass_different_class_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isInstanceOf<DifferentObject>()
         }
         assertEquals(
             "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
@@ -339,9 +382,27 @@ class AnyTest {
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
     }
 
+    @Test fun isInstanceOf_reified_kclass_run_block_when_passes() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject as TestObject).isInstanceOf<BasicObject>().prop("str", BasicObject::str)
+                .isEqualTo("wrong")
+        }
+        assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
+    }
+
     @Test fun isInstanceOf_kclass_doesnt_run_block_when_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject).isInstanceOf(DifferentObject::class).isNull()
+        }
+        assertEquals(
+            "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
+            error.message
+        )
+    }
+
+    @Test fun isInstanceOf_reified_kclass_doesnt_run_block_when_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject as TestObject).isInstanceOf<DifferentObject>().isNull()
         }
         assertEquals(
             "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
@@ -353,6 +414,10 @@ class AnyTest {
         assertThat(subject).isNotInstanceOf(DifferentObject::class)
     }
 
+    @Test fun isNotInstanceOf_reified_kclass_different_class_passes() {
+        assertThat(subject).isNotInstanceOf<DifferentObject>()
+    }
+
     @Test fun isNotInstanceOf_kclass_same_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(BasicObject::class)
@@ -360,9 +425,23 @@ class AnyTest {
         assertEquals("expected to not be instance of:<${BasicObject::class}>", error.message)
     }
 
+    @Test fun isNotInstanceOf_reified_kclass_same_class_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isNotInstanceOf<BasicObject>()
+        }
+        assertEquals("expected to not be instance of:<${BasicObject::class}>", error.message)
+    }
+
     @Test fun isNotInstanceOf_kclass_parent_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(TestObject::class)
+        }
+        assertEquals("expected to not be instance of:<${TestObject::class}>", error.message)
+    }
+
+    @Test fun isNotInstanceOf_reifeid_kclass_parent_class_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isNotInstanceOf<TestObject>()
         }
         assertEquals("expected to not be instance of:<${TestObject::class}>", error.message)
     }
