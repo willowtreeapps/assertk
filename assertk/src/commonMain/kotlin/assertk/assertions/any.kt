@@ -165,6 +165,14 @@ fun <T, R, F> Assert<T>.prop(callable: F): Assert<R> where F : (T) -> R, F : KCa
     prop(callable.name, callable)
 
 /**
+ * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass<String>()`
+ * is successful but `assertThat("test").hasClass<Any>()` fails.
+ * @see [doesNotHaveClass]
+ * @see [isInstanceOf]
+ */
+inline fun <reified T : Any> Assert<Any>.hasClass() = hasClass(T::class)
+
+/**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass(String::class)`
  * is successful but `assertThat("test").hasClass(Any::class)` fails.
  * @see [doesNotHaveClass]
@@ -177,7 +185,16 @@ fun <T : Any> Assert<T>.hasClass(kclass: KClass<out T>) = given { actual ->
 
 /**
  * Asserts the value does not have the expected kotlin class. This is an exact match, so
- * `assertThat("test").doesNotHaveClass(String::class)` is fails but `assertThat("test").doesNotHaveClass(Any::class)` is
+ * `assertThat("test").doesNotHaveClass<String>()` fails but `assertThat("test").doesNotHaveClass<Any>()` is
+ * successful.
+ * @see [hasClass]
+ * @see [isNotInstanceOf]
+ */
+inline fun <reified T : Any> Assert<Any>.doesNotHaveClass() = doesNotHaveClass(T::class)
+
+/**
+ * Asserts the value does not have the expected kotlin class. This is an exact match, so
+ * `assertThat("test").doesNotHaveClass(String::class)` fails but `assertThat("test").doesNotHaveClass(Any::class)` is
  * successful.
  * @see [hasClass]
  * @see [isNotInstanceOf]
@@ -186,10 +203,17 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual
     if (kclass != actual::class) return
     expected("to not have class:${show(kclass)}")
 }
+/**
+ * Asserts the value is not an instance of the expected kotlin class. Both
+ * `assertThat("test").isNotInstanceOf<String>()` and `assertThat("test").isNotInstanceOf<String>()` fail.
+ * @see [isInstanceOf]
+ * @see [doesNotHaveClass]
+ */
+inline fun <reified T : Any> Assert<Any>.isNotInstanceOf() = isNotInstanceOf(T::class)
 
 /**
  * Asserts the value is not an instance of the expected kotlin class. Both
- * `assertThat("test").isNotInstanceOf(String::class)` and `assertThat("test").isNotInstanceOf(Any::class)` fails.
+ * `assertThat("test").isNotInstanceOf(String::class)` and `assertThat("test").isNotInstanceOf(Any::class)` fail.
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
@@ -199,8 +223,16 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
 }
 
 /**
+ * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf<String>()` and
+ * `assertThat("test").isInstanceOf<Any>()` are successful.
+ * @see [isNotInstanceOf]
+ * @see [hasClass]
+ */
+inline fun <reified T : Any> Assert<Any>.isInstanceOf() = isInstanceOf(T::class)
+
+/**
  * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf(String::class)` and
- * `assertThat("test").isInstanceOf(Any::class)` is successful.
+ * `assertThat("test").isInstanceOf(Any::class)` are successful.
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
