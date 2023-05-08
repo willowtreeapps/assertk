@@ -144,3 +144,11 @@ fun Assert<CharSequence>.matches(regex: Regex) = given { actual ->
     if (actual.matches(regex)) return
     expected("to match:${show(regex)} but was:${show(actual)}")
 }
+
+/**
+ * Asserts the char sequence contains a match of the regular expression.
+ */
+fun Assert<CharSequence>.containsMatch(regex: Regex) = given { actual ->
+    if (regex.containsMatchIn(actual)) return
+    expected("to contain match:${show(regex)} but was:${show(actual)}")
+}

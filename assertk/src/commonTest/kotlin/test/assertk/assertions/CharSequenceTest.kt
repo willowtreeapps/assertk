@@ -270,4 +270,18 @@ class CharSequenceTest {
         assertEquals("expected to match:${show(regex)} but was:<\"12345\">", error.message)
     }
     //endregion
+
+    //region contains match
+    @Test fun contains_match_matching_value_passes() {
+        assertThat("abc1234xyz").containsMatch(Regex("\\d\\d\\d\\d"))
+    }
+
+    @Test fun contains_match_not_matching_value_fails() {
+        val regex = Regex("\\d\\d\\d\\d")
+        val error = assertFailsWith<AssertionError> {
+            assertThat("abc123xyz").containsMatch(regex)
+        }
+        assertEquals("expected to contain match:${show(regex)} but was:<\"abc123xyz\">", error.message)
+    }
+    //endregion
 }
