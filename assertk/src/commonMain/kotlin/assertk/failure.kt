@@ -4,6 +4,7 @@ import assertk.Failure.Companion.soft
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import com.willowtreeapps.opentest4k.MultipleFailuresError
 import com.willowtreeapps.opentest4k.failures
+import kotlin.DeprecationLevel.HIDDEN
 
 /**
  * Assertions are run in a failure context which captures failures to report them.
@@ -139,17 +140,29 @@ fun fail(error: AssertionError): Nothing {
 
 internal val NONE: Any = Any()
 
+// TODO Delete this before 1.0.
+@Deprecated("For binary compatibility", level = HIDDEN)
+fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
+    fail(message, expected, actual, null)
+}
+
 /**
  * Fail the test with the given message.
  */
-fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
+fun fail(
+    message: String,
+    expected: Any? = NONE,
+    actual: Any? = NONE,
+    cause: Throwable? = null,
+): Nothing {
     if (expected === NONE && actual === NONE) {
-        throw AssertionFailedError(message)
+        throw AssertionFailedError(message, cause)
     } else {
         throw AssertionFailedError(
             message,
             if (expected === NONE) null else expected,
-            if (actual === NONE) null else actual
+            if (actual === NONE) null else actual,
+            cause,
         )
     }
 }
