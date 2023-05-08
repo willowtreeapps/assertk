@@ -2,6 +2,7 @@ package assertk.assertions.support
 
 import assertk.Assert
 import assertk.NONE
+import assertk.ValueAssert
 import assertk.fail
 
 /**
@@ -76,10 +77,30 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
 fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
     val maybeSpace = if (message.startsWith(":")) "" else " "
     val maybeInstance = if (context.originatingSubject != null) " (${context.displayOriginatingSubject()})" else ""
+
+    // Attempt to extract a helpful Throwable to use as a cause if the current value
+    // or originating subject are a Throwable or failure Result.
+    var cause: Throwable? = null
+    if (this is ValueAssert<*>) {
+        cause = when (value) {
+            is Throwable -> value
+            is Result<*> -> value.exceptionOrNull()
+            else -> null
+        }
+        if (cause == null) {
+            cause = when (val originating = context.originatingSubject) {
+                is Throwable -> originating
+                is Result<*> -> originating.exceptionOrNull()
+                else -> null
+            }
+        }
+    }
+
     fail(
         message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
         expected = expected,
-        actual = actual
+        actual = actual,
+        cause = cause,
     )
 }
 
