@@ -25,12 +25,12 @@ class JVMAssertLambdaTest {
     }
 
     private suspend fun asyncReturnValue(): Int {
-        delay(10000)
+        delay(10)
         return 1
     }
 
     private suspend fun asyncThrows() {
-        delay(10000)
+        delay(10)
         throw  Exception("test")
     }
 }
