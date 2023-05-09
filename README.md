@@ -165,20 +165,13 @@ assertThat(people)
 
 ### Exceptions
 
-If you expect an exception to be thrown, you can use the version of `assertThat` that takes a lambda.
+If you expect an exception to be thrown, you can use `assertFailure` which takes a lambda.
 
 ```kotlin
-assertThat {
+assertFailure {
     throw Exception("error")
-}.isFailure().hasMessage("wrong")
+}.hasMessage("wrong")
 // -> expected [message] to be:<["wrong"]> but was:<["error"]>
-```
-
-This method also allows you to assert on successfully returned values.
-
-```kotlin
-assertThat { 1 + 1 }.isSuccess().isNegative()
-// -> expected to be negative but was:<2>
 ```
 
 ### Table Assertions
