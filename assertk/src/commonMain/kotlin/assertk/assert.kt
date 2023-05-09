@@ -187,6 +187,7 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
  *
  * @see assertFailure
  */
+@Deprecated("Use assertThat or assertFailure", ReplaceWith("assertThat(runCatching(f))"))
 inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(runCatching(f))
 
 /**

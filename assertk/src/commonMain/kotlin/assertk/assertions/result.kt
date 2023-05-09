@@ -6,10 +6,10 @@ import assertk.assertions.support.show
 import assertk.showError
 
 /**
- * Asserts the given [assertk.Result] successful returned a value, returning it's result if it did or failing if it didn't.
+ * Asserts the given [Result] successful returned a value, returning its result if it did or failing if it didn't.
  *
  * ```
- * assertThat { 1 + 1 }.isSuccess().isEqualTo(2)
+ * assertThat(runCatching { 1 + 1 }).isSuccess().isEqualTo(2)
  * ```
  */
 fun <T> Assert<Result<T>>.isSuccess(): Assert<T> = transform { actual ->
@@ -19,10 +19,10 @@ fun <T> Assert<Result<T>>.isSuccess(): Assert<T> = transform { actual ->
 }
 
 /**
- * Asserts the given [assertk.Result] threw an exception, returning that exception if it was or failing it if didn't.
+ * Asserts the given [Result] threw an exception, returning that exception if it was or failing it if didn't.
  *
  * ```
- * assertThat { throw Exception("error") }.isFailure().hasMessage("error")
+ * assertThat(runCatching { throw Exception("error") }).isFailure().hasMessage("error")
  * ```
  */
 fun <T> Assert<Result<T>>.isFailure(): Assert<Throwable> = transform { actual ->

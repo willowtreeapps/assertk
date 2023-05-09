@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
+- Lambda-accepting `assertThat { }` entrypoint is now deprecated.
+  Use `assertThat(T)` for normal values or `assertFailure { }` for exception-throwing code.
 - Previous deprecations are now errors
 
 ### Added
+- Added `assertFailure { }` entrypoint which is a shorthand for `assertThat(runCatching { .. }).isFailure()`
 - Added `first` and `single` assertion for `Iterable`
 - Added sequence assertions to mirror iterable
 - Added array assertions for `UByteArray`, `UShortArray`, `UIntArray`, and `ULongArray`.
