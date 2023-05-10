@@ -7,13 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
+- Minimum supported kotlin version is 1.8.10
+- Minimum supported coroutines version is 1.7.0
 - Lambda-accepting `assertThat { }` entrypoint is now deprecated.
   Use `assertThat(T)` for normal values or `assertFailure { }` for exception-throwing code.
+- When asserting on a `Throwable` or failed `Result`, their exception is added as the cause to any
+  `AssertionError`s which are thrown as the result of an assertion failure.
+- Removed second type parameter on `Any.isInstanceOf` extension. In practice this would generally widen
+  to `Any` which is what it has been replaced with.
 - Previous deprecations are now errors
 
 ### Added
 - Added `assertFailure { }` entrypoint which is a shorthand for `assertThat(runCatching { .. }).isFailure()`
 - Added `first` and `single` assertion for `Iterable`
+- Added `containsMatch` assertion for `CharSequence`.
+  Unlike 'contains' this is a regex rather than a literal.
+  Unlike 'matches' this looks for a subset of the `CharSequence` to match rather than the entire contents.
+- Added reified overloads of `hasClass`, `doesNotHaveClass`, `isInstanceOf`, and `isNotInstanceOf`.
+  For example: `isInstanceOf<String>()`.
 - Added sequence assertions to mirror iterable
 - Added array assertions for `UByteArray`, `UShortArray`, `UIntArray`, and `ULongArray`.
 
