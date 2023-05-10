@@ -201,6 +201,11 @@ inline fun assertAll(f: () -> Unit) {
  * Asserts that the given block will throw an exception rather than complete successfully.
  */
 fun assertFailure(f: () -> Unit): Assert<Throwable> {
-    runCatching(f).onFailure { return assertThat(it) }
+    @Suppress("TooGenericExceptionCaught") // Intentionally capturing all exceptions.
+    try {
+        f()
+    } catch (t: Throwable) {
+        return assertThat(t)
+    }
     fail("expected failure but lambda completed successfully")
 }
