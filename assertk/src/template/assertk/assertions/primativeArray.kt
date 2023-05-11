@@ -122,7 +122,7 @@ fun Assert<$T>.hasSameSizeAs(other: $T) = given { actual ->
 $A
 fun Assert<$T>.index(index: Int): Assert<$E> =
     transform(appendName(show(index, "[]"))) { actual ->
-        if (index in 0 until actual.size) {
+        if (index in actual.indices) {
             actual[index]
         } else {
             expected("index to be in range:[0-${actual.size}) but was:${show(index)}")

@@ -45,7 +45,7 @@ fun Assert<List<*>>.containsExactly(vararg elements: Any?) = given { actual ->
  */
 internal fun List<*>.contentEquals(other: Array<*>): Boolean {
     if (size != other.size) return false
-    for (i in 0 until size) {
+    for (i in indices) {
         if (get(i) != other[i]) return false
     }
     return true
