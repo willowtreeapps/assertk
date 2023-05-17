@@ -29,6 +29,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.coroutines.test)
             }
             kotlin.srcDir(compileTestTemplates)
         }
