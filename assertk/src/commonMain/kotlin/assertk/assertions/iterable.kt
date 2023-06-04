@@ -117,7 +117,24 @@ fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given
 }
 
 inline fun <reified T> Assert<Iterable<T>>.containsExactlyInAnyOrder(expected: Iterable<T>) = given { actual ->
-    assertThat(actual).containsExactlyInAnyOrder(expected.toMutableList().toTypedArray())
+    val actualMap = actual.groupingBy { it }.eachCount()
+    val expectedMap = expected.groupingBy { it }.eachCount()
+
+    if (actualMap == expectedMap) {
+        return
+    }
+
+    val notInActual = expectedMap.filter { (key, value) -> (actualMap[key] ?: 0) < value }.map { it.key }
+    val notInExpected = actualMap.filter { (key, value) -> (expectedMap[key] ?: 0) < value }.map { it.key }
+
+    expected(StringBuilder("to contain exactly in any order:${show(expected)} but was:${show(actual)}").apply {
+        if (notInActual.isNotEmpty()) {
+            append("\n elements not found:${show(notInActual)}")
+        }
+        if (notInExpected.isNotEmpty()) {
+            append("\n extra elements found:${show(notInExpected)}")
+        }
+    }.toString())
 }
 
 internal fun MutableList<*>.removeFirst(value: Any?) {
