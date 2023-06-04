@@ -116,6 +116,10 @@ fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given
     }.toString())
 }
 
+inline fun <reified T> Assert<Iterable<T>>.containsExactlyInAnyOrder(expected: Iterable<T>) = given { actual ->
+    assertThat(actual).containsExactlyInAnyOrder(*expected.toList().toTypedArray())
+}
+
 internal fun MutableList<*>.removeFirst(value: Any?) {
     val index = indexOf(value)
     if (index > -1) removeAt(index)

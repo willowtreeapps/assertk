@@ -206,6 +206,72 @@ class IterableTest {
             error.message
         )
     }
+
+    @Test fun containsExactlyInAnyOrder_only_elements_of_another_iterable_passes() {
+        assertThat(iterableOf(1, 2)).containsExactlyInAnyOrder(iterableOf(2, 1))
+    }
+
+    @Test fun containsExactlyInAnyOrder_only_elements_of_another_iterable_passes2() {
+        assertThat(iterableOf(1, 2, 1)).containsExactlyInAnyOrder(iterableOf(2, 1, 1))
+    }
+
+    @Test fun containsExactlyInAnyOrder_duplicate_elements_of_another_iterable_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1, 2, 2)).containsExactlyInAnyOrder(iterableOf(2, 1))
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1]> but was:<[1, 2, 2]>
+                | extra elements found:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_of_another_iterable_duplicate_elements_fails2() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1, 2)).containsExactlyInAnyOrder(iterableOf(2, 2, 1))
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 2, 1]> but was:<[1, 2]>
+                | elements not found:<[2]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder__of_another_iterable_more_elements_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1, 2, 3)).containsExactlyInAnyOrder(iterableOf(2, 1))
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1]> but was:<[1, 2, 3]>
+                | extra elements found:<[3]>
+            """.trimMargin(), error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_of_another_iterable_less_elements_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1, 2, 3)).containsExactlyInAnyOrder(iterableOf(2, 1, 3, 4))
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2, 1, 3, 4]> but was:<[1, 2, 3]>
+                | elements not found:<[4]>
+            """.trimMargin(),
+            error.message
+        )
+    }
+
+    @Test fun containsExactlyInAnyOrder_of_another_iterable_different_elements_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1)).containsExactlyInAnyOrder(iterableOf(2))
+        }
+        assertEquals(
+            """expected to contain exactly in any order:<[2]> but was:<[1]>
+                | elements not found:<[2]>
+                | extra elements found:<[1]>
+            """.trimMargin(),
+            error.message
+        )
+    }
     //endregion
 
     //region each
