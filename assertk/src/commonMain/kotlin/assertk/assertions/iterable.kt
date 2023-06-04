@@ -117,7 +117,7 @@ fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given
 }
 
 inline fun <reified T> Assert<Iterable<T>>.containsExactlyInAnyOrder(expected: Iterable<T>) = given { actual ->
-    assertThat(actual).containsExactlyInAnyOrder(*expected.toList().toTypedArray())
+    assertThat(actual).containsExactlyInAnyOrder(expected.toMutableList().toTypedArray())
 }
 
 internal fun MutableList<*>.removeFirst(value: Any?) {
