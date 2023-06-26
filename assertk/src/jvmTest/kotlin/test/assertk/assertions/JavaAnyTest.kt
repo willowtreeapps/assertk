@@ -53,7 +53,6 @@ class JavaAnyTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(DifferentObject::class.java)
-                .isNull()
         }
         assertEquals(
             "expected to be instance of:<$p\$DifferentObject> but had class:<$p\$BasicObject>",

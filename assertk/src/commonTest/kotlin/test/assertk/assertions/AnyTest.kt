@@ -241,9 +241,9 @@ class AnyTest {
 
     @Test fun nested_prop_callable_function_include_names_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop(BasicObject::funcB).prop(BasicObject::funcA).isNull()
+            assertThat(subject).prop(BasicObject::funcB).prop(BasicObject::funcA).isEqualTo("B")
         }
-        assertEquals("expected [funcB.funcA] to be null but was:<\"A\"> (test)", error.message)
+        assertEquals("expected [funcB.funcA]:<\"[B]\"> but was:<\"[A]\"> (test)", error.message)
     }
     //endregion
 
@@ -392,7 +392,7 @@ class AnyTest {
 
     @Test fun isInstanceOf_kclass_doesnt_run_block_when_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject as TestObject).isInstanceOf(DifferentObject::class).isNull()
+            assertThat(subject as TestObject).isInstanceOf(DifferentObject::class)
         }
         assertEquals(
             "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",
@@ -402,7 +402,7 @@ class AnyTest {
 
     @Test fun isInstanceOf_reified_kclass_doesnt_run_block_when_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject as TestObject).isInstanceOf<DifferentObject>().isNull()
+            assertThat(subject as TestObject).isInstanceOf<DifferentObject>()
         }
         assertEquals(
             "expected to be instance of:<${DifferentObject::class}> but had class:<${BasicObject::class}>",

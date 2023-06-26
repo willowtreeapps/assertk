@@ -6,6 +6,9 @@ import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
+import kotlin.DeprecationLevel.ERROR
+import kotlin.js.JsName
+import kotlin.jvm.JvmName
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -113,6 +116,14 @@ fun Assert<Any?>.isNull() = given { actual ->
 }
 
 /**
+ * @suppress
+ */
+@Deprecated("isNull is redundant on non-null type", level = ERROR)
+@JsName("isNullIdentity")
+@JvmName("isNullIdentity")
+fun Assert<Any>.isNull() = this
+
+/**
  * Asserts the value is not null. You can pass in an optional lambda to run additional assertions on the non-null value.
  *
  * ```
@@ -123,6 +134,14 @@ fun Assert<Any?>.isNull() = given { actual ->
 fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
     actual ?: expected("to not be null")
 }
+
+/**
+ * @suppress
+ */
+@Deprecated("isNotNull is redundant on non-null type", ReplaceWith("this"), level = ERROR)
+@JsName("isNotNullIdentity")
+@JvmName("isNotNullIdentity")
+fun <T : Any> Assert<T>.isNotNull(): Assert<T> = this
 
 /**
  * Returns an assert that asserts on the given property of the value.
