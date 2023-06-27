@@ -16,22 +16,33 @@ See [Custom Assertions](#custom-assertions) below to find out how to do this.
 
 ## Setup
 
-### Gradle/JVM
-
-```groovy
+```kotlin
 repositories {
   mavenCentral()
 }
 
 dependencies {
-  testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.25'
+  testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
 }
 ```
 
-### Javascript/Common
+assertk has full multiplatform support and it can be used in jvm, js, or native projects. For example to set it up using
+the multiplatform plugin:
+```kotlin
+plugins {
+  kotlin("multiplatform")
+}
 
-Replace dependency on `assertk-jvm` with `assertk-js` or `assertk` to use it in JavaScript and common projects,
-respectively.
+kotlin {
+  sourceSets {
+    val commonTest by getting {
+      dependencies {
+        implementation("com.willowtreeapps.assertk:assertk:0.26.1")
+      }
+    }
+  }
+}
+```
 
 ## Usage
 

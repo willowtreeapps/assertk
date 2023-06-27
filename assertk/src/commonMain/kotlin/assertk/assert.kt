@@ -200,7 +200,7 @@ inline fun assertAll(f: () -> Unit) {
 /**
  * Asserts that the given block will throw an exception rather than complete successfully.
  */
-fun assertFailure(f: () -> Unit): Assert<Throwable> {
+inline fun assertFailure(f: () -> Unit): Assert<Throwable> {
     @Suppress("TooGenericExceptionCaught") // Intentionally capturing all exceptions.
     try {
         f()

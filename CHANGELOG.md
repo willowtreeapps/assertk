@@ -6,15 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.26.1] 2023-05-18
+
+### Fixed
+- Made `assertFailure {}` inline like `assertThat {}` was to allow testing suspend function failures.
+
+## [0.26] 2023-05-12
+
 ### Changed
 - Minimum supported kotlin version is 1.8.10
 - Minimum supported coroutines version is 1.7.0
-- Lambda-accepting `assertThat { }` entrypoint is now deprecated.
-  Use `assertThat(T)` for normal values or `assertFailure { }` for exception-throwing code.
 - When asserting on a `Throwable` or failed `Result`, their exception is added as the cause to any
   `AssertionError`s which are thrown as the result of an assertion failure.
 - Removed second type parameter on `Any.isInstanceOf` extension. In practice this would generally widen
   to `Any` which is what it has been replaced with.
+
+### Breaking Changes
 - Previous deprecations are now errors
 
 ### Added
@@ -27,6 +34,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   For example: `isInstanceOf<String>()`.
 - Added sequence assertions to mirror iterable
 - Added array assertions for `UByteArray`, `UShortArray`, `UIntArray`, and `ULongArray`.
+
+### Deprecated
+- Lambda-accepting `assertThat { }` entrypoint is now deprecated.
+  Use `assertThat(T)` for normal values or `assertFailure { }` for exception-throwing code.
 
 ### Fixed
 - Fixed iterable assertions that take a block that could have multiple assertions.
