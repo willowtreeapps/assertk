@@ -4,6 +4,7 @@ import assertk.assertions.isFailure
 import assertk.assertions.isSuccess
 import assertk.assertions.support.display
 import assertk.assertions.support.show
+import kotlin.DeprecationLevel.ERROR
 import kotlin.reflect.KProperty0
 import kotlin.runCatching
 
@@ -187,7 +188,7 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
  *
  * @see assertFailure
  */
-@Deprecated("Use assertThat(result) or assertFailure", ReplaceWith("assertThat(runCatching(f))"))
+@Deprecated("Use assertThat(result) or assertFailure", ReplaceWith("assertThat(runCatching(f))"), ERROR)
 inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(runCatching(f))
 
 /**
