@@ -102,8 +102,8 @@ class AssertAllTest {
     @Test fun assertAll_fails_multiple_block_thrownError_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
-                assertThat { 1 + 1 }.isFailure()
-                assertThat { 2 + 3 }.isFailure()
+                assertThat(runCatching { 1 + 1 }).isFailure()
+                assertThat(runCatching { 2 + 3 }).isFailure()
             }
         }
         assertEquals(
@@ -118,8 +118,8 @@ class AssertAllTest {
     @Test fun assertAll_fails_multiple_block_returnedValue_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
-                assertThat { throw Exception("error1") }.isSuccess()
-                assertThat { throw Exception("error2") }.isSuccess()
+                assertThat(runCatching { throw Exception("error1") }).isSuccess()
+                assertThat(runCatching { throw Exception("error2") }).isSuccess()
             }
         }
         assertEquals(
@@ -133,8 +133,8 @@ class AssertAllTest {
     @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
-                assertThat { throw Exception("error1") }.isSuccess()
-                assertThat { throw Exception("error2") }.isSuccess()
+                assertThat(runCatching { throw Exception("error1") }).isSuccess()
+                assertThat(runCatching { throw Exception("error2") }).isSuccess()
             }
         }
         assertEquals(
