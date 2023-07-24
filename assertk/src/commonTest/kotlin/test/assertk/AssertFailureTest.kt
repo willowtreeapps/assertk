@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.message
 import com.willowtreeapps.opentest4k.AssertionFailedError
-import kotlinx.coroutines.test.runTest
 import test.assertk.assertions.valueOrFail
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

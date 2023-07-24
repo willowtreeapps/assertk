@@ -8,7 +8,6 @@ import assertk.assertions.isSuccess
 import test.assertk.assertions.valueOrFail
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.coroutines.test.runTest
 
 @Suppress("DEPRECATION_ERROR")
 class AssertLambdaTest {
