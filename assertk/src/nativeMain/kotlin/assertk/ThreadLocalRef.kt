@@ -1,7 +1,7 @@
 package assertk
 
 import kotlin.native.concurrent.ThreadLocal
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
 
 /*
  * Copyright (C) 2018 Touchlab, Inc.
