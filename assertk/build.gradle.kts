@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.common
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.wasm
+
 plugins {
     id("assertk.multiplatform")
     id("assertk.publish")
@@ -25,11 +29,9 @@ kotlin {
             }
             kotlin.srcDir(compileTemplates)
         }
-        commonTest {
+        val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(libs.kotlinx.coroutines)
-                implementation(libs.kotlinx.coroutines.test)
             }
             kotlin.srcDir(compileTestTemplates)
         }
@@ -42,6 +44,22 @@ kotlin {
             dependencies {
                 implementation(kotlin("reflect"))
             }
+        }
+
+        val coroutinesTest by creating {
+            dependsOn(commonTest)
+            dependencies {
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+    }
+
+    targets.configureEach {
+        if (platformType != common && platformType != wasm) {
+            compilations.getByName("test")
+                .defaultSourceSet
+                .dependsOn(sourceSets.getByName("coroutinesTest"))
         }
     }
 }

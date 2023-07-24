@@ -48,6 +48,12 @@ kotlin {
             }
         }
     }
+    // TODO Remove conditional once coroutines ships a version with WASM target.
+    if (project.path != ":assertk-coroutines") {
+        wasm {
+            nodejs()
+        }
+    }
 
     for (target in nativeTargets) {
         targets.add(presets.getByName(target).createTarget(target))
