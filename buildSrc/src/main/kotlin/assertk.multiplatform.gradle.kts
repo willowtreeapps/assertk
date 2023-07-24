@@ -39,7 +39,7 @@ val nativeTargets = arrayOf(
 
 kotlin {
     jvm()
-    js(IR) {
+    js {
         nodejs()
         // suppress noisy 'Reflection is not supported in JavaScript target'
         for (compilation in arrayOf("main", "test")) {
