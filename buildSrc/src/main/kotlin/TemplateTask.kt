@@ -61,6 +61,7 @@ abstract class TemplateTask : DefaultTask() {
 
     @TaskAction
     fun run() {
+        val lineSeparator = System.lineSeparator()
         val inDir = inputDir.get().asFile
         val outDir = outputDir.get().asFile
 
@@ -72,7 +73,7 @@ abstract class TemplateTask : DefaultTask() {
             val content = template.readText()
 
             val tokensStart = content.indexOf('$')
-            val tokensStop = content.indexOf("\n\n", startIndex = tokensStart)
+            val tokensStop = content.indexOf("$lineSeparator$lineSeparator", startIndex = tokensStart)
             val tokenLine = content.substring(tokensStart until tokensStop)
             val tokens = tokenLine.substringBefore('=').split(':').cleanup()
             val replacements = tokenLine.substringAfter('=')
