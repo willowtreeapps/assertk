@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gradle: circleci/gradle@1.0.10
+  win: circleci/windows@5.0
 _defaults: &defaults
   working_directory: ~/code
   environment:
@@ -10,6 +11,10 @@ _gradle_checksum: &gradle_checksum
   command: >-
     find . -name 'build.gradle' | sort | xargs cat | shasum | awk '{print
     $1}' > /tmp/gradle_cache_seed
+_gradle_checksum_windows: &gradle_checksum_windows
+  name: Generate Cache Checksum (Windows)
+  command: >-
+    Get-ChildItem -Filter *.gradle* -Recurse | Get-FileHash | Out-File -FilePath ".circleci/gradle_cache_seed"
 jobs:
   build-linux:
     docker:
@@ -79,6 +84,29 @@ jobs:
           key: >-
             gradle-{{ checksum "/tmp/gradle_cache_seed" }}-{{ checksum
             ".circleci/config.yml" }}-macos
+  build-windows:
+    executor:
+        name: win/default
+        size: large
+    steps:
+      - checkout
+      - run:
+          <<: *gradle_checksum_windows
+      - restore_cache:
+          key: >-
+            gradle-{{ checksum ".circleci/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-windows
+      - run:
+          command: ./gradlew --no-daemon build
+          shell: bash.exe
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+            - ~/.konan
+          key: >-
+            gradle-{{ checksum ".circleci/gradle_cache_seed" }}-{{ checksum
+            ".circleci/config.yml" }}-windows
 workflows:
   version: 2
   build:
@@ -88,6 +116,10 @@ workflows:
             branches:
               ignore: main
       - build-macos:
+          filters:
+            branches:
+              ignore: main
+      - build-windows:
           filters:
             branches:
               ignore: main
