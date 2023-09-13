@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.27.0] 2023-09-13
+
+### Changed
+- Minimum supported kotlin version is 1.9.0
+- Added support for WASM targets (note: this only applies to the core library
+  and not assertk-coroutines as the coroutines library doesn't have a stable
+  release for it yet)
+
+### Breaking Changes
+- Previous `assertThat {}` deprecation warning is now an error
 
 ## [0.26.1] 2023-05-18
 
