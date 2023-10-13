@@ -260,3 +260,32 @@ error message.
 ## Contributing to assertk
 
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/main/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/main/code-of-conduct.md).
+
+## Troubleshooting
+
+### I'm seeing a java.lang.NoClassDefFoundError: org/opentest4j/AssertionFailedError
+
+It might happen that your tests are failing with something like:
+
+```
+java.lang.AssertionError: java.lang.NoClassDefFoundError: org/opentest4j/AssertionFailedError
+
+	at me.tatarka.open4jideissuetest.ExampleUnitTest.addition_isCorrect(ExampleUnitTest.kt:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+[...]
+```
+
+It's a [known issue](https://youtrack.jetbrains.com/issue/IDEA-214533) and there is a workaround. You can add:
+
+```
+testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+```
+or
+```
+testImplemetation("org.opentest4j:opentest4j:1.1.1")
+```
+
+to your `build.gradle*` file 👍
