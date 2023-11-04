@@ -3,17 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.lint.library"
+    namespace = "assertk.android.lint"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 19
+        minSdk = 21
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
     lint {
         checkDependencies = true
     }
