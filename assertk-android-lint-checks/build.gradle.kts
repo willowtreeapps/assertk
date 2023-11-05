@@ -1,6 +1,27 @@
 plugins {
     id("java-library")
+    kotlin("jvm")
     alias(libs.plugins.android.lint)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+kotlin {
+    sourceSets {
+        main {
+            this.kotlin.srcDirs("src/main/kotlin")
+        }
+        test {
+            this.kotlin.srcDirs("src/test/kotlin")
+        }
+    }
 }
 
 lint {
@@ -9,6 +30,7 @@ lint {
     textReport = true
     absolutePaths = false
     ignoreTestSources = true
+    warningsAsErrors = true
 }
 
 dependencies {

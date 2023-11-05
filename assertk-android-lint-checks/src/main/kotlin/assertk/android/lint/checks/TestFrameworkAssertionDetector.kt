@@ -11,7 +11,7 @@ import com.android.tools.lint.detector.api.Severity
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UElement
 
-class Junit4Detector : Detector(), Detector.UastScanner {
+class TestFrameworkAssertionDetector : Detector(), Detector.UastScanner {
     override fun getApplicableUastTypes(): List<Class<out UElement>> = listOf(
         UCallExpression::class.java,
     )
@@ -19,37 +19,32 @@ class Junit4Detector : Detector(), Detector.UastScanner {
     override fun createUastHandler(context: JavaContext): UElementHandler {
         return object : UElementHandler() {
             override fun visitCallExpression(node: UCallExpression) {
-                if (context.evaluator.isMemberInClass(node.resolve(), "org.junit.Assert")) {
-                    context.report(
-                        ISSUE, node, context.getLocation(node),
-                        "Use asserk assertions"
-                    )
+                val psiMethod = node.resolve()
+                val isJunit4Assertion = context.evaluator.isMemberInClass(psiMethod, "org.junit.Assert")
+                val isJunit5Assertion = context.evaluator.isMemberInClass(psiMethod, "org.junit.jupiter.api.Assertions")
+                val isKotlinTestAssertion = context.evaluator.isMemberInClass(psiMethod, "kotlin.test.AssertionsKt")
+
+                if (isJunit4Assertion || isJunit5Assertion || isKotlinTestAssertion) {
+                    context.report(ISSUE, node, context.getLocation(node), "Use asserk assertions")
                 }
             }
         }
     }
 
     companion object {
-        /**
-         * Issue describing the problem and pointing to the detector
-         * implementation.
-         */
         @JvmField
         val ISSUE: Issue = Issue.create(
-            id = "SampleId",
-            briefDescription = "Lint Mentions",
+            id = "TestFrameworkAssertionUse",
+            briefDescription = "Test framework assertion is called",
 
             explanation = """
-                    This check highlights string literals in code which mentions the word `lint`. \
-                    Blah blah blah.
-
-                    Another paragraph here.
+                    Test frameworks like junit and kotlin test ship with built-in test assertions. However, these assertion mechanisms shouldn't be used if fluent assertion libraries are on the classpath.
                     """,
             category = Category.CORRECTNESS,
             priority = 6,
             severity = Severity.WARNING,
             implementation = Implementation(
-                Junit4Detector::class.java,
+                TestFrameworkAssertionDetector::class.java,
                 Scope.JAVA_FILE_SCOPE
             )
         )

@@ -9,9 +9,7 @@ import com.android.tools.lint.detector.api.CURRENT_API
  */
 class AssertkIssueRegistry : IssueRegistry() {
     override val issues = listOf(
-        Junit4Detector.ISSUE,
-        Junit5Detector.ISSUE,
-        KotlinTestDetector.ISSUE,
+        TestFrameworkAssertionDetector.ISSUE,
     )
 
     override val api: Int
