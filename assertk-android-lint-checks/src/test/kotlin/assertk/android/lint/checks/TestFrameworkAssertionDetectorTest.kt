@@ -28,6 +28,29 @@ class TestFrameworkAssertionDetectorTest : LintDetectorTest() {
     }
 
     @Test
+    fun `test junit 4 assertion not reported for java source`() {
+        val code = """
+            package error;
+
+            import java.io.File;
+            import org.junit.Assert.assertEquals;
+
+            class TestingTesting {
+                fun testingTest() {
+                    val first = File();
+                    val second = File();
+                    assertEquals(first, second);
+                }
+            }
+        """.trimIndent()
+
+        lint().files(
+            java(code),
+            java(JUNIT_4_ASSERT_STUB),
+        ).run().expectClean()
+    }
+
+    @Test
     fun `test junit 4 assertion detected`() {
         val code = """
             package error

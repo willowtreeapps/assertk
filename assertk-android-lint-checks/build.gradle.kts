@@ -16,10 +16,10 @@ kotlin {
 kotlin {
     sourceSets {
         main {
-            this.kotlin.srcDirs("src/main/kotlin")
+            kotlin.srcDirs("src/main/kotlin")
         }
         test {
-            this.kotlin.srcDirs("src/test/kotlin")
+            kotlin.srcDirs("src/test/kotlin")
         }
     }
 }

@@ -12,18 +12,12 @@ import com.android.tools.lint.detector.api.isJava
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UElement
 
-class TestFrameworkAssertionDetector : Detector(), Detector.UastScanner {
+class AssertJDetector : Detector(), Detector.UastScanner {
     override fun getApplicableUastTypes(): List<Class<out UElement>> = listOf(
         UCallExpression::class.java,
     )
 
     override fun createUastHandler(context: JavaContext) = object : UElementHandler() {
-        private val frameworkAssertionClasses = listOf(
-            "org.junit.Assert", // junit 4
-            "org.junit.jupiter.api.Assertions", // junit 5
-            "kotlin.test.AssertionsKt", // kotlin.test
-        )
-
         override fun visitCallExpression(node: UCallExpression) {
             // Avoid enforcing assertk use in java
             // sources for mixed language codebases
@@ -31,17 +25,13 @@ class TestFrameworkAssertionDetector : Detector(), Detector.UastScanner {
 
             val psiMethod = node.resolve()
 
-            for (assertionClass in frameworkAssertionClasses) {
-                if (context.evaluator.isMemberInClass(psiMethod, assertionClass)) {
-                    context.report(
-                        ISSUE,
-                        node,
-                        context.getLocation(node),
-                        "Use asserk assertions"
-                    )
-
-                    return
-                }
+            if (context.evaluator.isMemberInClass(psiMethod, "org.assertj.core.api.Assertions")) {
+                context.report(
+                    ISSUE,
+                    node,
+                    context.getLocation(node),
+                    "Use asserk assertions"
+                )
             }
         }
     }
@@ -49,17 +39,17 @@ class TestFrameworkAssertionDetector : Detector(), Detector.UastScanner {
     companion object {
         @JvmField
         val ISSUE: Issue = Issue.create(
-            id = "TestFrameworkAssertionUse",
-            briefDescription = "Test framework assertion is called",
-
+            id = "AssertJUse",
+            briefDescription = "AssertJ assertions are called",
             explanation = """
-                    Test frameworks like junit and kotlin test ship with built-in test assertions. However, these assertion mechanisms shouldn't be used if fluent assertion libraries are on the classpath.
+                    AssertJ assertions should not be used in Kotlin tests. Use assertk instead.
                     """,
             category = Category.CORRECTNESS,
             priority = 6,
             severity = Severity.WARNING,
+            enabledByDefault = false,
             implementation = Implementation(
-                TestFrameworkAssertionDetector::class.java,
+                AssertJDetector::class.java,
                 Scope.JAVA_FILE_SCOPE
             )
         )
