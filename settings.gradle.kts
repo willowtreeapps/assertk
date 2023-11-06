@@ -19,6 +19,5 @@ rootProject.name = "assertk-project"
 include(
     ":assertk",
     ":assertk-android-lint",
-    ":assertk-android-lint-checks",
     ":assertk-coroutines",
 )

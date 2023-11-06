@@ -1,4 +1,4 @@
-package assertk.android.lint.checks
+package assertk.android.lint
 
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.Category

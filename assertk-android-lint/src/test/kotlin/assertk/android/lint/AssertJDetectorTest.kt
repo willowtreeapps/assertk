@@ -1,4 +1,4 @@
-package assertk.android.lint.checks
+package assertk.android.lint
 
 import com.android.tools.lint.checks.infrastructure.LintDetectorTest
 import org.junit.Test

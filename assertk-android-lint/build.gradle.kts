@@ -1,21 +1,38 @@
 plugins {
-    alias(libs.plugins.android.library)
+    id("java-library")
+    kotlin("jvm")
+    alias(libs.plugins.android.lint)
 }
 
-android {
-    namespace = "assertk.android.lint"
-    compileSdk = 34
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-    defaultConfig {
-        minSdk = 21
-    }
+kotlin {
+    jvmToolchain(17)
+}
 
-    lint {
-        checkDependencies = true
+kotlin {
+    sourceSets {
+        main {
+            kotlin.srcDirs("src/main/kotlin")
+        }
+        test {
+            kotlin.srcDirs("src/test/kotlin")
+        }
     }
+}
+
+lint {
+    htmlReport = true
+    textReport = true
+    absolutePaths = false
+    ignoreTestSources = true
+    warningsAsErrors = true
 }
 
 dependencies {
-    implementation(project(":assertk-android-lint-checks"))
-    lintPublish(project(":assertk-android-lint-checks"))
+    compileOnly(libs.bundles.lint.api)
+    testImplementation(libs.bundles.lint.tests)
 }
