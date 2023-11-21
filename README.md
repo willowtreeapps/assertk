@@ -257,6 +257,10 @@ fun Assert<Person>.hasMiddleName(): Assert<String> = prop(Person::middleName).is
 The general rule of thumb is to prefer building out of the existing assertions unless you can give a more meaningful
 error message.
 
+## Additional Tools
+
+* [Assertk Lint](https://github.com/jzbrooks/assertk-lint) - A set of lint rules to encourage proper use of assertk.
+
 ## Contributing to assertk
 
 Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/main/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/main/code-of-conduct.md).
