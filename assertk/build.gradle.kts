@@ -10,12 +10,12 @@ plugins {
 
 val compileTemplates by tasks.registering(TemplateTask::class) {
     inputDir.set(file("src/template"))
-    outputDir.set(file("$buildDir/generated/template"))
+    outputDir.set(layout.buildDirectory.dir("generated/template"))
 }
 
 val compileTestTemplates by tasks.registering(TemplateTask::class) {
     inputDir.set(file("src/testTemplate"))
-    outputDir.set(file("$buildDir/generated/testTemplate"))
+    outputDir.set(layout.buildDirectory.dir("generated/testTemplate"))
 }
 
 kotlin {

@@ -26,7 +26,7 @@ tasks.withType<DokkaTask>().configureEach {
 }
 
 val dokkaCommon by tasks.registering(DokkaTask::class) {
-    outputDirectory.set(file("$buildDir/javadoc/common"))
+    outputDirectory.set(layout.buildDirectory.dir("javadoc/common"))
     dokkaSourceSets {
         @Suppress("UNUSED_VARIABLE")
         val commonMain by getting

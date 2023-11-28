@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  gradle: circleci/gradle@1.0.10
+  gradle: circleci/gradle@3.0.0
   win: circleci/windows@5.0
 _defaults: &defaults
   working_directory: ~/code
@@ -18,7 +18,7 @@ _gradle_checksum_windows: &gradle_checksum_windows
 jobs:
   build-linux:
     docker:
-      - image: cimg/openjdk:16.0.2-browsers
+      - image: cimg/openjdk:17.0.9@sha256:a36da58bce6d1b6c43984970acec45546e746e628969b1261d6700367aa6e8dc
     resource_class: xlarge
     <<: *defaults
     steps:
