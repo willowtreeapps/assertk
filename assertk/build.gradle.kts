@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.common
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.wasm
@@ -22,6 +23,15 @@ kotlin {
         withJava()
     }
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        group("coroutines") {
+            withNative()
+            withJs()
+            withJvm()
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -29,7 +39,7 @@ kotlin {
             }
             kotlin.srcDir(compileTemplates)
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
             }
@@ -46,20 +56,11 @@ kotlin {
             }
         }
 
-        val coroutinesTest by creating {
-            dependsOn(commonTest)
+        val coroutinesTest by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.coroutines.test)
             }
-        }
-    }
-
-    targets.configureEach {
-        if (platformType != common && platformType != wasm) {
-            compilations.getByName("test")
-                .defaultSourceSet
-                .dependsOn(sourceSets.getByName("coroutinesTest"))
         }
     }
 }
