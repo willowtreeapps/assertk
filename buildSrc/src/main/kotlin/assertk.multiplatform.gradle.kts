@@ -1,8 +1,12 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("multiplatform")
@@ -27,19 +31,10 @@ if (libs.versions.assertk.get().endsWith("SNAPSHOT")) {
     }
 }
 
-val nativeTargets = arrayOf(
-    "linuxX64", "linuxArm64",
-    "macosX64", "macosArm64",
-    "mingwX64",
-    "iosArm32", "iosArm64", "iosX64", "iosSimulatorArm64",
-    "tvosArm64", "tvosX64", "tvosSimulatorArm64",
-    "watchosArm32", "watchosArm64", "watchosX86", "watchosX64", "watchosSimulatorArm64", "watchosDeviceArm64",
-    "androidNativeArm32", "androidNativeArm64", "androidNativeX86", "androidNativeX64",
-)
-
 kotlin {
     jvm()
     js {
+        browser()
         nodejs()
         // suppress noisy 'Reflection is not supported in JavaScript target'
         for (compilation in arrayOf("main", "test")) {
@@ -50,33 +45,33 @@ kotlin {
     }
     // TODO Remove conditional once coroutines ships a version with WASM target.
     if (project.path != ":assertk-coroutines") {
-        wasm {
+        @OptIn(ExperimentalWasmDsl::class)
+        wasmJs {
+            browser()
             nodejs()
         }
     }
 
-    for (target in nativeTargets) {
-        targets.add(presets.getByName(target).createTarget(target))
-    }
-
-    sourceSets {
-        val commonMain by getting
-        val commonTest by getting
-        val nativeMain = create("nativeMain") {
-            dependsOn(commonMain)
-        }
-        val nativeTest = create("nativeTest") {
-            dependsOn(commonTest)
-        }
-        for (sourceSet in nativeTargets) {
-            getByName("${sourceSet}Main") {
-                dependsOn(nativeMain)
-            }
-            getByName("${sourceSet}Test") {
-                dependsOn(nativeTest)
-            }
-        }
-    }
+    linuxX64()
+    linuxArm64()
+    macosX64()
+    macosArm64()
+    mingwX64()
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX86()
+    androidNativeX64()
 }
 
 tasks.withType<KotlinJvmCompile> {
@@ -129,4 +124,19 @@ val detektTest by tasks.registering(Detekt::class) {
 
 val detekt by tasks.getting {
     dependsOn(detektMain, detektTest)
+}
+
+rootProject.the<NodeJsRootExtension>().apply {
+    nodeVersion = "22.0.0-v8-canary20231127cbafc81f11"
+    nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
+}
+
+rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
+    args.add("--ignore-engines")
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
 }
