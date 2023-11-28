@@ -1,5 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -124,9 +125,12 @@ val detekt by tasks.getting {
     dependsOn(detektMain, detektTest)
 }
 
-rootProject.the<NodeJsRootExtension>().apply {
-    nodeVersion = "22.0.0-v8-canary20231127cbafc81f11"
-    nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
+// Node doesn't publish alpha versions for windows
+if(!DefaultNativePlatform.getCurrentOperatingSystem().isWindows) {
+    rootProject.the<NodeJsRootExtension>().apply {
+        nodeVersion = "22.0.0-v8-canary20231127cbafc81f11"
+        nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
+    }
 }
 
 rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
