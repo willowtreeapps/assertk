@@ -34,7 +34,6 @@ if (libs.versions.assertk.get().endsWith("SNAPSHOT")) {
 kotlin {
     jvm()
     js {
-        browser()
         nodejs()
         // suppress noisy 'Reflection is not supported in JavaScript target'
         for (compilation in arrayOf("main", "test")) {
@@ -47,7 +46,6 @@ kotlin {
     if (project.path != ":assertk-coroutines") {
         @OptIn(ExperimentalWasmDsl::class)
         wasmJs {
-            browser()
             nodejs()
         }
     }
