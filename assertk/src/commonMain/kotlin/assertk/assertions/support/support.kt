@@ -31,6 +31,7 @@ internal fun display(value: Any?): String {
             prefix = "{",
             postfix = "}",
             transform = { (k, v) -> "${display(k)}=${display(v)}" })
+
         is BooleanArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is CharArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
         is IntArray -> value.joinToString(prefix = "[", postfix = "]", transform = ::display)
@@ -54,7 +55,31 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
     if (expected == null || actual == null || expected == actual) {
         expected(message = ":${show(expected)} but was:${show(actual)}", expected = expected, actual = actual)
     } else {
-        val extractor = DiffExtractor(display(expected), display(actual))
+        val displayExpected = display(expected)
+        val displayActual = display(actual)
+
+        if (displayExpected == displayActual) {
+            // display() representations are the same, if the types are different, report them
+            val expectedType = expected::class
+            val actualType = actual::class
+
+            if (expectedType != actualType) {
+                expected(
+                    message = ":<$displayActual> with type:${show(expectedType)} but was type:${show(actualType)} with the same string representation",
+                    expected = expected,
+                    actual = actual
+                )
+            } else {
+                // otherwise just note that they appear the same
+                expected(
+                    message = ":<${displayActual}> with type:${show(expectedType)} did not compare equal to the same type with the same string representation",
+                    expected = expected,
+                    actual = actual,
+                )
+            }
+        }
+
+        val extractor = DiffExtractor(displayExpected, displayActual)
         val prefix = extractor.compactPrefix()
         val suffix = extractor.compactSuffix()
         val expectedDiff = extractor.expectedDiff().renderSpecialWhitespace()
@@ -77,9 +102,17 @@ fun <T> Assert<T>.fail(expected: Any?, actual: Any?) {
 fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
     val maybeSpace = if (message.startsWith(":")) "" else " "
     val maybeInstance = if (context.originatingSubject != null) " (${context.displayOriginatingSubject()})" else ""
+    fail(
+        message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
+        expected = expected,
+        actual = actual,
+        cause = extractCause(),
+    )
+}
 
-    // Attempt to extract a helpful Throwable to use as a cause if the current value
-    // or originating subject are a Throwable or failure Result.
+// Attempt to extract a helpful Throwable to use as a cause if the current value
+// or originating subject are a Throwable or failure Result.
+private fun <T> Assert<T>.extractCause(): Throwable? {
     var cause: Throwable? = null
     if (this is ValueAssert<*>) {
         cause = when (value) {
@@ -95,13 +128,7 @@ fun <T> Assert<T>.expected(message: String, expected: Any? = NONE, actual: Any? 
             }
         }
     }
-
-    fail(
-        message = "expected${formatName(name)}$maybeSpace$message$maybeInstance",
-        expected = expected,
-        actual = actual,
-        cause = cause,
-    )
+    return cause
 }
 
 /**
