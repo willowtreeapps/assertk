@@ -65,14 +65,14 @@ class $TContainsTest {
     }
     //region
 
-    //region containsAll
-    @Test fun containsAll_all_elements_passes() {
-        assertThat($NOf(1.to$E(), 2.to$E())).containsAll(2.to$E(), 1.to$E())
+    //region containsAtLeast
+    @Test fun containsAtLeast_all_elements_passes() {
+        assertThat($NOf(1.to$E(), 2.to$E())).containsAtLeast(2.to$E(), 1.to$E())
     }
 
-    @Test fun containsAll_some_elements_fails() {
+    @Test fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat($NOf(1.to$E())).containsAll(1.to$E(), 2.to$E())
+            assertThat($NOf(1.to$E())).containsAtLeast(1.to$E(), 2.to$E())
         }
         assertEquals(
             """expected to contain all:<[${show(1.to$E(), "")}, ${show(2.to$E(), "")}]> but was:<[${show(1.to$E(), "")}]>

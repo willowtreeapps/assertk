@@ -72,7 +72,7 @@ suspend fun Assert<Flow<*>>.contains(element: Any?) = given { actual ->
 
 /**
  * Asserts the flow does not contain any of the expected elements. Fails as soon as that element is received.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 suspend fun Assert<Flow<*>>.doesNotContain(element: Any?) = given { actual ->
     val receivedElements = mutableListOf<Any?>()
@@ -92,7 +92,7 @@ suspend fun Assert<Flow<*>>.doesNotContain(element: Any?) = given { actual ->
 /**
  * Asserts the collection does not contain any of the expected elements. Fails as soon as one of the expected elements
  * is received.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 suspend fun Assert<Flow<*>>.containsNone(vararg elements: Any?) = given { actual ->
     val receivedElements = mutableListOf<Any?>()
@@ -114,13 +114,23 @@ suspend fun Assert<Flow<*>>.containsNone(vararg elements: Any?) = given { actual
 }
 
 /**
- * Asserts the flow emits all the expected elements, in any order. The flow may also
+ * Asserts the flow emits at least the expected elements, in any order. The flow may also
  * emit additional elements. Succeeds as soon as all expected elements are received.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsOnly]
  */
-suspend fun Assert<Flow<*>>.containsAll(vararg elements: Any?) = given { actual ->
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+suspend fun Assert<Flow<*>>.containsAll(vararg elements: Any?) = containsAtLeast(*elements)
+
+/**
+ * Asserts the flow emits at least the expected elements, in any order. The flow may also
+ * emit additional elements. Succeeds as soon as all expected elements are received.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsOnly]
+ */
+suspend fun Assert<Flow<*>>.containsAtLeast(vararg elements: Any?) = given { actual ->
     val remainingElements = MutableList(elements.size) { index -> elements[index] }
     val receivedElements = mutableListOf<Any?>()
     try {
@@ -148,7 +158,7 @@ suspend fun Assert<Flow<*>>.containsAll(vararg elements: Any?) = given { actual 
  * Asserts the flow contains only the expected elements, in any order.
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 suspend fun Assert<Flow<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val actualList = actual.toList()
@@ -170,7 +180,7 @@ suspend fun Assert<Flow<*>>.containsOnly(vararg elements: Any?) = given { actual
 /**
  * Asserts the flow contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 suspend fun Assert<Flow<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     val expected = elements.toList()

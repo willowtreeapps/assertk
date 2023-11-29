@@ -75,11 +75,19 @@ fun <K, V> Assert<Map<K, V>>.contains(element: Pair<K, V>) {
 }
 
 /**
- * Asserts the map contains all the expected elements. The map may also contain additional elements.
+ * Asserts the map contains at least the expected elements. The map may also contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
  */
-fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) = given { actual ->
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+fun <K, V> Assert<Map<K, V>>.containsAll(vararg elements: Pair<K, V>) = containsAtLeast(*elements)
+
+/**
+ * Asserts the map contains at least the expected elements. The map may also contain additional elements.
+ * @see [containsNone]
+ * @see [containsExactly]
+ */
+fun <K, V> Assert<Map<K, V>>.containsAtLeast(vararg elements: Pair<K, V>) = given { actual ->
     if (elements.all { (k, v) -> actual.containsKey(k) && actual[k] == v }) {
         return
     }
@@ -109,7 +117,7 @@ fun <K, V> Assert<Map<K, V>>.doesNotContain(element: Pair<K, V>) {
 
 /**
  * Asserts the map does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given { actual ->
     if (elements.all { (k, v) -> !actual.containsKey(k) || actual[k] != v }) return
@@ -123,7 +131,7 @@ fun <K, V> Assert<Map<K, V>>.containsNone(vararg elements: Pair<K, V>) = given {
 
 /**
  * Asserts the map contains only the expected elements. There must not be any extra elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun <K, V> Assert<Map<K, V>>.containsOnly(vararg elements: Pair<K, V>) = given { actual ->
     val elementMap = elements.toMap()

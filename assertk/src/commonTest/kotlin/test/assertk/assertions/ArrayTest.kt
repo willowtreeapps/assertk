@@ -146,18 +146,18 @@ class ArrayTest {
     }
     //region
 
-    //region containsAll
-    @Test fun containsAll_all_elements_passes() {
-        assertThat(arrayOf(1, 2)).containsAll(2, 1)
+    //region containsAtLeast
+    @Test fun containsAtLeast_all_elements_passes() {
+        assertThat(arrayOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAll_extra_elements_passes() {
-        assertThat(arrayOf(1, 2, 3)).containsAll(1, 2)
+    @Test fun containsAtLeast_extra_elements_passes() {
+        assertThat(arrayOf(1, 2, 3)).containsAtLeast(1, 2)
     }
 
-    @Test fun containsAll_some_elements_fails() {
+    @Test fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(arrayOf(1)).containsAll(1, 2)
+            assertThat(arrayOf(1)).containsAtLeast(1, 2)
         }
         assertEquals(
             """expected to contain all:<[1, 2]> but was:<[1]>

@@ -124,18 +124,18 @@ class FlowTest {
     }
     //region
 
-    //region containsAll
-    @Test fun containsAll_all_elements_passes() = runTest {
-        assertThat(flowOf(1, 2)).containsAll(2, 1)
+    //region containsAtLeast
+    @Test fun containsAtLeast_all_elements_passes() = runTest {
+        assertThat(flowOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAll_all_elements_in_flow_that_doesnt_complete_passes() = runTest {
-        assertThat(nonCompletingFlowOf(1, 2)).containsAll(2, 1)
+    @Test fun containsAtLeast_all_elements_in_flow_that_doesnt_complete_passes() = runTest {
+        assertThat(nonCompletingFlowOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAll_some_elements_fails() = runTest {
+    @Test fun containsAtLeast_some_elements_fails() = runTest {
         val error = assertFailsWith<AssertionError> {
-            assertThat(flowOf(1)).containsAll(1, 2)
+            assertThat(flowOf(1)).containsAtLeast(1, 2)
         }
         assertEquals(
             """expected to contain all:<[1, 2]> but received:<[1]>

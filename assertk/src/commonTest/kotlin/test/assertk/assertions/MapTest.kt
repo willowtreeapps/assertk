@@ -66,18 +66,18 @@ class MapTest {
     }
     //region
 
-    //region containsAll
-    @Test fun containsAll_all_elements_passes() {
-        assertThat(mapOf("one" to 1, "two" to 2)).containsAll("two" to 2, "one" to 1)
+    //region containsAtLeast
+    @Test fun containsAtLeast_all_elements_passes() {
+        assertThat(mapOf("one" to 1, "two" to 2)).containsAtLeast("two" to 2, "one" to 1)
     }
 
-    @Test fun containsAll_extra_elements_passes() {
-        assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).containsAll("one" to 1, "two" to 2)
+    @Test fun containsAtLeast_extra_elements_passes() {
+        assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).containsAtLeast("one" to 1, "two" to 2)
     }
 
-    @Test fun containsAll_swapped_keys_and_values_fails() {
+    @Test fun containsAtLeast_swapped_keys_and_values_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(mapOf("one" to 2, "two" to 1)).containsAll("two" to 2, "one" to 1)
+            assertThat(mapOf("one" to 2, "two" to 1)).containsAtLeast("two" to 2, "one" to 1)
         }
 
         assertEquals(
@@ -87,9 +87,9 @@ class MapTest {
         )
     }
 
-    @Test fun containsAll_nullable_values_fails() {
+    @Test fun containsAtLeast_nullable_values_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(mapOf<String, Any?>()).containsAll("key" to null)
+            assertThat(mapOf<String, Any?>()).containsAtLeast("key" to null)
         }
         assertEquals(
                 """expected to contain all:<{"key"=null}> but was:<{}>
@@ -98,9 +98,9 @@ class MapTest {
         )
     }
 
-    @Test fun containsAll_some_elements_fails() {
+    @Test fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(mapOf("one" to 1)).containsAll("one" to 1, "two" to 2)
+            assertThat(mapOf("one" to 1)).containsAtLeast("one" to 1, "two" to 2)
         }
         assertEquals(
             """expected to contain all:<{"one"=1, "two"=2}> but was:<{"one"=1}>

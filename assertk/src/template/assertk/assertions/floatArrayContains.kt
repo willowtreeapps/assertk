@@ -33,7 +33,7 @@ fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
 
 /**
  * Asserts the $T does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
     val actualList = actual.asList()
@@ -46,12 +46,21 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
 }
 
 /**
- * Asserts the $T contains all the expected elements, in any order. The array may also contain
+ * Asserts the $T contains at least the expected elements, in any order. The array may also contain
  * additional elements.
  * @see [containsExactly]
  */
-@JvmName("$NContainsAll")
-fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
+@JvmName("$NcontainsAll")
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+fun Assert<$T>.containsAll(vararg elements: $E) = containsAtLeast(*elements)
+
+/**
+ * Asserts the $T contains at least the expected elements, in any order. The array may also contain
+ * additional elements.
+ * @see [containsExactly]
+ */
+@JvmName("$NcontainsAtLeast")
+fun Assert<$T>.containsAtLeast(vararg elements: $E) = given { actual ->
     val actualList =  actual.asList()
     val elementsList = elements.asList()
     if (elementsList.all { actualList.contains(it) }) return
@@ -69,7 +78,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsExactlyInAnyOrder]
  */
 fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
@@ -98,7 +107,7 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
  * [1, 2, 2] containsOnly [2, 1] fails
  * [1, 2] containsOnly [2, 2, 1] fails
  *
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 @JvmName("$NContainsExactly")
 fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
@@ -119,7 +128,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  */
 @JvmName("$NContainsExactlyInAnyOrder")

@@ -27,7 +27,7 @@ fun Assert<Iterable<*>>.doesNotContain(element: Any?) = given { actual ->
 
 /**
  * Asserts the iterable does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
     val notExpected = elements.filter { it in actual }
@@ -38,13 +38,23 @@ fun Assert<Iterable<*>>.containsNone(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the iterable contains all the expected elements, in any order. The collection may also
+ * Asserts the iterable contains at least the expected elements, in any order. The collection may also
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsOnly]
  */
-fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = containsAtLeast(*elements)
+
+/**
+ * Asserts the iterable contains at least the expected elements, in any order. The collection may also
+ * contain additional elements.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsOnly]
+ */
+fun Assert<Iterable<*>>.containsAtLeast(vararg elements: Any?) = given { actual ->
     val notFound = elements.filterNot { it in actual }
     if (notFound.isEmpty()) {
         return
@@ -62,7 +72,7 @@ fun Assert<Iterable<*>>.containsAll(vararg elements: Any?) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsExactlyInAnyOrder]
  */
 fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
@@ -91,7 +101,7 @@ fun Assert<Iterable<*>>.containsOnly(vararg elements: Any?) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  */
 fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given { actual ->
