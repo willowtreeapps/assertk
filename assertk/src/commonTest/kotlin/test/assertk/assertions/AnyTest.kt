@@ -49,6 +49,20 @@ class AnyTest {
         }
     }
 
+    @Test fun isEqualTo_will_report_different_types_with_the_same_display_representation() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(Actual("test")).isEqualTo(Expected("test"))
+        }
+        assertEquals("expected:<test> with type:<${Expected::class}> but was type:<${Actual::class}> with the same string representation", error.message)
+    }
+
+    @Test fun isEqualTo_will_report_that_same_types_with_the_same_display_representation_do_not_compare_equal() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(Actual("test")).isEqualTo(Actual("test"))
+        }
+        assertEquals("expected:<test> with type:<${Actual::class}> did not compare equal to the same type with the same string representation", error.message)
+    }
+
     @Test fun isNotEqualTo_non_equal_objects_passes() {
         val nonEqual = BasicObject("not test")
         assertThat(subject).isNotEqualTo(nonEqual)
@@ -491,5 +505,12 @@ class AnyTest {
         }
 
         class DifferentObject : TestObject()
+
+        class Expected(val value: String) {
+            override fun toString() = value
+        }
+        class Actual(val value: String) {
+            override fun toString() = value
+        }
     }
 }
