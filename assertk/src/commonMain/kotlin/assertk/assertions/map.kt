@@ -116,6 +116,14 @@ fun <K, V> Assert<Map<K, V>>.doesNotContain(element: Pair<K, V>) {
 }
 
 /**
+ * Asserts the map does not contain the expected key.
+ */
+fun <K, V> Assert<Map<K, V>>.doesNotContainKey(key: K) = given {
+    if (!it.containsKey(key)) return
+    expected("to not contain key:${show(key)} but had value: ${show(it[key])}")
+}
+
+/**
  * Asserts the map does not contain any of the expected elements.
  * @see [containsAtLeast]
  */
