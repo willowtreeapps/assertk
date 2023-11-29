@@ -45,7 +45,7 @@ fun Assert<$T>.doesNotContain(element: $E) = given { actual ->
 
 /**
  * Asserts the $T does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 $A
 fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
@@ -58,13 +58,23 @@ fun Assert<$T>.containsNone(vararg elements: $E) = given { actual ->
 }
 
 /**
- * Asserts the $T contains all the expected elements, in any order. The array may also contain
+ * Asserts the $T contains at least the expected elements, in any order. The array may also contain
  * additional elements.
  * @see [containsExactly]
  */
-@JvmName("$NContainsAll")
+@JvmName("$NcontainsAll")
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
 $A
-fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
+fun Assert<$T>.containsAll(vararg elements: $E) = containsAtLeast(*elements)
+
+/**
+ * Asserts the $T contains at least the expected elements, in any order. The array may also contain
+ * additional elements.
+ * @see [containsExactly]
+ */
+@JvmName("$NcontainsAtLeast")
+$A
+fun Assert<$T>.containsAtLeast(vararg elements: $E) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
     expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
@@ -80,7 +90,7 @@ fun Assert<$T>.containsAll(vararg elements: $E) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 $A
 fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
@@ -107,7 +117,7 @@ fun Assert<$T>.containsOnly(vararg elements: $E) = given { actual ->
  * [1, 2, 2] containsOnly [2, 1] fails
  * [1, 2] containsOnly [2, 2, 1] fails
  *
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 @JvmName("$NContainsExactly")
 $A
@@ -127,7 +137,7 @@ fun Assert<$T>.containsExactly(vararg elements: $E) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  */
 @JvmName("$NContainsExactlyInAnyOrder")

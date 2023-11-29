@@ -30,7 +30,7 @@ fun <T> Assert<List<T>>.index(index: Int): Assert<T> =
  * [1, 2, 2] containsExactly [2, 1] fails
  * [1, 2] containsExactly [1, 2, 2] fails
  *
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  * @see [containsExactlyInAnyOrder]
  */

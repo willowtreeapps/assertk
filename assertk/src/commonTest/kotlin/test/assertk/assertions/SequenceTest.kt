@@ -6,7 +6,7 @@ import assertk.assertions.any
 import assertk.assertions.atLeast
 import assertk.assertions.atMost
 import assertk.assertions.contains
-import assertk.assertions.containsAll
+import assertk.assertions.containsAtLeast
 import assertk.assertions.containsExactly
 import assertk.assertions.containsExactlyInAnyOrder
 import assertk.assertions.containsNone
@@ -94,18 +94,18 @@ class SequenceTest {
     }
     //region
 
-    //region containsAll
-    @Test fun containsAll_all_elements_passes() {
-        assertThat(sequenceOf(1, 2)).containsAll(2, 1)
+    //region containsAtLeast
+    @Test fun containsAtLeast_all_elements_passes() {
+        assertThat(sequenceOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAll_oneshot_passes() {
-        assertThat(oneshotSequenceOf(1, 2)).containsAll(2, 1)
+    @Test fun containsAtLeast_oneshot_passes() {
+        assertThat(oneshotSequenceOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAll_some_elements_fails() {
+    @Test fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(sequenceOf(1)).containsAll(1, 2)
+            assertThat(sequenceOf(1)).containsAtLeast(1, 2)
         }
         assertEquals(
             """expected to contain all:<[1, 2]> but was:<[1]>

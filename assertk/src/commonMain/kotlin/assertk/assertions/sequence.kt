@@ -30,7 +30,7 @@ fun Assert<Sequence<*>>.doesNotContain(element: Any?) = given { actual ->
 
 /**
  * Asserts the sequence does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<Sequence<*>>.containsNone(vararg elements: Any?) = given { actual ->
     val actualList = actual.toList()
@@ -42,13 +42,23 @@ fun Assert<Sequence<*>>.containsNone(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the sequence contains all the expected elements, in any order. The collection may also
+ * Asserts the sequence contains at least the expected elements, in any order. The collection may also
  * contain additional elements.
  * @see [containsNone]
  * @see [containsExactly]
  * @see [containsOnly]
  */
-fun Assert<Sequence<*>>.containsAll(vararg elements: Any?) = given { actual ->
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+fun Assert<Sequence<*>>.containsAll(vararg elements: Any?) = containsAtLeast(*elements)
+
+/**
+ * Asserts the sequence contains at least the expected elements, in any order. The collection may also
+ * contain additional elements.
+ * @see [containsNone]
+ * @see [containsExactly]
+ * @see [containsOnly]
+ */
+fun Assert<Sequence<*>>.containsAtLeast(vararg elements: Any?) = given { actual ->
     val actualList = actual.toList()
     val notFound = elements.filterNot { it in actualList }
     if (notFound.isEmpty()) {
@@ -67,7 +77,7 @@ fun Assert<Sequence<*>>.containsAll(vararg elements: Any?) = given { actual ->
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsExactlyInAnyOrder]
  */
 fun Assert<Sequence<*>>.containsOnly(vararg elements: Any?) = given { actual ->
@@ -95,7 +105,7 @@ fun Assert<Sequence<*>>.containsOnly(vararg elements: Any?) = given { actual ->
  * [1, 2, 2] containsExactly [2, 1] fails
  * [1, 2] containsExactly [1, 2, 2] fails
  *
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  * @see [containsExactlyInAnyOrder]
  */
@@ -116,7 +126,7 @@ fun Assert<Sequence<*>>.containsExactly(vararg elements: Any?) = given { actual 
  *
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  * @see [containsOnly]
  */
 fun Assert<Sequence<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given { actual ->

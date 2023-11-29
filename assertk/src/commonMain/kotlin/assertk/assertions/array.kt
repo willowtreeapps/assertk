@@ -99,7 +99,7 @@ fun Assert<Array<*>>.doesNotContain(element: Any?) = given { actual ->
 
 /**
  * Asserts the collection does not contain any of the expected elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<Array<*>>.containsNone(vararg elements: Any?) = given { actual ->
     if (elements.none { it in actual }) {
@@ -111,11 +111,19 @@ fun Assert<Array<*>>.containsNone(vararg elements: Any?) = given { actual ->
 }
 
 /**
- * Asserts the array contains all the expected elements, in any order. The array may also contain
+ * Asserts the array contains at least the expected elements, in any order. The array may also contain
  * additional elements.
  * @see [containsExactly]
  */
-fun Assert<Array<*>>.containsAll(vararg elements: Any?) = given { actual ->
+@Deprecated("renamed to containsAtLeast", ReplaceWith("containsAtLeast(*elements)"))
+fun Assert<Array<*>>.containsAll(vararg elements: Any?) = containsAtLeast(*elements)
+
+/**
+ * Asserts the array contains at least the expected elements, in any order. The array may also contain
+ * additional elements.
+ * @see [containsExactly]
+ */
+fun Assert<Array<*>>.containsAtLeast(vararg elements: Any?) = given { actual ->
     if (elements.all { actual.contains(it) }) return
     val notFound = elements.filterNot { it in actual }
     expected("to contain all:${show(elements)} but was:${show(actual)}\n elements not found:${show(notFound)}")
@@ -125,7 +133,7 @@ fun Assert<Array<*>>.containsAll(vararg elements: Any?) = given { actual ->
  * Asserts the array contains only the expected elements, in any order.
  * @see [containsNone]
  * @see [containsExactly]
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<Array<*>>.containsOnly(vararg elements: Any?) = given { actual ->
     val notInActual = elements.filterNot { it in actual }
@@ -162,7 +170,7 @@ fun <T> Assert<Array<T>>.index(index: Int): Assert<T> =
 /**
  * Asserts the array contains exactly the expected elements. They must be in the same order and
  * there must not be any extra elements.
- * @see [containsAll]
+ * @see [containsAtLeast]
  */
 fun Assert<Array<*>>.containsExactly(vararg elements: Any?) = given { actual ->
     if (actual.contentEquals(elements)) return
