@@ -62,26 +62,26 @@ class AnyTest {
         assertEquals("expected to not be equal to:<test>", error.message)
     }
 
-    @Test fun isSameAs_same_objects_passes() {
-        assertThat(subject).isSameAs(subject)
+    @Test fun isSameInstanceAs_same_objects_passes() {
+        assertThat(subject).isSameInstanceAs(subject)
     }
 
-    @Test fun isSameAs_different_objects_fails() {
+    @Test fun isSameInstanceAs_different_objects_fails() {
         val nonSame = BasicObject("test")
         val error = assertFails("") {
-            assertThat(subject).isSameAs(nonSame)
+            assertThat(subject).isSameInstanceAs(nonSame)
         }
         assertEquals("expected:<test> and:<test> to refer to the same object", error.message)
     }
 
-    @Test fun isNotSameAs_non_same_objects_passes() {
+    @Test fun isNotSameInstanceAs_non_same_objects_passes() {
         val nonSame = BasicObject("test")
-        assertThat(subject).isNotSameAs(nonSame)
+        assertThat(subject).isNotSameInstanceAs(nonSame)
     }
 
-    @Test fun isNotSameAs_same_objects_fails() {
+    @Test fun isNotSameInstanceAs_same_objects_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).isNotSameAs(subject)
+            assertThat(subject).isNotSameInstanceAs(subject)
         }
         assertEquals("expected:<test> to not refer to the same object", error.message)
     }
