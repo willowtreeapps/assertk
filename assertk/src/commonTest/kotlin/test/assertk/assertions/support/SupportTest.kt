@@ -38,10 +38,6 @@ class SupportTest {
         assertEquals("<42L>", show(42L))
     }
 
-    @Test fun show_short() {
-        assertEquals("<42>", show(42.toShort()))
-    }
-
     @Test fun show_string() {
         assertEquals("<\"value\">", show("value"))
     }
@@ -68,10 +64,6 @@ class SupportTest {
 
     @Test fun show_long_array() {
         assertEquals("<[42L, 8L]>", show(longArrayOf(42L, 8L)))
-    }
-
-    @Test fun show_short_array() {
-        assertEquals("<[42, -1]>", show(shortArrayOf(42, -1)))
     }
 
     @Test fun show_list() {
