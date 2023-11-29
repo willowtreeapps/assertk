@@ -4,10 +4,10 @@ import assertk.all
 import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.*
-import org.junit.Test
 import java.time.LocalDate
 import java.time.Month
 import java.util.*
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 

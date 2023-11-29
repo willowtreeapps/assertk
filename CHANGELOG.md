@@ -23,6 +23,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `doesNotContainKey` assertion for `Map`
+- Added `assume` to support test assumptions. To use, wrap your assertions
+  ```kotlin
+  assume {
+    assertThat(System.getProperty("os.name")).startsWith("Windows")
+  }
+  ```
+  this will cause the test to be skipped instead of failing.
+  Note: This feature only works with opentest4j-compatible testing frameworks like junit5.
 
 ### Fixed
 - Fixed incorrect usage of contains in some kdoc examples
