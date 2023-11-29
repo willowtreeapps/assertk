@@ -42,6 +42,18 @@ class MapTest {
         }
         assertEquals("expected to not contain:<{\"two\"=2}> but was:<{\"one\"=1, \"two\"=2}>", error.message)
     }
+
+    @Test fun doesNotContainKey_key_missing_passes() {
+        assertThat(emptyMap<String, Int>()).doesNotContainKey("one")
+    }
+
+    @Test fun doesNotContainKey_key_present_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(mapOf("one" to 1)).doesNotContainKey("one")
+        }
+        assertEquals("expected to not contain key:<\"one\"> but had value: <1>", error.message)
+    }
+
     //endregion
 
     //region containsNone
