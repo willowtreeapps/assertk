@@ -28,7 +28,7 @@ fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
 /**
  * Asserts the value is equal to the expected one, using `==`.
  * @see [isNotEqualTo]
- * @see [isSameAs]
+ * @see [isSameInstanceAs]
  */
 fun <T> Assert<T>.isEqualTo(expected: T) = given { actual ->
     if (actual == expected) return
@@ -38,7 +38,7 @@ fun <T> Assert<T>.isEqualTo(expected: T) = given { actual ->
 /**
  * Asserts the value is not equal to the expected one, using `!=`.
  * @see [isEqualTo]
- * @see [isNotSameAs]
+ * @see [isNotSameInstanceAs]
  */
 fun Assert<Any?>.isNotEqualTo(expected: Any?) = given { actual ->
     if (actual != expected) return
@@ -54,20 +54,36 @@ fun Assert<Any?>.isNotEqualTo(expected: Any?) = given { actual ->
 
 /**
  * Asserts the value is the same as the expected one, using `===`.
- * @see [isNotSameAs]
+ * @see [isNotSameInstanceAs]
  * @see [isEqualTo]
  */
-fun <T> Assert<T>.isSameAs(expected: T) = given { actual ->
+@Deprecated("renamed to isSameInstanceAs", replaceWith = ReplaceWith("isSameInstanceAs(expected)"))
+fun <T> Assert<T>.isSameAs(expected: T) = isSameInstanceAs(expected)
+
+/**
+ * Asserts the value is the same as the expected one, using `===`.
+ * @see [isNotSameInstanceAs]
+ * @see [isEqualTo]
+ */
+fun <T> Assert<T>.isSameInstanceAs(expected: T) = given { actual ->
     if (actual === expected) return
     expected(":${show(expected)} and:${show(actual)} to refer to the same object")
 }
 
 /**
  * Asserts the value is not the same as the expected one, using `!==`.
- * @see [isSameAs]
+ * @see [isSameInstanceAs]
  * @see [isNotEqualTo]
  */
-fun Assert<Any?>.isNotSameAs(expected: Any?) = given { actual ->
+@Deprecated("renamed to isNotSameInstanceAs", replaceWith = ReplaceWith("isNotSameInstanceAs(expected)"))
+fun Assert<Any?>.isNotSameAs(expected: Any?) = isNotSameInstanceAs(expected)
+
+/**
+ * Asserts the value is not the same as the expected one, using `!==`.
+ * @see [isSameInstanceAs]
+ * @see [isNotEqualTo]
+ */
+fun Assert<Any?>.isNotSameInstanceAs(expected: Any?) = given { actual ->
     if (actual !== expected) return
     expected(":${show(expected)} to not refer to the same object")
 }
