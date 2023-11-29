@@ -175,7 +175,7 @@ fun <E> Assert<Sequence<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
  * ```
  * assertThat(people)
  *   .extracting(Person::name)
- *   .contains("Sue", "Bob")
+ *   .containsExactly("Sue", "Bob")
  * ```
  */
 fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = transform { actual ->
@@ -188,7 +188,7 @@ fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = t
  * ```
  * assertThat(people)
  *   .extracting(Person::name, Person::age)
- *   .contains("Sue" to 20, "Bob" to 22)
+ *   .containsExactly("Sue" to 20, "Bob" to 22)
  * ```
  */
 fun <E, R1, R2> Assert<Sequence<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<Sequence<Pair<R1, R2>>> =

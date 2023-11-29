@@ -201,7 +201,7 @@ fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
  * ```
  * assertThat(people)
  *   .extracting(Person::name)
- *   .contains("Sue", "Bob")
+ *   .containsExactly("Sue", "Bob")
  * ```
  */
 fun <E, R> Assert<Array<E>>.extracting(f1: (E) -> R): Assert<List<R>> = transform { actual ->
@@ -214,7 +214,7 @@ fun <E, R> Assert<Array<E>>.extracting(f1: (E) -> R): Assert<List<R>> = transfor
  * ```
  * assertThat(people)
  *   .extracting(Person::name, Person::age)
- *   .contains("Sue" to 20, "Bob" to 22)
+ *   .containsExactly("Sue" to 20, "Bob" to 22)
  * ```
  */
 fun <E, R1, R2> Assert<Array<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<List<Pair<R1, R2>>> =
