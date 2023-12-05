@@ -1,12 +1,8 @@
 package assertk
 
-import assertk.assertions.isFailure
-import assertk.assertions.isSuccess
 import assertk.assertions.support.display
 import assertk.assertions.support.show
-import kotlin.DeprecationLevel.ERROR
 import kotlin.reflect.KProperty0
-import kotlin.runCatching
 
 /**
  * Marks the assertion DSL.
@@ -174,22 +170,6 @@ fun <T> Assert<T>.all(body: Assert<T>.() -> Unit) {
         body()
     }
 }
-
-/**
- * Asserts on the given block returning an `Assert<Result<T>>`. You can test that it returns a value or throws an exception.
- *
- * ```
- * assertThat { 1 + 1 }.isSuccess().isPositive()
- *
- * assertThat {
- *   throw Exception("error")
- * }.isFailure().hasMessage("error")
- * ```
- *
- * @see assertFailure
- */
-@Deprecated("Use assertThat(result) or assertFailure", ReplaceWith("assertThat(runCatching(f))"), ERROR)
-inline fun <T> assertThat(f: () -> T): Assert<Result<T>> = assertThat(runCatching(f))
 
 /**
  * Runs all assertions in the given lambda and reports any failures.
