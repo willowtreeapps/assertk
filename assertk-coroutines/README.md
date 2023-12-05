@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-  testCompile 'com.willowtreeapps.assertk:assertk-coroutines:0.23'
+  testCompile("com.willowtreeapps.assertk:assertk-coroutines:0.28.0")
 }
 ```
 
@@ -19,7 +19,7 @@ dependencies {
 
 ### Flow
 
-Currently, the main thing this lib provides is many of the collection assertions on `Flow`. For example you can do
+Currently, the main thing this lib provides is many of the collection assertions on `Flow`. For example, you can do
 
 ```kotlin
 runBlocking {
