@@ -5,31 +5,36 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ListDifferTest {
-    @Test fun empty_diff() {
+    @Test
+    fun empty_diff() {
         val diff = ListDiffer.diff(emptyList<Any>(), emptyList<Any>())
 
         assertEquals(emptyList(), diff)
     }
 
-    @Test fun single_item_no_change() {
+    @Test
+    fun single_item_no_change() {
         val diff = ListDiffer.diff(listOf(1), listOf(1))
 
         assertEquals(listOf(ListDiffer.Edit.Eq(oldIndex = 0, oldValue = 1, newIndex = 0, newValue = 1)), diff)
     }
 
-    @Test fun singe_insert() {
+    @Test
+    fun singe_insert() {
         val diff = ListDiffer.diff(emptyList<Int>(), listOf(1))
 
         assertEquals(listOf(ListDiffer.Edit.Ins(newIndex = 0, newValue = 1)), diff)
     }
 
-    @Test fun singe_delete() {
+    @Test
+    fun singe_delete() {
         val diff = ListDiffer.diff(listOf(1), emptyList<Int>())
 
         assertEquals(listOf(ListDiffer.Edit.Del(oldIndex = 0, oldValue = 1)), diff)
     }
 
-    @Test fun single_insert_middle() {
+    @Test
+    fun single_insert_middle() {
         val diff = ListDiffer.diff(listOf(1, 3), listOf(1, 2, 3))
 
         assertEquals(
@@ -41,7 +46,8 @@ class ListDifferTest {
         )
     }
 
-    @Test fun singe_delete_middle() {
+    @Test
+    fun singe_delete_middle() {
         val diff = ListDiffer.diff(listOf(1, 2, 3), listOf(1, 3))
 
         assertEquals(
@@ -53,7 +59,8 @@ class ListDifferTest {
         )
     }
 
-    @Test fun single_delete_multiple_inserts() {
+    @Test
+    fun single_delete_multiple_inserts() {
         val diff = ListDiffer.diff(listOf(3), listOf(1, 2))
 
         assertEquals(

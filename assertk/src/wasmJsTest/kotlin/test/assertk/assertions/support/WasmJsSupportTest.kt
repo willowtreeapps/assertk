@@ -6,7 +6,8 @@ import kotlin.test.assertEquals
 
 class WasmJsSupportTest {
 
-    @Test fun show_byte_array() {
+    @Test
+    fun show_byte_array() {
         assertEquals("<[0x0A, 0x0F]>", show(byteArrayOf(10, 15)))
     }
 }

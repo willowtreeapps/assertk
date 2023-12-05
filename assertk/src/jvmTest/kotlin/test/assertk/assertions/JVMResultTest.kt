@@ -11,7 +11,8 @@ import kotlin.test.assertTrue
 
 class JVMResultTest {
 
-    @Test fun failure_result_fails_with_stacktrace() {
+    @Test
+    fun failure_result_fails_with_stacktrace() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("test"))).isSuccess()
         }

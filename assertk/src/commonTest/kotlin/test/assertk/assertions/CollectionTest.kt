@@ -8,11 +8,13 @@ import kotlin.test.assertFailsWith
 
 class CollectionTest {
     //region isEmpty
-    @Test fun isEmpty_empty_passes() {
+    @Test
+    fun isEmpty_empty_passes() {
         assertThat(emptyList<Any?>()).isEmpty()
     }
 
-    @Test fun isEmpty_non_empty_fails() {
+    @Test
+    fun isEmpty_non_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(listOf<Any?>(null)).isEmpty()
         }
@@ -21,11 +23,13 @@ class CollectionTest {
     //endregion
 
     //region isNotEmpty
-    @Test fun isNotEmpty_non_empty_passes() {
+    @Test
+    fun isNotEmpty_non_empty_passes() {
         assertThat(listOf<Any?>(null)).isNotEmpty()
     }
 
-    @Test fun isNotEmpty_empty_fails() {
+    @Test
+    fun isNotEmpty_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).isNotEmpty()
         }
@@ -34,15 +38,18 @@ class CollectionTest {
     //endregion
 
     //region isNullOrEmpty
-    @Test fun isNullOrEmpty_null_passes() {
+    @Test
+    fun isNullOrEmpty_null_passes() {
         assertThat(null as List<Any?>?).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_empty_passes() {
+    @Test
+    fun isNullOrEmpty_empty_passes() {
         assertThat(emptyList<Any?>()).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_non_empty_fails() {
+    @Test
+    fun isNullOrEmpty_non_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(listOf<Any?>(null)).isNullOrEmpty()
         }
@@ -51,11 +58,13 @@ class CollectionTest {
     //endregion
 
     //region hasSize
-    @Test fun hasSize_correct_size_passes() {
+    @Test
+    fun hasSize_correct_size_passes() {
         assertThat(emptyList<Any?>()).hasSize(0)
     }
 
-    @Test fun hasSize_wrong_size_fails() {
+    @Test
+    fun hasSize_wrong_size_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).hasSize(1)
         }
@@ -64,11 +73,13 @@ class CollectionTest {
     //endregion
 
     //region hasSameSizeAs
-    @Test fun hasSameSizeAs_equal_sizes_passes() {
+    @Test
+    fun hasSameSizeAs_equal_sizes_passes() {
         assertThat(emptyList<Any?>()).hasSameSizeAs(emptyList<Any?>())
     }
 
-    @Test fun hasSameSizeAs_non_equal_sizes_fails() {
+    @Test
+    fun hasSameSizeAs_non_equal_sizes_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyList<Any?>()).hasSameSizeAs(listOf<Any?>(null))
         }

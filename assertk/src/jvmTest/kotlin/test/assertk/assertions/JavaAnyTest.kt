@@ -15,21 +15,25 @@ class JavaAnyTest {
     val subject = BasicObject("test")
 
     //region jClass
-    @Test fun extracts_jClass() {
+    @Test
+    fun extracts_jClass() {
         assertEquals(BasicObject::class.java, assertThat(subject as TestObject).jClass().valueOrFail)
     }
     //endregion
 
     //region isInstanceOf
-    @Test fun isInstanceOf_jclass_same_class_passes() {
+    @Test
+    fun isInstanceOf_jclass_same_class_passes() {
         assertThat(subject).isInstanceOf(BasicObject::class.java)
     }
 
-    @Test fun isInstanceOf_jclass_parent_class_passes() {
+    @Test
+    fun isInstanceOf_jclass_parent_class_passes() {
         assertThat(subject).isInstanceOf(TestObject::class.java)
     }
 
-    @Test fun isInstanceOf_jclass_different_class_fails() {
+    @Test
+    fun isInstanceOf_jclass_different_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isInstanceOf(DifferentObject::class.java)
         }
@@ -39,7 +43,8 @@ class JavaAnyTest {
         )
     }
 
-    @Test fun isInstanceOf_jclass_run_block_when_passes() {
+    @Test
+    fun isInstanceOf_jclass_run_block_when_passes() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(BasicObject::class.java)
@@ -49,7 +54,8 @@ class JavaAnyTest {
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
     }
 
-    @Test fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
+    @Test
+    fun isInstanceOf_jclass_doesnt_run_block_when_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(DifferentObject::class.java)
@@ -63,18 +69,21 @@ class JavaAnyTest {
     //endregion
 
     //region isNotInstanceOf
-    @Test fun isNotInstanceOf_jclass_different_class_passess() {
+    @Test
+    fun isNotInstanceOf_jclass_different_class_passess() {
         assertThat(subject).isNotInstanceOf(DifferentObject::class.java)
     }
 
-    @Test fun isNotInstanceOf_jclass_same_class_fails() {
+    @Test
+    fun isNotInstanceOf_jclass_same_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(BasicObject::class.java)
         }
         assertEquals("expected to not be instance of:<$p\$BasicObject>", error.message)
     }
 
-    @Test fun isNotInstanceOf_jclass_parent_class_fails() {
+    @Test
+    fun isNotInstanceOf_jclass_parent_class_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotInstanceOf(TestObject::class.java)
         }
@@ -83,12 +92,14 @@ class JavaAnyTest {
     //endregion
 
     //region isDataClassEqualTo
-    @Test fun isDataClassEqualTo_equal_data_classes_passes() {
+    @Test
+    fun isDataClassEqualTo_equal_data_classes_passes() {
         assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
             .isDataClassEqualTo(DataClass(InnerDataClass("test"), 1, 'a'))
     }
 
-    @Test fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
+    @Test
+    fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
         val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
                 .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
@@ -101,7 +112,8 @@ class JavaAnyTest {
         )
     }
 
-    @Test fun isDataClassEqualTo_fails_on_null_property_in_actual() {
+    @Test
+    fun isDataClassEqualTo_fails_on_null_property_in_actual() {
         val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(null, 1, 'a'))
                 .isDataClassEqualTo(DataClass(InnerDataClass("wrong"), 1, 'b'))
@@ -114,7 +126,8 @@ class JavaAnyTest {
         )
     }
 
-    @Test fun isDataClassEqualTo_fails_on_null_property_in_expected() {
+    @Test
+    fun isDataClassEqualTo_fails_on_null_property_in_expected() {
         val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
                 .isDataClassEqualTo(DataClass(null, 1, 'b'))
@@ -129,18 +142,41 @@ class JavaAnyTest {
     //endregion
 
     //region isEqualToIgnoringGivenProperties
-    @Test fun isEqualToIgnoringGivenProperties_passes() {
-        assertThat(BasicObject("Rarity")).isEqualToIgnoringGivenProperties(BasicObject("notRarity"), BasicObject::str, BasicObject::other, BasicObject::failing)
+    @Test
+    fun isEqualToIgnoringGivenProperties_passes() {
+        assertThat(BasicObject("Rarity")).isEqualToIgnoringGivenProperties(
+            BasicObject("notRarity"),
+            BasicObject::str,
+            BasicObject::other,
+            BasicObject::failing
+        )
     }
 
-    @Test fun isEqualToIgnoringGivenProperties_fails() {
+    @Test
+    fun isEqualToIgnoringGivenProperties_fails() {
         assertFailsWith<AssertionError> {
-            assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(BasicObject("notRarity", int = 1337), BasicObject::str, BasicObject::failing)
+            assertThat(BasicObject("Rarity", int = 42)).isEqualToIgnoringGivenProperties(
+                BasicObject(
+                    "notRarity",
+                    int = 1337
+                ), BasicObject::str, BasicObject::failing
+            )
         }
     }
 
-    @Test fun isEqualToIgnoringGivenProperties_passes_even_when_private_property_differs() {
-        assertThat(BasicObject(str = "Rarity", private = 1)).isEqualToIgnoringGivenProperties(BasicObject(str = "notRarity", private = 2), BasicObject::str, BasicObject::other, BasicObject::failing)
+    @Test
+    fun isEqualToIgnoringGivenProperties_passes_even_when_private_property_differs() {
+        assertThat(
+            BasicObject(
+                str = "Rarity",
+                private = 1
+            )
+        ).isEqualToIgnoringGivenProperties(
+            BasicObject(str = "notRarity", private = 2),
+            BasicObject::str,
+            BasicObject::other,
+            BasicObject::failing
+        )
     }
     //endregion
 

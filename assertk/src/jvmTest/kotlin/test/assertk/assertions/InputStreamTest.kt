@@ -12,11 +12,13 @@ import kotlin.test.assertFailsWith
 class InputStreamTest {
 
     //region hasSameContentAs
-    @Test fun hasSameContentAs_on_empty_streams_passes() {
+    @Test
+    fun hasSameContentAs_on_empty_streams_passes() {
         assertThat(emptyStream()).hasSameContentAs(emptyStream())
     }
 
-    @Test fun hasSameContentAs_on_different_streams_fails() {
+    @Test
+    fun hasSameContentAs_on_different_streams_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyStream()).hasSameContentAs(streamA())
         }
@@ -26,7 +28,8 @@ class InputStreamTest {
         )
     }
 
-    @Test fun hasSameContentAs_on_different_non_empty_streams_fails() {
+    @Test
+    fun hasSameContentAs_on_different_non_empty_streams_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(streamA()).hasSameContentAs(streamB())
         }
@@ -36,11 +39,13 @@ class InputStreamTest {
         )
     }
 
-    @Test fun hasSameContentAs_with_same_streams_passes() {
+    @Test
+    fun hasSameContentAs_with_same_streams_passes() {
         assertThat(streamA()).hasSameContentAs(streamA())
     }
 
-    @Test fun hasSameContent_on_different_sized_streams_fails() {
+    @Test
+    fun hasSameContent_on_different_sized_streams_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(prefixOfStreamA()).hasSameContentAs(streamA())
         }
@@ -52,7 +57,8 @@ class InputStreamTest {
         assertEquals("expected to have the same size, but actual size (10) differs from other size (5)", error2.message)
     }
 
-    @Test fun hasSameContentAs_streams_different_in_single_value_fails() {
+    @Test
+    fun hasSameContentAs_streams_different_in_single_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(streamB()).hasSameContentAs(streamC())
         }
@@ -65,29 +71,34 @@ class InputStreamTest {
     //endregion
 
     //region hasNotSameContentAs
-    @Test fun hasNotSameContentAs_on_empty_streams_fails() {
+    @Test
+    fun hasNotSameContentAs_on_empty_streams_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyStream()).hasNotSameContentAs(emptyStream())
         }
         assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
-    @Test fun hasNotSameContentAs_on_different_streams_passes() {
+    @Test
+    fun hasNotSameContentAs_on_different_streams_passes() {
         assertThat(emptyStream()).hasNotSameContentAs(streamA())
     }
 
-    @Test fun hasNotSameContentAs_on_same_streams_fails() {
+    @Test
+    fun hasNotSameContentAs_on_same_streams_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(streamA()).hasNotSameContentAs(streamA())
         }
         assertEquals("expected streams not to be equal, but they were equal", error.message)
     }
 
-    @Test fun hasNotSameContentAs_on_different_non_empty_streams_passes() {
+    @Test
+    fun hasNotSameContentAs_on_different_non_empty_streams_passes() {
         assertThat(streamA()).hasNotSameContentAs(streamB())
     }
 
-    @Test fun hasNotSameContentAs_on_different_sized_streams_passes() {
+    @Test
+    fun hasNotSameContentAs_on_different_sized_streams_passes() {
         assertThat(prefixOfStreamA()).hasNotSameContentAs(streamA())
         assertThat(streamA()).hasNotSameContentAs(prefixOfStreamA())
         assertThat(streamB()).hasNotSameContentAs(streamC())

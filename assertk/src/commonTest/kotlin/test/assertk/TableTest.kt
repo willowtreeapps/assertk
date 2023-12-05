@@ -9,7 +9,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class TableTest {
-    @Test fun no_failures_runs_for_each_row_and_passes() {
+    @Test
+    fun no_failures_runs_for_each_row_and_passes() {
         var invokeCount = 0
         tableOf("a", "b")
             .row(1, 1)
@@ -22,7 +23,8 @@ class TableTest {
         assertEquals(2, invokeCount)
     }
 
-    @Test fun single_failure_fails_row() {
+    @Test
+    fun single_failure_fails_row() {
         var invokeCount = 0
         val error = assertFailsWith<AssertionError> {
             tableOf("a", "b")
@@ -44,7 +46,8 @@ class TableTest {
         )
     }
 
-    @Test fun multiple_failures_fails_with_all() {
+    @Test
+    fun multiple_failures_fails_with_all() {
         var invokeCount = 0
         val error = assertFailsWith<AssertionError> {
             tableOf("a", "b")
@@ -69,7 +72,8 @@ class TableTest {
         )
     }
 
-    @Test fun table_with_one_value_fails_row() {
+    @Test
+    fun table_with_one_value_fails_row() {
         var invokeCount = 0
         val error = assertFailsWith<AssertionError> {
             tableOf("a")
@@ -90,7 +94,8 @@ class TableTest {
         )
     }
 
-    @Test fun table_with_three_values_fails_row() {
+    @Test
+    fun table_with_three_values_fails_row() {
         var invokeCount = 0
         val error = assertFailsWith<AssertionError> {
             tableOf("a", "b", "c")
@@ -111,7 +116,8 @@ class TableTest {
         )
     }
 
-    @Test fun table_with_four_values_fails_row() {
+    @Test
+    fun table_with_four_values_fails_row() {
         var invokeCount = 0
         val error = assertFailsWith<AssertionError> {
             tableOf("a", "b", "c", "d")

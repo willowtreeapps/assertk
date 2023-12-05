@@ -29,15 +29,18 @@ import kotlin.test.assertFailsWith
 
 class SequenceTest {
     //region contains
-    @Test fun contains_element_present_passes() {
+    @Test
+    fun contains_element_present_passes() {
         assertThat(sequenceOf(1, 2, 3)).contains(2)
     }
 
-    @Test fun contains_oneshot_passes() {
+    @Test
+    fun contains_oneshot_passes() {
         assertThat(oneshotSequenceOf(1, 2, 3)).contains(2)
     }
 
-    @Test fun contains_element_missing_fails() {
+    @Test
+    fun contains_element_missing_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptySequence<Any?>()).contains(1)
         }
@@ -46,18 +49,21 @@ class SequenceTest {
     //endregion
 
     //region doesNotContain
-    @Test fun doesNotContain_element_missing_passes() {
+    @Test
+    fun doesNotContain_element_missing_passes() {
         assertThat(emptySequence<Any?>()).doesNotContain(1)
     }
 
-    @Test fun doesNotContain_element_present_fails() {
+    @Test
+    fun doesNotContain_element_present_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).doesNotContain(2)
         }
         assertEquals("expected to not contain:<2> but was:<[1, 2, 3]>", error.message)
     }
 
-    @Test fun doesNotContain_oneshot_fails() {
+    @Test
+    fun doesNotContain_oneshot_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(oneshotSequenceOf(1, 2, 3)).doesNotContain(2)
         }
@@ -66,11 +72,13 @@ class SequenceTest {
     //endregion
 
     //region containsNone
-    @Test fun containsNone_missing_elements_passes() {
+    @Test
+    fun containsNone_missing_elements_passes() {
         assertThat(emptySequence<Any?>()).containsNone(1)
     }
 
-    @Test fun containsNone_present_element_fails() {
+    @Test
+    fun containsNone_present_element_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2)).containsNone(2, 3)
         }
@@ -81,7 +89,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsNone_oneshot_fails() {
+    @Test
+    fun containsNone_oneshot_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(oneshotSequenceOf(1, 2)).containsNone(2, 3)
         }
@@ -95,15 +104,18 @@ class SequenceTest {
     //region
 
     //region containsAtLeast
-    @Test fun containsAtLeast_all_elements_passes() {
+    @Test
+    fun containsAtLeast_all_elements_passes() {
         assertThat(sequenceOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAtLeast_oneshot_passes() {
+    @Test
+    fun containsAtLeast_oneshot_passes() {
         assertThat(oneshotSequenceOf(1, 2)).containsAtLeast(2, 1)
     }
 
-    @Test fun containsAtLeast_some_elements_fails() {
+    @Test
+    fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1)).containsAtLeast(1, 2)
         }
@@ -116,23 +128,28 @@ class SequenceTest {
     //endregion
 
     //region containsOnly
-    @Test fun containsOnly_only_elements_passes() {
+    @Test
+    fun containsOnly_only_elements_passes() {
         assertThat(sequenceOf(1, 2)).containsOnly(2, 1)
     }
 
-    @Test fun containsOnly_duplicate_elements_passes() {
+    @Test
+    fun containsOnly_duplicate_elements_passes() {
         assertThat(sequenceOf(1, 2, 2)).containsOnly(2, 1)
     }
 
-    @Test fun containsOnly_duplicate_elements_passes2() {
+    @Test
+    fun containsOnly_duplicate_elements_passes2() {
         assertThat(sequenceOf(1, 2)).containsOnly(2, 2, 1)
     }
 
-    @Test fun containsOnly_oneshot_passes() {
+    @Test
+    fun containsOnly_oneshot_passes() {
         assertThat(oneshotSequenceOf(1, 2)).containsOnly(2, 1)
     }
 
-    @Test fun containsOnly_more_elements_fails() {
+    @Test
+    fun containsOnly_more_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).containsOnly(2, 1)
         }
@@ -143,7 +160,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsOnly_less_elements_fails() {
+    @Test
+    fun containsOnly_less_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).containsOnly(2, 1, 3, 4)
         }
@@ -155,7 +173,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsOnly_different_elements_fails() {
+    @Test
+    fun containsOnly_different_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1)).containsOnly(2)
         }
@@ -168,7 +187,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsOnly_oneshot_fails() {
+    @Test
+    fun containsOnly_oneshot_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(oneshotSequenceOf(1, 2, 3)).containsOnly(2, 1)
         }
@@ -181,19 +201,23 @@ class SequenceTest {
     //endregion
 
     //region containsExactlyInAnyOrder
-    @Test fun containsExactlyInAnyOrder_only_elements_passes() {
+    @Test
+    fun containsExactlyInAnyOrder_only_elements_passes() {
         assertThat(sequenceOf(1, 2)).containsExactlyInAnyOrder(2, 1)
     }
 
-    @Test fun containsExactlyInAnyOrder_only_elements_passes2() {
+    @Test
+    fun containsExactlyInAnyOrder_only_elements_passes2() {
         assertThat(sequenceOf(1, 2, 1)).containsExactlyInAnyOrder(2, 1, 1)
     }
 
-    @Test fun containsExactlyInAnyOrder_oneshot_passes() {
+    @Test
+    fun containsExactlyInAnyOrder_oneshot_passes() {
         assertThat(oneshotSequenceOf(1, 2)).containsExactlyInAnyOrder(2, 1)
     }
 
-    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails() {
+    @Test
+    fun containsExactlyInAnyOrder_duplicate_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 2)).containsExactlyInAnyOrder(2, 1)
         }
@@ -204,7 +228,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
+    @Test
+    fun containsExactlyInAnyOrder_duplicate_elements_fails2() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2)).containsExactlyInAnyOrder(2, 2, 1)
         }
@@ -215,7 +240,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsExactlyInAnyOrder_more_elements_fails() {
+    @Test
+    fun containsExactlyInAnyOrder_more_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).containsExactlyInAnyOrder(2, 1)
         }
@@ -226,7 +252,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsExactlyInAnyOrder_less_elements_fails() {
+    @Test
+    fun containsExactlyInAnyOrder_less_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).containsExactlyInAnyOrder(2, 1, 3, 4)
         }
@@ -238,7 +265,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsExactlyInAnyOrder_different_elements_fails() {
+    @Test
+    fun containsExactlyInAnyOrder_different_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1)).containsExactlyInAnyOrder(2)
         }
@@ -251,7 +279,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun containsExactlyInAnyOrder_oneshot_fails() {
+    @Test
+    fun containsExactlyInAnyOrder_oneshot_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(oneshotSequenceOf(1, 2, 2)).containsExactlyInAnyOrder(2, 1)
         }
@@ -264,19 +293,23 @@ class SequenceTest {
     //endregion
 
     //region each
-    @Test fun each_empty_list_passes() {
+    @Test
+    fun each_empty_list_passes() {
         assertThat(emptySequence<Int>()).each { it.isEqualTo(1) }
     }
 
-    @Test fun each_content_passes() {
+    @Test
+    fun each_content_passes() {
         assertThat(sequenceOf(1, 2)).each { it.isGreaterThan(0) }
     }
 
-    @Test fun each_oneshot_passes() {
+    @Test
+    fun each_oneshot_passes() {
         assertThat(oneshotSequenceOf(1, 2)).each { it.isGreaterThan(0) }
     }
 
-    @Test fun each_non_matching_content_fails() {
+    @Test
+    fun each_non_matching_content_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).each { it.isLessThan(2) }
         }
@@ -290,11 +323,13 @@ class SequenceTest {
     //endregion
 
     //region none
-    @Test fun none_empty_list_passes() {
+    @Test
+    fun none_empty_list_passes() {
         assertThat(emptySequence<Int>()).none { it.isEqualTo(1) }
     }
 
-    @Test fun none_matching_content_fails() {
+    @Test
+    fun none_matching_content_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2)).none { it.isGreaterThan(0) }
         }
@@ -306,7 +341,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun none_matching_some_content_fails() {
+    @Test
+    fun none_matching_some_content_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).none { it.isGreaterThanOrEqualTo(3) }
         }
@@ -317,11 +353,13 @@ class SequenceTest {
         )
     }
 
-    @Test fun none_all_non_matching_content_passes() {
+    @Test
+    fun none_all_non_matching_content_passes() {
         assertThat(sequenceOf(1, 2, 3)).none { it.isLessThan(0) }
     }
 
-    @Test fun none_multiple_failures_passes() {
+    @Test
+    fun none_multiple_failures_passes() {
         assertThat(sequenceOf(1, 2, 3)).none {
             it.isLessThan(2)
             it.isGreaterThan(2)
@@ -330,7 +368,8 @@ class SequenceTest {
     //endregion
 
     //region atLeast
-    @Test fun atLeast_too_many_failures_fails() {
+    @Test
+    fun atLeast_too_many_failures_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).atLeast(2) { it.isGreaterThan(2) }
         }
@@ -342,21 +381,25 @@ class SequenceTest {
         )
     }
 
-    @Test fun atLeast_no_failures_passes() {
+    @Test
+    fun atLeast_no_failures_passes() {
         assertThat(sequenceOf(1, 2, 3)).atLeast(2) { it.isGreaterThan(0) }
     }
 
-    @Test fun atLeast_less_than_times_failures_passes() {
+    @Test
+    fun atLeast_less_than_times_failures_passes() {
         assertThat(sequenceOf(1, 2, 3)).atLeast(2) { it.isGreaterThan(1) }
     }
 
-    @Test fun atLeast_works_in_a_soft_assert_context() {
+    @Test
+    fun atLeast_works_in_a_soft_assert_context() {
         assertThat(sequenceOf(1, 2, 3)).all { atLeast(2) { it.isGreaterThan(1) } }
     }
     //endregion
 
     //region atMost
-    @Test fun atMost_more_than_times_passed_fails() {
+    @Test
+    fun atMost_more_than_times_passed_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).atMost(2) { it.isGreaterThan(0) }
         }
@@ -365,19 +408,22 @@ class SequenceTest {
         )
     }
 
-    @Test fun atMost_exactly_times_passed_passes() {
+    @Test
+    fun atMost_exactly_times_passed_passes() {
         assertThat(sequenceOf(1, 2, 3)).atMost(2) { it.isGreaterThan(1) }
     }
 
 
-    @Test fun atMost_less_than_times_passed_passes() {
+    @Test
+    fun atMost_less_than_times_passed_passes() {
         assertThat(sequenceOf(1, 2)).atMost(2) { it.isGreaterThan(1) }
     }
     //endregion
 
 
     //region exactly
-    @Test fun exactly_too_few_passes_fails() {
+    @Test
+    fun exactly_too_few_passes_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).exactly(2) { it.isGreaterThan(2) }
         }
@@ -389,7 +435,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun exactly_too_many_passes_fails() {
+    @Test
+    fun exactly_too_many_passes_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(5, 4, 3)).exactly(2) { it.isGreaterThan(2) }
         }
@@ -398,7 +445,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun exactly_too_few_inside_all_fails() {
+    @Test
+    fun exactly_too_few_inside_all_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(5, 4, 3)).all {
                 exactly(2) { it.isGreaterThan(2) }
@@ -409,17 +457,20 @@ class SequenceTest {
         )
     }
 
-    @Test fun exactly_times_passed_passes() {
+    @Test
+    fun exactly_times_passed_passes() {
         assertThat(sequenceOf(0, 1, 2)).exactly(2) { it.isGreaterThan(0) }
     }
     //endregion
 
     //region any
-    @Test fun any_passes_if_one_item_passes() {
+    @Test
+    fun any_passes_if_one_item_passes() {
         assertThat(sequenceOf(1, 2)).any { it.isGreaterThan(1) }
     }
 
-    @Test fun any_fails_if_all_fail() {
+    @Test
+    fun any_fails_if_all_fail() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2)).any { it.isGreaterThan(3) }
         }
@@ -431,7 +482,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun any_multiple_assertions_fail() {
+    @Test
+    fun any_multiple_assertions_fail() {
         assertFailsWith<AssertionError> {
             assertThat(sequenceOf("one")).any {
                 it.isEqualTo("two")
@@ -440,7 +492,8 @@ class SequenceTest {
         }
     }
 
-    @Test fun any_multiple_items_fail() {
+    @Test
+    fun any_multiple_items_fail() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(1, 2, 3)).any {
                 it.isEqualTo(4)
@@ -456,7 +509,8 @@ class SequenceTest {
         )
     }
 
-    @Test fun any_with_exception_still_passes() {
+    @Test
+    fun any_with_exception_still_passes() {
         var count = 0
         assertThat(sequenceOf("one", "two")).any {
             if (count == 1) {
@@ -468,17 +522,20 @@ class SequenceTest {
     //endregion
 
     //region isEmpty
-    @Test fun isEmpty_empty_passes() {
+    @Test
+    fun isEmpty_empty_passes() {
         val empty = emptySequence<Int>()
         assertThat(empty).isEmpty()
     }
 
-    @Test fun isEmpty_oneshot_passes() {
+    @Test
+    fun isEmpty_oneshot_passes() {
         val empty = oneshotSequenceOf<Int>()
         assertThat(empty).isEmpty()
     }
 
-    @Test fun isEmpty_non_empty_fails() {
+    @Test
+    fun isEmpty_non_empty_fails() {
         val nonEmpty = sequenceOf(1)
         val error = assertFailsWith<AssertionError> {
             assertThat(nonEmpty).isEmpty()
@@ -486,7 +543,8 @@ class SequenceTest {
         assertEquals("expected to be empty but was:<[1]>", error.message)
     }
 
-    @Test fun isEmpty_oneshot_fails() {
+    @Test
+    fun isEmpty_oneshot_fails() {
         val nonEmpty = oneshotSequenceOf(1)
         val error = assertFailsWith<AssertionError> {
             assertThat(nonEmpty).isEmpty()
@@ -496,17 +554,20 @@ class SequenceTest {
     //endregion
 
     //region isNotEmpty
-    @Test fun isNotEmpty_non_empty_passes() {
+    @Test
+    fun isNotEmpty_non_empty_passes() {
         val nonEmpty = sequenceOf(1)
         assertThat(nonEmpty).isNotEmpty()
     }
 
-    @Test fun isNotEmpty_oneshot_passes() {
+    @Test
+    fun isNotEmpty_oneshot_passes() {
         val nonEmpty = oneshotSequenceOf(1)
         assertThat(nonEmpty).isNotEmpty()
     }
 
-    @Test fun isNotEmpty_empty_fails() {
+    @Test
+    fun isNotEmpty_empty_fails() {
         val empty = emptySequence<Int>()
         val error = assertFailsWith<AssertionError> {
             assertThat(empty).isNotEmpty()
@@ -514,7 +575,8 @@ class SequenceTest {
         assertEquals("expected to not be empty", error.message)
     }
 
-    @Test fun isNotEmpty_oneshot_fails() {
+    @Test
+    fun isNotEmpty_oneshot_fails() {
         val empty = oneshotSequenceOf<Int>()
         val error = assertFailsWith<AssertionError> {
             assertThat(empty).isNotEmpty()
@@ -524,12 +586,14 @@ class SequenceTest {
     //endregion
 
     //region extracting
-    @Test fun single_extracting_function_passes() {
+    @Test
+    fun single_extracting_function_passes() {
         assertThat(sequenceOf("one", "two")).extracting { it.length }
             .containsOnly(3, 3)
     }
 
-    @Test fun single_extracting_function_fails() {
+    @Test
+    fun single_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
         }
@@ -542,13 +606,15 @@ class SequenceTest {
         )
     }
 
-    @Test fun pair_extracting_function_passes() {
+    @Test
+    fun pair_extracting_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
             .extracting(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
-    @Test fun pair_extracting_function_fails() {
+    @Test
+    fun pair_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .extracting(Thing::one, Thing::two)
@@ -564,13 +630,15 @@ class SequenceTest {
         )
     }
 
-    @Test fun triple_extracting_function_passes() {
+    @Test
+    fun triple_extracting_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
             .extracting(Thing::one, Thing::two, Thing::three)
             .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
     }
 
-    @Test fun triple_extracting_function_fails() {
+    @Test
+    fun triple_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .extracting(Thing::one, Thing::two, Thing::three)

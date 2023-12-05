@@ -12,24 +12,29 @@ class ThrowableTest {
     val cause = Exception("cause", rootCause)
     val subject = Exception("test", cause)
 
-    @Test fun extracts_message() {
+    @Test
+    fun extracts_message() {
         assertEquals(subject.message, assertThat(subject).message().valueOrFail)
     }
 
-    @Test fun extracts_cause() {
+    @Test
+    fun extracts_cause() {
         assertEquals(cause, assertThat(subject).cause().valueOrFail)
     }
 
-    @Test fun extracts_root_cause() {
+    @Test
+    fun extracts_root_cause() {
         assertEquals(rootCause, assertThat(subject).rootCause().valueOrFail)
     }
 
     //region hasMessage
-    @Test fun hasMessage_same_message_passes() {
+    @Test
+    fun hasMessage_same_message_passes() {
         assertThat(subject).hasMessage("test")
     }
 
-    @Test fun hasMessage_different_message_fails() {
+    @Test
+    fun hasMessage_different_message_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasMessage("not test")
         }
@@ -38,11 +43,13 @@ class ThrowableTest {
     //endregion
 
     //region messageContains
-    @Test fun messageContains_similar_message_passes() {
+    @Test
+    fun messageContains_similar_message_passes() {
         assertThat(subject).messageContains("es")
     }
 
-    @Test fun messageContains_different_message_fails() {
+    @Test
+    fun messageContains_different_message_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).messageContains("not")
         }
@@ -52,11 +59,13 @@ class ThrowableTest {
     //endregion
 
     //region hasCause
-    @Test fun hasCause_same_type_and_message_passes() {
+    @Test
+    fun hasCause_same_type_and_message_passes() {
         assertThat(subject).hasCause(Exception("cause"))
     }
 
-    @Test fun hasCause_no_cause_fails() {
+    @Test
+    fun hasCause_no_cause_fails() {
         val causeless = Exception("test")
         val error = assertFailsWith<AssertionError> {
             assertThat(causeless).hasCause(cause)
@@ -67,7 +76,8 @@ class ThrowableTest {
         )
     }
 
-    @Test fun hasCause_different_message_fails() {
+    @Test
+    fun hasCause_different_message_fails() {
         val wrongCause = Exception("wrong")
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasCause(wrongCause)
@@ -78,7 +88,8 @@ class ThrowableTest {
         )
     }
 
-    @Test fun hasCause_different_type_fails() {
+    @Test
+    fun hasCause_different_type_fails() {
         val wrongCause = IllegalArgumentException("cause")
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasCause(wrongCause)
@@ -91,12 +102,14 @@ class ThrowableTest {
     //endregion
 
     //region hasNoCause
-    @Test fun hasNoCause_no_cause_passes() {
+    @Test
+    fun hasNoCause_no_cause_passes() {
         val causeless = Exception("test")
         assertThat(causeless).hasNoCause()
     }
 
-    @Test fun hasNoCause_cause_fails() {
+    @Test
+    fun hasNoCause_cause_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasNoCause()
         }
@@ -105,11 +118,13 @@ class ThrowableTest {
     //endregion
 
     //region hasRootCause
-    @Test fun hasRootCause_same_root_cause_type_and_message_passes() {
+    @Test
+    fun hasRootCause_same_root_cause_type_and_message_passes() {
         assertThat(subject).hasRootCause(Exception("rootCause"))
     }
 
-    @Test fun hasRootCause_wrong_cause_type_fails() {
+    @Test
+    fun hasRootCause_wrong_cause_type_fails() {
         val wrongCause = IllegalArgumentException("rootCause")
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasRootCause(wrongCause)
@@ -120,7 +135,8 @@ class ThrowableTest {
         )
     }
 
-    @Test fun hasRootCause_wrong_cause_message_fails() {
+    @Test
+    fun hasRootCause_wrong_cause_message_fails() {
         val wrongCause = Exception("wrong")
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).hasRootCause(wrongCause)

@@ -10,11 +10,13 @@ import kotlin.test.assertFailsWith
 class JavaNullableStringTest {
 
     //region isEqualTo
-    @Test fun isEqualTo_same_nullable_string_passes() {
+    @Test
+    fun isEqualTo_same_nullable_string_passes() {
         assertThat(JavaNullableString.string()).isEqualTo(JavaNullableString.string())
     }
 
-    @Test fun isEqualTo_different_string_fails() {
+    @Test
+    fun isEqualTo_different_string_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(JavaNullableString.string()).isEqualTo("wrong")
         }
@@ -23,11 +25,13 @@ class JavaNullableStringTest {
     //endregion
 
     //region isNotEqualTo
-    @Test fun isNotEqualTo_different_string_passes() {
+    @Test
+    fun isNotEqualTo_different_string_passes() {
         assertThat(JavaNullableString.string()).isNotEqualTo("wrong")
     }
 
-    @Test fun isNotEqualTo_same_nullable_string_fails() {
+    @Test
+    fun isNotEqualTo_same_nullable_string_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(JavaNullableString.string()).isNotEqualTo(JavaNullableString.string())
         }

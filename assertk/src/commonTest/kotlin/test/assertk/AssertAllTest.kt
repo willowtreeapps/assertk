@@ -18,14 +18,16 @@ import kotlin.test.assertTrue
 
 class AssertAllTest {
     //region all
-    @Test fun all_multiple_successful_passes() {
+    @Test
+    fun all_multiple_successful_passes() {
         assertThat("test").all {
             startsWith("t")
             endsWith("t")
         }
     }
 
-    @Test fun all_one_failure_fails() {
+    @Test
+    fun all_one_failure_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat("test", name = "test").all {
                 startsWith("t")
@@ -38,7 +40,8 @@ class AssertAllTest {
         )
     }
 
-    @Test fun all_both_failures_fails_with_both() {
+    @Test
+    fun all_both_failures_fails_with_both() {
         val error = assertFailsWith<AssertionError> {
             assertThat("test", name = "test").all {
                 startsWith("w")
@@ -54,7 +57,8 @@ class AssertAllTest {
         )
     }
 
-    @Test fun all_prioritizes_exceptions_thrown_in_block_over_soft_assertions() {
+    @Test
+    fun all_prioritizes_exceptions_thrown_in_block_over_soft_assertions() {
         val error = assertFailsWith<IllegalStateException> {
             assertThat(1).all {
                 isEqualTo(2)
@@ -66,14 +70,16 @@ class AssertAllTest {
     //endregion
 
     //region assertAll
-    @Test fun assertAll_multiple_successful_passes() {
+    @Test
+    fun assertAll_multiple_successful_passes() {
         assertAll {
             assertThat("test1", name = "test1").isEqualTo("test1")
             assertThat("test2", name = "test2").isEqualTo("test2")
         }
     }
 
-    @Test fun assertAll_one_failure_fails() {
+    @Test
+    fun assertAll_one_failure_fails() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat("test1", name = "test1").isEqualTo("wrong1")
@@ -86,7 +92,8 @@ class AssertAllTest {
         )
     }
 
-    @Test fun assertAll_both_failures_fails_with_both() {
+    @Test
+    fun assertAll_both_failures_fails_with_both() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat("test1", name = "test1").isEqualTo("wrong1")
@@ -102,7 +109,8 @@ class AssertAllTest {
         )
     }
 
-    @Test fun leaves_soft_assert_scope_properly_on_exception() {
+    @Test
+    fun leaves_soft_assert_scope_properly_on_exception() {
         val error = assertFailsWith<AssertionError> {
             @Suppress("SwallowedException")
             try {
@@ -117,7 +125,8 @@ class AssertAllTest {
         assertEquals("Fail", error.message)
     }
 
-    @Test fun assertAll_fails_multiple_block_thrownError_assertions() {
+    @Test
+    fun assertAll_fails_multiple_block_thrownError_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat(runCatching { 1 + 1 }).isFailure()
@@ -133,7 +142,8 @@ class AssertAllTest {
         )
     }
 
-    @Test fun assertAll_fails_multiple_block_returnedValue_assertions() {
+    @Test
+    fun assertAll_fails_multiple_block_returnedValue_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat(runCatching { throw Exception("error1") }).isSuccess()
@@ -144,11 +154,28 @@ class AssertAllTest {
             "The following assertions failed (2 failures)",
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error2"))}"))
+        assertTrue(
+            error.message!!.contains(
+                "\t${opentestPackageName}AssertionFailedError: expected success but was failure:${
+                    show(
+                        Exception("error1")
+                    )
+                }"
+            )
+        )
+        assertTrue(
+            error.message!!.contains(
+                "\t${opentestPackageName}AssertionFailedError: expected success but was failure:${
+                    show(
+                        Exception("error2")
+                    )
+                }"
+            )
+        )
     }
 
-    @Test fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
+    @Test
+    fun assertAll_fails_multiple_block_doesNotThrowAnyException_assertions() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat(runCatching { throw Exception("error1") }).isSuccess()
@@ -159,8 +186,24 @@ class AssertAllTest {
             "The following assertions failed (2 failures)".trimMargin(),
             error.message!!.lineSequence().first()
         )
-        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error1"))}"))
-        assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error2"))}"))
+        assertTrue(
+            error.message!!.contains(
+                "\t${opentestPackageName}AssertionFailedError: expected success but was failure:${
+                    show(
+                        Exception("error1")
+                    )
+                }"
+            )
+        )
+        assertTrue(
+            error.message!!.contains(
+                "\t${opentestPackageName}AssertionFailedError: expected success but was failure:${
+                    show(
+                        Exception("error2")
+                    )
+                }"
+            )
+        )
     }
 
     @Test

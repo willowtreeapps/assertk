@@ -16,11 +16,13 @@ import kotlin.test.assertFailsWith
 
 class ComparableTest {
     //region isGreaterThan
-    @Test fun isGreaterThan_greater_value_passes() {
+    @Test
+    fun isGreaterThan_greater_value_passes() {
         assertThat(2).isGreaterThan(1)
     }
 
-    @Test fun isGreaterThan_non_greater_value_fails() {
+    @Test
+    fun isGreaterThan_non_greater_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(0).isGreaterThan(0)
         }
@@ -29,11 +31,13 @@ class ComparableTest {
     //endregion
 
     //region isLessThan
-    @Test fun isLessThan_lesser_value_passes() {
+    @Test
+    fun isLessThan_lesser_value_passes() {
         assertThat(1).isLessThan(2)
     }
 
-    @Test fun isLessThan_non_lesser_value_fails() {
+    @Test
+    fun isLessThan_non_lesser_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(0).isLessThan(0)
         }
@@ -42,15 +46,18 @@ class ComparableTest {
     //endregion
 
     //region isGreaterThanOrEqualTo
-    @Test fun isGreaterThanOrEqualTo_greater_value_passes() {
+    @Test
+    fun isGreaterThanOrEqualTo_greater_value_passes() {
         assertThat(2).isGreaterThanOrEqualTo(1)
     }
 
-    @Test fun isGreaterThanOrEqualTo_equal_value_passes() {
+    @Test
+    fun isGreaterThanOrEqualTo_equal_value_passes() {
         assertThat(2).isGreaterThanOrEqualTo(2)
     }
 
-    @Test fun isGreaterThanOrEqualTo_lesser_value_fails() {
+    @Test
+    fun isGreaterThanOrEqualTo_lesser_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(0).isGreaterThanOrEqualTo(2)
         }
@@ -59,15 +66,18 @@ class ComparableTest {
     //endregion
 
     //region isLessThanOrEqualTo
-    @Test fun isLessThanOrEqualTo_lesser_value_passes() {
+    @Test
+    fun isLessThanOrEqualTo_lesser_value_passes() {
         assertThat(1).isLessThanOrEqualTo(2)
     }
 
-    @Test fun isLessThanOrEqualTo_equal_value_passes() {
+    @Test
+    fun isLessThanOrEqualTo_equal_value_passes() {
         assertThat(2).isLessThanOrEqualTo(2)
     }
 
-    @Test fun isLessThanOrEqualTo_greater_value_fails() {
+    @Test
+    fun isLessThanOrEqualTo_greater_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(2).isLessThanOrEqualTo(0)
         }
@@ -76,26 +86,31 @@ class ComparableTest {
     //endregion
 
     //region isBetween
-    @Test fun isBetween_inside_range_passes() {
+    @Test
+    fun isBetween_inside_range_passes() {
         assertThat(1).isBetween(0, 2)
     }
 
-    @Test fun isBetween_lower_bound_passes() {
+    @Test
+    fun isBetween_lower_bound_passes() {
         assertThat(0).isBetween(0, 2)
     }
 
-    @Test fun isBetween_upper_bound_passes() {
+    @Test
+    fun isBetween_upper_bound_passes() {
         assertThat(2).isBetween(0, 2)
     }
 
-    @Test fun isBetween_below_lower_bound_fails() {
+    @Test
+    fun isBetween_below_lower_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(-1).isBetween(0, 2)
         }
         assertEquals("expected to be between:<0> and <2> but was:<-1>", error.message)
     }
 
-    @Test fun isBetween_above_upper_bound_fails() {
+    @Test
+    fun isBetween_above_upper_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(3).isBetween(0, 2)
         }
@@ -104,32 +119,37 @@ class ComparableTest {
     //endregion
 
     //region isStrictlyBetween
-    @Test fun isStrictlyBetween_inside_range_passes() {
+    @Test
+    fun isStrictlyBetween_inside_range_passes() {
         assertThat(0 + 1).isStrictlyBetween(0, 2)
     }
 
-    @Test fun isStrictlyBetween_lower_bound_fails() {
+    @Test
+    fun isStrictlyBetween_lower_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(0).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<0>", error.message)
     }
 
-    @Test fun isStrictlyBetween_upper_bound_fails() {
+    @Test
+    fun isStrictlyBetween_upper_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(2).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<2>", error.message)
     }
 
-    @Test fun isStrictlyBetween_below_lower_bound_fails() {
+    @Test
+    fun isStrictlyBetween_below_lower_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(0 - 1).isStrictlyBetween(0, 2)
         }
         assertEquals("expected to be strictly between:<0> and <2> but was:<-1>", error.message)
     }
 
-    @Test fun isStrictlyBetween_above_upper_bound_fails() {
+    @Test
+    fun isStrictlyBetween_above_upper_bound_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(2 + 1).isStrictlyBetween(0, 2)
         }
@@ -163,7 +183,10 @@ class ComparableTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(10.1f).isCloseTo(15.0f, 3f)
         }
-        assertEquals("expected ${show(10.1f)} to be close to ${show(15.0f)} with delta of ${show(3f)}, but was not", error.message)
+        assertEquals(
+            "expected ${show(10.1f)} to be close to ${show(15.0f)} with delta of ${show(3f)}, but was not",
+            error.message
+        )
     }
 
     @Test
@@ -171,7 +194,10 @@ class ComparableTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(10.1).isCloseTo(15.0, 3.0)
         }
-        assertEquals("expected ${show(10.1)} to be close to ${show(15.0)} with delta of ${show(3.0)}, but was not", error.message)
+        assertEquals(
+            "expected ${show(10.1)} to be close to ${show(15.0)} with delta of ${show(3.0)}, but was not",
+            error.message
+        )
     }
 
     @Test
@@ -187,10 +213,11 @@ class ComparableTest {
         assertThat(Info("aaa")).isEqualByComparingTo(Info("bbb"))
     }
 
-    private class Info(private val data: String): Comparable<Info> {
+    private class Info(private val data: String) : Comparable<Info> {
         override fun compareTo(other: Info): Int {
             return data.length - other.data.length
         }
+
         override fun toString(): String {
             return data
         }

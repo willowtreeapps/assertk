@@ -9,11 +9,13 @@ import kotlin.test.assertFailsWith
 
 class BooleanTest {
     //region isTrue
-    @Test fun isTrue_true_value_passes() {
+    @Test
+    fun isTrue_true_value_passes() {
         assertThat(true).isTrue()
     }
 
-    @Test fun isTrue_false_value_fails() {
+    @Test
+    fun isTrue_false_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(false).isTrue()
         }
@@ -22,11 +24,13 @@ class BooleanTest {
     //endregion
 
     //region isFalse
-    @Test fun isFalse_false_value_passes() {
+    @Test
+    fun isFalse_false_value_passes() {
         assertThat(false).isFalse()
     }
 
-    @Test fun isFalse_true_value_fails() {
+    @Test
+    fun isFalse_true_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(true).isFalse()
         }

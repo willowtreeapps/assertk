@@ -8,18 +8,21 @@ import kotlin.test.assertFailsWith
 
 class MapTest {
     //region contains
-    @Test fun contains_element_present_passes() {
+    @Test
+    fun contains_element_present_passes() {
         assertThat(mapOf("one" to 1, "two" to 2)).contains("two" to 2)
     }
 
-    @Test fun contains_element_missing_fails() {
+    @Test
+    fun contains_element_missing_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyMap<String, Int>()).contains("one" to 1)
         }
         assertEquals("expected to contain:<{\"one\"=1}> but was:<{}>", error.message)
     }
 
-    @Test fun contains_element_with_nullable_value_missing_fails() {
+    @Test
+    fun contains_element_with_nullable_value_missing_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyMap<String, Int?>()).contains("one" to null)
         }
@@ -28,26 +31,31 @@ class MapTest {
     //endregion
 
     //region doesNotContain
-    @Test fun doesNotContain_element_missing_passes() {
+    @Test
+    fun doesNotContain_element_missing_passes() {
         assertThat(emptyMap<String, Int>()).doesNotContain("one" to 1)
     }
 
-    @Test fun doesNotContain_element_with_missing_nullable_value_passes() {
+    @Test
+    fun doesNotContain_element_with_missing_nullable_value_passes() {
         assertThat(emptyMap<String, Int?>()).doesNotContain("one" to null)
     }
 
-    @Test fun doesNotContain_element_present_fails() {
+    @Test
+    fun doesNotContain_element_present_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2)).doesNotContain("two" to 2)
         }
         assertEquals("expected to not contain:<{\"two\"=2}> but was:<{\"one\"=1, \"two\"=2}>", error.message)
     }
 
-    @Test fun doesNotContainKey_key_missing_passes() {
+    @Test
+    fun doesNotContainKey_key_missing_passes() {
         assertThat(emptyMap<String, Int>()).doesNotContainKey("one")
     }
 
-    @Test fun doesNotContainKey_key_present_fails() {
+    @Test
+    fun doesNotContainKey_key_present_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1)).doesNotContainKey("one")
         }
@@ -57,15 +65,18 @@ class MapTest {
     //endregion
 
     //region containsNone
-    @Test fun containsNone_missing_elements_passes() {
+    @Test
+    fun containsNone_missing_elements_passes() {
         assertThat(emptyMap<String, Int>()).containsNone("one" to 1)
     }
 
-    @Test fun containsNone_missing_elements_with_nullable_value_passes() {
+    @Test
+    fun containsNone_missing_elements_with_nullable_value_passes() {
         assertThat(emptyMap<String, Int?>()).containsNone("one" to null)
     }
 
-    @Test fun containsNone_present_element_fails() {
+    @Test
+    fun containsNone_present_element_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2)).containsNone("two" to 2, "three" to 3)
         }
@@ -79,38 +90,43 @@ class MapTest {
     //region
 
     //region containsAtLeast
-    @Test fun containsAtLeast_all_elements_passes() {
+    @Test
+    fun containsAtLeast_all_elements_passes() {
         assertThat(mapOf("one" to 1, "two" to 2)).containsAtLeast("two" to 2, "one" to 1)
     }
 
-    @Test fun containsAtLeast_extra_elements_passes() {
+    @Test
+    fun containsAtLeast_extra_elements_passes() {
         assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).containsAtLeast("one" to 1, "two" to 2)
     }
 
-    @Test fun containsAtLeast_swapped_keys_and_values_fails() {
+    @Test
+    fun containsAtLeast_swapped_keys_and_values_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 2, "two" to 1)).containsAtLeast("two" to 2, "one" to 1)
         }
 
         assertEquals(
-                """expected to contain all:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
+            """expected to contain all:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
                 | elements not found:<{"two"=2, "one"=1}>
             """.trimMargin(), error.message
         )
     }
 
-    @Test fun containsAtLeast_nullable_values_fails() {
+    @Test
+    fun containsAtLeast_nullable_values_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf<String, Any?>()).containsAtLeast("key" to null)
         }
         assertEquals(
-                """expected to contain all:<{"key"=null}> but was:<{}>
+            """expected to contain all:<{"key"=null}> but was:<{}>
                 | elements not found:<{"key"=null}>
             """.trimMargin(), error.message
         )
     }
 
-    @Test fun containsAtLeast_some_elements_fails() {
+    @Test
+    fun containsAtLeast_some_elements_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1)).containsAtLeast("one" to 1, "two" to 2)
         }
@@ -124,24 +140,27 @@ class MapTest {
     //endregion
 
     //region containsOnly
-    @Test fun containsOnly_all_elements_passes() {
+    @Test
+    fun containsOnly_all_elements_passes() {
         assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("two" to 2, "one" to 1)
     }
 
-    @Test fun containsOnly_swapped_keys_and_values_fails() {
+    @Test
+    fun containsOnly_swapped_keys_and_values_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 2, "two" to 1)).containsOnly("two" to 2, "one" to 1)
         }
 
         assertEquals(
-                """expected to contain only:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
+            """expected to contain only:<{"two"=2, "one"=1}> but was:<{"one"=2, "two"=1}>
                 | elements not found:<{"two"=2, "one"=1}>
                 | extra elements found:<{"one"=2, "two"=1}>
             """.trimMargin(), error.message
         )
     }
 
-    @Test fun containsOnly_missing_element_fails() {
+    @Test
+    fun containsOnly_missing_element_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("three" to 3)
         }
@@ -153,7 +172,8 @@ class MapTest {
         )
     }
 
-    @Test fun containsOnly_extra_element_fails() {
+    @Test
+    fun containsOnly_extra_element_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2)).containsOnly("one" to 1)
         }
@@ -166,11 +186,13 @@ class MapTest {
     //endregion
 
     //region isEmpty
-    @Test fun isEmpty_empty_passes() {
+    @Test
+    fun isEmpty_empty_passes() {
         assertThat(emptyMap<Any?, Any?>()).isEmpty()
     }
 
-    @Test fun isEmpty_non_empty_fails() {
+    @Test
+    fun isEmpty_non_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf<Any?, Any?>(null to null)).isEmpty()
         }
@@ -179,11 +201,13 @@ class MapTest {
     //endregion
 
     //region isNotEmpty
-    @Test fun isNotEmpty_non_empty_passes() {
+    @Test
+    fun isNotEmpty_non_empty_passes() {
         assertThat(mapOf<Any?, Any?>(null to null)).isNotEmpty()
     }
 
-    @Test fun isNotEmpty_empty_fails() {
+    @Test
+    fun isNotEmpty_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf<Any?, Any?>()).isNotEmpty()
         }
@@ -192,15 +216,18 @@ class MapTest {
     //endregion
 
     //region isNullOrEmpty
-    @Test fun isNullOrEmpty_null_passes() {
+    @Test
+    fun isNullOrEmpty_null_passes() {
         assertThat(null as Map<Any?, Any?>?).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_empty_passes() {
+    @Test
+    fun isNullOrEmpty_empty_passes() {
         assertThat(emptyMap<Any?, Any?>()).isNullOrEmpty()
     }
 
-    @Test fun isNullOrEmpty_non_empty_fails() {
+    @Test
+    fun isNullOrEmpty_non_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf<Any?, Any?>(null to null)).isNullOrEmpty()
         }
@@ -209,11 +236,13 @@ class MapTest {
     //endregion
 
     //region hasSize
-    @Test fun hasSize_correct_size_passes() {
+    @Test
+    fun hasSize_correct_size_passes() {
         assertThat(emptyMap<String, Int>()).hasSize(0)
     }
 
-    @Test fun hasSize_wrong_size_fails() {
+    @Test
+    fun hasSize_wrong_size_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyMap<String, Int>()).hasSize(1)
         }
@@ -222,11 +251,13 @@ class MapTest {
     //endregion
 
     //region hasSameSizeAs
-    @Test fun hasSameSizeAs_equal_sizes_passes() {
+    @Test
+    fun hasSameSizeAs_equal_sizes_passes() {
         assertThat(emptyMap<String, Int>()).hasSameSizeAs(emptyMap<String, Int>())
     }
 
-    @Test fun hasSameSizeAs_non_equal_sizes_fails() {
+    @Test
+    fun hasSameSizeAs_non_equal_sizes_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(emptyMap<String, Int>()).hasSameSizeAs(mapOf("one" to 1))
         }
@@ -235,18 +266,21 @@ class MapTest {
     //endregion
 
     //region key
-    @Test fun index_successful_assertion_passes() {
+    @Test
+    fun index_successful_assertion_passes() {
         assertThat(mapOf("one" to 1, "two" to 2), name = "subject").key("one").isEqualTo(1)
     }
 
-    @Test fun index_unsuccessful_assertion_fails() {
+    @Test
+    fun index_unsuccessful_assertion_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2), name = "subject").key("one").isEqualTo(2)
         }
         assertEquals("expected [subject[\"one\"]]:<[2]> but was:<[1]> ({\"one\"=1, \"two\"=2})", error.message)
     }
 
-    @Test fun index_missing_key_fails() {
+    @Test
+    fun index_missing_key_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(mapOf("one" to 1, "two" to 2), name = "subject").key("wrong").isEqualTo(1)
         }

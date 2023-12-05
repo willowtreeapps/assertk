@@ -11,7 +11,8 @@ import kotlin.test.*
 
 class FailureTest {
 
-    @Test fun fail_throws_assertion_failed_error_with_actual_and_expected_present_and_defined() {
+    @Test
+    fun fail_throws_assertion_failed_error_with_actual_and_expected_present_and_defined() {
         val error = assertFailsWith<AssertionFailedError> {
             fail("message", "expected", "actual")
         }
@@ -23,7 +24,8 @@ class FailureTest {
         assertNull(error.cause)
     }
 
-    @Test fun fail_throws_assertion_failed_error_with_actual_and_expected_not_defined() {
+    @Test
+    fun fail_throws_assertion_failed_error_with_actual_and_expected_not_defined() {
         val error = assertFailsWith<AssertionFailedError> {
             fail("message")
         }
@@ -35,7 +37,8 @@ class FailureTest {
         assertNull(error.cause)
     }
 
-    @Test fun fail_cause_nonnull() {
+    @Test
+    fun fail_cause_nonnull() {
         val cause = RuntimeException()
         val error = assertFailsWith<AssertionFailedError> {
             fail("message", cause = cause)
@@ -43,7 +46,8 @@ class FailureTest {
         assertSame(cause, error.cause)
     }
 
-    @Test fun fail_cause_null() {
+    @Test
+    fun fail_cause_null() {
         val error = assertFailsWith<AssertionFailedError> {
             fail("message", cause = null)
         }
