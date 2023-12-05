@@ -8,9 +8,11 @@ import assertk.assertions.doesNotContain
 import assertk.assertions.isEqualTo
 import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.Future
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.TransferMode
 import kotlin.test.*
 
+@ObsoleteWorkersApi
 class NativeAssertAllTest {
 
     @Test fun assert_all_is_thread_safe() {
@@ -35,7 +37,15 @@ class NativeAssertAllTest {
         }
     }
 
-    @Test fun assert_all_does_not_catch_out_of_memory_errors() {
+    @Test fun assertAll_does_not_catch_out_of_memory_errors() {
+        assertFailsWith<OutOfMemoryError> {
+            assertAll {
+                throw OutOfMemoryError()
+            }
+        }
+    }
+
+    @Test fun assertAll_does_not_catch_out_of_memory_errors_in_nested_assert() {
         var runs = false
         assertFailsWith<OutOfMemoryError> {
             assertAll {

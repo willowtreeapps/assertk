@@ -6,8 +6,5 @@ internal actual inline fun failWithNotInStacktrace(error: Throwable): Nothing {
     throw error
 }
 
-internal actual inline fun Throwable.addSuppressed(error: Throwable) {
-    // ignore
-}
-
+@PublishedApi
 internal actual inline fun Throwable.isOutOfMemory(): Boolean = this is OutOfMemoryError

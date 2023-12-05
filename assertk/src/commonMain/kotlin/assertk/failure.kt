@@ -76,14 +76,31 @@ internal interface Failure {
  * Run the given block of assertions with its Failure.
  */
 @PublishedApi
+@Suppress("TooGenericExceptionCaught", "ThrowingExceptionFromFinally")
 internal inline fun <F: Failure, T> F.run(f: F.() -> T): T {
     pushFailure()
+    var otherException: Throwable? = null
     try {
         return f()
+    } catch (e: Throwable) {
+        if (e.isOutOfMemory()) {
+            throw e
+        }
+        otherException = e
     } finally {
         popFailure()
-        invoke()
+        if (otherException != null) {
+            try {
+                invoke()
+            } catch (e: Throwable) {
+                otherException.addSuppressed(e)
+            }
+            throw otherException
+        } else {
+            invoke()
+        }
     }
+    throw UnsupportedOperationException("unreachable!")
 }
 
 /**
@@ -171,9 +188,7 @@ fun notifyFailure(e: Throwable) {
     FailureContext.fail(e)
 }
 
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-internal expect inline fun Throwable.addSuppressed(error: Throwable)
-
+@PublishedApi
 internal expect inline fun Throwable.isOutOfMemory(): Boolean
 
 internal expect inline fun failWithNotInStacktrace(error: Throwable): Nothing
