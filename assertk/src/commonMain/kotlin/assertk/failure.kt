@@ -157,12 +157,6 @@ fun fail(error: AssertionError): Nothing {
 
 internal val NONE: Any = Any()
 
-// TODO Delete this before 1.0.
-@Deprecated("For binary compatibility", level = HIDDEN)
-fun fail(message: String, expected: Any? = NONE, actual: Any? = NONE): Nothing {
-    fail(message, expected, actual, null)
-}
-
 /**
  * Fail the test with the given message.
  */
