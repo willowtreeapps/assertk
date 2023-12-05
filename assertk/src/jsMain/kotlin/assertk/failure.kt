@@ -7,4 +7,4 @@ internal actual inline fun failWithNotInStacktrace(error: Throwable): Nothing {
 }
 
 @PublishedApi
-internal actual inline fun Throwable.isOutOfMemory(): Boolean = false
+internal actual inline fun Throwable.isFatal(): Boolean = false

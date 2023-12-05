@@ -25,7 +25,7 @@ internal object FailureContext {
     }
 
     fun fail(error: Throwable) {
-        if (error.isOutOfMemory()) throw error
+        if (error.isFatal()) throw error
         failureRef.value.last().fail(error)
     }
 }
@@ -83,7 +83,7 @@ internal inline fun <F: Failure, T> F.run(f: F.() -> T): T {
     try {
         return f()
     } catch (e: Throwable) {
-        if (e.isOutOfMemory()) {
+        if (e.isFatal()) {
             throw e
         }
         otherException = e
@@ -189,7 +189,7 @@ fun notifyFailure(e: Throwable) {
 }
 
 @PublishedApi
-internal expect inline fun Throwable.isOutOfMemory(): Boolean
+internal expect inline fun Throwable.isFatal(): Boolean
 
 internal expect inline fun failWithNotInStacktrace(error: Throwable): Nothing
 
