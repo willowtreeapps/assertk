@@ -12,15 +12,18 @@ import kotlin.test.assertFailsWith
 
 class ResultTest {
     // region success
-    @Test fun success_passes() {
+    @Test
+    fun success_passes() {
         assertThat(Result.success(1)).isSuccess()
     }
 
-    @Test fun success_on_null_passed() {
+    @Test
+    fun success_on_null_passed() {
         assertThat(Result.success(null)).isSuccess()
     }
 
-    @Test fun success_fails() {
+    @Test
+    fun success_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("error"))).isSuccess()
         }
@@ -30,11 +33,13 @@ class ResultTest {
         )
     }
 
-    @Test fun chained_success_passes() {
+    @Test
+    fun chained_success_passes() {
         assertThat(Result.success(1)).isSuccess().isEqualTo(1)
     }
 
-    @Test fun chained_success_fails() {
+    @Test
+    fun chained_success_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Result.success(1)).isSuccess().isEqualTo(2)
         }
@@ -43,22 +48,26 @@ class ResultTest {
     //endregion
 
     //region failure
-    @Test fun failure_passes() {
+    @Test
+    fun failure_passes() {
         assertThat(Result.failure<String>(Exception("error"))).isFailure()
     }
 
-    @Test fun failure_fails() {
+    @Test
+    fun failure_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Result.success(1)).isFailure()
         }
         assertEquals("expected failure but was success:<1>", error.message)
     }
 
-    @Test fun chained_failure_passes() {
+    @Test
+    fun chained_failure_passes() {
         assertThat(Result.failure<String>(Exception("error"))).isFailure().hasMessage("error")
     }
 
-    @Test fun chained_failure_fails() {
+    @Test
+    fun chained_failure_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Result.failure<String>(Exception("error"))).isFailure().hasMessage("wrong")
         }

@@ -18,12 +18,14 @@ import kotlin.test.assertTrue
 
 class AssertFailureTest {
 
-    @Test fun failure_is_success() {
+    @Test
+    fun failure_is_success() {
         val expected = RuntimeException()
         assertSame(expected, assertFailure { throw expected }.valueOrFail)
     }
 
-    @Test fun failure_originating_subject_not_wrapped_in_result() {
+    @Test
+    fun failure_originating_subject_not_wrapped_in_result() {
         val t = assertFailsWith<AssertionFailedError> {
             assertFailure { throw RuntimeException("foo") }
                 .message()
@@ -33,7 +35,8 @@ class AssertFailureTest {
         assertFalse("Failure(" in t.message!!)
     }
 
-    @Test fun success_is_failure() {
+    @Test
+    fun success_is_failure() {
         val t = assertFailsWith<AssertionFailedError> {
             assertFailure { }
         }

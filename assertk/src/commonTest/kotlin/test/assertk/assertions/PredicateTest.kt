@@ -8,13 +8,15 @@ import kotlin.test.assertFailsWith
 
 class PredicateTest {
 
-    @Test fun matchesPredicate_true_predicate_passes() {
+    @Test
+    fun matchesPredicate_true_predicate_passes() {
         val divisibleBy5: (Int) -> Boolean = { it % 5 == 0 }
 
         assertThat(10).matchesPredicate(divisibleBy5)
     }
 
-    @Test fun matchesPredicate_false_predicate_fails() {
+    @Test
+    fun matchesPredicate_false_predicate_fails() {
         val divisibleBy5: (Int) -> Boolean = { it % 5 == 0 }
         val error = assertFailsWith<AssertionError> { assertThat(6).matchesPredicate(divisibleBy5) }
 

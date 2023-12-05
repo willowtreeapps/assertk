@@ -13,7 +13,8 @@ import kotlin.test.assertFailsWith
 
 internal class OptionalTest {
 
-    @Test fun isPresent_passes() {
+    @Test
+    fun isPresent_passes() {
         assertThat(Optional.of("test")).isPresent()
     }
 
@@ -28,11 +29,13 @@ internal class OptionalTest {
         )
     }
 
-    @Test fun isEmpty_passes() {
+    @Test
+    fun isEmpty_passes() {
         assertThat(Optional.empty<Any>()).isEmpty()
     }
 
-    @Test fun isEmpty_fails() {
+    @Test
+    fun isEmpty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Optional.of("test")).isEmpty()
         }
@@ -42,11 +45,13 @@ internal class OptionalTest {
         )
     }
 
-    @Test fun hasValue_passes() {
+    @Test
+    fun hasValue_passes() {
         assertThat(Optional.of("test")).hasValue("test")
     }
 
-    @Test fun hasValue_empty_fails() {
+    @Test
+    fun hasValue_empty_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Optional.empty<String>()).hasValue("test")
         }
@@ -56,7 +61,8 @@ internal class OptionalTest {
         )
     }
 
-    @Test fun hasValue_wrong_value_fails() {
+    @Test
+    fun hasValue_wrong_value_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(Optional.of("test")).hasValue("wrong")
         }

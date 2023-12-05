@@ -12,7 +12,8 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
 class JVMAssertAllTest {
-    @Test fun assertAll_is_thread_safe() {
+    @Test
+    fun assertAll_is_thread_safe() {
         runOnMultipleThreads {
             assertAll {
                 assertThat("one").isEqualTo("one")
@@ -21,7 +22,8 @@ class JVMAssertAllTest {
         }
     }
 
-    @Test fun all_is_thread_safe() {
+    @Test
+    fun all_is_thread_safe() {
         runOnMultipleThreads {
             assertThat("one").all {
                 contains("o")
@@ -30,7 +32,8 @@ class JVMAssertAllTest {
         }
     }
 
-    @Test fun assertAll_includes_exceptions_as_suppressed() {
+    @Test
+    fun assertAll_includes_exceptions_as_suppressed() {
         val error = assertFailsWith<AssertionError> {
             assertAll {
                 assertThat(1).isEqualTo(2)
@@ -42,7 +45,8 @@ class JVMAssertAllTest {
         assertEquals("expected:<[1]> but was:<[2]>", error.suppressed[1].message)
     }
 
-    @Test fun assertAll_does_not_catch_out_of_memory_errors() {
+    @Test
+    fun assertAll_does_not_catch_out_of_memory_errors() {
         assertFailsWith<OutOfMemoryError> {
             assertAll {
                 throw OutOfMemoryError()
@@ -50,7 +54,8 @@ class JVMAssertAllTest {
         }
     }
 
-    @Test fun assertAll_does_not_catch_out_of_memory_errors_in_nested_assert() {
+    @Test
+    fun assertAll_does_not_catch_out_of_memory_errors_in_nested_assert() {
         var runs = false
         assertFailsWith<OutOfMemoryError> {
             assertAll {

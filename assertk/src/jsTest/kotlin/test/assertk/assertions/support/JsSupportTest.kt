@@ -6,7 +6,8 @@ import kotlin.test.assertEquals
 
 class JsSupportTest {
 
-    @Test fun show_regex() {
+    @Test
+    fun show_regex() {
         assertEquals("</^abcd$/gu>", show(Regex("^abcd$")))
     }
 }

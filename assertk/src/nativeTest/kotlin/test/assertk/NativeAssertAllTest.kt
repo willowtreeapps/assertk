@@ -15,7 +15,8 @@ import kotlin.test.*
 @ObsoleteWorkersApi
 class NativeAssertAllTest {
 
-    @Test fun assert_all_is_thread_safe() {
+    @Test
+    fun assert_all_is_thread_safe() {
         aBunchOfWokers { w ->
             w.execute(TransferMode.SAFE, { }, {
                 assertAll {
@@ -26,7 +27,8 @@ class NativeAssertAllTest {
         }
     }
 
-    @Test fun all_is_thread_safe() {
+    @Test
+    fun all_is_thread_safe() {
         aBunchOfWokers { w ->
             w.execute(TransferMode.SAFE, { }, {
                 assertThat("one").all {
@@ -37,7 +39,8 @@ class NativeAssertAllTest {
         }
     }
 
-    @Test fun assertAll_does_not_catch_out_of_memory_errors() {
+    @Test
+    fun assertAll_does_not_catch_out_of_memory_errors() {
         assertFailsWith<OutOfMemoryError> {
             assertAll {
                 throw OutOfMemoryError()
@@ -45,7 +48,8 @@ class NativeAssertAllTest {
         }
     }
 
-    @Test fun assertAll_does_not_catch_out_of_memory_errors_in_nested_assert() {
+    @Test
+    fun assertAll_does_not_catch_out_of_memory_errors_in_nested_assert() {
         var runs = false
         assertFailsWith<OutOfMemoryError> {
             assertAll {
@@ -64,7 +68,9 @@ class NativeAssertAllTest {
                 futures.add(f(w))
             }
         }
-        for (future in futures) { future.result }
+        for (future in futures) {
+            future.result
+        }
 
         for (w in workers) {
             w.requestTermination().result
