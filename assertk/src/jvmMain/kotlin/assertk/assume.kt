@@ -10,6 +10,6 @@ package assertk
  * }
  * ```
  */
-fun assume(f: () -> Unit) {
+inline fun assume(f: () -> Unit) {
     AssumptionFailure.run { f() }
 }
