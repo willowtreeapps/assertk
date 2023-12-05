@@ -10,7 +10,9 @@ assertk is a fluent assertion library for Kotlin inspired by [AssertJ](https://g
 
 ## Why another assertion library?
 
-You might be asking, "If AssertJ already exists, why create another library?". It's true, assertk is very similar to AssertJ. But assertk is written in Kotlin so it has one major advantage: extension methods. This makes adding your own assertion methods far simpler.
+You might be asking, "If AssertJ already exists, why create another library?". It's true, assertk is very similar to
+AssertJ. But assertk is written in Kotlin so it has one major advantage: extension methods. This makes adding your own
+assertion methods far simpler.
 
 See [Custom Assertions](#custom-assertions) below to find out how to do this.
 
@@ -18,35 +20,37 @@ See [Custom Assertions](#custom-assertions) below to find out how to do this.
 
 ```kotlin
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  testImplementation("com.willowtreeapps.assertk:assertk:0.27.0")
+    testImplementation("com.willowtreeapps.assertk:assertk:0.28.0")
 }
 ```
 
 assertk has full multiplatform support and it can be used in jvm, js, or native projects. For example to set it up using
 the multiplatform plugin:
+
 ```kotlin
 plugins {
-  kotlin("multiplatform")
+    kotlin("multiplatform")
 }
 
 kotlin {
-  sourceSets {
-    val commonTest by getting {
-      dependencies {
-        implementation("com.willowtreeapps.assertk:assertk:0.27.0")
-      }
+    sourceSets {
+        val commonTest by getting {
+            dependencies {
+                implementation("com.willowtreeapps.assertk:assertk:0.28.0")
+            }
+        }
     }
-  }
 }
 ```
 
 ## Usage
 
-Simple usage is to wrap the value or property you are testing in `assertThat()` and call assertion methods on the result.
+Simple usage is to wrap the value or property you are testing in `assertThat()` and call assertion methods on the
+result.
 
 ```kotlin
 import assertk.assertThat
@@ -75,9 +79,11 @@ class PersonTest {
 }
 ```
 
-You can see all built-in assertions in the [docs](https://willowtreeapps.github.io/assertk/assertk/assertk.assertions/index.html).
+You can see all built-in assertions in
+the [docs](https://willowtreeapps.github.io/assertk/assertk/assertk.assertions/index.html).
 
 ### Nullability
+
 Since null is a first-class concept in kotlin's type system, you need to be explicit in your assertions.
 
 ```kotlin
@@ -128,14 +134,14 @@ assertAll {
 You can assert on the contents of an `Iterable/List` with the various `contains*` functions. They have different
 semantics as follows:
 
-|Assertion|Description|
-|---|---|
-|containsAll|Asserts the iterable contains all the expected elements, in **any order**. The collection may also contain **additional elements**.|
-|containsSubList|Asserts that a collection contains a **subset** of items the **same order**, but may have **additional elements** in the list.|
-|containsOnly|Asserts the iterable contains **only the expected elements**, in **any order**. **Duplicate values** in the expected and actual are ignored.|
-|containsExactlyInAnyOrder|Asserts the iterable contains **exactly the expected elements**, in **any order**. Each value in expected must correspond to a matching value in actual, and visa-versa.|
-|containsExactly|Asserts the list contains **exactly the expected elements**. They must be in the **same order** and there must not be any extra elements.|
-|containsNone|Asserts the iterable **does not contain any** of the expected elements|
+| Assertion                 | Description                                                                                                                                                              |
+|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| containsAtLeast           | Asserts the iterable contains at least the expected elements, in **any order**. The collection may also contain **additional elements**.                                 |
+| containsSubList           | Asserts that a collection contains a **subset** of items the **same order**, but may have **additional elements** in the list.                                           |
+| containsOnly              | Asserts the iterable contains **only the expected elements**, in **any order**. **Duplicate values** in the expected and actual are ignored.                             |
+| containsExactlyInAnyOrder | Asserts the iterable contains **exactly the expected elements**, in **any order**. Each value in expected must correspond to a matching value in actual, and visa-versa. |
+| containsExactly           | Asserts the list contains **exactly the expected elements**. They must be in the **same order** and there must not be any extra elements.                                |
+| containsNone              | Asserts the iterable **does not contain any** of the expected elements                                                                                                   |
 
 ### Extracting data
 
@@ -236,11 +242,11 @@ return something more specific that additional assertions can be chained on.
 
 ```kotlin
 fun Assert<Person>.hasMiddleName(): Assert<String> = transform(appendName("middleName", separator = ".")) { actual ->
-   if (actual.middleName != null) {
-       actual.middleName
-   } else {
-       expected("to not be null")
-   }
+    if (actual.middleName != null) {
+        actual.middleName
+    } else {
+        expected("to not be null")
+    }
 }
 
 assertThat(person).hasMiddleName().isEqualTo("Lorie")
@@ -263,4 +269,6 @@ error message.
 
 ## Contributing to assertk
 
-Contributions are more than welcome! Please see the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/main/Contributing.md) and be mindful of our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/main/code-of-conduct.md).
+Contributions are more than welcome! Please see
+the [Contributing Guidelines](https://github.com/willowtreeapps/assertk/blob/main/Contributing.md) and be mindful of
+our [Code of Conduct](https://github.com/willowtreeapps/assertk/blob/main/code-of-conduct.md).

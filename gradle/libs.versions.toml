@@ -1,5 +1,5 @@
 [versions]
-assertk = "0.28.0-SNAPSHOT"
+assertk = "0.28.0"
 kotlin = "1.9.21"
 kotlinx-coroutines = "1.7.3"
 [libraries]
