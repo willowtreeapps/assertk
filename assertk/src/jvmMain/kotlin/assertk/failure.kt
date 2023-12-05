@@ -12,9 +12,5 @@ internal actual inline fun failWithNotInStacktrace(error: Throwable): Nothing {
     throw error
 }
 
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
-internal actual inline fun Throwable.addSuppressed(error: Throwable) {
-    throw NotImplementedError()
-}
-
+@PublishedApi
 internal actual inline fun Throwable.isOutOfMemory(): Boolean = this is OutOfMemoryError

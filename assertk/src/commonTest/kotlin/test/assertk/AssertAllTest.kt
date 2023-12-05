@@ -1,11 +1,19 @@
 package test.assertk
 
-import assertk.*
-import assertk.assertions.*
+import assertk.all
+import assertk.assertAll
+import assertk.assertThat
+import assertk.assertions.endsWith
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFailure
+import assertk.assertions.isSuccess
+import assertk.assertions.startsWith
 import assertk.assertions.support.show
+import assertk.fail
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class AssertAllTest {
@@ -44,6 +52,16 @@ class AssertAllTest {
             """.trimMargin().lines(),
             error.message!!.lines()
         )
+    }
+
+    @Test fun all_prioritizes_exceptions_thrown_in_block_over_soft_assertions() {
+        val error = assertFailsWith<IllegalStateException> {
+            assertThat(1).all {
+                isEqualTo(2)
+                throw IllegalStateException("Test")
+            }
+        }
+        assertEquals("Test", error.message)
     }
     //endregion
 
@@ -144,6 +162,17 @@ class AssertAllTest {
         assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error1"))}"))
         assertTrue(error.message!!.contains("\t${opentestPackageName}AssertionFailedError: expected success but was failure:${show(Exception("error2"))}"))
     }
-    //endregion
 
+    @Test
+    fun assertAll_prioritizes_exceptions_thrown_in_block_over_soft_assertions() {
+        val error = assertFailsWith<IllegalStateException> {
+            assertAll {
+                assertThat(1).isEqualTo(2)
+                throw IllegalStateException("Test")
+            }
+        }
+        assertEquals("Test", error.message)
+        assertIs<AssertionError>(error.suppressedExceptions.first())
+    }
+    //endregion
 }
