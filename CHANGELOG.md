@@ -5,7 +5,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Changed
+- Minimum supported kotlin version is 1.9.21
+- Rename `isSameAs/isNotSameAs` to `isSameInstanceAs/isNotSameInstanceAs` to make it more clear they
+  use are about instance identity, old name is deprecated
+- Rename `containsAll` to `containsAtLeast` to make it more clear that the collection can contain additional elements,
+  old name is deprecated
+- Bytes are shown as hex on all supported platforms (previously it was only on the jvm)
+- If `isEqualTo` fails and the expected and actual display the same string, print a disambiguation message, ex:
+  ```
+  expected:<4> with type:<class kotlin.Int> but was type:<class kotlin.Short> with the same string representation
+  ```
+
+### Breaking Changes
+- Binary-breaking change as previous error-level deprecations were removed
+
+### Added
 - Added `doesNotContainKey` assertion for `Map`
+
+### Fixed
+- Fixed incorrect usage of contains in some kdoc examples
+- Exceptions being swallowed if thrown in a soft assertion block
+- More correctly re-throw fatal error in the jvm
 
 ## [0.27.0] 2023-09-13
 
