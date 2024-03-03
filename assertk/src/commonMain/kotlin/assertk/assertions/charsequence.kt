@@ -118,6 +118,14 @@ fun Assert<CharSequence>.doesNotContain(expected: Iterable<CharSequence>, ignore
 }
 
 /**
+ * Asserts the char sequence does not contain the expected regular expression.
+ */
+fun Assert<CharSequence>.doesNotContainMatch(regex: Regex) = given { actual ->
+    if (!regex.containsMatchIn(actual)) return
+    expected("to not contain match:${show(regex)} but was:${show(actual)}")
+}
+
+/**
  * Asserts the char sequence starts with the expected char sequence.
  * @param ignoreCase true to compare ignoring case, the default if false.
  * @see [endsWith]

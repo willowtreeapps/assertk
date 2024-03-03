@@ -223,6 +223,22 @@ class CharSequenceTest {
     }
     //endregion
 
+    //region doesNotContainMatch
+    @Test
+    fun doesNotContainMatch_non_matching_value_passes() {
+        assertThat("abcd").doesNotContainMatch(Regex("\\d\\d\\d\\d"))
+    }
+
+    @Test
+    fun doesNotContainMatch_matching_value_fails() {
+        val regex = Regex("\\d\\d\\d\\d")
+        val error = assertFailsWith<AssertionError> {
+            assertThat("1234").doesNotContainMatch(regex)
+        }
+        assertEquals("expected to not contain match:${show(regex)} but was:<\"1234\">", error.message)
+    }
+    //endregion
+
     //region startsWith
     @Test
     fun startsWith_value_prefix_passes() {
