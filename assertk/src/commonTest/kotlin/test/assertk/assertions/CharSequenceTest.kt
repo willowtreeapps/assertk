@@ -65,6 +65,29 @@ class CharSequenceTest {
     }
     //endregion
 
+    //region isNotNullOrEmpty
+    @Test
+    fun isNotNullOrEmpty_non_empty_passes() {
+        assertThat("test").isNotNullOrEmpty()
+    }
+
+    @Test
+    fun isNotNullOrEmpty_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as CharSequence?).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<null>", error.message)
+    }
+
+    @Test
+    fun isNotNullOrEmpty_empty_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat("").isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<\"\">", error.message)
+    }
+    //endregion
+
     //region hasLength
     @Test
     fun hasLength_correct_length_passes() {

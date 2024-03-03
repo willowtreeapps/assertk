@@ -38,6 +38,14 @@ fun Assert<CharSequence?>.isNullOrEmpty() = given { actual ->
 }
 
 /**
+ * Asserts the char sequence is not null or empty.
+ */
+fun Assert<CharSequence?>.isNotNullOrEmpty() = given { actual ->
+    if (!actual.isNullOrEmpty()) return
+    expected("to not be null or empty but was:${show(actual)}")
+}
+
+/**
  * Asserts the char sequence has the expected length.
  */
 fun Assert<CharSequence>.hasLength(length: Int) {
