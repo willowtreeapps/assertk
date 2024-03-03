@@ -57,6 +57,29 @@ class CollectionTest {
     }
     //endregion
 
+    //region isNotNullOrEmpty
+    @Test
+    fun isNotNullOrEmpty_non_empty_passes() {
+        assertThat(listOf(1, 2, 3)).isNotNullOrEmpty()
+    }
+
+    @Test
+    fun isNotNullOrEmpty_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as List<Any?>?).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<null>", error.message)
+    }
+
+    @Test
+    fun isNotNullOrEmpty_empty_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(emptyList<Any?>()).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<[]>", error.message)
+    }
+    //endregion
+
     //region hasSize
     @Test
     fun hasSize_correct_size_passes() {

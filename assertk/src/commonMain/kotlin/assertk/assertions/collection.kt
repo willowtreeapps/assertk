@@ -37,6 +37,14 @@ fun Assert<Collection<*>?>.isNullOrEmpty() = given { actual ->
 }
 
 /**
+ * Asserts the collection is not null or empty.
+ */
+fun Assert<Collection<*>?>.isNotNullOrEmpty() = given { actual ->
+    if (!actual.isNullOrEmpty()) return
+    expected("to not be null or empty but was:${show(actual)}")
+}
+
+/**
  * Asserts the collection has the expected size.
  */
 fun Assert<Collection<*>>.hasSize(size: Int) {
