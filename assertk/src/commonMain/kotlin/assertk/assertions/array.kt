@@ -63,6 +63,14 @@ fun Assert<Array<*>?>.isNullOrEmpty() = given { actual ->
 }
 
 /**
+ * Asserts the array is not null or empty.
+ */
+fun Assert<Array<*>?>.isNotNullOrEmpty() = given { actual ->
+    if (!actual.isNullOrEmpty()) return
+    expected("to not be null or empty but was:${show(actual)}")
+}
+
+/**
  * Asserts the array has the expected size.
  */
 fun Assert<Array<*>>.hasSize(size: Int) {

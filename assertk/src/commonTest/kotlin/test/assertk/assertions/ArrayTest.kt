@@ -88,6 +88,29 @@ class ArrayTest {
     }
     //endregion
 
+    //region isNotNullOrEmpty
+    @Test
+    fun isNotNullOrEmpty_non_empty_passes() {
+        assertThat(arrayOf(1, 2, 3)).isNotNullOrEmpty()
+    }
+
+    @Test
+    fun isNotNullOrEmpty_empty_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(emptyArray<Any?>()).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<[]>", error.message)
+    }
+
+    @Test
+    fun isNotNullOrEmpty_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as Array<Any?>?).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<null>", error.message)
+    }
+    //endregion
+
     //region hasSize
     @Test
     fun hasSize_correct_size_passes() {
