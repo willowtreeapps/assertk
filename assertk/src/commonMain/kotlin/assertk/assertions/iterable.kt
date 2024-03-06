@@ -224,7 +224,7 @@ fun <E> Assert<Iterable<E>>.none(f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
+ * assertThat(listOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
@@ -239,7 +239,7 @@ fun <E, T : Iterable<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-2, -1, 1)).atMost(2) { it.isPositive() }
+ * assertThat(listOf(-2, -1, 1)).atMost(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) =
@@ -254,7 +254,7 @@ fun <E, T : Iterable<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-1, 1, 2)).exactly(2) { it.isPositive() }
+ * assertThat(listOf(-1, 1, 2)).exactly(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) =
@@ -269,7 +269,7 @@ fun <E, T : Iterable<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(listOf(-1, -2, 1)).any { it.isPositive() }
+ * assertThat(listOf(-1, -2, 1)).any { it.isPositive() }
  * ```
  */
 fun <E, T : Iterable<E>> Assert<T>.any(f: (Assert<E>) -> Unit) =
