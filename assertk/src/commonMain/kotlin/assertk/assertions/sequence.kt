@@ -245,7 +245,7 @@ fun <E> Assert<Sequence<E>>.none(f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(sequenceOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
+ * assertThat(sequenceOf(-1, 1, 2)).atLeast(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Sequence<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
@@ -260,7 +260,7 @@ fun <E, T : Sequence<E>> Assert<T>.atLeast(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(sequenceOf(-2, -1, 1)).atMost(2) { it.isPositive() }
+ * assertThat(sequenceOf(-2, -1, 1)).atMost(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Sequence<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) =
@@ -275,7 +275,7 @@ fun <E, T : Sequence<E>> Assert<T>.atMost(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(sequenceOf(-1, 1, 2)).exactly(2) { it.isPositive() }
+ * assertThat(sequenceOf(-1, 1, 2)).exactly(2) { it.isPositive() }
  * ```
  */
 fun <E, T : Sequence<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) =
@@ -290,7 +290,7 @@ fun <E, T : Sequence<E>> Assert<T>.exactly(times: Int, f: (Assert<E>) -> Unit) =
  * The given lambda will be run for each item.
  *
  * ```
- * assert(sequenceOf(-1, -2, 1)).any { it.isPositive() }
+ * assertThat(sequenceOf(-1, -2, 1)).any { it.isPositive() }
  * ```
  */
 fun <E, T : Sequence<E>> Assert<T>.any(f: (Assert<E>) -> Unit) =

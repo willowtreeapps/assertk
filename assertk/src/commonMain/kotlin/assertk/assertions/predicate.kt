@@ -8,7 +8,7 @@ import assertk.assertions.support.expected
  *
  * ```
  * val divisibleBy5 : (Int) -> Boolean = { it % 5 == 0 }
- * assert(10).matchesPredicate(divisibleBy5)
+ * assertThat(10).matchesPredicate(divisibleBy5)
  * ```
  */
 fun <T> Assert<T>.matchesPredicate(f: (T) -> Boolean) = given { actual ->
