@@ -91,6 +91,16 @@ fun Assert<$T?>.isNullOrEmpty() = given { actual ->
 }
 
 /**
+ * Asserts the $T is not null or empty.
+ */
+@JvmName("$NIsNotNullOrEmpty")
+$A
+fun Assert<$T?>.isNotNullOrEmpty() = given { actual ->
+    if (actual != null && actual.isNotEmpty()) return
+    expected("to not be null or empty but was:${show(actual)}")
+}
+
+/**
  * Asserts the $T has the expected size.
  */
 @JvmName("$NHasSize")

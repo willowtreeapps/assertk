@@ -82,6 +82,29 @@ class $TTest {
     }
     //endregion
 
+    //region isNotNullOrEmpty
+    @Test
+    fun isNotNullOrEmpty_non_empty_passes() {
+        assertThat($NOf(0.to$E())).isNotNullOrEmpty()
+    }
+
+    @Test
+    fun isNotNullOrEmpty_empty_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat($NOf()).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<${show($NOf(), "")}>", error.message)
+    }
+
+    @Test
+    fun isNotNullOrEmpty_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as $T?).isNotNullOrEmpty()
+        }
+        assertEquals("expected to not be null or empty but was:<null>", error.message)
+    }
+    //endregion
+
     //region isNullOrEmpty
     @Test
     fun isNullOrEmpty_null_passes() {
