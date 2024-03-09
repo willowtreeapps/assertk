@@ -207,6 +207,13 @@ class FileTest {
         assertThat(fileWithText).text().contains("Forty-two")
     }
 
+    //region bytes
+    @Test
+    fun hasBytes_correct_value_passes() {
+        assertThat(fileWithText).bytes().isEqualTo(fileWithText.readBytes())
+    }
+    //endregion
+
     @Test
     fun contains_wrong_substring_fails() {
         val error = assertFailsWith<AssertionError> {
