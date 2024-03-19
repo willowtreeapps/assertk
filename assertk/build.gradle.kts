@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.common
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.wasm
 
 plugins {
     id("assertk.multiplatform")
@@ -21,15 +19,6 @@ val compileTestTemplates by tasks.registering(TemplateTask::class) {
 kotlin {
     jvm {
         withJava()
-    }
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    applyDefaultHierarchyTemplate {
-        group("coroutines") {
-            withNative()
-            withJs()
-            withJvm()
-        }
     }
 
     sourceSets {
@@ -56,10 +45,18 @@ kotlin {
             }
         }
 
-        val coroutinesTest by getting {
+        val coroutinesTest by creating {
+            dependsOn(commonTest.get())
             dependencies {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+        targets.configureEach {
+            if (platformType != common && name != "wasmWasi") {
+                compilations.getByName(TEST_COMPILATION_NAME)
+                    .defaultSourceSet
+                    .dependsOn(coroutinesTest)
             }
         }
     }
