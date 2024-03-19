@@ -97,7 +97,7 @@ jobs:
             gradle-{{ checksum ".circleci/gradle_cache_seed" }}-{{ checksum
             ".circleci/config.yml" }}-windows
       - run:
-          command: ./gradlew --no-daemon build -x wasmNodeTest
+          command: ./gradlew --no-daemon build -x wasmJsNodeTest -x wasmWasiNodeTest
           shell: bash.exe
       - save_cache:
           paths:

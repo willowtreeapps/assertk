@@ -43,10 +43,11 @@ kotlin {
             }
         }
     }
-    // TODO Remove conditional once coroutines ships a version with WASM target.
-    if (project.path != ":assertk-coroutines") {
+    // TODO Remove conditional once coroutines ships a version with WASI target.
+    val hasWasmWasi = project.path != ":assertk-coroutines"
+    if (hasWasmWasi) {
         @OptIn(ExperimentalWasmDsl::class)
-        wasmJs {
+        wasmWasi {
             nodejs()
         }
     }
@@ -71,6 +72,26 @@ kotlin {
     androidNativeArm64()
     androidNativeX86()
     androidNativeX64()
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        nodejs()
+    }
+
+    applyDefaultHierarchyTemplate()
+
+    // The above does not yet create a common Wasm source set, so build our own.
+    // https://youtrack.jetbrains.com/issue/KT-61988
+    sourceSets {
+        val wasmMain by creating
+        val wasmTest by creating
+        named("wasmJsMain") { dependsOn(wasmMain) }
+        named("wasmJsTest") { dependsOn(wasmTest) }
+        if (hasWasmWasi) {
+            named("wasmWasiMain") { dependsOn(wasmMain) }
+            named("wasmWasiTest") { dependsOn(wasmTest) }
+        }
+    }
 }
 
 tasks.withType<KotlinJvmCompile> {

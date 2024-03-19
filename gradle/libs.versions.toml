@@ -1,7 +1,7 @@
 [versions]
 assertk = "1.0.0-SNAPSHOT"
 kotlin = "1.9.21"
-kotlinx-coroutines = "1.7.3"
+kotlinx-coroutines = "1.8.0"
 [libraries]
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.10" }
