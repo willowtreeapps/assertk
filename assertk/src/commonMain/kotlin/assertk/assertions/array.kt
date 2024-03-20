@@ -7,7 +7,7 @@ import assertk.assertions.support.*
 /**
  * Returns an assert on the Arrays's size.
  */
-fun Assert<Array<*>>.size() = prop("size") { it.size }
+fun Assert<Array<*>>.size() = having("size") { it.size }
 
 /**
  * Asserts the array contents are equal to the expected one, using [contentDeepEquals].

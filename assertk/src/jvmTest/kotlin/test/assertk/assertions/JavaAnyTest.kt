@@ -4,10 +4,8 @@ import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
 import java.lang.Exception
-import kotlin.reflect.KCallable
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 class JavaAnyTest {
@@ -48,7 +46,7 @@ class JavaAnyTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject)
                 .isInstanceOf(BasicObject::class.java)
-                .prop("str", BasicObject::str)
+                .having("str", BasicObject::str)
                 .isEqualTo("wrong")
         }
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)

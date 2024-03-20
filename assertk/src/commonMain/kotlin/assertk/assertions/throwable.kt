@@ -1,23 +1,22 @@
 package assertk.assertions
 
 import assertk.Assert
-import assertk.ValueAssert
 import assertk.all
 
 /**
  * Returns an assert on the throwable's message.
  */
-fun Assert<Throwable>.message() = prop("message", Throwable::message)
+fun Assert<Throwable>.message() = having("message", Throwable::message)
 
 /**
  * Returns an assert on the throwable's cause.
  */
-fun Assert<Throwable>.cause() = prop("cause", Throwable::cause)
+fun Assert<Throwable>.cause() = having("cause", Throwable::cause)
 
 /**
  * Returns an assert on the throwable's root cause.
  */
-fun Assert<Throwable>.rootCause() = prop("rootCause", Throwable::rootCause)
+fun Assert<Throwable>.rootCause() = having("rootCause", Throwable::rootCause)
 
 /**
  * Asserts the throwable has the expected message.

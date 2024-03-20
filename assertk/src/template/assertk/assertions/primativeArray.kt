@@ -27,7 +27,7 @@ $T:$N:$E:$A =
  */
 @JvmName("$NSize")
 $A
-fun Assert<$T>.size() = prop("size") { it.size }
+fun Assert<$T>.size() = having("size") { it.size }
 
 /**
  * Asserts the $T contents are equal to the expected one, using [contentDeepEquals].

@@ -8,7 +8,7 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the Maps's size.
  */
-fun Assert<Map<*, *>>.size() = prop("size", Map<*, *>::size)
+fun Assert<Map<*, *>>.size() = having("size", Map<*, *>::size)
 
 /**
  * Asserts the collection is empty.

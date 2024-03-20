@@ -7,7 +7,7 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the CharSequence's length.
  */
-fun Assert<CharSequence>.length() = prop("length", CharSequence::length)
+fun Assert<CharSequence>.length() = having("length", CharSequence::length)
 
 /**
  * Asserts the char sequence is empty.
