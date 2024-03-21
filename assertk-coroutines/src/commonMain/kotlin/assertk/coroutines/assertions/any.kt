@@ -13,5 +13,5 @@ import assertk.assertions.support.appendName
  * assertThat(person).suspendCall("name()", { it.name() }).isEqualTo("Sue")
  * ```
  */
-suspend fun <T, P> Assert<T>.suspendCall(name: String, extract: suspend (T) -> P): Assert<P> =
+suspend fun <T, P> Assert<T>.having(name: String, extract: suspend (T) -> P): Assert<P> =
     transform(appendName(name, separator = ".")) { extract(it) }
