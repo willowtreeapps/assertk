@@ -13,17 +13,17 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun Assert<Any>.kClass() = prop("class") { it::class }
+fun Assert<Any>.kClass() = having("class") { it::class }
 
 /**
  * Returns an assert on the toString method of the value.
  */
-fun Assert<Any?>.toStringFun() = prop("toString", Any?::toString)
+fun Assert<Any?>.toStringFun() = having("toString", Any?::toString)
 
 /**
  * Returns an assert on the hasCode method of the value.
  */
-fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
+fun Assert<Any>.hashCodeFun() = having("hashCode", Any::hashCode)
 
 /**
  * Asserts the value is equal to the expected one, using `==`.
@@ -149,7 +149,7 @@ fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
  * assertThat(person).prop("name", { it.name }).isEqualTo("Sue")
  * ```
  */
-fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
+fun <T, P> Assert<T>.having(name: String, extract: (T) -> P): Assert<P> =
     transform(appendName(name, separator = "."), extract)
 
 /**
@@ -163,8 +163,8 @@ fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
  * @param property Property on which to assert. The name of this
  * property will be shown in failure messages.
  */
-fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
-    prop(property.name) { property.get(it) }
+fun <T, P> Assert<T>.having(property: KProperty1<T, P>): Assert<P> =
+    having(property.name) { property.get(it) }
 
 /**
  * Returns an assert that asserts on the result of calling the given function.
@@ -177,8 +177,8 @@ fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
  * @param callable Callable on which to assert. The name of this
  * callable will be shown in the failure messages.
  */
-fun <T, R, F> Assert<T>.prop(callable: F): Assert<R> where F : (T) -> R, F : KCallable<R> =
-    prop(callable.name, callable)
+fun <T, R, F> Assert<T>.having(callable: F): Assert<R> where F : (T) -> R, F : KCallable<R> =
+    having(callable.name, callable)
 
 /**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass<String>()`

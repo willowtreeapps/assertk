@@ -96,9 +96,9 @@ internal class OptionalTest {
         assertAll {
             assertThat(findPersonById(0)).isEmpty()
             assertThat(findPersonById(personId)).isPresent().all {
-                prop(Person::id).isEqualTo(personId)
-                prop(Person::name).isEqualTo(personName)
-                prop(Person::dateCreated).all {
+                having(Person::id).isEqualTo(personId)
+                having(Person::name).isEqualTo(personName)
+                having(Person::dateCreated).all {
                     isEqualTo(personDateCreated)
                     transform("dateCreated.year") { it.year }.isGreaterThan(2020)
                 }

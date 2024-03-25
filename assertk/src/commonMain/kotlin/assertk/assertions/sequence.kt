@@ -178,7 +178,7 @@ fun <E> Assert<Sequence<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
  *   .containsExactly("Sue", "Bob")
  * ```
  */
-fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = transform { actual ->
+fun <E, R> Assert<Sequence<E>>.eachHaving(f1: (E) -> R): Assert<Sequence<R>> = transform { actual ->
     actual.map(f1)
 }
 
@@ -191,7 +191,7 @@ fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = t
  *   .containsExactly("Sue" to 20, "Bob" to 22)
  * ```
  */
-fun <E, R1, R2> Assert<Sequence<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<Sequence<Pair<R1, R2>>> =
+fun <E, R1, R2> Assert<Sequence<E>>.eachHaving(f1: (E) -> R1, f2: (E) -> R2): Assert<Sequence<Pair<R1, R2>>> =
     transform { actual ->
         actual.map { f1(it) to f2(it) }
     }
@@ -205,7 +205,7 @@ fun <E, R1, R2> Assert<Sequence<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): As
  *   .contains(Triple("Sue", 20, "123 Street"), Triple("Bob", 22, "456 Street")
  * ```
  */
-fun <E, R1, R2, R3> Assert<Sequence<E>>.extracting(
+fun <E, R1, R2, R3> Assert<Sequence<E>>.eachHaving(
     f1: (E) -> R1,
     f2: (E) -> R2,
     f3: (E) -> R3

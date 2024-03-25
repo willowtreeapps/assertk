@@ -15,7 +15,7 @@ import kotlin.reflect.full.memberProperties
 /**
  * Returns an assert on the java class of the value.
  */
-fun <T : Any> Assert<T>.jClass() = prop("class") { it::class.java }
+fun <T : Any> Assert<T>.jClass() = having("class") { it::class.java }
 
 /**
  * Asserts the value has the expected java class. This is an exact match, so
@@ -86,7 +86,7 @@ private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?
         for (memberProp in kclass.memberProperties) {
             @Suppress("UNCHECKED_CAST")
             val force = memberProp as KProperty1<T, Any?>
-            prop(force).isDataClassEqualToImpl(force.get(expected), force.returnType.classifier as? KClass<*>)
+            having(force).isDataClassEqualToImpl(force.get(expected), force.returnType.classifier as? KClass<*>)
         }
     } else {
         isEqualTo(expected)
