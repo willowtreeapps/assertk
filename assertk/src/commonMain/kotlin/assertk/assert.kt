@@ -190,3 +190,17 @@ inline fun assertFailure(f: () -> Unit): Assert<Throwable> {
     }
     fail("expected failure but lambda completed successfully")
 }
+
+/**
+ * Asserts that the given block will throw an exception with expected type rather than complete successfully.
+ */
+inline fun <reified T: Throwable> assertFailureWith(f: () -> Unit): Assert<T> {
+    @Suppress("TooGenericExceptionCaught") // Intentionally capturing all exceptions.
+    try {
+        f()
+    } catch (t: Throwable) {
+        if (t !is T) fail("2expected failure to be type of ${T::class}")
+        return assertThat(t)
+    }
+    fail("expected failure but lambda completed successfully")
+}
