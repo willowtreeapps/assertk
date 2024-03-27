@@ -195,7 +195,7 @@ inline fun assertFailure(f: () -> Unit): Assert<Throwable> {
  * Asserts that the given block will throw an exception with expected type rather than complete successfully.
  */
 inline fun <reified T: Throwable> assertFailureWith(f: () -> Unit): Assert<T> {
-    @Suppress("TooGenericExceptionCaught") // Intentionally capturing all exceptions.
+    @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException") // Intentionally capturing all exceptions.
     try {
         f()
     } catch (t: Throwable) {
