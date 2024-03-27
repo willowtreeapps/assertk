@@ -199,7 +199,7 @@ inline fun <reified T: Throwable> assertFailureWith(f: () -> Unit): Assert<T> {
     try {
         f()
     } catch (t: Throwable) {
-        if (t !is T) fail("2expected failure to be type of ${T::class}")
+        if (t !is T) fail("expected failure to be type of ${T::class}")
         return assertThat(t)
     }
     fail("expected failure but lambda completed successfully")
