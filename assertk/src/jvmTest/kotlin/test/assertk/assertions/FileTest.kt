@@ -58,6 +58,22 @@ class FileTest {
     }
     //endregion
 
+    //region canExecute
+    @Test
+    fun canExecute_value_regular_file_passes() {
+        file.setExecutable(true)
+        assertThat(file).canExecute()
+    }
+
+    @Test
+    fun canExecute_value_directory_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(file).canExecute()
+        }
+        assertEquals("expected to be executable", error.message)
+    }
+    //endregion
+
     //region isNotHidden
     @Test
     fun isNotHidden_value_regular_file_passes() {
@@ -206,6 +222,13 @@ class FileTest {
     fun contains_correct_substring_passes() {
         assertThat(fileWithText).text().contains("Forty-two")
     }
+
+    //region bytes
+    @Test
+    fun hasBytes_correct_value_passes() {
+        assertThat(fileWithText).bytes().isEqualTo(fileWithText.readBytes())
+    }
+    //endregion
 
     @Test
     fun contains_wrong_substring_fails() {
