@@ -2,7 +2,6 @@ package test.assertk
 
 import assertk.assertFailure
 import assertk.assertFailureWith
-import assertk.assertions.hasProperties
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.message
@@ -22,27 +21,26 @@ class AssertFailureTest {
     }
 
     @Test
-    fun failure_with_expected_type_and_additional_properties() {
-        assertFailureWith<DummyException> {
-            throw DummyException(12, "night")
-        }.hasProperties(
-            DummyException::value to 12,
-            DummyException::tag to "night"
-        )
+    fun failure_with_expected_type() {
+        val expected = IllegalArgumentException()
+        val actual = assertFailureWith<IllegalArgumentException> { throw expected }
+        assertSame(expected, actual.valueOrFail)
     }
 
     @Test
     fun failure_with_wrong_type() {
         val t = assertFailsWith<AssertionFailedError> {
-            assertFailureWith<DummyException> {
-                throw RuntimeException()
+            assertFailureWith<IllegalArgumentException> {
+                throw IllegalStateException()
             }
         }
 
         val message = t.message ?: fail("should have a message")
 
-        assertTrue("expected failure to be type of class" in message)
-        assertTrue("DummyException" in message)
+        assertTrue("expected to be instance of" in message)
+        assertTrue("IllegalArgumentException" in message)
+        assertTrue("but had class" in message)
+        assertTrue("IllegalStateException" in message)
     }
 
     @Test
@@ -81,6 +79,4 @@ class AssertFailureTest {
         }
         t.isInstanceOf<IllegalArgumentException>()
     }
-
-    class DummyException(val value: Int, val tag: String) : Exception("My value broken is $value")
 }

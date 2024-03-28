@@ -1,16 +1,19 @@
 package test.assertk.assertions
 
+import assertk.assertFailureWith
 import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.exceptionPackageName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class ThrowableTest {
-    val rootCause = Exception("rootCause")
-    val cause = Exception("cause", rootCause)
-    val subject = Exception("test", cause)
+    private val rootCause = Exception("rootCause")
+    private val cause = Exception("cause", rootCause)
+    private val subject = Exception("test", cause)
 
     @Test
     fun extracts_message() {
@@ -146,5 +149,39 @@ class ThrowableTest {
             error.message
         )
     }
+    //endregion
+
+    //region hasProperties
+    @Test
+    fun hasProperties_single_fail() {
+        val exception = DummyException(1116, 12.5)
+        val error = assertFailsWith<AssertionError> {
+            assertFailureWith<DummyException> { throw exception }.hasProperties(
+                DummyException::index to 1118,
+                DummyException::rate to 12.5
+            )
+        }
+        assertEquals(
+            "expected [index]:<111[8]> but was:<111[6]> ($exception)",
+            error.message
+        )
+    }
+
+    @Test
+    fun hasProperties_multiple_fails() {
+        val exception = DummyException(1116, 12.5)
+        val error = assertFailsWith<AssertionError> {
+            assertFailureWith<DummyException> { throw exception }.hasProperties(
+                DummyException::index to 1118,
+                DummyException::rate to 15.3
+            )
+        }
+        val message = error.message ?: fail("should have a message")
+        assertTrue("The following assertions failed (2 failures)" in message)
+        assertTrue("expected [index]:<111[8]> but was:<111[6]> ($exception)" in message)
+        assertTrue("expected [rate]:<1[5.3]> but was:<1[2.5]> ($exception)" in message)
+    }
+
+    class DummyException(val index: Int, val rate: Double): Exception("bad value: $index -> $rate")
     //endregion
 }
