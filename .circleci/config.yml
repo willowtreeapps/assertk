@@ -36,7 +36,8 @@ jobs:
       - gradle/collect_test_results:
           test_results_path: build/test-results
           reports_path: build/reports
-      - deploy:
+      - run:
+          name: Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -d > $HOME/secring.gpg
@@ -69,7 +70,8 @@ jobs:
       - run:
           name: Build Apple
           command: ./gradlew buildApple
-      - deploy:
+      - run:
+          name: Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo "$MAVEN_CENTRAL_SEC_RING" | base64 -D -o $HOME/secring.gpg
