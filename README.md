@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation("com.willowtreeapps.assertk:assertk:0.28.0")
+    testImplementation("com.willowtreeapps.assertk:assertk:0.28.1")
 }
 ```
 
@@ -40,7 +40,7 @@ kotlin {
     sourceSets {
         val commonTest by getting {
             dependencies {
-                implementation("com.willowtreeapps.assertk:assertk:0.28.0")
+                implementation("com.willowtreeapps.assertk:assertk:0.28.1")
             }
         }
     }

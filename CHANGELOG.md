@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.28.1] 2024-04-17
+
+### Added
+- Added core wasmWasi support, wasmJs to coroutines
+
 ## [0.28.0] 2023-12-05
 
 ### Changed
