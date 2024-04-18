@@ -13,17 +13,17 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun Assert<Any>.kClass() = prop("class") { it::class }
+fun Assert<Any>.kClass() = having("class") { it::class }
 
 /**
  * Returns an assert on the toString method of the value.
  */
-fun Assert<Any?>.toStringFun() = prop("toString", Any?::toString)
+fun Assert<Any?>.toStringFun() = having("toString", Any?::toString)
 
 /**
  * Returns an assert on the hasCode method of the value.
  */
-fun Assert<Any>.hashCodeFun() = prop("hashCode", Any::hashCode)
+fun Assert<Any>.hashCodeFun() = having("hashCode", Any::hashCode)
 
 /**
  * Asserts the value is equal to the expected one, using `==`.
@@ -146,39 +146,64 @@ fun <T : Any> Assert<T?>.isNotNull(): Assert<T> = transform { actual ->
  * @param extract The function to extract the property value out of the value of the current assert.
  *
  * ```
- * assertThat(person).prop("name", { it.name }).isEqualTo("Sue")
+ * assertThat(person).having("name", { it.name }).isEqualTo("Sue")
  * ```
  */
+fun <T, P> Assert<T>.having(name: String, extract: (T) -> P): Assert<P> =
+    transform(appendName(name, separator = "."), extract)
+
+@Deprecated(
+    message = "Function prop has been renamed to having",
+    replaceWith = ReplaceWith("having(name, extract)"),
+    level = DeprecationLevel.WARNING
+)
 fun <T, P> Assert<T>.prop(name: String, extract: (T) -> P): Assert<P> =
     transform(appendName(name, separator = "."), extract)
+
 
 /**
  * Returns an assert that asserts on the given property.
  *
  * Example:
  * ```
- * assertThat(person).prop(Person::name).isEqualTo("Sue")
+ * assertThat(person).having(Person::name).isEqualTo("Sue")
  * ```
  *
  * @param property Property on which to assert. The name of this
  * property will be shown in failure messages.
  */
+fun <T, P> Assert<T>.having(property: KProperty1<T, P>): Assert<P> =
+    having(property.name) { property.get(it) }
+
+@Deprecated(
+    message = "Function prop has been renamed to having",
+    replaceWith = ReplaceWith("having(property)"),
+    level = DeprecationLevel.WARNING
+)
 fun <T, P> Assert<T>.prop(property: KProperty1<T, P>): Assert<P> =
-    prop(property.name) { property.get(it) }
+    having(property.name) { property.get(it) }
 
 /**
  * Returns an assert that asserts on the result of calling the given function.
  *
  * Example:
  * ```
- * assertThat(person).prop(Person::nameAsLowerCase).isEqualTo("sue")
+ * assertThat(person).having(Person::nameAsLowerCase).isEqualTo("sue")
  * ```
  *
  * @param callable Callable on which to assert. The name of this
  * callable will be shown in the failure messages.
  */
+fun <T, R, F> Assert<T>.having(callable: F): Assert<R> where F : (T) -> R, F : KCallable<R> =
+    having(callable.name, callable)
+
+@Deprecated(
+    message = "Function prop has been renamed to having",
+    replaceWith = ReplaceWith("having(callable)"),
+    level = DeprecationLevel.WARNING
+)
 fun <T, R, F> Assert<T>.prop(callable: F): Assert<R> where F : (T) -> R, F : KCallable<R> =
-    prop(callable.name, callable)
+    having(callable.name, callable)
 
 /**
  * Asserts the value has the expected kotlin class. This is an exact match, so `assertThat("test").hasClass<String>()`
@@ -219,6 +244,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual
     if (kclass != actual::class) return
     expected("to not have class:${show(kclass)}")
 }
+
 /**
  * Asserts the value is not an instance of the expected kotlin class. Both
  * `assertThat("test").isNotInstanceOf<String>()` and `assertThat("test").isNotInstanceOf<String>()` fail.

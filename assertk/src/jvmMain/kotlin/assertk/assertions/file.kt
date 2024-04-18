@@ -11,32 +11,32 @@ import kotlin.io.readBytes
 /**
  * Returns an assert on the file's name.
  */
-fun Assert<File>.name() = prop("name", File::getName)
+fun Assert<File>.name() = having("name", File::getName)
 
 /**
  * Returns an assert on the file's path.
  */
-fun Assert<File>.path() = prop("path", File::getPath)
+fun Assert<File>.path() = having("path", File::getPath)
 
 /**
  * Returns an assert on the file's parent.
  */
-fun Assert<File>.parent() = prop("parent", File::getParent)
+fun Assert<File>.parent() = having("parent", File::getParent)
 
 /**
  * Returns an assert on the file's extension.
  */
-fun Assert<File>.extension() = prop("extension", File::extension)
+fun Assert<File>.extension() = having("extension", File::extension)
 
 /**
  * Returns an assert on the file's contents as text.
  */
-fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = prop("text") { it.readText(charset) }
+fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = having("text") { it.readText(charset) }
 
 /**
  * Returns an assert on the file's contents as bytes.
  */
-fun Assert<File>.bytes() = prop("bytes", File::readBytes)
+fun Assert<File>.bytes() = having("bytes", File::readBytes)
 
 /**
  * Asserts the file exists.

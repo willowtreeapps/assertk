@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
-import assertk.coroutines.assertions.suspendCall
+import assertk.coroutines.assertions.having
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -14,22 +14,22 @@ class AnyTest {
     val subject = BasicObject("test")
 
     @Test
-    fun suspendCall_passes() = runTest {
-        assertThat(subject).suspendCall("str") { it.str() }.isEqualTo("test")
+    fun having_passes() = runTest {
+        assertThat(subject).having("str") { it.str() }.isEqualTo("test")
     }
 
     @Test
-    fun suspendCall_includes_name_in_failure_message() = runTest {
+    fun having_includes_name_in_failure_message() = runTest {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).suspendCall("str") { it.str() }.isEmpty()
+            assertThat(subject).having("str") { it.str() }.isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
 
     @Test
-    fun nested_suspendCall_include_names_in_failure_message() = runTest {
+    fun nested_having_include_names_in_failure_message() = runTest {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).suspendCall("other") { it.other() }.suspendCall("str") { it?.str() }.isNotNull()
+            assertThat(subject).having("other") { it.other() }.having("str") { it?.str() }.isNotNull()
         }
         assertEquals("expected [other.str] to not be null (test)", error.message)
     }

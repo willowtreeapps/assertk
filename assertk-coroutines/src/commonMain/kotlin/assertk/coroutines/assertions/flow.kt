@@ -7,10 +7,9 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.expectedListDiff
 import assertk.assertions.support.show
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
-suspend fun Assert<Flow<*>>.count(): Assert<Int> = suspendCall("count()", Flow<*>::count)
+suspend fun Assert<Flow<*>>.count(): Assert<Int> = having("count()", Flow<*>::count)
 
 /**
  * Asserts the flow is empty. Fails as soon as the flow delivers an element.
