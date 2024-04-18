@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- renamed `prop` to `having` as part of effort to unify API naming, old name is deprecated.
+- renamed `suspendCall` to `having` as part of effort to unify API naming, old name is deprecated.
+- renamed `extracting` to `eachHaving` as part of effort to unify API naming, old name is deprecated.
+
 ## [0.28.1] 2024-04-17
 
 ### Added
