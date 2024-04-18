@@ -242,12 +242,12 @@ class AnyTest {
 
     //region having
     @Test
-    fun prop_passes() {
+    fun having_passes() {
         assertThat(subject).having("str") { it.str }.isEqualTo("test")
     }
 
     @Test
-    fun prop_includes_name_in_failure_message() {
+    fun having_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).having("str") { it.str }.isEmpty()
         }
@@ -255,7 +255,7 @@ class AnyTest {
     }
 
     @Test
-    fun nested_prop_include_names_in_failure_message() {
+    fun nested_having_include_names_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).having("other") { it.other }.having("str") { it?.str }.isNotNull()
         }
@@ -263,12 +263,12 @@ class AnyTest {
     }
 
     @Test
-    fun prop_property1_extract_prop_passes() {
+    fun having_property1_extract_prop_passes() {
         assertThat(subject).having(BasicObject::str).isEqualTo("test")
     }
 
     @Test
-    fun prop_property1_extract_prop_includes_name_in_failure_message() {
+    fun having_property1_extract_prop_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).having(BasicObject::str).isEmpty()
         }
@@ -276,7 +276,7 @@ class AnyTest {
     }
 
     @Test
-    fun prop_property1_includes_error_message_when_fails() {
+    fun having_property1_includes_error_message_when_fails() {
         val error = assertFails {
             assertThat(subject).having(BasicObject::failing).isEmpty()
         }
@@ -284,12 +284,12 @@ class AnyTest {
     }
 
     @Test
-    fun prop_callable_function_passes() {
+    fun having_callable_function_passes() {
         assertThat(subject).having(BasicObject::funcA).isEqualTo("A")
     }
 
     @Test
-    fun prop_callable_function_includes_name_in_failure_message() {
+    fun having_callable_function_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).having(BasicObject::funcA).isEqualTo(14)
         }
@@ -297,7 +297,7 @@ class AnyTest {
     }
 
     @Test
-    fun nested_prop_callable_function_include_names_in_failure_message() {
+    fun nested_having_callable_function_include_names_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).having(BasicObject::funcB).having(BasicObject::funcA).isNull()
         }
