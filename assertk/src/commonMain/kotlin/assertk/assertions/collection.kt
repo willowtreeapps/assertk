@@ -6,7 +6,7 @@ import assertk.assertions.support.*
 /**
  * Returns an assert on the Collection's size.
  */
-fun Assert<Collection<*>>.size() = prop("size", Collection<*>::size)
+fun Assert<Collection<*>>.size() = having("size", Collection<*>::size)
 
 /**
  * Asserts the collection is empty.

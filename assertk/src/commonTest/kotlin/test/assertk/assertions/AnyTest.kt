@@ -240,16 +240,16 @@ class AnyTest {
         assertEquals("expected [int]:<[99]> but was:<[42]> (test)", error.message)
     }
 
-    //region prop
+    //region having
     @Test
     fun prop_passes() {
-        assertThat(subject).prop("str") { it.str }.isEqualTo("test")
+        assertThat(subject).having("str") { it.str }.isEqualTo("test")
     }
 
     @Test
     fun prop_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop("str") { it.str }.isEmpty()
+            assertThat(subject).having("str") { it.str }.isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
@@ -257,20 +257,20 @@ class AnyTest {
     @Test
     fun nested_prop_include_names_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop("other") { it.other }.prop("str") { it?.str }.isNotNull()
+            assertThat(subject).having("other") { it.other }.having("str") { it?.str }.isNotNull()
         }
         assertEquals("expected [other.str] to not be null (test)", error.message)
     }
 
     @Test
     fun prop_property1_extract_prop_passes() {
-        assertThat(subject).prop(BasicObject::str).isEqualTo("test")
+        assertThat(subject).having(BasicObject::str).isEqualTo("test")
     }
 
     @Test
     fun prop_property1_extract_prop_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop(BasicObject::str).isEmpty()
+            assertThat(subject).having(BasicObject::str).isEmpty()
         }
         assertEquals("expected [str] to be empty but was:<\"test\"> (test)", error.message)
     }
@@ -278,20 +278,20 @@ class AnyTest {
     @Test
     fun prop_property1_includes_error_message_when_fails() {
         val error = assertFails {
-            assertThat(subject).prop(BasicObject::failing).isEmpty()
+            assertThat(subject).having(BasicObject::failing).isEmpty()
         }
         assertEquals("sorry!", error.message)
     }
 
     @Test
     fun prop_callable_function_passes() {
-        assertThat(subject).prop(BasicObject::funcA).isEqualTo("A")
+        assertThat(subject).having(BasicObject::funcA).isEqualTo("A")
     }
 
     @Test
     fun prop_callable_function_includes_name_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop(BasicObject::funcA).isEqualTo(14)
+            assertThat(subject).having(BasicObject::funcA).isEqualTo(14)
         }
         assertEquals("expected [funcA]:<[14]> but was:<[\"A\"]> (test)", error.message)
     }
@@ -299,7 +299,7 @@ class AnyTest {
     @Test
     fun nested_prop_callable_function_include_names_in_failure_message() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject).prop(BasicObject::funcB).prop(BasicObject::funcA).isNull()
+            assertThat(subject).having(BasicObject::funcB).having(BasicObject::funcA).isNull()
         }
         assertEquals("expected [funcB.funcA] to be null but was:<\"A\"> (test)", error.message)
     }
@@ -456,7 +456,7 @@ class AnyTest {
     @Test
     fun isInstanceOf_kclass_run_block_when_passes() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject as TestObject).isInstanceOf(BasicObject::class).prop("str", BasicObject::str)
+            assertThat(subject as TestObject).isInstanceOf(BasicObject::class).having("str", BasicObject::str)
                 .isEqualTo("wrong")
         }
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
@@ -465,7 +465,7 @@ class AnyTest {
     @Test
     fun isInstanceOf_reified_kclass_run_block_when_passes() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(subject as TestObject).isInstanceOf<BasicObject>().prop("str", BasicObject::str)
+            assertThat(subject as TestObject).isInstanceOf<BasicObject>().having("str", BasicObject::str)
                 .isEqualTo("wrong")
         }
         assertEquals("expected [str]:<\"[wrong]\"> but was:<\"[test]\"> (test)", error.message)
