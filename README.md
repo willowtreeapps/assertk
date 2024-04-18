@@ -148,12 +148,12 @@ semantics as follows:
 There's a few ways you extract the data you want to assert on. While you can do this yourself before calling the
 assertion, these methods will add the extra context to the failure message which can be helpful.
 
-The simplest way is with `having()`. It will take a property (or function, or a name and a lambda) and return an
+The simplest way is with `prop()`. It will take a property (or function, or a name and a lambda) and return an
 assertion on that property.
 
 ```kotlin
 val person = Person(age = 22)
-assertThat(person).having(Person::age).isEqualTo(20)
+assertThat(person).prop(Person::age).isEqualTo(20)
 
 // -> expected [age]:<2[0]> but was:<2[2]> (Person(age=22))
 ```
@@ -217,7 +217,7 @@ One of the goals of this library is to make custom assertions easy to make. All 
 
 ```kotlin
 fun Assert<Person>.hasAge(expected: Int) {
-    having(Person::age).isEqualTo(expected)
+    prop(Person::age).isEqualTo(expected)
 }
 
 assertThat(person).hasAge(20)
@@ -257,7 +257,7 @@ assertThat(person).hasMiddleName().isEqualTo("Lorie")
 Note: this is a bit of a contrived example as you'd probably want to build this out of existing assertions instead.
 
 ```kotlin
-fun Assert<Person>.hasMiddleName(): Assert<String> = having(Person::middleName).isNotNull()
+fun Assert<Person>.hasMiddleName(): Assert<String> = prop(Person::middleName).isNotNull()
 ```
 
 The general rule of thumb is to prefer building out of the existing assertions unless you can give a more meaningful
