@@ -200,10 +200,19 @@ fun <T> Assert<Array<T>>.each(f: (Assert<T>) -> Unit) = given { actual ->
  *
  * ```
  * assertThat(people)
- *   .extracting(Person::name)
+ *   .eachHaving(Person::name)
  *   .containsExactly("Sue", "Bob")
  * ```
  */
+fun <E, R> Assert<Array<E>>.eachHaving(f1: (E) -> R): Assert<List<R>> = transform { actual ->
+    actual.map(f1)
+}
+
+@Deprecated(
+    message = "Function extracting has been renamed to eachHaving",
+    replaceWith = ReplaceWith("eachHaving(f1)"),
+    level = DeprecationLevel.WARNING
+)
 fun <E, R> Assert<Array<E>>.extracting(f1: (E) -> R): Assert<List<R>> = transform { actual ->
     actual.map(f1)
 }
@@ -213,10 +222,20 @@ fun <E, R> Assert<Array<E>>.extracting(f1: (E) -> R): Assert<List<R>> = transfor
  *
  * ```
  * assertThat(people)
- *   .extracting(Person::name, Person::age)
+ *   .eachHaving(Person::name, Person::age)
  *   .containsExactly("Sue" to 20, "Bob" to 22)
  * ```
  */
+fun <E, R1, R2> Assert<Array<E>>.eachHaving(f1: (E) -> R1, f2: (E) -> R2): Assert<List<Pair<R1, R2>>> =
+    transform { actual ->
+        actual.map { f1(it) to f2(it) }
+    }
+
+@Deprecated(
+    message = "Function extracting has been renamed to eachHaving",
+    replaceWith = ReplaceWith("eachHaving(f1, f2)"),
+    level = DeprecationLevel.WARNING
+)
 fun <E, R1, R2> Assert<Array<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<List<Pair<R1, R2>>> =
     transform { actual ->
         actual.map { f1(it) to f2(it) }
@@ -227,10 +246,23 @@ fun <E, R1, R2> Assert<Array<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Asser
  *
  * ```
  * assertThat(people)
- *   .extracting(Person::name, Person::age, Person::address)
+ *   .eachHaving(Person::name, Person::age, Person::address)
  *   .contains(Triple("Sue", 20, "123 Street"), Triple("Bob", 22, "456 Street")
  * ```
  */
+fun <E, R1, R2, R3> Assert<Array<E>>.eachHaving(
+    f1: (E) -> R1,
+    f2: (E) -> R2,
+    f3: (E) -> R3
+): Assert<List<Triple<R1, R2, R3>>> = transform { actual ->
+    actual.map { Triple(f1(it), f2(it), f3(it)) }
+}
+
+@Deprecated(
+    message = "Function extracting has been renamed to eachHaving",
+    replaceWith = ReplaceWith("eachHaving(f1, f2, f3)"),
+    level = DeprecationLevel.WARNING
+)
 fun <E, R1, R2, R3> Assert<Array<E>>.extracting(
     f1: (E) -> R1,
     f2: (E) -> R2,

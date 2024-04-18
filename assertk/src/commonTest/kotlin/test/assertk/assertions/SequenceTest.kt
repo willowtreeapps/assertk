@@ -14,7 +14,7 @@ import assertk.assertions.containsOnly
 import assertk.assertions.doesNotContain
 import assertk.assertions.each
 import assertk.assertions.exactly
-import assertk.assertions.extracting
+import assertk.assertions.eachHaving
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
@@ -585,17 +585,17 @@ class SequenceTest {
     }
     //endregion
 
-    //region extracting
+    //region eachHaving
     @Test
     fun single_extracting_function_passes() {
-        assertThat(sequenceOf("one", "two")).extracting { it.length }
+        assertThat(sequenceOf("one", "two")).eachHaving { it.length }
             .containsOnly(3, 3)
     }
 
     @Test
     fun single_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(sequenceOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
+            assertThat(sequenceOf("one", "two")).eachHaving { it.length }.containsExactly(2, 2)
         }
         assertEquals(
             """expected to contain exactly:<[2, 2]> but was:<[3, 3]>
@@ -609,7 +609,7 @@ class SequenceTest {
     @Test
     fun pair_extracting_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-            .extracting(Thing::one, Thing::two)
+            .eachHaving(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
@@ -617,7 +617,7 @@ class SequenceTest {
     fun pair_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-                .extracting(Thing::one, Thing::two)
+                .eachHaving(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
         }
         assertEquals(
@@ -633,7 +633,7 @@ class SequenceTest {
     @Test
     fun triple_extracting_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-            .extracting(Thing::one, Thing::two, Thing::three)
+            .eachHaving(Thing::one, Thing::two, Thing::three)
             .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
     }
 
@@ -641,7 +641,7 @@ class SequenceTest {
     fun triple_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-                .extracting(Thing::one, Thing::two, Thing::three)
+                .eachHaving(Thing::one, Thing::two, Thing::three)
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
         }
         assertEquals(
@@ -653,7 +653,7 @@ class SequenceTest {
             error.message
         )
     }
-    //region extracting
+    //region eachHaving
 
     data class Thing(val one: String, val two: Int, val three: Char)
 }

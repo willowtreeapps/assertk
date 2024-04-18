@@ -14,7 +14,7 @@ import assertk.assertions.containsOnly
 import assertk.assertions.doesNotContain
 import assertk.assertions.each
 import assertk.assertions.exactly
-import assertk.assertions.extracting
+import assertk.assertions.eachHaving
 import assertk.assertions.first
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
@@ -503,16 +503,16 @@ class IterableTest {
     }
     //endregion
 
-    //region extracting
+    //region eachHaving
     @Test
     fun single_extracting_function_passes() {
-        assertThat(iterableOf("one", "two")).extracting { it.length }.containsExactly(3, 3)
+        assertThat(iterableOf("one", "two")).eachHaving { it.length }.containsExactly(3, 3)
     }
 
     @Test
     fun single_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(iterableOf("one", "two")).extracting { it.length }.containsExactly(2, 2)
+            assertThat(iterableOf("one", "two")).eachHaving { it.length }.containsExactly(2, 2)
         }
         assertEquals(
             """expected to contain exactly:<[2, 2]> but was:<[3, 3]>
@@ -526,7 +526,7 @@ class IterableTest {
     @Test
     fun pair_extracting_function_passes() {
         assertThat(iterableOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-            .extracting(Thing::one, Thing::two)
+            .eachHaving(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
@@ -534,7 +534,7 @@ class IterableTest {
     fun pair_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(iterableOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-                .extracting(Thing::one, Thing::two)
+                .eachHaving(Thing::one, Thing::two)
                 .containsExactly("one" to 2, "two" to 1)
         }
         assertEquals(
@@ -550,7 +550,7 @@ class IterableTest {
     @Test
     fun triple_extracting_function_passes() {
         assertThat(iterableOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-            .extracting(Thing::one, Thing::two, Thing::three)
+            .eachHaving(Thing::one, Thing::two, Thing::three)
             .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
     }
 
@@ -558,7 +558,7 @@ class IterableTest {
     fun triple_extracting_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(iterableOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
-                .extracting(Thing::one, Thing::two, Thing::three)
+                .eachHaving(Thing::one, Thing::two, Thing::three)
                 .containsExactly(Triple("one", 1, '2'), Triple("two", 2, '3'))
         }
         assertEquals(
@@ -570,7 +570,7 @@ class IterableTest {
             error.message
         )
     }
-    //region extracting
+    //region eachHaving
 
     //region first
     @Test
