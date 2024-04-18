@@ -10,8 +10,16 @@ import assertk.assertions.support.appendName
  * @param extract The suspend function to extract the property value out of the value of the current assert.
  *
  * ```
- * assertThat(person).suspendCall("name()", { it.name() }).isEqualTo("Sue")
+ * assertThat(person).having("name()", { it.name() }).isEqualTo("Sue")
  * ```
  */
+suspend fun <T, P> Assert<T>.having(name: String, extract: suspend (T) -> P): Assert<P> =
+    transform(appendName(name, separator = ".")) { extract(it) }
+
+@Deprecated(
+    message = "Function suspendCall has been renamed to having",
+    replaceWith = ReplaceWith("having(name, extract)"),
+    level = DeprecationLevel.WARNING
+)
 suspend fun <T, P> Assert<T>.suspendCall(name: String, extract: suspend (T) -> P): Assert<P> =
     transform(appendName(name, separator = ".")) { extract(it) }
