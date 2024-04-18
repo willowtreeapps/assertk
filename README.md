@@ -171,12 +171,12 @@ assertThat(mapOf("one" to 1, "two" to 2, "three" to 3)).key("two").isEqualTo(1)
 // -> expected: [["two"]]:<1> but was:<2> ({"one"=1, "two"=2, "three"=3})
 ```
 
-You can also extract a property from a collection using `eachHaving()`.
+You can also extract a property from a collection using `extracting()`.
 
 ```kotlin
 val people = listOf(Person(name = "Sue"), Person(name = "Bob"))
 assertThat(people)
-    .eachHaving(Person::name)
+    .extracting(Person::name)
     .containsExactly("Sue", "Bob")
 ```
 

@@ -38,13 +38,7 @@ fun Assert<Sequence<*>>.containsNone(vararg elements: Any?) = given { actual ->
     if (notExpected.isEmpty()) {
         return
     }
-    expected(
-        "to contain none of:${show(elements)} but was:${show(actualList)}\n elements not expected:${
-            show(
-                notExpected
-            )
-        }"
-    )
+    expected("to contain none of:${show(elements)} but was:${show(actualList)}\n elements not expected:${show(notExpected)}")
 }
 
 /**
@@ -180,19 +174,10 @@ fun <E> Assert<Sequence<E>>.each(f: (Assert<E>) -> Unit) = given { actual ->
  *
  * ```
  * assertThat(people)
- *   .eachHaving(Person::name)
+ *   .extracting(Person::name)
  *   .containsExactly("Sue", "Bob")
  * ```
  */
-fun <E, R> Assert<Sequence<E>>.eachHaving(f1: (E) -> R): Assert<Sequence<R>> = transform { actual ->
-    actual.map(f1)
-}
-
-@Deprecated(
-    message = "Function extracting has been renamed to eachHaving",
-    replaceWith = ReplaceWith("eachHaving(f1)"),
-    level = DeprecationLevel.WARNING
-)
 fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = transform { actual ->
     actual.map(f1)
 }
@@ -202,20 +187,10 @@ fun <E, R> Assert<Sequence<E>>.extracting(f1: (E) -> R): Assert<Sequence<R>> = t
  *
  * ```
  * assertThat(people)
- *   .eachHaving(Person::name, Person::age)
+ *   .extracting(Person::name, Person::age)
  *   .containsExactly("Sue" to 20, "Bob" to 22)
  * ```
  */
-fun <E, R1, R2> Assert<Sequence<E>>.eachHaving(f1: (E) -> R1, f2: (E) -> R2): Assert<Sequence<Pair<R1, R2>>> =
-    transform { actual ->
-        actual.map { f1(it) to f2(it) }
-    }
-
-@Deprecated(
-    message = "Function extracting has been renamed to eachHaving",
-    replaceWith = ReplaceWith("eachHaving(f1, f2)"),
-    level = DeprecationLevel.WARNING
-)
 fun <E, R1, R2> Assert<Sequence<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): Assert<Sequence<Pair<R1, R2>>> =
     transform { actual ->
         actual.map { f1(it) to f2(it) }
@@ -226,23 +201,10 @@ fun <E, R1, R2> Assert<Sequence<E>>.extracting(f1: (E) -> R1, f2: (E) -> R2): As
  *
  * ```
  * assertThat(people)
- *   .eachHaving(Person::name, Person::age, Person::address)
+ *   .extracting(Person::name, Person::age, Person::address)
  *   .contains(Triple("Sue", 20, "123 Street"), Triple("Bob", 22, "456 Street")
  * ```
  */
-fun <E, R1, R2, R3> Assert<Sequence<E>>.eachHaving(
-    f1: (E) -> R1,
-    f2: (E) -> R2,
-    f3: (E) -> R3
-): Assert<Sequence<Triple<R1, R2, R3>>> = transform { actual ->
-    actual.map { Triple(f1(it), f2(it), f3(it)) }
-}
-
-@Deprecated(
-    message = "Function extracting has been renamed to eachHaving",
-    replaceWith = ReplaceWith("eachHaving(f1, f2, f3)"),
-    level = DeprecationLevel.WARNING
-)
 fun <E, R1, R2, R3> Assert<Sequence<E>>.extracting(
     f1: (E) -> R1,
     f2: (E) -> R2,
@@ -262,7 +224,7 @@ fun <E, R1, R2, R3> Assert<Sequence<E>>.extracting(
  * ```
  */
 fun <E> Assert<Sequence<E>>.none(f: (Assert<E>) -> Unit) =
-    collection(check = {
+     collection(check = {
         if (size != failureSize) {
             fail(
                 "expected none to pass\n" + results().mapIndexedNotNull { index, result ->
