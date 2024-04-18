@@ -587,13 +587,13 @@ class SequenceTest {
 
     //region eachHaving
     @Test
-    fun single_extracting_function_passes() {
+    fun single_eachHaving_function_passes() {
         assertThat(sequenceOf("one", "two")).eachHaving { it.length }
             .containsOnly(3, 3)
     }
 
     @Test
-    fun single_extracting_function_fails() {
+    fun single_eachHaving_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf("one", "two")).eachHaving { it.length }.containsExactly(2, 2)
         }
@@ -607,14 +607,14 @@ class SequenceTest {
     }
 
     @Test
-    fun pair_extracting_function_passes() {
+    fun pair_eachHaving_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
             .eachHaving(Thing::one, Thing::two)
             .containsExactly("one" to 1, "two" to 2)
     }
 
     @Test
-    fun pair_extracting_function_fails() {
+    fun pair_eachHaving_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .eachHaving(Thing::one, Thing::two)
@@ -631,14 +631,14 @@ class SequenceTest {
     }
 
     @Test
-    fun triple_extracting_function_passes() {
+    fun triple_eachHaving_function_passes() {
         assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
             .eachHaving(Thing::one, Thing::two, Thing::three)
             .containsExactly(Triple("one", 1, '1'), Triple("two", 2, '2'))
     }
 
     @Test
-    fun triple_extracting_function_fails() {
+    fun triple_eachHaving_function_fails() {
         val error = assertFailsWith<AssertionError> {
             assertThat(sequenceOf(Thing("one", 1, '1'), Thing("two", 2, '2')))
                 .eachHaving(Thing::one, Thing::two, Thing::three)
