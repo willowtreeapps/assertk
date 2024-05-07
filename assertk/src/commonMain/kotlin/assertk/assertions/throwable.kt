@@ -6,30 +6,30 @@ import assertk.all
 /**
  * Returns an assert on the throwable's message.
  */
-fun Assert<Throwable>.message() = having("message", Throwable::message)
+fun Assert<Throwable>.havingMessage() = having("message", Throwable::message)
 
 /**
  * Returns an assert on the throwable's cause.
  */
-fun Assert<Throwable>.cause() = having("cause", Throwable::cause)
+fun Assert<Throwable>.havingCause() = having("cause", Throwable::cause)
 
 /**
  * Returns an assert on the throwable's root cause.
  */
-fun Assert<Throwable>.rootCause() = having("rootCause", Throwable::rootCause)
+fun Assert<Throwable>.havingRootCause() = having("rootCause", Throwable::rootCause)
 
 /**
  * Asserts the throwable has the expected message.
  */
 fun Assert<Throwable>.hasMessage(message: String?) {
-    message().isEqualTo(message)
+    havingMessage().isEqualTo(message)
 }
 
 /**
  * Asserts the throwable contains the expected text
  */
 fun Assert<Throwable>.messageContains(text: String) {
-    message().isNotNull().contains(text)
+    havingMessage().isNotNull().contains(text)
 }
 
 /**
@@ -37,7 +37,7 @@ fun Assert<Throwable>.messageContains(text: String) {
  * @see [hasNoCause]
  */
 fun Assert<Throwable>.hasCause(cause: Throwable) {
-    cause().isNotNull().all {
+    havingCause().isNotNull().all {
         kClass().isEqualTo(cause::class)
         hasMessage(cause.message)
     }
@@ -48,14 +48,14 @@ fun Assert<Throwable>.hasCause(cause: Throwable) {
  * @see [hasCause]
  */
 fun Assert<Throwable>.hasNoCause() {
-    cause().isNull()
+    havingCause().isNull()
 }
 
 /**
  * Asserts the throwable is similar to the expected root cause, checking the type and message.
  */
 fun Assert<Throwable>.hasRootCause(cause: Throwable) {
-    rootCause().all {
+    havingRootCause().all {
         kClass().isEqualTo(cause::class)
         hasMessage(cause.message)
     }
