@@ -58,6 +58,23 @@ class FileTest {
     }
     //endregion
 
+    //region canExecute
+    @Test
+    fun canExecute_value_regular_file_passes() {
+        file.setExecutable(true)
+        assertThat(file).canExecute()
+    }
+
+    @Test
+    fun canExecute_value_directory_fails() {
+        file.setExecutable(false)
+        val error = assertFailsWith<AssertionError> {
+            assertThat(file).canExecute()
+        }
+        assertEquals("expected to be executable", error.message)
+    }
+    //endregion
+
     //region isNotHidden
     @Test
     fun isNotHidden_value_regular_file_passes() {
