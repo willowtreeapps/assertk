@@ -1,11 +1,9 @@
 package test.assertk.assertions.support
 
 import assertk.assertThat
-import assertk.assertions.hasMessage
-import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isSuccess
-import assertk.assertions.message
+import assertk.assertions.havingMessage
 import assertk.assertions.support.expected
 import assertk.assertions.support.fail
 import assertk.assertions.support.show
@@ -236,7 +234,7 @@ class SupportTest {
     @Test
     fun expected_originating_throwable_included_as_cause() {
         val subject = RuntimeException()
-        val assert = assertThat(subject).message()
+        val assert = assertThat(subject).havingMessage()
         val error = assertFailsWith<AssertionFailedError> {
             assert.expected("message")
         }
@@ -246,7 +244,7 @@ class SupportTest {
     @Test
     fun expected_originating_failure_result_included_as_cause() {
         val subject = RuntimeException()
-        val assert = assertThat(Result.failure<String>(subject)).isFailure().message()
+        val assert = assertThat(Result.failure<String>(subject)).isFailure().havingMessage()
         val error = assertFailsWith<AssertionFailedError> {
             assert.expected("message")
         }
