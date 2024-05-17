@@ -11,7 +11,7 @@ class CharSequenceTest {
     //region props
     @Test
     fun extracts_length() {
-        assertEquals(4, assertThat("test").length().valueOrFail)
+        assertEquals(4, assertThat("test").havingLength().valueOrFail)
     }
     //endregion
 
