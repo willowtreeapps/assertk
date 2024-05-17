@@ -8,7 +8,14 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the Maps's size.
  */
-fun Assert<Map<*, *>>.size() = having("size", Map<*, *>::size)
+fun Assert<Map<*, *>>.havingSize() = having("size", Map<*, *>::size)
+
+@Deprecated(
+    message = "Function size has been renamed to havingSize",
+    replaceWith = ReplaceWith("havingSize()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Map<*, *>>.size() = havingSize()
 
 /**
  * Asserts the collection is empty.
@@ -42,7 +49,7 @@ fun Assert<Map<*, *>?>.isNullOrEmpty() = given { actual ->
  * Asserts the collection has the expected size.
  */
 fun Assert<Map<*, *>>.hasSize(size: Int) {
-    size().isEqualTo(size)
+    havingSize().isEqualTo(size)
 }
 
 /**
