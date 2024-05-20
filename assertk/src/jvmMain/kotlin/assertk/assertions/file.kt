@@ -59,12 +59,26 @@ fun Assert<File>.extension() = havingExtension()
 /**
  * Returns an assert on the file's contents as text.
  */
-fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = having("text") { it.readText(charset) }
+fun Assert<File>.havingText(charset: Charset = Charsets.UTF_8) = having("text") { it.readText(charset) }
+
+@Deprecated(
+    message = "Function text has been renamed to havingText",
+    replaceWith = ReplaceWith("havingText()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = havingText()
 
 /**
  * Returns an assert on the file's contents as bytes.
  */
-fun Assert<File>.bytes() = having("bytes", File::readBytes)
+fun Assert<File>.havingBytes() = having("bytes", File::readBytes)
+
+@Deprecated(
+    message = "Function bytes has been renamed to havingBytes",
+    replaceWith = ReplaceWith("havingBytes()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.bytes() = havingBytes()
 
 /**
  * Asserts the file exists.
@@ -144,7 +158,7 @@ fun Assert<File>.hasExtension(expected: String) {
  * @see [hasBytes]
  */
 fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
-    text(charset).isEqualTo(expected)
+    havingText(charset).isEqualTo(expected)
 }
 
 /**

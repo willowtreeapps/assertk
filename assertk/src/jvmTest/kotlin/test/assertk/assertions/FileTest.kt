@@ -204,13 +204,13 @@ class FileTest {
     //region contains
     @Test
     fun contains_correct_substring_passes() {
-        assertThat(fileWithText).text().contains("Forty-two")
+        assertThat(fileWithText).havingText().contains("Forty-two")
     }
 
     @Test
     fun contains_wrong_substring_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(fileWithText).text().contains("Forty-two!")
+            assertThat(fileWithText).havingText().contains("Forty-two!")
         }
         assertTrue(error.message!!.startsWith("expected [text] to contain:<\"Forty-two!\"> but was:<\"$text\">"))
         assertTrue(error.message!!.contains("file_contains"))
@@ -228,14 +228,14 @@ class FileTest {
 
     @Test
     fun matches_correct_regex_passes() {
-        assertThat(matchingFile).text().matches(".a...e.".toRegex())
+        assertThat(matchingFile).havingText().matches(".a...e.".toRegex())
     }
 
     @Test
     fun matches_wrong_regex_fails() {
         val incorrectRegexp = ".*d".toRegex()
         val error = assertFailsWith<AssertionError> {
-            assertThat(matchingFile).text().matches(incorrectRegexp)
+            assertThat(matchingFile).havingText().matches(incorrectRegexp)
         }
         assertTrue(error.message!!.startsWith("expected [text] to match:</$incorrectRegexp/> but was:<\"$matchingText\">"))
         assertTrue(error.message!!.contains("file_contains"))
