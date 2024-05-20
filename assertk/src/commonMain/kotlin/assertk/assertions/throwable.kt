@@ -59,7 +59,7 @@ fun Assert<Throwable>.messageContains(text: String) {
  */
 fun Assert<Throwable>.hasCause(cause: Throwable) {
     havingCause().isNotNull().all {
-        kClass().isEqualTo(cause::class)
+        havingKClass().isEqualTo(cause::class)
         hasMessage(cause.message)
     }
 }
@@ -77,7 +77,7 @@ fun Assert<Throwable>.hasNoCause() {
  */
 fun Assert<Throwable>.hasRootCause(cause: Throwable) {
     havingRootCause().all {
-        kClass().isEqualTo(cause::class)
+        havingKClass().isEqualTo(cause::class)
         hasMessage(cause.message)
     }
 }

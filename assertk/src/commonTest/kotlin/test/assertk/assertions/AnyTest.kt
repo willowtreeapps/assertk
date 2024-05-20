@@ -13,17 +13,17 @@ class AnyTest {
 
     @Test
     fun extracts_kClass() {
-        assertEquals(BasicObject::class, assertThat(subject as TestObject).kClass().valueOrFail)
+        assertEquals(BasicObject::class, assertThat(subject as TestObject).havingKClass().valueOrFail)
     }
 
     @Test
     fun extracts_toStringFun() {
-        assertEquals("test", assertThat(subject).toStringFun().valueOrFail)
+        assertEquals("test", assertThat(subject).havingToStringFun().valueOrFail)
     }
 
     @Test
     fun extracts_hashCodeFun() {
-        assertEquals(42, assertThat(subject).hashCodeFun().valueOrFail)
+        assertEquals(42, assertThat(subject).havingHashCodeFun().valueOrFail)
     }
 
     @Test
