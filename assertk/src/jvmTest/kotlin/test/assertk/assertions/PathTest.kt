@@ -164,14 +164,14 @@ class PathTest {
     //region lines
     @Test
     fun lines_correct_string_passes() {
-        assertThat(regularFileWithText!!).lines().containsExactly("a", "b")
+        assertThat(regularFileWithText!!).havingLines().containsExactly("a", "b")
     }
     //endregion
 
     //region bytes
     @Test
     fun bytes_value_correct_byte_array_passes() {
-        assertThat(regularFile!!).bytes().containsExactly(*ByteArray(10))
+        assertThat(regularFile!!).havingBytes().containsExactly(*ByteArray(10))
     }
     //endregion
 }
