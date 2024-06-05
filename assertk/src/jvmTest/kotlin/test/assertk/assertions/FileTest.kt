@@ -10,6 +10,9 @@ class FileTest {
 
     val file = File.createTempFile("exists", "txt")
     val directory = Files.createTempDirectory("isDirectory").toFile()
+    val missing = File("/this/is/not/a/real/file/and/should/not/exist.txt").also {
+        assertFalse(it.exists())
+    }
 
     //region exists
     @Test
@@ -19,12 +22,25 @@ class FileTest {
 
     @Test
     fun exists_with_nonexistent_file_fails() {
-        val tempFile = File.createTempFile("exists", "txt")
-        tempFile.delete()
         val error = assertFailsWith<AssertionError> {
-            assertThat(tempFile).exists()
+            assertThat(missing).exists()
         }
         assertEquals("expected to exist", error.message)
+    }
+    //endregion
+
+    //region does not exist
+    @Test
+    fun doesNotExist_with_missing_file_passes() {
+        assertThat(missing).doesNotExist()
+    }
+
+    @Test
+    fun doesNotExist_with_nonexistent_file_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(file).doesNotExist()
+        }
+        assertEquals("expected not to exist", error.message)
     }
     //endregion
 
