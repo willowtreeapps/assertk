@@ -13,17 +13,38 @@ import kotlin.reflect.KProperty1
 /**
  * Returns an assert on the kotlin class of the value.
  */
-fun Assert<Any>.kClass() = having("class") { it::class }
+fun Assert<Any>.havingKClass() = having("class") { it::class }
+
+@Deprecated(
+    message = "Function kClass has been renamed to havingKClass",
+    replaceWith = ReplaceWith("havingKClass()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Any>.kClass() = havingKClass()
 
 /**
  * Returns an assert on the toString method of the value.
  */
-fun Assert<Any?>.toStringFun() = having("toString", Any?::toString)
+fun Assert<Any?>.havingToStringFun() = having("toString", Any?::toString)
+
+@Deprecated(
+    message = "Function toStringFun has been renamed to havingToStringFun",
+    replaceWith = ReplaceWith("havingToStringFun()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Any?>.toStringFun() = havingToStringFun()
 
 /**
  * Returns an assert on the hasCode method of the value.
  */
-fun Assert<Any>.hashCodeFun() = having("hashCode", Any::hashCode)
+fun Assert<Any>.havingHashCodeFun() = having("hashCode", Any::hashCode)
+
+@Deprecated(
+    message = "Function hashCodeFun has been renamed to havingHashCodeFun",
+    replaceWith = ReplaceWith("havingHashCodeFun()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Any>.hashCodeFun() = havingHashCodeFun()
 
 /**
  * Asserts the value is equal to the expected one, using `==`.
@@ -110,14 +131,14 @@ fun <T> Assert<T>.isNotIn(vararg values: T) = given { actual ->
  * Asserts the value has the expected string from it's [toString].
  */
 fun Assert<Any?>.hasToString(string: String) {
-    toStringFun().isEqualTo(string)
+    havingToStringFun().isEqualTo(string)
 }
 
 /**
  * Asserts the value has the expected hash code from it's [hashCode].
  */
 fun Assert<Any>.hasHashCode(hashCode: Int) {
-    hashCodeFun().isEqualTo(hashCode)
+    havingHashCodeFun().isEqualTo(hashCode)
 }
 
 /**
