@@ -4,9 +4,9 @@ import assertk.assertThat
 import assertk.assertions.isNegative
 import assertk.assertions.isPositive
 import assertk.assertions.isZero
-import org.junit.Test
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
