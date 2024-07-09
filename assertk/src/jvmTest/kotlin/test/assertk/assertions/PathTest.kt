@@ -161,6 +161,29 @@ class PathTest {
     }
     //endregion
 
+    //region exists
+    @Test
+    fun doesNotExist_value_regularFile_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(regularFile!!).doesNotExist()
+        }
+        assertEquals("expected <$regularFile> does not exist, but it exists", error.message)
+    }
+
+    @Test
+    fun doesNotExist_value_directory_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(directory!!).doesNotExist()
+        }
+        assertEquals("expected <$directory> does not exist, but it exists", error.message)
+    }
+
+    @Test
+    fun doesNotExist_value_not_exists_passes() {
+        assertThat(doesNotExist!!).doesNotExist()
+    }
+    //endregion
+
     //region lines
     @Test
     fun lines_correct_string_passes() {

@@ -99,3 +99,15 @@ fun Assert<Path>.exists(vararg options: LinkOption) = given { actual ->
         expected("${show(actual)} to exist, but it does not")
     }
 }
+
+/**
+ * Assert that the path does not exists.
+ *
+ * @param options indicating how symbolic links are handled
+ */
+@Suppress("SpreadOperator") // https://github.com/arturbosch/detekt/issues/391
+fun Assert<Path>.doesNotExist(vararg options: LinkOption) = given { actual ->
+    if (!Files.notExists(actual, *options)) {
+        expected("${show(actual)} does not exist, but it exists")
+    }
+}
