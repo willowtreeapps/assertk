@@ -1,11 +1,26 @@
 package test.assertk.assertions
 
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.bytes
+import assertk.assertions.containsExactly
+import assertk.assertions.doesNotExist
+import assertk.assertions.exists
+import assertk.assertions.isDirectory
+import assertk.assertions.isHidden
+import assertk.assertions.isReadable
+import assertk.assertions.isRegularFile
+import assertk.assertions.isSameFileAs
+import assertk.assertions.isSymbolicLink
+import assertk.assertions.isWritable
+import assertk.assertions.lines
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 private var regularFile: Path? = null
 private var directory: Path? = null
@@ -158,6 +173,29 @@ class PathTest {
             assertThat(doesNotExist!!).exists()
         }
         assertEquals("expected <$doesNotExist> to exist, but it does not", error.message)
+    }
+    //endregion
+
+    //region exists
+    @Test
+    fun doesNotExist_value_regularFile_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(regularFile!!).doesNotExist()
+        }
+        assertEquals("expected <$regularFile> does not exist, but it exists", error.message)
+    }
+
+    @Test
+    fun doesNotExist_value_directory_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(directory!!).doesNotExist()
+        }
+        assertEquals("expected <$directory> does not exist, but it exists", error.message)
+    }
+
+    @Test
+    fun doesNotExist_value_not_exists_passes() {
+        assertThat(doesNotExist!!).doesNotExist()
     }
     //endregion
 
