@@ -13,12 +13,26 @@ import java.nio.file.Path
  *
  * @param charset charset to use when reading file
  */
-fun Assert<Path>.lines(charset: Charset = Charsets.UTF_8): Assert<List<String>> =
+fun Assert<Path>.havingLines(charset: Charset = Charsets.UTF_8): Assert<List<String>> =
     transform { actual -> Files.readAllLines(actual, charset) }
 
+@Deprecated(
+    message = "Function lines has been renamed to havingLines",
+    replaceWith = ReplaceWith("havingLines()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Path>.lines(charset: Charset = Charsets.UTF_8): Assert<List<String>> = havingLines()
+
 /** Assert on file bytes */
-fun Assert<Path>.bytes(): Assert<ByteArray> =
+fun Assert<Path>.havingBytes(): Assert<ByteArray> =
     transform { actual -> Files.readAllBytes(actual) }
+
+@Deprecated(
+    message = "Function bytes has been renamed to havingBytes",
+    replaceWith = ReplaceWith("havingBytes()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Path>.bytes(): Assert<ByteArray> = havingBytes()
 
 /** Assert that the path is a regular file.
  *

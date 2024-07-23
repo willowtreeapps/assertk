@@ -3,7 +3,7 @@ package test.assertk
 import assertk.assertFailure
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.message
+import assertk.assertions.havingMessage
 import com.willowtreeapps.opentest4k.AssertionFailedError
 import test.assertk.assertions.valueOrFail
 import kotlin.coroutines.resume
@@ -28,7 +28,7 @@ class AssertFailureTest {
     fun failure_originating_subject_not_wrapped_in_result() {
         val t = assertFailsWith<AssertionFailedError> {
             assertFailure { throw RuntimeException("foo") }
-                .message()
+                .havingMessage()
                 .isEqualTo("bar")
         }
         assertTrue("RuntimeException" in t.message!!)
