@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-  testCompile("com.willowtreeapps.assertk:assertk-coroutines:0.28.0")
+  testImplementation("com.willowtreeapps.assertk:assertk-coroutines:0.28.0")
 }
 ```
 
