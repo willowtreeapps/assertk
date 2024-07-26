@@ -59,6 +59,24 @@ class PathTest {
     }
     //endregion
 
+
+    //region isExecutable
+    @Test
+    fun isExecutable_value_regular_file_executable_passes() {
+        regularFile!!.toFile().setExecutable(true)
+        assertThat(regularFile!!).isExecutable()
+    }
+
+    @Test
+    fun isExecutable_value_regular_file_not_executable_fails() {
+        regularFile!!.toFile().setExecutable(false)
+        val error = assertFailsWith<AssertionError> {
+            assertThat(regularFile!!).isExecutable()
+        }
+        assertEquals("expected <$regularFile> to be an executable, but it is not", error.message)
+    }
+    //endregion
+
     //region isHidden
     @Test
     fun isHidden_value_regular_file_not_hidden_fails() {
