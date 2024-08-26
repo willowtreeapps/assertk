@@ -15,7 +15,14 @@ import kotlin.reflect.full.memberProperties
 /**
  * Returns an assert on the java class of the value.
  */
-fun <T : Any> Assert<T>.jClass() = having("class") { it::class.java }
+fun <T : Any> Assert<T>.havingJClass() = having("class") { it::class.java }
+
+@Deprecated(
+    message = "Function jClass has been renamed to havingJClass",
+    replaceWith = ReplaceWith("havingJClass()"),
+    level = DeprecationLevel.WARNING
+)
+fun <T : Any> Assert<T>.jClass() = havingJClass()
 
 /**
  * Asserts the value has the expected java class. This is an exact match, so

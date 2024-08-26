@@ -14,17 +14,17 @@ class ThrowableTest {
 
     @Test
     fun extracts_message() {
-        assertEquals(subject.message, assertThat(subject).message().valueOrFail)
+        assertEquals(subject.message, assertThat(subject).havingMessage().valueOrFail)
     }
 
     @Test
     fun extracts_cause() {
-        assertEquals(cause, assertThat(subject).cause().valueOrFail)
+        assertEquals(cause, assertThat(subject).havingCause().valueOrFail)
     }
 
     @Test
     fun extracts_root_cause() {
-        assertEquals(rootCause, assertThat(subject).rootCause().valueOrFail)
+        assertEquals(rootCause, assertThat(subject).havingRootCause().valueOrFail)
     }
 
     //region hasMessage

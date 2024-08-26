@@ -7,7 +7,14 @@ import assertk.assertions.support.show
 /**
  * Returns an assert on the CharSequence's length.
  */
-fun Assert<CharSequence>.length() = having("length", CharSequence::length)
+fun Assert<CharSequence>.havingLength() = having("length", CharSequence::length)
+
+@Deprecated(
+    message = "Function length has been renamed to havingLength",
+    replaceWith = ReplaceWith("havingLength()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<CharSequence>.length() = havingLength()
 
 /**
  * Asserts the char sequence is empty.
@@ -41,7 +48,7 @@ fun Assert<CharSequence?>.isNullOrEmpty() = given { actual ->
  * Asserts the char sequence has the expected length.
  */
 fun Assert<CharSequence>.hasLength(length: Int) {
-    length().isEqualTo(length)
+    havingLength().isEqualTo(length)
 }
 
 /**

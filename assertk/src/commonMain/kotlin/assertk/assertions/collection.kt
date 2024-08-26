@@ -6,7 +6,14 @@ import assertk.assertions.support.*
 /**
  * Returns an assert on the Collection's size.
  */
-fun Assert<Collection<*>>.size() = having("size", Collection<*>::size)
+fun Assert<Collection<*>>.havingSize() = having("size", Collection<*>::size)
+
+@Deprecated(
+    message = "Function size has been renamed to havingSize",
+    replaceWith = ReplaceWith("havingSize()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<Collection<*>>.size() = havingSize()
 
 /**
  * Asserts the collection is empty.
@@ -40,7 +47,7 @@ fun Assert<Collection<*>?>.isNullOrEmpty() = given { actual ->
  * Asserts the collection has the expected size.
  */
 fun Assert<Collection<*>>.hasSize(size: Int) {
-    size().isEqualTo(size)
+    havingSize().isEqualTo(size)
 }
 
 /**

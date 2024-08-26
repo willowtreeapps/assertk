@@ -11,32 +11,74 @@ import kotlin.io.readBytes
 /**
  * Returns an assert on the file's name.
  */
-fun Assert<File>.name() = having("name", File::getName)
+fun Assert<File>.havingName() = having("name", File::getName)
+
+@Deprecated(
+    message = "Function name has been renamed to havingName",
+    replaceWith = ReplaceWith("havingName()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.name() = havingName()
 
 /**
  * Returns an assert on the file's path.
  */
-fun Assert<File>.path() = having("path", File::getPath)
+fun Assert<File>.havingPath() = having("path", File::getPath)
+
+@Deprecated(
+    message = "Function path has been renamed to havingPath",
+    replaceWith = ReplaceWith("havingPath()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.path() = havingPath()
 
 /**
  * Returns an assert on the file's parent.
  */
-fun Assert<File>.parent() = having("parent", File::getParent)
+fun Assert<File>.havingParent() = having("parent", File::getParent)
+
+@Deprecated(
+    message = "Function parent has been renamed to havingParent",
+    replaceWith = ReplaceWith("havingParent()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.parent() = havingParent()
 
 /**
  * Returns an assert on the file's extension.
  */
-fun Assert<File>.extension() = having("extension", File::extension)
+fun Assert<File>.havingExtension() = having("extension", File::extension)
+
+@Deprecated(
+    message = "Function extension has been renamed to havingExtension",
+    replaceWith = ReplaceWith("havingExtension()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.extension() = havingExtension()
 
 /**
  * Returns an assert on the file's contents as text.
  */
-fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = having("text") { it.readText(charset) }
+fun Assert<File>.havingText(charset: Charset = Charsets.UTF_8) = having("text") { it.readText(charset) }
+
+@Deprecated(
+    message = "Function text has been renamed to havingText",
+    replaceWith = ReplaceWith("havingText()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.text(charset: Charset = Charsets.UTF_8) = havingText()
 
 /**
  * Returns an assert on the file's contents as bytes.
  */
-fun Assert<File>.bytes() = having("bytes", File::readBytes)
+fun Assert<File>.havingBytes() = having("bytes", File::readBytes)
+
+@Deprecated(
+    message = "Function bytes has been renamed to havingBytes",
+    replaceWith = ReplaceWith("havingBytes()"),
+    level = DeprecationLevel.WARNING
+)
+fun Assert<File>.bytes() = havingBytes()
 
 /**
  * Asserts the file exists.
@@ -94,28 +136,28 @@ fun Assert<File>.isNotHidden() = given { actual ->
  * Asserts the file has the expected name.
  */
 fun Assert<File>.hasName(expected: String) {
-    name().isEqualTo(expected)
+    havingName().isEqualTo(expected)
 }
 
 /**
  * Asserts the file has the expected path.
  */
 fun Assert<File>.hasPath(expected: String) {
-    path().isEqualTo(File(expected).path)
+    havingPath().isEqualTo(File(expected).path)
 }
 
 /**
  * Asserts the file has the expected parent path.
  */
 fun Assert<File>.hasParent(expected: String) {
-    parent().isEqualTo(File(expected).path)
+    havingParent().isEqualTo(File(expected).path)
 }
 
 /**
  * Asserts the file has the expected extension.
  */
 fun Assert<File>.hasExtension(expected: String) {
-    extension().isEqualTo(expected)
+    havingExtension().isEqualTo(expected)
 }
 
 /**
@@ -124,7 +166,7 @@ fun Assert<File>.hasExtension(expected: String) {
  * @see [hasBytes]
  */
 fun Assert<File>.hasText(expected: String, charset: Charset = Charsets.UTF_8) {
-    text(charset).isEqualTo(expected)
+    havingText(charset).isEqualTo(expected)
 }
 
 /**

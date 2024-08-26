@@ -25,6 +25,15 @@ $T:$N:$E:$A =
 /**
  * Returns an assert on the $T's size.
  */
+@JvmName("$NHavingSize")
+$A
+fun Assert<$T>.havingSize() = having("size") { it.size }
+
+@Deprecated(
+    message = "Function size has been renamed to havingSize",
+    replaceWith = ReplaceWith("havingSize()"),
+    level = DeprecationLevel.WARNING
+)
 @JvmName("$NSize")
 $A
 fun Assert<$T>.size() = having("size") { it.size }
@@ -96,7 +105,7 @@ fun Assert<$T?>.isNullOrEmpty() = given { actual ->
 @JvmName("$NHasSize")
 $A
 fun Assert<$T>.hasSize(size: Int) {
-    size().isEqualTo(size)
+    havingSize().isEqualTo(size)
 }
 
 /**
