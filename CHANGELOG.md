@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - renamed `prop` to `having` as part of effort to unify API naming, old name is deprecated.
 - renamed `suspendCall` to `having` as part of effort to unify API naming, old name is deprecated.
-- added `doesNotExist` assertions to `Path`.
+
+### Added
+- Added `doesNotExist` assertions to `Path`
+- Added `containsInstanceOf` and `doesNotContainInstanceOf` for `Iterable`
 
 ## [0.28.1] 2024-04-17
 
