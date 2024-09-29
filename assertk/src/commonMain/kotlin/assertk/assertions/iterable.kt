@@ -2,10 +2,12 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
+import assertk.assertThat
 import assertk.collection
 import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
+import assertk.fail
 
 /**
  * Asserts the iterable contains the expected element, using `in`.
@@ -129,6 +131,34 @@ fun Assert<Iterable<*>>.containsExactlyInAnyOrder(vararg elements: Any?) = given
 internal fun MutableList<*>.removeFirst(value: Any?) {
     val index = indexOf(value)
     if (index > -1) removeAt(index)
+}
+
+/**
+ * Asserts the collection contains at least one instance of a given type.
+ *
+ * ```
+ * assertThat(listOf<Any>("one", "two", 1)).containsInstanceOf<String>().each {
+ *   it.hasLength(3)
+ * }
+ * ```
+ */
+inline fun <reified T> Assert<Iterable<*>>.containsInstanceOf(): Assert<List<T>> {
+    return transform("contains subtype of ${T::class}") { actual ->
+        actual.filterIsInstance<T>().also {
+            if (it.isEmpty()) expected("to contain at least one instance of ${T::class} but was $actual")
+        }
+    }
+}
+
+/**
+ * Asserts the collection does not contain an instance of a given type.
+ *
+ * ```
+ * assertThat(listOf<Any>("one", "two", 1)).doesNotContainInstanceOf<Double>()
+ * ```
+ */
+inline fun <reified T> Assert<Iterable<*>>.doesNotContainInstanceOf() = given { actual ->
+    if (actual.filterIsInstance<T>().isNotEmpty()) expected("to contain no instances of ${T::class} but was $actual")
 }
 
 /**
