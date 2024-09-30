@@ -158,7 +158,7 @@ inline fun <reified T> Assert<Iterable<*>>.containsInstanceOf(): Assert<List<T>>
  * ```
  */
 inline fun <reified T> Assert<Iterable<*>>.doesNotContainInstanceOf() = given { actual ->
-    if (actual.none { it is T }) expected("to contain no instances of ${T::class} but was $actual")
+    if (actual.none { it is T }) expected("to not contain instances of ${T::class} but was $actual")
 }
 
 /**
