@@ -250,7 +250,7 @@ class IterableTest {
         val error = assertFailsWith<AssertionError>() {
             assertThat(iterableOf(1, "two")).doesNotContainInstanceOf<String>()
         }
-        assertEquals("expected to contain no instances of class kotlin.String but was [1, two]", error.message)
+        assertEquals("expected to not contain instances of class kotlin.String but was [1, two]", error.message)
     }
 
     @Test fun doesNotContainInstanceOf_element_missing_passes() {
