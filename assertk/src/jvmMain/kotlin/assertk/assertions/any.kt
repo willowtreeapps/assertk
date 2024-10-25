@@ -83,7 +83,7 @@ fun <T : Any> Assert<T>.isDataClassEqualTo(expected: T) = given { actual ->
 private fun <T> Assert<T>.isDataClassEqualToImpl(expected: T, kclass: KClass<*>?): Unit = given { actual ->
     if (actual == expected) return
     val compareProps = actual != null && expected != null
-    if (compareProps && kclass != null && kclass.isData) {
+    if (compareProps && kclass != null && kclass.isData && kclass.objectInstance == null) {
         for (memberProp in kclass.memberProperties) {
             @Suppress("UNCHECKED_CAST")
             val force = memberProp as KProperty1<T, Any?>
