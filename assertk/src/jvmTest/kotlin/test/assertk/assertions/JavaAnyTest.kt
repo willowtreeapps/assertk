@@ -3,7 +3,6 @@ package test.assertk.assertions
 import assertk.assertThat
 import assertk.assertions.*
 import test.assertk.opentestPackageName
-import java.lang.Exception
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -28,6 +27,17 @@ class JavaAnyTest {
     @Test
     fun isInstanceOf_jclass_parent_class_passes() {
         assertThat(subject).isInstanceOf(TestObject::class.java)
+    }
+
+    @Test
+    fun isInstanceOf_jclass_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as BasicObject?).isInstanceOf(BasicObject::class.java)
+        }
+        assertEquals(
+            "expected to be instance of:<$p\$BasicObject> but was null",
+            error.message,
+        )
     }
 
     @Test
@@ -70,6 +80,11 @@ class JavaAnyTest {
     @Test
     fun isNotInstanceOf_jclass_different_class_passess() {
         assertThat(subject).isNotInstanceOf(DifferentObject::class.java)
+    }
+
+    @Test
+    fun isNotInstanceOf_jclass_null_passess() {
+        assertThat(null as DifferentObject?).isNotInstanceOf(DifferentObject::class.java)
     }
 
     @Test

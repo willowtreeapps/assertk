@@ -46,12 +46,13 @@ fun <T : Any> Assert<T>.doesNotHaveClass(jclass: Class<out T>) = given { actual 
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = transform { actual ->
+fun <T : Any> Assert<Any?>.isInstanceOf(jclass: Class<T>): Assert<T> = transform { actual ->
     if (jclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
-        actual as S
+        actual as T
     } else {
-        expected("to be instance of:${show(jclass)} but had class:${show(actual.javaClass)}")
+        val but = if (actual == null) "was null" else "had class:${show(actual.javaClass)}"
+        expected("to be instance of:${show(jclass)} but $but")
     }
 }
 
@@ -61,7 +62,7 @@ fun <T : Any, S : T> Assert<T>.isInstanceOf(jclass: Class<S>): Assert<S> = trans
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(jclass: Class<out T>) = given { actual ->
+fun <T : Any> Assert<T?>.isNotInstanceOf(jclass: Class<out T>) = given { actual ->
     if (!jclass.isInstance(actual)) return
     expected("to not be instance of:${show(jclass)}")
 }
