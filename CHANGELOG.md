@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - renamed `prop` to `having` as part of effort to unify API naming, old name is deprecated.
 - renamed `suspendCall` to `having` as part of effort to unify API naming, old name is deprecated.
 - added `doesNotExist` assertions to `Path`.
+- the receiver types for `isTrue()`, `isFalse()`, and `isInstanceOf()` have been widened to operate on nullable values.
 
 ## [0.28.1] 2024-04-17
 

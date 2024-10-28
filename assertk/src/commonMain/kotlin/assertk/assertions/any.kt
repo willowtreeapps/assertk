@@ -251,7 +251,7 @@ fun <T : Any> Assert<T>.doesNotHaveClass(kclass: KClass<out T>) = given { actual
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-inline fun <reified T : Any> Assert<Any>.isNotInstanceOf() = isNotInstanceOf(T::class)
+inline fun <reified T : Any> Assert<Any?>.isNotInstanceOf() = isNotInstanceOf(T::class)
 
 /**
  * Asserts the value is not an instance of the expected kotlin class. Both
@@ -259,7 +259,7 @@ inline fun <reified T : Any> Assert<Any>.isNotInstanceOf() = isNotInstanceOf(T::
  * @see [isInstanceOf]
  * @see [doesNotHaveClass]
  */
-fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual ->
+fun <T : Any> Assert<T?>.isNotInstanceOf(kclass: KClass<out T>) = given { actual ->
     if (!kclass.isInstance(actual)) return
     expected("to not be instance of:${show(kclass)}")
 }
@@ -270,7 +270,7 @@ fun <T : Any> Assert<T>.isNotInstanceOf(kclass: KClass<out T>) = given { actual 
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-inline fun <reified T : Any> Assert<Any>.isInstanceOf() = isInstanceOf(T::class)
+inline fun <reified T : Any> Assert<Any?>.isInstanceOf() = isInstanceOf(T::class)
 
 /**
  * Asserts the value is an instance of the expected kotlin class. Both `assertThat("test").isInstanceOf(String::class)` and
@@ -278,12 +278,13 @@ inline fun <reified T : Any> Assert<Any>.isInstanceOf() = isInstanceOf(T::class)
  * @see [isNotInstanceOf]
  * @see [hasClass]
  */
-fun <T : Any> Assert<Any>.isInstanceOf(kclass: KClass<T>): Assert<T> = transform(name) { actual ->
+fun <T : Any> Assert<Any?>.isInstanceOf(kclass: KClass<T>): Assert<T> = transform(name) { actual ->
     if (kclass.isInstance(actual)) {
         @Suppress("UNCHECKED_CAST")
         actual as T
     } else {
-        expected("to be instance of:${show(kclass)} but had class:${show(actual::class)}")
+        val but = if (actual == null) "was null" else "had class:${show(actual::class)}"
+        expected("to be instance of:${show(kclass)} but $but")
     }
 }
 

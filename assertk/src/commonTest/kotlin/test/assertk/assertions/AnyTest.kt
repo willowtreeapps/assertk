@@ -454,6 +454,28 @@ class AnyTest {
     }
 
     @Test
+    fun isInstanceOf_kclass_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as DifferentObject?).isInstanceOf(DifferentObject::class)
+        }
+        assertEquals(
+            "expected to be instance of:<${DifferentObject::class}> but was null",
+            error.message
+        )
+    }
+
+    @Test
+    fun isInstanceOf_reified_kclass_null_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(null as DifferentObject?).isInstanceOf<DifferentObject>()
+        }
+        assertEquals(
+            "expected to be instance of:<${DifferentObject::class}> but was null",
+            error.message
+        )
+    }
+
+    @Test
     fun isInstanceOf_kclass_run_block_when_passes() {
         val error = assertFailsWith<AssertionError> {
             assertThat(subject as TestObject).isInstanceOf(BasicObject::class).having("str", BasicObject::str)
@@ -501,6 +523,16 @@ class AnyTest {
     @Test
     fun isNotInstanceOf_reified_kclass_different_class_passes() {
         assertThat(subject).isNotInstanceOf<DifferentObject>()
+    }
+
+    @Test
+    fun isNotInstanceOf_kclass_null_passes() {
+        assertThat(null as DifferentObject?).isNotInstanceOf(DifferentObject::class)
+    }
+
+    @Test
+    fun isNotInstanceOf_reified_kclass_null_passes() {
+        assertThat(null as DifferentObject?).isNotInstanceOf<DifferentObject>()
     }
 
     @Test
