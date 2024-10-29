@@ -88,7 +88,7 @@ class TableTest {
         assertEquals(
             """The following assertion failed
 	          |${"\t"}on row:(a=<false>)
-	          |${"\t"}expected:<[tru]e> but was:<[fals]e>
+	          |${"\t"}expected to be true but was false
             """.trimMargin(),
             error.message
         )

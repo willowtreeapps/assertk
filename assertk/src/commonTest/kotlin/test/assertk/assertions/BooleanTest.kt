@@ -19,7 +19,7 @@ class BooleanTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(false).isTrue()
         }
-        assertEquals("expected:<[tru]e> but was:<[fals]e>", error.message)
+        assertEquals("expected to be true but was false", error.message)
     }
 
     @Test
@@ -27,7 +27,7 @@ class BooleanTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(null as Boolean?).isTrue()
         }
-        assertEquals("expected:<true> but was:<null>", error.message)
+        assertEquals("expected to be true but was null", error.message)
     }
     //endregion
 
@@ -42,7 +42,7 @@ class BooleanTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(true).isFalse()
         }
-        assertEquals("expected:<[fals]e> but was:<[tru]e>", error.message)
+        assertEquals("expected to be false but was true", error.message)
     }
 
     @Test
@@ -50,7 +50,7 @@ class BooleanTest {
         val error = assertFailsWith<AssertionError> {
             assertThat(null as Boolean?).isFalse()
         }
-        assertEquals("expected:<false> but was:<null>", error.message)
+        assertEquals("expected to be false but was null", error.message)
     }
     //endregion
 }
