@@ -2,7 +2,6 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.assertions.support.expected
-import assertk.assertions.support.fail
 
 /**
  * Asserts the boolean is true.
@@ -10,7 +9,7 @@ import assertk.assertions.support.fail
  */
 fun Assert<Boolean?>.isTrue() = given { actual ->
     if (actual == true) return
-    fail(true, actual)
+    expected("to be true but was $actual")
 }
 
 /**
@@ -19,5 +18,5 @@ fun Assert<Boolean?>.isTrue() = given { actual ->
  */
 fun Assert<Boolean?>.isFalse() = given { actual ->
     if (actual == false) return
-    fail(false, actual)
+    expected("to be false but was $actual")
 }
