@@ -98,10 +98,28 @@ fun <T> Assert<T>.isIn(vararg values: T) = given { actual ->
 }
 
 /**
+ * Asserts the value is in the expected values, using `in`.
+ * @see [isNotIn]
+ */
+fun <T> Assert<T>.isIn(values: Iterable<T>) = given { actual ->
+    if (actual in values) return
+    expected(":${show(values)} to contain:${show(actual)}")
+}
+
+/**
  * Asserts the value is not in the expected values, using `!in`.
  * @see [isIn]
  */
 fun <T> Assert<T>.isNotIn(vararg values: T) = given { actual ->
+    if (actual !in values) return
+    expected(":${show(values)} to not contain:${show(actual)}")
+}
+
+/**
+ * Asserts the value is not in the expected values, using `!in`.
+ * @see [isIn]
+ */
+fun <T> Assert<T>.isNotIn(values: Iterable<T>) = given { actual ->
     if (actual !in values) return
     expected(":${show(values)} to not contain:${show(actual)}")
 }
