@@ -154,6 +154,36 @@ class AnyTest {
     }
 
     @Test
+    fun isIn_iterable_one_equal_item_passes() {
+        val list = listOf(BasicObject("test"))
+        assertThat(subject).isIn(list)
+    }
+
+    @Test
+    fun isIn_iterable_one_non_equal_item_fails() {
+        val list = listOf(BasicObject("not test1"))
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isIn(list)
+        }
+        assertEquals("expected:<[not test1]> to contain:<test>", error.message)
+    }
+
+    @Test
+    fun isIn_iterable_one_equal_item_in_may_passes() {
+        val list = listOf(BasicObject("not test1"), BasicObject("test"), BasicObject("not test2"))
+        assertThat(subject).isIn(list)
+    }
+
+    @Test
+    fun isIn_iterable_no_equal_items_in_may_fails() {
+        val list = listOf(BasicObject("not test1"), BasicObject("not test2"))
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isIn(list)
+        }
+        assertEquals("expected:<[not test1, not test2]> to contain:<test>", error.message)
+    }
+
+    @Test
     fun isNotIn_one_non_equal_item_passes() {
         val isOut1 = BasicObject("not test1")
         assertThat(subject).isNotIn(isOut1)
@@ -182,6 +212,36 @@ class AnyTest {
         val isOut2 = BasicObject("not test2")
         val error = assertFailsWith<AssertionError> {
             assertThat(subject).isNotIn(isOut1, isIn, isOut2)
+        }
+        assertEquals("expected:<[not test1, test, not test2]> to not contain:<test>", error.message)
+    }
+
+    @Test
+    fun isNotIn_iterable_one_non_equal_item_passes() {
+        val list = listOf(BasicObject("not test1"))
+        assertThat(subject).isNotIn(list)
+    }
+
+    @Test
+    fun isNotIn_iterable_one_equal_item_fails() {
+        val list = listOf(BasicObject("test"))
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isNotIn(list)
+        }
+        assertEquals("expected:<[test]> to not contain:<test>", error.message)
+    }
+
+    @Test
+    fun isNotIn_iterable_no_equal_items_in_many_passes() {
+        val list = listOf(BasicObject("not test1"), BasicObject("not test2"))
+        assertThat(subject).isNotIn(list)
+    }
+
+    @Test
+    fun isNotIn_iterable_one_equal_item_in_many_fails() {
+        val list = listOf(BasicObject("not test1"), BasicObject("test"), BasicObject("not test2"))
+        val error = assertFailsWith<AssertionError> {
+            assertThat(subject).isNotIn(list)
         }
         assertEquals("expected:<[not test1, test, not test2]> to not contain:<test>", error.message)
     }
