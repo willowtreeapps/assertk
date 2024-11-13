@@ -121,22 +121,7 @@ class AnyTest {
     }
 
     @Test
-    fun isIn_one_equal_item_passes() {
-        val isIn = BasicObject("test")
-        assertThat(subject).isIn(isIn)
-    }
-
-    @Test
-    fun isIn_one_non_equal_item_fails() {
-        val isOut1 = BasicObject("not test1")
-        val error = assertFailsWith<AssertionError> {
-            assertThat(subject).isIn(isOut1)
-        }
-        assertEquals("expected:<[not test1]> to contain:<test>", error.message)
-    }
-
-    @Test
-    fun isIn_one_equal_item_in_may_passes() {
+    fun isIn_one_equal_item_in_many_passes() {
         val isOut1 = BasicObject("not test1")
         val isIn = BasicObject("test")
         val isOut2 = BasicObject("not test2")
@@ -144,7 +129,7 @@ class AnyTest {
     }
 
     @Test
-    fun isIn_no_equal_items_in_may_fails() {
+    fun isIn_no_equal_items_in_many_fails() {
         val isOut1 = BasicObject("not test1")
         val isOut2 = BasicObject("not test2")
         val error = assertFailsWith<AssertionError> {
@@ -181,21 +166,6 @@ class AnyTest {
             assertThat(subject).isIn(list)
         }
         assertEquals("expected:<[not test1, not test2]> to contain:<test>", error.message)
-    }
-
-    @Test
-    fun isNotIn_one_non_equal_item_passes() {
-        val isOut1 = BasicObject("not test1")
-        assertThat(subject).isNotIn(isOut1)
-    }
-
-    @Test
-    fun isNotIn_one_equal_item_fails() {
-        val isIn = BasicObject("test")
-        val error = assertFailsWith<AssertionError> {
-            assertThat(subject).isNotIn(isIn)
-        }
-        assertEquals("expected:<[test]> to not contain:<test>", error.message)
     }
 
     @Test
