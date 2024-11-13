@@ -92,9 +92,30 @@ fun Assert<Any?>.isNotSameInstanceAs(expected: Any?) = given { actual ->
  * Asserts the value is in the expected values, using `in`.
  * @see [isNotIn]
  */
+fun <T> Assert<T>.isIn(first: T, second: T, vararg rest: T) = given { actual ->
+    val values = listOf(first, second, *rest)
+    if (actual in values) return
+    expected(":${show(values)} to contain:${show(actual)}")
+}
+
+@Deprecated("For binary compatibility", level = DeprecationLevel.HIDDEN)
 fun <T> Assert<T>.isIn(vararg values: T) = given { actual ->
     if (actual in values) return
     expected(":${show(values)} to contain:${show(actual)}")
+}
+
+@Deprecated("isIn with no values always fails", level = DeprecationLevel.ERROR)
+fun <T> Assert<T>.isIn() {
+    throw AssertionError() // Cannot be called.
+}
+
+@Deprecated(
+    "Use isEqualTo instead of isIn with a singed value",
+    level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("isEqualTo(first)", "assertk.assertions.isEqualTo"),
+)
+fun <T> Assert<T>.isIn(first: T) {
+    throw AssertionError() // Cannot be called.
 }
 
 /**
@@ -110,9 +131,30 @@ fun <T> Assert<T>.isIn(values: Iterable<T>) = given { actual ->
  * Asserts the value is not in the expected values, using `!in`.
  * @see [isIn]
  */
+fun <T> Assert<T>.isNotIn(first: T, second: T, vararg rest: T) = given { actual ->
+    val values = listOf(first, second, *rest)
+    if (actual !in values) return
+    expected(":${show(values)} to not contain:${show(actual)}")
+}
+
+@Deprecated("For binary compatibility", level = DeprecationLevel.HIDDEN)
 fun <T> Assert<T>.isNotIn(vararg values: T) = given { actual ->
     if (actual !in values) return
     expected(":${show(values)} to not contain:${show(actual)}")
+}
+
+@Deprecated("isNotIn with no values always succeeds", level = DeprecationLevel.ERROR)
+fun <T> Assert<T>.isNotIn() {
+    throw AssertionError() // Cannot be called.
+}
+
+@Deprecated(
+    "Use isNotEqualTo instead of isNotIn with a singed value",
+    level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("isNotEqualTo(first)", "assertk.assertions.isNotEqualTo"),
+)
+fun <T> Assert<T>.isNotIn(first: T) {
+    throw AssertionError() // Cannot be called.
 }
 
 /**
