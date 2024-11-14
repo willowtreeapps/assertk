@@ -112,6 +112,11 @@ class JavaAnyTest {
     }
 
     @Test
+    fun isDataClassEqualTo_equal_data_objects_passes() {
+        assertThat(DataObject).isDataClassEqualTo(DataObject)
+    }
+
+    @Test
     fun isDataClassEqualTo_reports_all_properties_that_differ_on_failure() {
         val error = assertFailsWith<AssertionError> {
             assertThat(DataClass(InnerDataClass("test"), 1, 'a'))
@@ -150,6 +155,17 @@ class JavaAnyTest {
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [one]:<null> but was:<InnerDataClass(inner=test)> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
             |${"\t"}${opentestPackageName}AssertionFailedError: expected [three]:<'[b]'> but was:<'[a]'> (DataClass(one=InnerDataClass(inner=test), two=1, three=a))
         """.trimMargin().lines(), error.message!!.lines()
+        )
+    }
+
+    @Test
+    fun isDataClassEqualTo_fails_different_data_objects() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(DataObject).isDataClassEqualTo(OtherDataObject)
+        }
+        assertEquals(
+            "expected:<[Other]DataObject> but was:<[]DataObject>"
+                .lines(), error.message!!.lines()
         )
     }
     //endregion
@@ -217,5 +233,9 @@ class JavaAnyTest {
     data class DataClass(val one: InnerDataClass?, val two: Int, val three: Char)
 
     data class InnerDataClass(val inner: String)
+
+    data object DataObject
+
+    data object OtherDataObject
 }
 
