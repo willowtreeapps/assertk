@@ -2,8 +2,8 @@ package test.assertk.assertions
 
 import assertk.assertThat
 import assertk.assertions.isSuccess
-import org.junit.Test
 import test.assertk.exceptionPackageName
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
