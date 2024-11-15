@@ -173,3 +173,33 @@ fun <K, V> Assert<Map<K, V>>.key(key: K): Assert<V> = transform(appendName(show(
         expected("to have key:${show(key)}")
     }
 }
+
+/**
+ * Returns an assert that has a collection of the keys in the map.
+ * ```
+ * assertThat(mapOf("key" to "value")).havingKeys().containsOnly("key")
+ * ```
+ * @see havingValues
+ */
+fun <K, V> Assert<Map<K, V>>.havingKeys(): Assert<Set<K>> = transform {
+    if (it.isEmpty()) {
+        expected("map to not be empty")
+    } else {
+        it.keys
+    }
+}
+
+/**
+ * Returns an assert that has a collection of the values in the map.
+ * ```
+ * assertThat(mapOf("key" to "value")).havingValues().containsOnly("value")
+ * ```
+ * @see havingKeys
+ */
+fun <K, V> Assert<Map<K, V>>.havingValues(): Assert<Collection<V>> = transform {
+    if (it.isEmpty()) {
+        expected("map to not be empty")
+    } else {
+        it.values
+    }
+}

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - the receiver types for `isTrue()`, `isFalse()`, and `isInstanceOf()` have been widened to operate on nullable values.
 - signature of `isIn` and `isNotIn` has been changed to ensure at least two items are supplied.
 - added assertions `isIn(Iterable<T>)` and `isNotIn(Iterable<T>)`
+- added transformers `Map<K,V>.havingKeys()` and `Map<K,V>.havingValues()`
 
 ## [0.28.1] 2024-04-17
 

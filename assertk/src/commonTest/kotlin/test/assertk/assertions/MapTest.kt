@@ -287,4 +287,34 @@ class MapTest {
         assertEquals("expected [subject] to have key:<\"wrong\">", error.message)
     }
     //endregion
+
+    //region havingKeys
+    @Test
+    fun havingKeys_empty_list_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(emptyMap<String, String>()).havingKeys()
+        }
+        assertEquals("expected map to not be empty", error.message)
+    }
+
+    @Test
+    fun havingKeys_assertion_passes() {
+        assertThat(mapOf("key" to "value")).havingKeys().containsOnly("key")
+    }
+    //endregion
+
+    //region havingValues
+    @Test
+    fun havingValues_empty_list_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(emptyMap<String, String>()).havingKeys()
+        }
+        assertEquals("expected map to not be empty", error.message)
+    }
+
+    @Test
+    fun havingValues_assertion_passes() {
+        assertThat(mapOf("key" to "value")).havingValues().containsOnly("value")
+    }
+    //endregion
 }
