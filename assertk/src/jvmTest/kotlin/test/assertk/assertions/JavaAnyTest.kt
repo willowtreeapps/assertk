@@ -14,7 +14,7 @@ class JavaAnyTest {
     //region jClass
     @Test
     fun extracts_jClass() {
-        assertEquals(BasicObject::class.java, assertThat(subject as TestObject).jClass().valueOrFail)
+        assertEquals(BasicObject::class.java, assertThat(subject as TestObject).havingJClass().valueOrFail)
     }
     //endregion
 
