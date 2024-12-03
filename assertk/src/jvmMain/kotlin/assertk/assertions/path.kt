@@ -101,7 +101,7 @@ fun Assert<Path>.exists(vararg options: LinkOption) = given { actual ->
 }
 
 /**
- * Assert that the path does not exists.
+ * Assert that the path does not exist.
  *
  * @param options indicating how symbolic links are handled
  */
