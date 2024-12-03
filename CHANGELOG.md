@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Add `asAssert` extensions for simplifying `assertThat` usages.
+
 ### Changed
 - renamed `prop` to `having` as part of effort to unify API naming, old name is deprecated.
 - renamed `suspendCall` to `having` as part of effort to unify API naming, old name is deprecated.

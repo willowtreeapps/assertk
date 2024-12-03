@@ -121,6 +121,25 @@ fun <T> assertThat(
 )
 
 /**
+ * Asserts on this with an optional name.
+ *
+ * ```
+ * assertThis(name = "true").isTrue()
+ * ```
+ *
+ * @see [assertThat]
+ */
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> T.asAssert(
+    name: String? = null,
+    noinline displayActual: (T) -> String = { display(it) }
+): Assert<T> = assertThat(
+    actual = this,
+    name = name,
+    displayActual = displayActual,
+)
+
+/**
  * Asserts on the given property reference using its name, if no explicit name is specified. This method
  * should be preferred in cases, where property references can be used, as it uses the property's name
  * for the assertion automatically. The name may optionally be overridden, if needed.
@@ -135,6 +154,26 @@ fun <T> assertThat(
  */
 fun <T> assertThat(getter: KProperty0<T>, name: String? = null): Assert<T> =
     assertThat(getter.get(), name ?: getter.name)
+
+
+/**
+ * Asserts on this reference using its name, if no explicit name is specified. This method
+ * should be preferred in cases, where property references can be used, as it uses the property's name
+ * for the assertion automatically. The name may optionally be overridden, if needed.
+ *
+ * ```
+ * data class Person(val name: String)
+ *
+ * val p = Person("Hugo")
+ *
+ * p::name.assertThis().contains("u")
+ * ```
+ * @see [assertThat]
+ */
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> KProperty0<T>.asAssert(name: String? = null): Assert<T> =
+    assertThat(getter = this, name = name)
 
 /**
  * All assertions in the given lambda are run.
