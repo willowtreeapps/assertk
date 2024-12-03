@@ -8,14 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add `asAssert` extensions for simplifying `assertThat` usages.
+- Add `doesNotExist` assertions to `File` and `Path`.
+- Add assertions `isIn(Iterable<T>)` and `isNotIn(Iterable<T>)`
 
 ### Changed
 - renamed `prop` to `having` as part of effort to unify API naming, old name is deprecated.
 - renamed `suspendCall` to `having` as part of effort to unify API naming, old name is deprecated.
-- added `doesNotExist` assertions to `Path`.
 - the receiver types for `isTrue()`, `isFalse()`, and `isInstanceOf()` have been widened to operate on nullable values.
 - signature of `isIn` and `isNotIn` has been changed to ensure at least two items are supplied.
-- added assertions `isIn(Iterable<T>)` and `isNotIn(Iterable<T>)`
 
 ## [0.28.1] 2024-04-17
 
