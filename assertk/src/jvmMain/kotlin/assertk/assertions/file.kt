@@ -47,7 +47,7 @@ fun Assert<File>.exists() = given { actual ->
 }
 
 /**
- * Asserts the file does not exists.
+ * Asserts the file does not exist.
  */
 fun Assert<File>.doesNotExist() = given { actual ->
     if (!actual.exists()) return
