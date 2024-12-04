@@ -2,6 +2,7 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
+import kotlin.reflect.KProperty1
 
 /**
  * Returns an assert on the throwable's message.
@@ -58,6 +59,17 @@ fun Assert<Throwable>.hasRootCause(cause: Throwable) {
     rootCause().all {
         kClass().isEqualTo(cause::class)
         hasMessage(cause.message)
+    }
+}
+
+/**
+ * Asserts the throwable with a specific type have the expected properties for it.
+ */
+fun <T: Throwable> Assert<T>.hasProperties(vararg pairs: Pair<KProperty1<T, Any>, Any>) {
+    all {
+        pairs.forEach {
+            prop(it.first).isEqualTo(it.second)
+        }
     }
 }
 

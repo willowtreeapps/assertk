@@ -1,5 +1,6 @@
 package assertk
 
+import assertk.assertions.isInstanceOf
 import assertk.assertions.support.display
 import assertk.assertions.support.show
 import kotlin.reflect.KProperty0
@@ -189,4 +190,14 @@ inline fun assertFailure(f: () -> Unit): Assert<Throwable> {
         return assertThat(t)
     }
     fail("expected failure but lambda completed successfully")
+}
+
+/**
+ * Asserts that the given block will throw an exception with expected type rather than complete successfully.
+ */
+inline fun <reified T: Throwable> assertFailureWith(f: () -> Unit): Assert<T> {
+    val assertFailure = assertFailure(f)
+    assertFailure.isInstanceOf(T::class)
+    @Suppress("UNCHECKED_CAST")
+    return assertFailure as Assert<T>
 }
