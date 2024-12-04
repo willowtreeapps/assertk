@@ -72,6 +72,12 @@ fun Assert<File>.isFile() = given { actual ->
     expected("to be a file")
 }
 
+/** Assert that the file is an executable. */
+fun Assert<File>.canExecute() = given { actual ->
+    if (actual.canExecute()) return
+    expected("to be executable")
+}
+
 /**
  * Asserts the file is hidden.
  * @see [isNotHidden]
