@@ -1,9 +1,11 @@
 package test.assertk.coroutines.assertions
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.support.show
 import assertk.coroutines.assertions.*
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.test.Test
@@ -305,6 +307,18 @@ class FlowTest {
                 | at index:1 unexpected:<2>
             """.trimMargin(), error.message
         )
+    }
+    //endregion
+
+    //region StateFlow value
+    @Test
+    fun value_transform() {
+        val name = MutableStateFlow("Sue")
+        val display = name::class.simpleName!!
+        val error = assertFailsWith<AssertionError> {
+            assertThat(name, "name") { display }.havingValue().isEqualTo("John")
+        }
+        assertEquals("""expected [name.value]:<"[John]"> but was:<"[Sue]"> ($display)""", error.message)
     }
     //endregion
 }
