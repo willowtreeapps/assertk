@@ -132,6 +132,34 @@ internal fun MutableList<*>.removeFirst(value: Any?) {
 }
 
 /**
+ * Asserts the collection contains at least one instance of a given type.
+ *
+ * ```
+ * assertThat(listOf<Any>("one", "two", 1)).havingInstanceOf<String>().each {
+ *   it.hasLength(3)
+ * }
+ * ```
+ */
+inline fun <reified T> Assert<Iterable<*>>.havingInstancesOf(): Assert<List<T>> {
+    return transform("contains instance of ${T::class}") { actual ->
+        actual.filterIsInstance<T>().also {
+            if (it.isEmpty()) expected("to contain at least one instance of ${T::class} but was $actual")
+        }
+    }
+}
+
+/**
+ * Asserts the collection does not contain an instance of a given type.
+ *
+ * ```
+ * assertThat(listOf<Any>("one", "two", 1)).doesNotContainInstanceOf<Double>()
+ * ```
+ */
+inline fun <reified T> Assert<Iterable<*>>.notHavingInstancesOf() = given { actual ->
+    if (actual.any { it is T }) expected("to not contain instances of ${T::class} but was $actual")
+}
+
+/**
  * Asserts on each item in the iterable. The given lambda will be run for each item.
  *
  * ```

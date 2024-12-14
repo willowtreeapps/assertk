@@ -9,9 +9,11 @@ import assertk.assertions.contains
 import assertk.assertions.containsAtLeast
 import assertk.assertions.containsExactly
 import assertk.assertions.containsExactlyInAnyOrder
+import assertk.assertions.havingInstancesOf
 import assertk.assertions.containsNone
 import assertk.assertions.containsOnly
 import assertk.assertions.doesNotContain
+import assertk.assertions.notHavingInstancesOf
 import assertk.assertions.each
 import assertk.assertions.exactly
 import assertk.assertions.extracting
@@ -226,6 +228,32 @@ class IterableTest {
             """.trimMargin(),
             error.message
         )
+    }
+    //endregion
+
+    //region containsInstanceOf
+    @Test fun containsInstanceOf_element_present_passes() {
+        assertThat(iterableOf(1, "two")).havingInstancesOf<String>().single().isEqualTo("two")
+    }
+
+    @Test fun containsInstanceOf_element_missing_fails() {
+        val error = assertFailsWith<AssertionError> {
+            assertThat(iterableOf(1, "two")).havingInstancesOf<Double>()
+        }
+        assertEquals("expected to contain at least one instance of class kotlin.Double but was [1, two]", error.message)
+    }
+    //endregion
+
+    //region doesNotContainInstanceOf
+    @Test fun doesNotContainInstanceOf_element_present_fails() {
+        val error = assertFailsWith<AssertionError>() {
+            assertThat(iterableOf(1, "two")).notHavingInstancesOf<String>()
+        }
+        assertEquals("expected to not contain instances of class kotlin.String but was [1, two]", error.message)
+    }
+
+    @Test fun doesNotContainInstanceOf_element_missing_passes() {
+        assertThat(iterableOf(1, "two")).notHavingInstancesOf<Double>()
     }
     //endregion
 
