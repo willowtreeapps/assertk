@@ -324,12 +324,12 @@ class ArrayTest {
 
     //region containsInstanceOf
     @Test fun containsInstanceOf_element_present_passes() {
-        assertThat(arrayOf<Any>(1, "two")).containsInstanceOf<String>().single().isEqualTo("two")
+        assertThat(arrayOf<Any>(1, "two")).havingInstancesOf<String>().single().isEqualTo("two")
     }
 
     @Test fun containsInstanceOf_element_missing_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(arrayOf<Any>(1, "two")).containsInstanceOf<Double>()
+            assertThat(arrayOf<Any>(1, "two")).havingInstancesOf<Double>()
         }
         assertEquals("expected to contain at least one instance of class kotlin.Double but was [1, two]", error.message)
     }
@@ -338,13 +338,13 @@ class ArrayTest {
     //region doesNotContainInstanceOf
     @Test fun doesNotContainInstanceOf_element_present_fails() {
         val error = assertFailsWith<AssertionError>() {
-            assertThat(arrayOf<Any>(1, "two")).doesNotContainInstanceOf<String>()
+            assertThat(arrayOf<Any>(1, "two")).notHavingInstancesOf<String>()
         }
         assertEquals("expected to not contain instances of class kotlin.String but was [1, two]", error.message)
     }
 
     @Test fun doesNotContainInstanceOf_element_missing_passes() {
-        assertThat(arrayOf<Any>(1, "two")).doesNotContainInstanceOf<Double>()
+        assertThat(arrayOf<Any>(1, "two")).notHavingInstancesOf<Double>()
     }
     //endregion
 

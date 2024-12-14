@@ -2,12 +2,10 @@ package assertk.assertions
 
 import assertk.Assert
 import assertk.all
-import assertk.assertThat
 import assertk.collection
 import assertk.assertions.support.appendName
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
-import assertk.fail
 
 /**
  * Asserts the iterable contains the expected element, using `in`.
@@ -137,13 +135,13 @@ internal fun MutableList<*>.removeFirst(value: Any?) {
  * Asserts the collection contains at least one instance of a given type.
  *
  * ```
- * assertThat(listOf<Any>("one", "two", 1)).containsInstanceOf<String>().each {
+ * assertThat(listOf<Any>("one", "two", 1)).havingInstanceOf<String>().each {
  *   it.hasLength(3)
  * }
  * ```
  */
-inline fun <reified T> Assert<Iterable<*>>.containsInstanceOf(): Assert<List<T>> {
-    return transform("contains subtype of ${T::class}") { actual ->
+inline fun <reified T> Assert<Iterable<*>>.havingInstancesOf(): Assert<List<T>> {
+    return transform("contains instance of ${T::class}") { actual ->
         actual.filterIsInstance<T>().also {
             if (it.isEmpty()) expected("to contain at least one instance of ${T::class} but was $actual")
         }
@@ -157,7 +155,7 @@ inline fun <reified T> Assert<Iterable<*>>.containsInstanceOf(): Assert<List<T>>
  * assertThat(listOf<Any>("one", "two", 1)).doesNotContainInstanceOf<Double>()
  * ```
  */
-inline fun <reified T> Assert<Iterable<*>>.doesNotContainInstanceOf() = given { actual ->
+inline fun <reified T> Assert<Iterable<*>>.notHavingInstancesOf() = given { actual ->
     if (actual.any { it is T }) expected("to not contain instances of ${T::class} but was $actual")
 }
 

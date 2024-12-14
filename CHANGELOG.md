@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added `doesNotExist` assertions to `Path`
-- Added `containsInstanceOf` and `doesNotContainInstanceOf` for `Iterable`
+- Added `havingInstancesOf` and `notHavingInstancesOf` for `Iterable` and `Array`
 
 ## [0.28.1] 2024-04-17
 

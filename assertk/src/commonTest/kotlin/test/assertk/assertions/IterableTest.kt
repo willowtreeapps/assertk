@@ -1,7 +1,6 @@
 package test.assertk.assertions
 
 import assertk.all
-import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.any
 import assertk.assertions.atLeast
@@ -10,11 +9,11 @@ import assertk.assertions.contains
 import assertk.assertions.containsAtLeast
 import assertk.assertions.containsExactly
 import assertk.assertions.containsExactlyInAnyOrder
-import assertk.assertions.containsInstanceOf
+import assertk.assertions.havingInstancesOf
 import assertk.assertions.containsNone
 import assertk.assertions.containsOnly
 import assertk.assertions.doesNotContain
-import assertk.assertions.doesNotContainInstanceOf
+import assertk.assertions.notHavingInstancesOf
 import assertk.assertions.each
 import assertk.assertions.exactly
 import assertk.assertions.extracting
@@ -234,12 +233,12 @@ class IterableTest {
 
     //region containsInstanceOf
     @Test fun containsInstanceOf_element_present_passes() {
-        assertThat(iterableOf(1, "two")).containsInstanceOf<String>().single().isEqualTo("two")
+        assertThat(iterableOf(1, "two")).havingInstancesOf<String>().single().isEqualTo("two")
     }
 
     @Test fun containsInstanceOf_element_missing_fails() {
         val error = assertFailsWith<AssertionError> {
-            assertThat(iterableOf(1, "two")).containsInstanceOf<Double>()
+            assertThat(iterableOf(1, "two")).havingInstancesOf<Double>()
         }
         assertEquals("expected to contain at least one instance of class kotlin.Double but was [1, two]", error.message)
     }
@@ -248,13 +247,13 @@ class IterableTest {
     //region doesNotContainInstanceOf
     @Test fun doesNotContainInstanceOf_element_present_fails() {
         val error = assertFailsWith<AssertionError>() {
-            assertThat(iterableOf(1, "two")).doesNotContainInstanceOf<String>()
+            assertThat(iterableOf(1, "two")).notHavingInstancesOf<String>()
         }
         assertEquals("expected to not contain instances of class kotlin.String but was [1, two]", error.message)
     }
 
     @Test fun doesNotContainInstanceOf_element_missing_passes() {
-        assertThat(iterableOf(1, "two")).doesNotContainInstanceOf<Double>()
+        assertThat(iterableOf(1, "two")).notHavingInstancesOf<Double>()
     }
     //endregion
 
