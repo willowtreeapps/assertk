@@ -12,6 +12,16 @@ import kotlinx.coroutines.flow.*
 suspend fun Assert<Flow<*>>.count(): Assert<Int> = having("count()", Flow<*>::count)
 
 /**
+ * Returns an assert that asserts on the value of the given [StateFlow]
+ *
+ * ```
+ * val person: StateFlow<Person> = _person
+ * assertThat(person).havingValue().having(Person::name).isEqualTo("Sue")
+ * ```
+ */
+fun <T> Assert<StateFlow<T>>.havingValue() = having(StateFlow<T>::value)
+
+/**
  * Asserts the flow is empty. Fails as soon as the flow delivers an element.
  * @see isNotEmpty
  * @see isNullOrEmpty
